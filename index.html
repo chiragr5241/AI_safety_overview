@@ -166,46 +166,28 @@ input[type="range"] { accent-color: var(--accent); width: 100%; }
 .callout { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; max-width: 46rem; font-size: .96rem; }
 .callout b { font-family: var(--font-display); }
 
-/* Friday-night table grab */
+/* Table grab (restaurant example) */
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .8rem; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; border: 1px solid; }
 .grab { display: grid; gap: 18px; }
-.grab-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 24px; align-items: end; }
-@media (max-width: 700px) { .grab-top { grid-template-columns: minmax(0, 1fr); } }
-.presets { display: flex; flex-wrap: wrap; gap: 6px; }
-.presets button { font-family: var(--font-mono); font-size: .76rem; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); cursor: pointer; }
-.presets button:hover { border-color: var(--ink); }
-.clock { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
-.timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
-.timeline button { font-family: var(--font-mono); font-size: .7rem; padding: 8px 4px 6px; border: 0; border-top: 3px solid var(--line); background: none; color: var(--muted); cursor: pointer; text-align: left; line-height: 1.3; }
-.timeline button.done { border-top-color: var(--accent); color: var(--ink); }
-.timeline button.now { border-top-color: var(--ink); color: var(--ink); font-weight: 500; }
-.story { font-size: 1.04rem; min-height: 3.4em; max-width: 52rem; }
-.story b { font-family: var(--font-display); }
-.town { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-@media (max-width: 560px) { .town { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.rest { background: var(--surface-2); border-radius: 10px; padding: 10px; display: grid; gap: 8px; min-width: 0; }
-.rest-name { font-family: var(--font-display); font-weight: 700; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rest-tables { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
-.tb { aspect-ratio: 1; max-width: 100%; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); display: grid; place-items: center; font-family: var(--font-mono); font-size: .62rem; color: var(--muted); transition: background .35s, border-color .35s, color .35s, transform .35s; }
-.tb.held { background: var(--con-soft); border-color: var(--con); color: var(--con); transform: scale(1.06); }
-.tb.booked, .tb.kept { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-.tb.cancelled { background: transparent; border-style: dashed; border-color: var(--con); color: var(--con); }
-.diners-label { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.diners { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
-.dn { aspect-ratio: 1; max-width: 100%; border-radius: 50%; background: var(--surface-2); border: 1.5px solid var(--line); display: grid; place-items: center; font-family: var(--font-mono); font-size: .6rem; color: var(--muted); transition: background .35s, border-color .35s, color .35s; }
-.dn.ai { border-color: var(--ink); color: var(--ink); border-width: 2px; }
-.dn.fed { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-.dn.hungry { background: var(--con); border-color: var(--con); color: var(--bg); }
-.score { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.score > div { border-top: 3px solid var(--line); padding-top: 8px; display: grid; gap: 2px; }
-.score .num { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1; font-variant-numeric: tabular-nums; }
-.score .lbl { font-size: .82rem; color: var(--muted); }
-.score .fed { border-top-color: var(--accent); } .score .fed .num { color: var(--accent); }
-.score .hungry { border-top-color: var(--con); } .score .hungry .num { color: var(--con); }
-.score .empty .num { color: var(--con); }
-.punch { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.35rem); line-height: 1.3; max-width: 44rem; }
-.fix { display: flex; gap: 8px; align-items: center; font-size: .92rem; background: var(--accent-soft); padding: 10px 12px; border-radius: 10px; }
+.grab-steps { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: .95rem; }
+.grab-scene { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 700px) { .grab-scene { grid-template-columns: minmax(0, 1fr); } }
+.town { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rest { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; }
+.rest-name { font-family: var(--font-display); font-weight: 700; font-size: .92rem; }
+.rest-tables { display: flex; gap: 8px; }
+.tb { width: 44px; height: 44px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); display: grid; place-items: center; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); transition: background .3s, border-color .3s, color .3s; }
+.tb.eat { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.tb.empty { background: transparent; border-style: dashed; border-color: var(--con); color: var(--con); }
+.diners { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.dn { display: grid; justify-items: center; gap: 4px; font-size: .78rem; color: var(--muted); }
+.dn i { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-family: var(--font-mono); font-size: .72rem; border: 2px solid transparent; transition: background .3s, color .3s; }
+.dn.fed i { background: var(--accent); color: var(--bg); }
+.dn.hungry i { background: var(--con); color: var(--bg); }
+.dn.ai i { border-color: var(--ink); }
+.punch { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.35rem); line-height: 1.3; max-width: 44rem; min-height: 2.6em; }
+#grabPick { flex-wrap: wrap; }
 
 /* Classifier */
 .classifier { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 22px; }
@@ -660,46 +642,25 @@ footer .wrap { display: grid; gap: 14px; }
 
       <div class="lab grab" id="restaurant" style="margin-top:28px">
         <div class="lab-head"><span class="eyebrow">Try it · the Friday-night table grab</span><span class="small mono">toy model of the report's example</span></div>
-        <div class="grab-top">
-          <div class="q">
-            <label for="nAssist">Diners with a booking assistant: <span class="readout" id="nAssistOut">1</span> of 24</label>
-            <input type="range" id="nAssist" min="0" max="24" value="1">
-            <div class="presets" role="group" aria-label="Quick scenarios">
-              <button type="button" data-k="0">Nobody</button>
-              <button type="button" data-k="1">Just one person</button>
-              <button type="button" data-k="4">4 early adopters</button>
-              <button type="button" data-k="24">Everyone</button>
-            </div>
-          </div>
-          <div class="controls">
-            <button class="btn" type="button" id="grabPlay">▶ Play the evening</button>
-          </div>
+        <p style="font-size:.95rem;max-width:46rem">Four restaurants, two tables each: 8 tables for 8 diners, so everyone can eat. But a booking assistant, to keep its user's options open, does this:</p>
+        <ol class="grab-steps">
+          <li><strong>5:00 pm</strong>: it reserves a table at <em>every</em> restaurant.</li>
+          <li><strong>5:30 pm</strong>: everyone else phones around. Some restaurants are full.</li>
+          <li><strong>7:00 pm</strong>: its user picks one; the other reservations are cancelled, too late for anyone to use them.</li>
+        </ol>
+        <div class="seg" role="group" aria-label="Choose a scenario" id="grabPick">
+          <button type="button" data-v="0" aria-pressed="false">No assistants</button>
+          <button type="button" data-v="1" aria-pressed="true">Sam uses one</button>
+          <button type="button" data-v="2" aria-pressed="false">Sam and Alex use one</button>
+          <button type="button" data-v="fee" aria-pressed="false">Same, with a no-show fee</button>
         </div>
-        <label class="fix"><input type="checkbox" id="grabFee"> The fix: restaurants charge a $20 fee for no-shows, so each assistant books only one table</label>
-
-        <div style="display:grid;gap:8px">
-          <div class="clock" id="grabClock" aria-live="polite">8:00 pm</div>
-          <div class="timeline" id="grabSteps" role="group" aria-label="Step through the evening"></div>
-          <p class="story" id="grabStory"></p>
+        <div class="grab-scene">
+          <div class="town" id="town" aria-label="Restaurant tables at 8 pm"></div>
+          <div class="diners" id="diners" aria-label="Diners at 8 pm"></div>
         </div>
-
-        <div class="town" id="town" aria-label="Restaurants in town"></div>
-
-        <div style="display:grid;gap:8px">
-          <div class="diners-label"><span class="small">24 diners · <b class="mono" style="font-weight:500">AI</b> = has an assistant</span>
-            <span class="legend"><span><i style="background:var(--accent);border-color:var(--accent)"></i>Got a table</span><span><i style="background:var(--con);border-color:var(--con)"></i>Turned away</span></span></div>
-          <div class="diners" id="diners"></div>
-        </div>
-
-        <div class="legend"><span><i style="background:var(--con-soft);border-color:var(--con)"></i>Held "just in case"</span><span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>Someone eats here</span><span><i style="border-style:dashed;border-color:var(--con)"></i>Cancelled too late: sits empty</span></div>
-
-        <div class="score" id="grabScore">
-          <div class="fed"><span class="num" id="sFed">0</span><span class="lbl">ate out</span></div>
-          <div class="hungry"><span class="num" id="sHungry">0</span><span class="lbl">went home hungry</span></div>
-          <div class="empty"><span class="num" id="sEmpty">0</span><span class="lbl">tables sat empty</span></div>
-        </div>
-        <p class="punch" id="grabPunch"></p>
-        <p class="lab-note">No assistant broke a rule or disobeyed its user, yet the town ends up worse off. This is a <em>social dilemma</em>: AI removes the time and effort that used to limit selfish behaviour. The no-show fee shows the kind of fix that works: change the incentives, not the agents.</p>
+        <div class="legend"><span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>Someone eats here</span><span><i style="border-style:dashed;border-color:var(--con)"></i>Cancelled too late: sits empty</span><span><i style="background:var(--con);border-color:var(--con)"></i>Went home hungry</span></div>
+        <p class="punch" id="grabPunch" aria-live="polite"></p>
+        <p class="lab-note">Each assistant did exactly what its user asked, yet the town ends up worse off. This is a <em>social dilemma</em>: AI removes the time and effort that used to limit selfish behaviour. The no-show fee shows the kind of fix that works: change the incentives, not the agents.</p>
       </div>
 
       <div class="callout" style="margin-top:28px"><b>What's in scope.</b> The report only covers risks that arise because there are <em>multiple</em> agents. Problems that a single AI could cause in the same way, including single-agent alignment, are left to other work. It focuses on advanced, autonomous agents, and grounds each risk in real events, earlier research, or new experiments run by the authors.</div>
@@ -1312,95 +1273,46 @@ footer .wrap { display: grid; gap: 14px; }
   }
 
   /* ---------- 1. Friday-night table grab ---------- */
-  const RESTS = ["Luigi's", "Pho Real", "Curry Leaf", "Taco Stand", "Sushi Bar", "Blue Plate Diner"];
-  const PER = 4, NT = RESTS.length * PER, ND = 24;
-  const STEPS = [["4:59 pm", "Before"], ["5:00 pm", "Bots book"], ["5:30 pm", "Others call"], ["7:00 pm", "Bots cancel"], ["8:00 pm", "Dinner"]];
-  let grabStep = 4, grabTimer = null;
+  const RESTS = ["Luigi's", "Pho Real", "Curry Leaf", "Taco Stand"];
+  const NAMES = ["Sam", "Alex", "Priya", "Tom", "Mei", "Omar", "Lena", "Jo"];
   function grabModel(k, fee) {
-    // tables: index = r*PER + t
-    const holder = new Array(NT).fill(-1), held = [];
-    for (let i = 0; i < k; i++) {                      // assistants act first, fastest first
-      held[i] = [];
+    // Tables are [restaurant][seat]. The first k diners have assistants and book first.
+    const tables = RESTS.map(() => [null, null]);
+    const kept = [];
+    for (let d = 0; d < k; d++) {
+      const mine = [];
       for (let r = 0; r < RESTS.length; r++) {
-        let t = -1;
-        for (let x = 0; x < PER; x++) if (holder[r * PER + x] < 0) { t = r * PER + x; break; }
-        if (t >= 0) { holder[t] = i; held[i].push(t); if (fee) break; }
-        if (fee && held[i].length) break;
+        const t = tables[r].indexOf(null);
+        if (t >= 0) { tables[r][t] = d; mine.push([r, t]); if (fee) break; }
+      }
+      kept[d] = mine.shift();
+      mine.forEach(([r, t]) => { tables[r][t] = "empty"; });
+    }
+    const fed = new Array(NAMES.length).fill(false);
+    for (let d = 0; d < k; d++) fed[d] = !!kept[d];
+    for (let d = k; d < NAMES.length; d++) {
+      for (let r = 0; r < RESTS.length && !fed[d]; r++) {
+        const t = tables[r].indexOf(null);
+        if (t >= 0) { tables[r][t] = d; fed[d] = true; }
       }
     }
-    const heldAt5 = holder.slice();
-    const at530 = holder.slice(); const booked = new Array(ND).fill(-1);
-    for (let d = k; d < ND; d++) { const t = at530.indexOf(-1); if (t >= 0) { at530[t] = d; booked[d] = t; } }
-    const kept = []; const cancelled = [];
-    for (let i = 0; i < k; i++) { if (held[i].length) { kept.push(held[i][0]); booked[i] = held[i][0]; cancelled.push(...held[i].slice(1)); } }
-    const fed = booked.filter(t => t >= 0).length;
-    return { heldAt5, at530, booked, kept, cancelled, fed, hungry: ND - fed, empty: NT - fed,
-      heldCount: heldAt5.filter(h => h >= 0).length, humanFed: booked.slice(k).filter(t => t >= 0).length, aiHungry: held.slice(0, k).filter(h => !h.length).length };
+    return { tables, fed };
   }
-  function grabRender() {
-    const k = +$("#nAssist").value, fee = $("#grabFee").checked, m = grabModel(k, fee), st = grabStep;
-    $("#nAssistOut").textContent = k;
-    $("#grabClock").textContent = STEPS[st][0];
-    $("#grabSteps").innerHTML = STEPS.map((x, i) => `<button type="button" data-s="${i}" class="${i < st ? "done" : i === st ? "now" : ""}" aria-pressed="${i === st}">${x[0]}<br>${x[1]}</button>`).join("");
-    $$("#grabSteps button").forEach(b => b.addEventListener("click", () => { stopGrab(); grabStep = +b.dataset.s; grabRender(); }));
-    // tables
-    let h = "";
-    RESTS.forEach((name, r) => {
-      h += `<div class="rest"><span class="rest-name">${name}</span><div class="rest-tables">`;
-      for (let x = 0; x < PER; x++) {
-        const t = r * PER + x; let cls = "", lbl = "";
-        if (st === 1 && m.heldAt5[t] >= 0) { cls = "held"; lbl = "AI"; }
-        else if (st === 2) { if (m.heldAt5[t] >= 0) { cls = "held"; lbl = "AI"; } else if (m.at530[t] >= 0) { cls = "booked"; lbl = "✓"; } }
-        else if (st >= 3) { if (m.kept.includes(t)) { cls = "kept"; lbl = "✓"; } else if (m.cancelled.includes(t)) { cls = "cancelled"; lbl = "–"; } else if (m.at530[t] >= 0) { cls = "booked"; lbl = "✓"; } }
-        h += `<div class="tb ${cls}" style="transition-delay:${reduced ? 0 : (st === 1 ? t * 25 : 0)}ms">${lbl}</div>`;
-      }
-      h += "</div></div>";
-    });
-    $("#town").innerHTML = h;
-    // diners
-    let dh = "";
-    for (let d = 0; d < ND; d++) {
-      const ai = d < k; let cls = ai ? "ai" : "";
-      if (st === 2 && d >= k) cls += m.booked[d] >= 0 ? " fed" : " hungry";
-      if (st >= 3) cls += m.booked[d] >= 0 ? " fed" : " hungry";
-      if (st === 2 && ai && !m.heldAt5.includes(d)) cls += " hungry";
-      dh += `<div class="dn ${cls}" title="Diner ${d + 1}${ai ? " (has an assistant)" : ""}">${ai ? "AI" : ""}</div>`;
-    }
-    $("#diners").innerHTML = dh;
-    // story
-    const turnedAway = ND - k - m.humanFed, cancelledN = m.cancelled.length;
-    const S = [
-      `<b>Friday, 4:59 pm.</b> 24 hungry people and 24 tables across six restaurants: exactly enough for everyone. ${k === 0 ? "Nobody is using a booking assistant." : `${k === 1 ? "One person has" : `${k} people have`} an AI booking assistant.`}`,
-      k === 0 ? `<b>5:00 pm.</b> No assistants, so nothing happens yet.` :
-        fee ? `<b>5:00 pm.</b> Because no-shows cost $20, each assistant books just <b>one</b> table. ${m.heldCount} tables are taken.` :
-        `<b>5:00 pm.</b> In under a second, ${k === 1 ? "the assistant reserves" : "the assistants reserve"} a table at every restaurant "to keep options open". <b>${m.heldCount} of 24</b> tables are now held for ${k === 1 ? "one person" : `${k} people`}.${m.aiHungry ? ` The slower ${m.aiHungry} assistant${m.aiHungry > 1 ? "s" : ""} found nothing left.` : ""}`,
-      k === ND ? `<b>5:30 pm.</b> Nobody is left to phone around: everyone relied on an assistant.${m.aiHungry ? ` <b>${m.aiHungry}</b> people whose assistants were a moment too slow have no table.` : ""}` :
-      `<b>5:30 pm.</b> Everyone else phones around. ${m.humanFed} get a table.${turnedAway > 0 ? ` <b>${turnedAway}</b> hear "sorry, we're fully booked" and give up.` : " Nobody is turned away."}`,
-      cancelledN ? `<b>7:00 pm.</b> Assistant users finally choose where to eat. <b>${cancelledN}</b> reservations are cancelled. But the people who were turned away are already making toast at home.` : `<b>7:00 pm.</b> Nothing to cancel: every reserved table will be used.`,
-      `<b>8:00 pm. Dinner.</b> ${m.hungry ? `${m.fed} people eat out, ${m.hungry} go hungry, and ${m.empty} tables sit empty.` : "All 24 people eat out. No table is wasted."}`
-    ];
-    $("#grabStory").innerHTML = S[st];
-    const final = st === 4;
-    $("#sFed").textContent = final ? m.fed : "–";
-    $("#sHungry").textContent = final ? m.hungry : "–";
-    $("#sEmpty").textContent = final ? m.empty : "–";
-    $("#grabPunch").textContent = !final ? "" :
-      m.hungry === 0 ? (k === 0 ? "Without assistants, everyone eats." : "With the fee in place, every assistant still serves its user, and everyone eats.")
-      : k === 1 ? `One perfectly loyal assistant sent ${m.hungry} people home hungry.`
-      : k === ND ? `When everyone has an assistant, it becomes a speed race: the fastest ${m.fed} bots take every table and ${m.hungry} people go hungry.`
-      : `Every assistant did exactly what its owner asked. The town still sent ${m.hungry} people home hungry.`;
+  function grabRender(v) {
+    const k = v === "0" ? 0 : v === "1" ? 1 : 2, fee = v === "fee";
+    const { tables, fed } = grabModel(k, fee);
+    $("#town").innerHTML = RESTS.map((name, r) => `<div class="rest"><span class="rest-name">${name}</span><div class="rest-tables">${
+      tables[r].map(x => x === "empty" ? `<div class="tb empty">empty</div>` : `<div class="tb eat">${NAMES[x]}</div>`).join("")}</div></div>`).join("");
+    $("#diners").innerHTML = NAMES.map((n, d) => `<div class="dn ${fed[d] ? "fed" : "hungry"} ${d < k ? "ai" : ""}"><i>${d < k ? "AI" : fed[d] ? "✓" : "✕"}</i>${n}</div>`).join("");
+    const hungry = fed.filter(f => !f).length;
+    const who = k === 1 ? "Sam's assistant" : "Sam's and Alex's assistants";
+    $("#grabPunch").textContent =
+      k === 0 ? "No assistants: all 8 people eat, and every table is used." :
+      fee ? "With a no-show fee, each assistant books just one table. Everyone eats." :
+      `${who} did exactly what ${k === 1 ? "Sam" : "they were"} asked. ${hungry} people went home hungry while ${hungry} tables sat empty.`;
   }
-  function stopGrab() { if (grabTimer) { clearInterval(grabTimer); grabTimer = null; } $("#grabPlay").textContent = "▶ Play the evening"; }
-  $("#grabPlay").addEventListener("click", () => {
-    if (grabTimer) { stopGrab(); return; }
-    grabStep = 0; grabRender();
-    $("#grabPlay").textContent = "❚❚ Pause";
-    grabTimer = setInterval(() => { grabStep++; grabRender(); if (grabStep >= 4) stopGrab(); }, reduced ? 900 : 2200);
-  });
-  $("#nAssist").addEventListener("input", () => { stopGrab(); grabStep = 4; grabRender(); });
-  $("#grabFee").addEventListener("change", () => { stopGrab(); grabStep = 4; grabRender(); });
-  $$("#restaurant .presets button").forEach(b => b.addEventListener("click", () => { stopGrab(); $("#nAssist").value = b.dataset.k; grabStep = 4; grabRender(); }));
-  grabRender();
+  seg($("#grabPick"), grabRender);
+  grabRender("1");
 
   /* ---------- 2. classifier ---------- */
   const verdicts = {
