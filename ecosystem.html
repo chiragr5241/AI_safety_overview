@@ -108,11 +108,14 @@ main > .wrap { padding-top: 16px; }
 .web-tip li strong { font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; color: var(--w-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .web-tip li em { font-style: normal; font-family: var(--font-mono); font-size: .7rem; white-space: nowrap; }
 .web-tip li small { display: block; font-size: .76rem; opacity: .8; }
+.web-tip .tip-grp { display: flex; align-items: center; gap: 7px; margin: -2px 0 8px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: var(--w-muted); }
+.web-tip .tip-grp i { flex: none; width: 9px; height: 9px; border-radius: 50%; }
+.web-tip .tip-more { display: block; margin-top: 8px; font-size: .76rem; color: var(--w-muted); }
 #webStage .off { display: none; }
 #webStage.has-focus .link:not(.on) { opacity: .06; }
 #webStage.has-focus .flow:not(.on) { opacity: 0; }
 #webStage.has-focus .link.on { opacity: .95; }
-#webStage .node { cursor: pointer; transition: opacity .2s; }
+#webStage .node { cursor: help; transition: opacity .2s; }
 #webStage .node circle { stroke: var(--w-bg); stroke-width: 1.5; }
 #webStage.has-focus .node:not(.on) { opacity: .15; }
 #webStage .node.unk circle { fill-opacity: .13; stroke: currentColor; stroke-width: 1.3; stroke-dasharray: 2.6 2.4; }

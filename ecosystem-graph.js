@@ -14,7 +14,8 @@
   "use strict";
   const D = window.ECOSYSTEM, U = window.ECO_UI, svg = document.getElementById("webStage");
   if (!D || !U || !svg) return;
-  const NS = "http://www.w3.org/2000/svg", W = 1080, H = 870;
+  const NS = "http://www.w3.org/2000/svg", W = 1080, H0 = 870;
+  let H = H0;   // the plate grows taller when a measure draws bubbles too large for the usual height
   const $ = id => document.getElementById(id);
   const esc = U.esc, tidy = U.tidy;
   const el = (name, attrs, parent) => {
@@ -148,6 +149,9 @@
       when: f ? f.period : m.when, basis: f ? f.basis : m.basis, est: !!m.est, note: [m.note, f && !m.note ? f.caveat : ""].filter(Boolean).join(" "),
       url: src ? src.url : m.url, srcTitle: src ? src.title : "" };
   };
+  // The two money measures widen faster at the top, so the largest sums stand clear: a bubble is 1.5 times as wide at 100bn
+  // and twice as wide at 1tn and above as the even scale would draw it. Below 10bn nothing changes. Set by the author.
+  const lift = v => 1 + 0.5 * Math.max(0, Math.min(2, Math.log10(v) - 10));
   const MEASURES = [
     { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
       keyText: "people employed, where a figure is published; each step up in size is ten times more",
@@ -158,14 +162,14 @@
     { id: "money", pill: "Money (revenue or budget)", key: "size = yearly revenue or budget", unit: "a year", log: true,
       keyText: "money through the organisation in a year: revenue for a company, budget or funding for others; each step up in size is ten times more",
       of: moneyOf(S.money),
-      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn a year, in US dollars"]],
-      note: k => `Bubble size shows money through each actor in a year: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. It is not what the actor is worth, which is the next measure along. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Financing rounds and multi-year totals are left out. Size here is not influence.`,
+      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)) * lift(v), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn a year, in US dollars"]],
+      note: k => `Bubble size shows money through each actor in a year: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. It is not what the actor is worth, which is the next measure along. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Financing rounds and multi-year totals are left out. Size here is not influence.`,
       about: "One figure per actor, covering a year or less. Microsoft's figure of about USD 332bn, for example, is its revenue for fiscal 2026, not its value on the stock market. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings and budget documents collected on 5 October 2026. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
     { id: "worth", pill: "Money (worth)", key: "size = what it is worth", unit: "", log: true,
       keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
       of: moneyOf(S.worth),
-      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
-      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
+      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
+      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
       about: "Stock-market value for listed companies, read on 5 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
       keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
@@ -257,20 +261,31 @@
       list.forEach(n => { n.ox -= mx; n.oy -= my; });
       c.x = c.ax; c.y = c.ay;
     });
-    // groups start at their anchors and are nudged apart along the shallower overlap; a weak pull keeps them near home
-    for (let it = 0; it < 420; it++) {
-      const pull = it < 300 ? 0.035 : 0;
-      for (let i = 0; i < CLUSTERS.length; i++) for (let j = i + 1; j < CLUSTERS.length; j++) {
-        const a = CLUSTERS[i], b = CLUSTERS[j];
-        const px = a.hw + b.hw + 10 - Math.abs(a.x - b.x), py = a.hh + b.hh + 8 - Math.abs(a.y - b.y);
-        if (px <= 0 || py <= 0) continue;
-        if (px < py) { const s = (a.x < b.x ? -1 : 1) * px / 2; a.x += s; b.x -= s; } else { const s = (a.y < b.y ? -1 : 1) * py / 2; a.y += s; b.y -= s; }
+    // groups start at their anchors and are nudged apart along the shallower overlap; a weak pull keeps them near home.
+    // If they still overlap at the end, the plate is made a little taller and the groups are spread down it and tried again,
+    // each time leaning further towards moving groups up and down, where the new room is, and not sideways into the edges.
+    for (H = H0; ; H += 50) {
+      const ky = H / H0, lean = Math.pow(0.8, (H - H0) / 50);
+      let left = 0;
+      CLUSTERS.forEach(c => { c.x = c.ax; c.y = c.ay * ky; });
+      for (let it = 0; it < 420; it++) {
+        const pull = it < 300 ? 0.035 : 0;
+        left = 0;
+        for (let i = 0; i < CLUSTERS.length; i++) for (let j = i + 1; j < CLUSTERS.length; j++) {
+          const a = CLUSTERS[i], b = CLUSTERS[j];
+          const px = a.hw + b.hw + 10 - Math.abs(a.x - b.x), py = a.hh + b.hh + 8 - Math.abs(a.y - b.y);
+          if (px <= 0 || py <= 0) continue;
+          left = Math.max(left, Math.min(px, py));
+          if (px < py * lean) { const s = (a.x < b.x ? -1 : 1) * px / 2; a.x += s; b.x -= s; } else { const s = (a.y < b.y ? -1 : 1) * py / 2; a.y += s; b.y -= s; }
+        }
+        CLUSTERS.forEach(c => {
+          c.x += (c.ax - c.x) * pull; c.y += (c.ay * ky - c.y) * pull;
+          c.x = Math.max(c.hw + 6, Math.min(W - c.hw - 6, c.x)); c.y = Math.max(c.hh + 6, Math.min(H - c.hh - 6, c.y));
+        });
       }
-      CLUSTERS.forEach(c => {
-        c.x += (c.ax - c.x) * pull; c.y += (c.ay - c.y) * pull;
-        c.x = Math.max(c.hw + 6, Math.min(W - c.hw - 6, c.x)); c.y = Math.max(c.hh + 6, Math.min(H - c.hh - 6, c.y));
-      });
+      if (left < 2 || H >= 1700) break;
     }
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
     CLUSTERS.forEach(c => {
       c.nodes.forEach(n => { n.tx = c.x + n.ox; n.ty = c.y + n.oy; });
       c.titleX = c.x; c.titleY = c.y - c.hh + 14;
@@ -382,7 +397,6 @@
     const c = C.get(n.cat);
     const g = n.el = el("g", { class: "node", "data-id": n.id, style: `color:${c.color}` }, gNodes);
     n.circle = el("circle", { r: n.r.toFixed(1), fill: c.color }, g);
-    n.tip = el("title", {}, g);
     n.lab = el("g", { class: "nlabel" }, gLabels);
     n.place = () => { const t = `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`; g.setAttribute("transform", t); n.lab.setAttribute("transform", t); };
     n.place();
@@ -399,7 +413,7 @@
       } else {
         n.lines.forEach((line, i) => { el("text", { class: "lab", y: (n.R + 14 + i * 14).toFixed(1), "text-anchor": "middle" }, n.lab).textContent = line; });
       }
-      n.tip.textContent = `${n.name}: ${n.val ? n.val.text : "no figure found"}`;
+      n.el.setAttribute("aria-label", `${n.name}: ${n.val ? n.val.text : "no figure found"}`);
     });
   }
   labelNodes();
@@ -735,6 +749,19 @@
     tip.style.left = Math.max(8, Math.min(e.clientX + 14, vw - w - 8)) + "px";
     tip.style.top = (e.clientY + h + 22 > window.innerHeight ? e.clientY - h - 12 : e.clientY + 16) + "px";
   }
+  // pointing at a bubble says what it is and what its size stands for under the chosen measure
+  function nodeTipHtml(n) {
+    const c = C.get(n.cat), v = n.val, where = v ? [v.basis, v.when].filter(Boolean).join(", ") : "";
+    const fig = `<li><span>${esc(measure.pill)}<small>${v ? tidy(sentence(cap(v.text) + (v.est ? " (estimate)" : ""))) + (where ? " " + tidy(sentence(cap(where))) : "") : "Not zero, and not a sign that the organisation is small."}</small></span>${v ? `<strong>${esc(v.num)}</strong>` : "<em>no figure found</em>"}</li>`;
+    const ties = measure.id === "ties" ? "" : `<li><span>Documented ties</span><strong>${n.deg}</strong></li>`;
+    return `<b>${tidy(n.name)}</b><span class="tip-grp"><i style="background:${c.color}"></i>${tidy(c.label)} · ${tidy(n.data.subtype)}</span><ul>${fig}${ties}</ul><span class="tip-more">Select the bubble for its ties and sources.</span>`;
+  }
+  function showNodeTip(n, e) {
+    if (tipLink) { tipLink.el.classList.remove("hot"); tipLink = null; }
+    tip.innerHTML = nodeTipHtml(n);
+    tip.hidden = false;
+    moveTip(e);
+  }
   function showTip(l, e) {
     if (tipLink && tipLink !== l) tipLink.el.classList.remove("hot");
     tipLink = l;
@@ -744,16 +771,16 @@
     moveTip(e);
   }
   function hideTip() {
-    if (!tipLink) return;
-    tipLink.el.classList.remove("hot");
+    if (tip.hidden) return;
+    if (tipLink) tipLink.el.classList.remove("hot");
     tipLink = null;
     tip.hidden = true;
   }
   const linkAt = e => { const h = e.target.closest && e.target.closest(".hit"); return h ? links[+h.getAttribute("data-link")] : null; };
   svg.addEventListener("pointermove", e => {
     if (e.pointerType !== "mouse" || drag) return;
-    const l = linkAt(e);
-    if (l) showTip(l, e); else hideTip();
+    const n = nodeAt(e), l = n ? null : linkAt(e);
+    if (n) showNodeTip(n, e); else if (l) showTip(l, e); else hideTip();
   });
   svg.addEventListener("pointerleave", hideTip);
   let lastPointer = "mouse";   // click events do not carry the pointer type in every browser
