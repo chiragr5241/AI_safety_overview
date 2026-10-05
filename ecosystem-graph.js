@@ -1,12 +1,15 @@
 /* The interactive map at the top of ecosystem.html.
    Bubbles are actors, grouped by category around the frontier developers. Arrows are documented ties, drawn from -> to.
-   Bubble area counts an organisation's documented ties. It does not encode money or influence.
+   Bubble size is chosen by the reader: people employed (the default), one yearly money figure, names on a published list of
+   influential people, documented ties, or sources cited. The figures and their sources are in size-data.js. An actor with no
+   figure under the chosen measure is drawn as a small dashed ring: unknown is not shown as small, and never as zero.
    Arrows that carry money (investment, grants, donations, credits) show a small money sign moving from giver to receiver, and their
-   width is the largest single amount stated on the tie, one step wider for every tenfold increase. Amounts are never summed.
-   A money tie with no disclosed amount is drawn thin with a fainter sign: unknown is not shown as small. Every other arrow is a plain line.
+   width is the largest single amount stated on the tie, one step wider for every tenfold increase, with steps twice as large above
+   the 1m to 10m step. Amounts are never summed.
+   A money tie with no disclosed amount is drawn thin with a fainter sign. Every other arrow is a plain line.
    People are not bubbles. A named person with a role or interest in two organisations is drawn as a dotted link between them,
    and every person can be found in the search box under the map, alongside the actors and groups.
-   Needs ecosystem-data.js (window.ECOSYSTEM) and the helpers the page script exports as window.ECO_UI. */
+   Needs ecosystem-data.js (window.ECOSYSTEM), size-data.js (window.ECO_SIZE) and the helpers the page script exports as window.ECO_UI. */
 (function () {
   "use strict";
   const D = window.ECOSYSTEM, U = window.ECO_UI, svg = document.getElementById("webStage");
@@ -47,9 +50,12 @@
   const MONEY = new Set(["equity_investment", "grant_recommendation", "philanthropic_support", "philanthropic_or_public_support", "research_grant",
     "matching_offer", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits"]);
   // Amounts on the map run from tens of thousands to tens of billions, so width goes up one step per power of ten.
+  // From the 1m to 10m step upwards each step is twice as large, so the big sums stand clear of the small ones.
   const STEPS = ["under 100k", "100k to 1m", "1m to 10m", "10m to 100m", "100m to 1bn", "1bn to 10bn", "10bn or more"];
   const stepOf = v => Math.max(0, Math.min(STEPS.length - 1, Math.floor(Math.log10(v)) - 4));
-  const widthOf = step => 1.8 + 1.05 * step;
+  const STEP_UP = 2;   // the "1m to 10m" step
+  const W_TOP = 16;    // width of the top step, "10bn or more"; every other step keeps its proportion to it
+  const widthOf = step => (1.8 + 1.05 * Math.min(step, STEP_UP) + 2.1 * Math.max(0, step - STEP_UP)) * W_TOP / 12.3;
   const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5;   // from W_WIDE up, the arrowhead grows with the line
   const STILL = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const typeLabel = t => EXT_LABEL[t.type] || U.typeLabel(t.type);
@@ -95,9 +101,8 @@
   const deg = new Map();
   ORG_EDGES.forEach(e => { deg.set(e.from, (deg.get(e.from) || 0) + 1); deg.set(e.to, (deg.get(e.to) || 0) + 1); });
   const nodes = D.nodes.filter(n => !personById.has(n.id)).map(n => {
-    const d = deg.get(n.id) || 0;
     const short = SHORT[n.id] || n.name;
-    return { id: n.id, name: n.name, short, lines: wrap(short), cat: n.cat, deg: d, r: Math.max(5, 8.2 * Math.sqrt(d)), always: d >= 2, data: n };
+    return { id: n.id, name: n.name, short, lines: wrap(short), cat: n.cat, deg: deg.get(n.id) || 0, data: n };
   });
   const byId = new Map(nodes.map(n => [n.id, n]));
   const pairs = new Map();
@@ -118,29 +123,156 @@
   });
   const links = Array.from(pairs.values()).concat(Array.from(shared.values()));
   const nInter = shared.size;
+  CLUSTERS.forEach(c => { c.ax = c.x; c.ay = c.y; c.nodes = nodes.filter(n => n.cat === c.cat); });
 
-  /* ---------- layout: pack each cluster on a spiral, biggest bubble in the middle ---------- */
-  CLUSTERS.forEach(c => {
-    const list = nodes.filter(n => n.cat === c.cat).sort((a, b) => b.r - a.r || a.name.localeCompare(b.name));
-    const placed = [];
-    // labelled bubbles reserve room for the name underneath
-    const reach = n => n.always ? Math.max(n.r, Math.min(46, Math.max.apply(null, n.lines.map(l => l.length)) * 3.4)) : n.r;
-    list.forEach((n, i) => {
-      if (!i) { n.x = c.x; n.y = c.y; placed.push(n); return; }
-      for (let t = 1; t < 6000; t++) {
-        const a = t * 0.31, d = 3 + t * 0.4;
-        const x = c.x + Math.cos(a) * d, y = c.y + Math.sin(a) * d * 0.86;
-        if (placed.every(p => Math.hypot(p.x - x, (p.y - y) * 0.74) >= reach(p) + reach(n) + 6)) { n.x = x; n.y = y; placed.push(n); return; }
-      }
+  /* ---------- what a bubble's size stands for ---------- */
+  // Each measure reads one figure per actor and turns it into a radius. of(n) returns null where no figure was found.
+  // People and money run over five or more powers of ten, so there the radius goes up one even step per tenfold increase.
+  const S = window.ECO_SIZE || { fx: { USD: 1 }, people: {}, money: {}, time100: { matches: {}, groupActors: [] } };
+  const finById = new Map(D.financials.map(f => [f.id, f]));
+  const SYM = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", KRW: "₩", CNY: "CN¥" };
+  const big = v => { for (const [k, u] of [[1e12, "tn"], [1e9, "bn"], [1e6, "m"], [1e3, "k"]]) if (v >= k) return +(v / k).toPrecision(v / k >= 100 ? 3 : 2) + u; return String(v); };
+  const srcLink = (url, label) => url ? `<a href="${esc(url)}">${tidy(label || "Source")}</a>` : "";
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const sentence = s => /[.!?]$/.test(s) ? s : s + ".";
+  const T100 = S.time100;
+  const t100Date = U.fmtDate(T100.date || "");
+  function moneyOf(n) {
+    const m = S.money[n.id];
+    if (!m) return null;
+    const f = m.fin ? finById.get(m.fin) : null;
+    if (m.fin && (!f || f.amount == null)) return null;
+    const amount = f ? f.amount : m.v, cur = f ? f.currency : m.cur, src = f ? D.sources[f.sources[0]] : null;
+    return { v: amount * (m.times || 1) * (S.fx[cur] || 1), num: (SYM[cur] || cur + " ") + big(amount * (m.times || 1)), text: `${m.kind}: ${U.fmtAmount(amount, cur)}`,
+      when: f ? f.period : m.when, basis: f ? f.basis : m.basis, est: !!m.est, note: [m.note, f && !m.note ? f.caveat : ""].filter(Boolean).join(" "),
+      url: src ? src.url : m.url, srcTitle: src ? src.title : "" };
+  }
+  const MEASURES = [
+    { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
+      keyText: "people employed, where a figure is published; each step up in size is ten times more",
+      of: n => { const p = S.people[n.id]; return p ? { v: p.v, num: big(p.v), text: p.text, when: p.when, basis: p.basis, est: !!p.est, note: p.note || "", url: p.url } : null; },
+      r: v => Math.max(6, 7 + 6 * (Math.log10(v) - 1)), ticks: [[10, "10"], [1000, "1,000"], [100000, "100,000 people"]],
+      note: k => `Bubble size shows people employed, on a scale where each step is ten times more, so a bubble twice as wide is a far larger employer than twice. ${k} of the ${nodes.length} actors have a figure. A dashed ring means none was found, which does not mean the organisation is small. Figures cover whole organisations, so Amazon's includes its warehouses, and a few are outside estimates. Size here is not influence.`,
+      about: "Employees or staff, from a company filing or annual report where there is one, from the organisation's own team page for small research groups, and from a press report or an outside tracker for private companies that publish nothing. Each line says which. Groups of many organisations, and bodies such as a committee or a legislature, have no single headcount and are left as not stated." },
+    { id: "money", pill: "Money", key: "size = yearly money", unit: "a year", log: true,
+      keyText: "one yearly money figure, where a source states one; each step up in size is ten times more",
+      of: moneyOf,
+      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn, in US dollars"]],
+      note: k => `Bubble size shows one yearly money figure for each actor: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Valuations, assets under management, financing rounds and multi-year totals are left out. Size here is not influence.`,
+      about: "One figure per actor, covering a year or less. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings and budget documents collected on 5 October 2026. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
+    { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
+      keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
+      of: n => { const m = T100.matches[n.id] || []; return { v: m.length, num: String(m.length), text: m.length ? `${m.length} ${m.length === 1 ? "person" : "people"} on the list: ${m.join("; ")}` : "No one on the list", when: `published ${t100Date}`, basis: T100.title, est: false,
+        note: T100.groupActors.indexOf(n.id) >= 0 ? "This bubble is a group of organisations. Matching the name to it is this map's reading, not TIME's." : "", url: T100.url }; },
+      r: v => v ? 5 + 12 * Math.sqrt(v) : 4, ticks: [[1, "1"], [3, "3 people named"]],
+      note: k => `Influence has no agreed measure. Here bubble size counts the people TIME named on its TIME100 AI 2026 list, published ${t100Date}, whose title on the list names the organisation. That is one magazine's editorial judgement about individuals. It is not a finding of this map and it is not a ranking. ${k} of the ${T100.people} names fall on an actor shown here. A small dot means no one from that actor is on the list.`,
+      about: `TIME's editors and reporters choose 100 people each year as the most influential in AI. The 2026 list was published on ${t100Date}. A person counts towards a bubble only where the title TIME prints names that organisation, or an office inside one of the map's group actors. Most of the 100 work at organisations that are not on this map, and several large actors here have no one on the 2026 list.` },
+    { id: "ties", pill: "Documented ties", key: "size = ties", unit: "ties", log: false,
+      keyText: "number of documented ties",
+      of: n => ({ v: n.deg, num: String(n.deg), text: `${n.deg} documented ${n.deg === 1 ? "tie" : "ties"} to other organisations`, when: "", basis: "", est: false, note: "", url: "" }),
+      r: v => Math.max(5, 8.2 * Math.sqrt(v)), ticks: [[1, "1"], [10, "10"], [25, "25 ties"]],
+      note: () => "Bubble size counts documented ties. A large bubble has many ties recorded in this map, which partly reflects how much an organisation discloses. Size here is not influence.",
+      about: "Counted from the arrows on this map: the ties in the base dataset plus the ties added from the control evidence. Links through a shared person are not counted." },
+    { id: "sources", pill: "Sources cited", key: "size = sources cited", unit: "sources", log: false,
+      keyText: "number of sources this map cites for the actor",
+      of: n => { const k = (n.data.sources || []).length; return { v: k, num: String(k), text: `${k} ${k === 1 ? "source" : "sources"} cited for this actor in the base dataset`, when: "", basis: "", est: false, note: "", url: "" }; },
+      r: v => Math.max(4, 3 + 6.5 * Math.sqrt(v)), ticks: [[1, "1"], [4, "4"], [9, "9 sources"]],
+      note: () => "Bubble size counts the sources this map cites for the actor. It shows where the evidence behind the map is thick and where it is thin, not how much an actor matters.",
+      about: "Counted from the source list attached to each actor in the base dataset. An actor with few sources is one this version documents lightly." }
+  ];
+  const measureById = new Map(MEASURES.map(m => [m.id, m]));
+  const R_UNKNOWN = 7.5;
+  // ecosystem.html?size=money opens the map on that measure, so a view can be linked to
+  let measure = measureById.get(new URLSearchParams(location.search).get("size")) || MEASURES[0];
+
+  // widths come from the browser, so a name is only set inside a bubble when it really fits
+  const gMeasure = el("g", { visibility: "hidden", "aria-hidden": "true" }, svg), widths = new Map();
+  function textW(cls, str) {
+    const k = cls + "|" + str;
+    if (!widths.has(k)) {
+      const t = el("text", { class: cls }, gMeasure);
+      t.textContent = str;
+      widths.set(k, t.getComputedTextLength());
+      gMeasure.removeChild(t);
+    }
+    return widths.get(k);
+  }
+  function sizeNodes() {
+    nodes.forEach(n => {
+      const val = n.val = measure.of(n);
+      n.unk = !val;
+      n.R = val ? measure.r(val.v) : R_UNKNOWN;
+      // the name and the figure go inside when both fit across the bubble at the height they sit; a long name may be set a little smaller
+      const fits = (w, dy) => n.R > dy && w <= 2 * Math.sqrt(n.R * n.R - dy * dy) - 5;
+      n.fs = !val || n.R < 17 || !fits(textW("in num", val.num), 14) ? 0 : [12.5, 11.5, 10.5].find(f => fits(textW("in", n.short) * f / 12.5, 10)) || 0;
+      n.inside = n.fs > 0;
+      n.always = n.inside || n.deg >= 2 || (!!val && n.R >= 12);
+      // a name under the bubble reserves a box so that no neighbour is placed over it
+      n.lw = n.always && !n.inside ? Math.max.apply(null, n.lines.map(l => textW("lab", l))) : 0;
+      n.lh = n.lw ? 14 * n.lines.length + 3 : 0;
     });
-    // slide the whole cluster back inside the plate if a bubble or its name would cross the edge
-    const lo = Math.min.apply(null, list.map(n => n.x - reach(n))), hi = Math.max.apply(null, list.map(n => n.x + reach(n)));
-    const shift = lo < 10 ? 10 - lo : hi > W - 10 ? W - 10 - hi : 0;
-    list.forEach(n => { n.x += shift; });
-    c.x += shift;
-    c.nodes = list;
-    c.top = Math.min.apply(null, list.map(n => n.y - n.r));
-  });
+  }
+
+  /* ---------- layout: pack each group on a spiral, then push the groups apart until none overlap ---------- */
+  const PAD = 5;
+  const nearRect = (cx, cy, cr, x0, y0, x1, y1) => { const dx = cx - Math.max(x0, Math.min(x1, cx)), dy = cy - Math.max(y0, Math.min(y1, cy)); return dx * dx + dy * dy < (cr + PAD) * (cr + PAD); };
+  // does bubble a at (ax, ay), with its name box, touch bubble b at (bx, by) with its name box?
+  function clash(a, ax, ay, b, bx, by) {
+    if (Math.hypot(ax - bx, ay - by) < a.R + b.R + PAD + 1) return true;
+    const ra = a.lw ? [ax - a.lw / 2, ay + a.R + 1, ax + a.lw / 2, ay + a.R + 1 + a.lh] : null;
+    const rb = b.lw ? [bx - b.lw / 2, by + b.R + 1, bx + b.lw / 2, by + b.R + 1 + b.lh] : null;
+    if (ra && nearRect(bx, by, b.R, ra[0], ra[1], ra[2], ra[3])) return true;
+    if (rb && nearRect(ax, ay, a.R, rb[0], rb[1], rb[2], rb[3])) return true;
+    return !!ra && !!rb && ra[0] < rb[2] + PAD && rb[0] < ra[2] + PAD && ra[1] < rb[3] + PAD && rb[1] < ra[3] + PAD;
+  }
+  function layout() {
+    CLUSTERS.forEach(c => {
+      const list = c.nodes.slice().sort((a, b) => b.R - a.R || b.deg - a.deg || a.name.localeCompare(b.name)), placed = [];
+      list.forEach((n, i) => {
+        n.ox = 0; n.oy = 0;
+        if (i) for (let t = 1; t < 9000; t++) {
+          const a = t * 0.33, d = 2 + t * 0.42, x = Math.cos(a) * d * 1.12, y = Math.sin(a) * d * 0.9;
+          if (placed.every(p => !clash(n, x, y, p, p.ox, p.oy))) { n.ox = x; n.oy = y; break; }
+        }
+        placed.push(n);
+      });
+      // the box around the group: every bubble and name, with the group's title on top
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      list.forEach(n => {
+        const hw = Math.max(n.R, n.lw / 2);
+        x0 = Math.min(x0, n.ox - hw); x1 = Math.max(x1, n.ox + hw); y0 = Math.min(y0, n.oy - n.R); y1 = Math.max(y1, n.oy + n.R + (n.lh ? n.lh + 1 : 0));
+      });
+      const mx = (x0 + x1) / 2;
+      c.hw = Math.max((x1 - x0) / 2, c.tw / 2) + 4;
+      y0 -= 24;   // room for the title
+      const my = (y0 + y1) / 2;
+      c.hh = (y1 - y0) / 2 + 2;
+      list.forEach(n => { n.ox -= mx; n.oy -= my; });
+      c.x = c.ax; c.y = c.ay;
+    });
+    // groups start at their anchors and are nudged apart along the shallower overlap; a weak pull keeps them near home
+    for (let it = 0; it < 420; it++) {
+      const pull = it < 300 ? 0.035 : 0;
+      for (let i = 0; i < CLUSTERS.length; i++) for (let j = i + 1; j < CLUSTERS.length; j++) {
+        const a = CLUSTERS[i], b = CLUSTERS[j];
+        const px = a.hw + b.hw + 10 - Math.abs(a.x - b.x), py = a.hh + b.hh + 8 - Math.abs(a.y - b.y);
+        if (px <= 0 || py <= 0) continue;
+        if (px < py) { const s = (a.x < b.x ? -1 : 1) * px / 2; a.x += s; b.x -= s; } else { const s = (a.y < b.y ? -1 : 1) * py / 2; a.y += s; b.y -= s; }
+      }
+      CLUSTERS.forEach(c => {
+        c.x += (c.ax - c.x) * pull; c.y += (c.ay - c.y) * pull;
+        c.x = Math.max(c.hw + 6, Math.min(W - c.hw - 6, c.x)); c.y = Math.max(c.hh + 6, Math.min(H - c.hh - 6, c.y));
+      });
+    }
+    CLUSTERS.forEach(c => {
+      c.nodes.forEach(n => { n.tx = c.x + n.ox; n.ty = c.y + n.oy; });
+      c.titleX = c.x; c.titleY = c.y - c.hh + 14;
+    });
+  }
+  CLUSTERS.forEach(c => { c.titleText = `${c.label} · ${c.nodes.length}`; c.tw = textW("ctitle", c.titleText); });
+  sizeNodes();
+  layout();
+  nodes.forEach(n => { n.x = n.tx; n.y = n.ty; n.r = n.R; });
 
   /* ---------- drawing ---------- */
   const defs = el("defs", {}, svg);
@@ -233,29 +365,55 @@
   }
 
   CLUSTERS.forEach(c => {
-    c.title = el("text", { class: "ctitle", x: c.x, y: Math.max(16, c.top - 12), "text-anchor": "middle", fill: c.color, "data-cat": c.cat }, gTitles);
-    c.title.textContent = `${c.label} · ${c.nodes.length}`;
-    // keep a long group name inside the plate
-    const half = c.title.getComputedTextLength() / 2 + 10;
-    c.title.setAttribute("x", Math.max(half, Math.min(W - half, c.x)).toFixed(1));
+    c.title = el("text", { class: "ctitle", x: c.titleX.toFixed(1), y: c.titleY.toFixed(1), "text-anchor": "middle", fill: c.color, "data-cat": c.cat }, gTitles);
+    c.title.textContent = c.titleText;
   });
 
   nodes.forEach(n => {
     const c = C.get(n.cat);
-    const g = n.el = el("g", { class: "node", "data-id": n.id }, gNodes);
-    el("circle", { r: n.r.toFixed(1), fill: c.color }, g);
-    const inside = n.r >= 20 && n.short.length * 6.2 <= 2 * n.r - 4;
-    n.lab = el("g", { class: "nlabel" + (n.always || inside ? " always" : "") }, gLabels);
-    if (inside) {
-      el("text", { class: "in", y: -1, "text-anchor": "middle" }, n.lab).textContent = n.short;
-      el("text", { class: "in num", y: 13, "text-anchor": "middle" }, n.lab).textContent = n.deg;
-    } else {
-      n.lines.forEach((line, i) => { el("text", { class: "lab", y: (n.r + 14 + i * 14).toFixed(1), "text-anchor": "middle" }, n.lab).textContent = line; });
-    }
+    const g = n.el = el("g", { class: "node", "data-id": n.id, style: `color:${c.color}` }, gNodes);
+    n.circle = el("circle", { r: n.r.toFixed(1), fill: c.color }, g);
+    n.tip = el("title", {}, g);
+    n.lab = el("g", { class: "nlabel" }, gLabels);
     n.place = () => { const t = `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`; g.setAttribute("transform", t); n.lab.setAttribute("transform", t); };
     n.place();
-    el("title", {}, g).textContent = `${n.name}: ${n.deg} documented ${n.deg === 1 ? "tie" : "ties"}`;
   });
+  // the name sits inside a bubble with its figure when both fit, and underneath when they do not
+  function labelNodes() {
+    nodes.forEach(n => {
+      n.el.classList.toggle("unk", n.unk);
+      n.lab.textContent = "";
+      n.lab.classList.toggle("always", n.always);
+      if (n.inside) {
+        el("text", { class: "in", y: -1, "text-anchor": "middle", style: n.fs < 12.5 ? `font-size:${n.fs}px` : "" }, n.lab).textContent = n.short;
+        el("text", { class: "in num", y: 13, "text-anchor": "middle" }, n.lab).textContent = n.val.num;
+      } else {
+        n.lines.forEach((line, i) => { el("text", { class: "lab", y: (n.R + 14 + i * 14).toFixed(1), "text-anchor": "middle" }, n.lab).textContent = line; });
+      }
+      n.tip.textContent = `${n.name}: ${n.val ? n.val.text : "no figure found"}`;
+    });
+  }
+  labelNodes();
+
+  // move every bubble, title and arrow from where it is to where the layout now puts it
+  let frame = 0;
+  function settle(ms) {
+    cancelAnimationFrame(frame);
+    if (STILL || document.hidden) ms = 0;
+    const from = nodes.map(n => [n.x, n.y, n.r]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
+    const step = now => {
+      const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = 1 - Math.pow(1 - k, 3);
+      nodes.forEach((n, i) => {
+        n.x = from[i][0] + (n.tx - from[i][0]) * e; n.y = from[i][1] + (n.ty - from[i][1]) * e; n.r = from[i][2] + (n.R - from[i][2]) * e;
+        n.circle.setAttribute("r", n.r.toFixed(1));
+        n.place();
+      });
+      CLUSTERS.forEach((c, i) => { c.title.setAttribute("x", (tf[i][0] + (c.titleX - tf[i][0]) * e).toFixed(1)); c.title.setAttribute("y", (tf[i][1] + (c.titleY - tf[i][1]) * e).toFixed(1)); });
+      links.forEach(l => l.draw());
+      if (k < 1) frame = requestAnimationFrame(step);
+    };
+    step(t0);
+  }
 
   /* ---------- state ---------- */
   const state = { sel: null, hover: null, fam: "all" };
@@ -325,6 +483,7 @@
           <span class="web-eyebrow" style="color:${c.color}">${tidy(c.label)} · ${tidy(n.data.subtype)} · ${tidy(n.data.country)}</span>
           <h2>${tidy(n.name)}</h2>
           <p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>
+          ${measure.id === "ties" ? "" : `<p class="wp-small"><span class="wp-lbl">Bubble size · ${esc(measure.pill)}</span>${valueLine(n)}</p>`}
           <p class="wp-small">${n.deg} documented ${n.deg === 1 ? "tie" : "ties"} to other organisations.${filt} <a href="#a-${esc(n.id)}">Open the full profile</a></p>
         </div>
         <div class="wp-ties">${tieBlock("Arrows going out to", out, true)}${tieBlock("Arrows coming in from", inc, false)}${here.length ? `<div><h3>People with a role or interest here (${here.length})</h3><ul>${here.map(r => roleItem(r, true)).join("")}</ul></div>` : ""}</div>`;
@@ -332,7 +491,7 @@
       const c = C.get(s.id), ids = new Set(c.nodes.map(n => n.id));
       const out = count(t => ids.has(t.from) && !ids.has(t.to) && inFam(t)), inc = count(t => !ids.has(t.from) && ids.has(t.to) && inFam(t)), within = count(t => ids.has(t.from) && ids.has(t.to) && inFam(t));
       const about = document.querySelector(`#cat-${c.cat} .oneline`);
-      const top = c.nodes.filter(n => n.deg).slice(0, 8);
+      const top = c.nodes.filter(n => n.deg).sort((a, b) => b.deg - a.deg || a.name.localeCompare(b.name)).slice(0, 8);
       panel.innerHTML = `<div class="wp-main">
           <span class="web-eyebrow" style="color:${c.color}">Group · ${c.nodes.length} actors</span>
           <h2>${tidy(c.label)}</h2>
@@ -376,6 +535,64 @@
     refresh();
     renderPanel();
   }
+  const setText = (id, v) => { const x = $(id); if (x) x.textContent = v; };
+  /* ---------- the size selector: what a bubble's size stands for ---------- */
+  const sizePills = $("webSize"), sizeScale = $("webSizeScale"), sizeAbout = $("webSizeAbout");
+  // one actor's figure in words, with when, where from and a link
+  function valueLine(n) {
+    const v = n.val;
+    if (!v) return "No figure found for this measure. That is not zero, and it does not mean the organisation is small.";
+    return `${tidy(sentence(cap(v.text) + (v.est ? " (estimate)" : "")))} ${tidy(cap([v.basis, v.when].filter(Boolean).join(", ")))}${v.basis || v.when ? ". " : ""}${v.note ? tidy(sentence(v.note)) + " " : ""}${srcLink(v.url, v.srcTitle || "Source")}`;
+  }
+  // the scale is drawn at the size the map is shown, so its circles match the bubbles
+  function drawScale() {
+    if (!sizeScale) return;
+    const k = svg.getBoundingClientRect().width / W || 1;
+    const dot = (r, label, cls) => { const d = Math.max(4, 2 * r * k + 3); return `<li><svg width="${d.toFixed(1)}" height="${d.toFixed(1)}" viewBox="${-d / 2} ${-d / 2} ${d} ${d}" aria-hidden="true"><circle r="${(r * k).toFixed(1)}" class="${cls || ""}"/></svg>${esc(label)}</li>`; };
+    sizeScale.innerHTML = measure.ticks.map(t => dot(measure.r(t[0]), t[1])).join("")
+      + (measure.id === "influence" ? dot(measure.r(0), "no one named") : "")
+      + (nodes.some(n => n.unk) ? dot(R_UNKNOWN, "no figure found", "unk") : "");
+  }
+  function renderSize() {
+    const known = nodes.filter(n => !n.unk), k = measure.id === "influence" ? known.reduce((a, n) => a + n.val.v, 0) : known.length;
+    Array.from(sizePills.querySelectorAll("button")).forEach(b => b.setAttribute("aria-pressed", b.dataset.v === measure.id ? "true" : "false"));
+    setText("webSizeKey", measure.key);
+    setText("webSizeKeyFull", measure.keyText);
+    setText("webSizeNote", measure.note(k));
+    drawScale();
+    if (!sizeAbout) return;
+    const listed = measure.id === "ties" || measure.id === "sources" ? [] : known.filter(n => n.val.v > 0), missing = nodes.filter(n => n.unk);
+    sizeAbout.innerHTML = `<p class="web-sub">${tidy(measure.about)}${measure.id === "influence" ? ` ${srcLink(T100.url, "The list at TIME")}` : ""}</p>`
+      + (listed.length ? `<div class="web-sizelist">${CLUSTERS.filter(c => listed.some(n => n.cat === c.cat)).map(c =>
+        `<div><h3 style="color:${c.color}">${tidy(c.label)}</h3><ul>${listed.filter(n => n.cat === c.cat).sort((a, b) => a.name.localeCompare(b.name)).map(n =>
+          `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${valueLine(n)}</span></li>`).join("")}</ul></div>`).join("")}</div>` : "")
+      + (missing.length ? `<p class="note"><b>No figure found for ${missing.length} actors:</b> ${missing.map(n => tidy(n.short)).join(", ")}.</p>` : "");
+  }
+  function setSize(id, ms) {
+    measure = measureById.get(id) || measure;
+    sizeNodes();
+    layout();
+    labelNodes();
+    settle(ms);
+    renderSize();
+    renderPanel();
+  }
+  if (sizePills) {
+    sizePills.innerHTML = MEASURES.map(m => `<button type="button" data-v="${m.id}" aria-pressed="${m === measure}">${esc(m.pill)}</button>`).join("");
+    sizePills.addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.v !== measure.id) setSize(b.dataset.v, 650); });
+  }
+  if (sizeAbout) sizeAbout.addEventListener("click", e => { const b = e.target.closest("button[data-node]"); if (b) { select({ type: "node", id: b.dataset.node }, true); svg.scrollIntoView({ block: "center", behavior: STILL ? "auto" : "smooth" }); } });
+  if (window.ResizeObserver) new ResizeObserver(drawScale).observe(svg);
+  // text is measured to lay the map out, so lay it out again once the web fonts have arrived
+  const probe = () => textW("in", "OpenAI Anthropic") + textW("lab", "Coefficient Giving");
+  const before = probe();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+    widths.clear();
+    if (Math.abs(probe() - before) < 0.5) return;
+    CLUSTERS.forEach(c => { c.tw = textW("ctitle", c.titleText); });
+    setSize(measure.id, 0);
+  });
+
   const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests" };
   lens.innerHTML = [{ id: "all", label: "All ties" }].concat(FAMS).map(f =>
     `<button type="button" data-v="${f.id}" aria-pressed="${f.id === "all"}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? ORG_EDGES.length + nInter : f.id === "people" ? nInter : count(t => famOf(t) === f.id)}</span></button>`).join("");
@@ -457,10 +674,9 @@
     const o = e.target.closest('[role="option"]');
     if (o && e.pointerType === "mouse" && +o.dataset.i !== active) setActive(+o.dataset.i, false);
   });
-  const setText = (id, v) => { const x = $(id); if (x) x.textContent = v; };
   const scale = $("webScale");
   if (scale) {
-    const row = (w, label, faint) => `<li><svg viewBox="0 0 34 14" aria-hidden="true"><path d="M1 7h32" stroke-width="${w}"/>${faint ? '<text x="17" y="11.4" text-anchor="middle" class="k-sign faint">$</text>' : ""}</svg><span>${label}</span></li>`;
+    const row = (w, label, faint) => `<li><svg viewBox="0 0 34 18" aria-hidden="true"><path d="M1 9h32" stroke-width="${(+w).toFixed(1)}"/>${faint ? '<text x="17" y="13.4" text-anchor="middle" class="k-sign faint">$</text>' : ""}</svg><span>${label}</span></li>`;
     const used = Array.from(new Set(ORG_EDGES.filter(t => MONEY.has(t.type) && t.amount != null).map(t => stepOf(t.amount)))).sort((a, b) => a - b);
     scale.innerHTML = row(W_UNKNOWN, "amount not disclosed", true) + used.map(st => row(widthOf(st), STEPS[st])).join("");
   }
@@ -594,5 +810,6 @@
   });
 
   refresh();
+  renderSize();
   renderPanel();
 })();

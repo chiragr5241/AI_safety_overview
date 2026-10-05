@@ -115,7 +115,23 @@ main > .wrap { padding-top: 16px; }
 #webStage .node { cursor: pointer; transition: opacity .2s; }
 #webStage .node circle { stroke: var(--w-bg); stroke-width: 1.5; }
 #webStage.has-focus .node:not(.on) { opacity: .15; }
+#webStage .node.unk circle { fill-opacity: .13; stroke: currentColor; stroke-width: 1.3; stroke-dasharray: 2.6 2.4; }
 #webStage .node.sel circle { stroke: #fff; stroke-width: 3; }
+.web-sizer { border-top: 0; padding-top: 0; }
+.web-sizer .pills { flex: 0 1 auto; }
+.web-sizekey { list-style: none; margin: 0 0 0 auto; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; font-family: var(--font-mono); font-size: .74rem; color: var(--w-muted); }
+.web-sizekey li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.web-sizekey svg { flex: none; overflow: visible; }
+.web-sizekey circle { fill: var(--w-muted); }
+.web-sizekey circle.unk { fill: var(--w-muted); fill-opacity: .13; stroke: var(--w-muted); stroke-width: 1.3; stroke-dasharray: 2.6 2.4; }
+.web-sizemore { flex: 1 1 100%; margin-top: -4px; }
+.web-sizelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 14px 28px; }
+.web-sizelist h3 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.web-sizelist ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.web-sizelist li { display: grid; padding: 6px 0; border-bottom: 1px solid var(--w-line); }
+.web-sizelist li span { font-size: .8rem; line-height: 1.4; color: var(--w-muted); padding-left: 18px; }
+.web-sizemore .note { font-size: .84rem; color: var(--w-muted); }
+.web-sizemore .note b { color: var(--w-ink); font-weight: 500; }
 #webStage .nlabel { display: none; pointer-events: none; transition: opacity .2s; }
 #webStage .nlabel.always, #webStage.has-focus .nlabel.on { display: block; }
 #webStage.has-focus .nlabel:not(.on) { opacity: .15; }
@@ -151,7 +167,7 @@ main > .wrap { padding-top: 16px; }
 .web-scale { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
 .web-scale ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font-mono); font-size: .74rem; color: var(--w-muted); }
 .web-scale li { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
-.web-scale svg { width: 34px; height: 14px; fill: var(--w-ink); stroke: var(--w-ink); }
+.web-scale svg { width: 34px; height: 18px; fill: var(--w-ink); stroke: var(--w-ink); }
 .web-scale .note { font-size: .84rem; color: var(--w-muted); flex: 1 1 100%; }
 .web-jump i.who { border-radius: 2px; width: 10px; height: 2px; align-self: center; border-top: 2px dotted #DCE4EA; background: none; }
 .wp-ties.one { grid-template-columns: minmax(0, 1fr); }
@@ -413,7 +429,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <h1 id="webTitle">Who has a <span>stake</span> in AI safety?</h1>
         <p class="web-sub">Bubbles are organisations, arrows are documented ties from giver to receiver, and a moving $ marks money on the way.</p>
         <ul class="web-legend" aria-label="Map legend">
-          <li><svg viewBox="0 0 26 14" aria-hidden="true"><circle cx="5" cy="9" r="3"/><circle cx="17" cy="7" r="6"/></svg>size = ties</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><circle cx="5" cy="9" r="3"/><circle cx="17" cy="7" r="6"/></svg><span id="webSizeKey">size = people employed</span></li>
           <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7L25 3.6V10.4Z" stroke="none"/></svg>width = money, &times;10 a step</li>
           <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h24" stroke-width="1.4"/><text x="13" y="11.4" text-anchor="middle" class="k-sign">$</text></svg>money moving</li>
           <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h24" stroke-width="1"/><text x="13" y="11.4" text-anchor="middle" class="k-sign faint">$</text></svg>amount not stated</li>
@@ -427,7 +443,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
           <div class="web-more-body">
             <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests or lobbies to the party on the receiving end. People are not bubbles: a dotted link joins two organisations that share a named person.</p>
             <ul class="web-key" aria-label="How to read the map">
-              <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> number of documented ties</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> <span id="webSizeKeyFull">people employed, where a figure is published; each step up in size is ten times more</span>. Change it with the buttons above the map</span></li>
               <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 6h24" stroke-width="1.6"/><path d="M2 14h24" stroke-width="4.5"/><path d="M25 2l8 4-8 4zM25 9l8 5-8 5z" stroke="none"/></svg><span><b>Arrow width</b> the money stated on that tie; each step wider is ten times more</span></li>
               <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="2"/><path d="M24 5l9 5-9 5z" stroke="none"/><text x="12" y="14.5" text-anchor="middle" class="k-sign">$</text></svg><span><b>Moving money sign</b> money flows along this arrow, from giver to receiver</span></li>
               <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="1.2"/><path d="M24 5l9 5-9 5z" stroke="none"/><text x="12" y="14.5" text-anchor="middle" class="k-sign faint">$</text></svg><span><b>Faint money sign</b> money moves, but no amount is disclosed</span></li>
@@ -448,8 +464,17 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <span class="web-eyebrow" id="webLensLabel">Show one kind of tie</span>
         <div class="pills needs-data" role="group" aria-labelledby="webLensLabel" id="webLens"></div>
       </div>
+      <div class="web-tools web-sizer">
+        <span class="web-eyebrow" id="webSizeLabel">Size bubbles by</span>
+        <div class="pills needs-data" role="group" aria-labelledby="webSizeLabel" id="webSize"></div>
+        <ul class="web-sizekey" id="webSizeScale" aria-label="Bubble size scale"></ul>
+        <details class="web-more web-sizemore">
+          <summary>Where these sizes come from</summary>
+          <div class="web-more-body" id="webSizeAbout"></div>
+        </details>
+      </div>
       <div class="web-scroll">
-        <svg id="webStage" viewBox="0 0 1080 870" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by documented ties, with further ties added from the control evidence. Twelve named people appear as dotted links between the organisations they connect and can be found with the search under the map. Arrows that carry money show a moving money sign and are wider for larger stated amounts. The same information is in the lists and tables below."></svg>
+        <svg id="webStage" viewBox="0 0 1080 870" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by documented ties, with further ties added from the control evidence. Twelve named people appear as dotted links between the organisations they connect and can be found with the search under the map. Bubble size follows the measure chosen above the map: people employed, yearly money, names on the TIME100 AI 2026 list, documented ties or sources cited. Arrows that carry money show a moving money sign and are wider for larger stated amounts. The same information is in the lists and tables below."></svg>
       </div>
       <div class="web-under">
         <p class="web-blurb" id="webBlurb"></p>
@@ -464,7 +489,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">20</b> ties from the control evidence · <b id="nExtPeople">12</b> named people, shown as dotted links and not as bubbles · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. Arrow width compares unlike kinds of money: a conditional commitment, a recommended grant, a paid grant and the value of compute credits. Select a bubble to see which kind each one is. A thin arrow with a faint money sign has no disclosed amount, which does not mean the amount is small. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">20</b> ties from the control evidence · <b id="nExtPeople">12</b> named people, shown as dotted links and not as bubbles · public-source evidence through 4 October 2026.</span> <span id="webSizeNote">Bubble size shows people employed, on a scale where each step is ten times more. A dashed ring means no figure was found, which does not mean the organisation is small. Size here is not influence.</span> Position is a layout choice. Arrow width compares unlike kinds of money: a conditional commitment, a recommended grant, a paid grant and the value of compute credits. Select a bubble to see which kind each one is. A thin arrow with a faint money sign has no disclosed amount, which does not mean the amount is small. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
     </figure>
 
     <div class="readrow">
@@ -1420,6 +1445,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 
 <script src="ecosystem-data.js"></script>
 <script src="control-data.js"></script>
+<script src="size-data.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
