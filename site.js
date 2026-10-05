@@ -48,7 +48,7 @@
   let activeIdx = -2;
   function onScroll() {
     const h = document.documentElement;
-    if (progress) progress.style.width = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100).toFixed(1) + "%";
+    if (progress) progress.style.transform = "scaleX(" + (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)).toFixed(4) + ")";
     let idx = -1;
     sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 160) idx = i; });
     if (idx === activeIdx) return;

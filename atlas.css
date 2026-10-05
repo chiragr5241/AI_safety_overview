@@ -1,0 +1,137 @@
+/* Atlas shell for the risks guide (multi-agent-risks.html): the risk-path rail, chapter openers,
+   specimens and risk dossiers. Tokens come from the page's inline styles; nothing here redefines them.
+   Everything that depends on atlas.js is scoped to html.atlas-on, so the page still reads without it. */
+
+/* ---------- Risk-path rail (wide screens). Below 1180px the top bar's own chapter path and Contents menu stay in charge. ---------- */
+.rail { display: none; }
+@media (min-width: 1180px) {
+  html.atlas-on:has(#guideView:not([hidden])) .topbar .wrap,
+  html.atlas-on:has(#guideView:not([hidden])) .sitebar-in,
+  html.atlas-on #guideView > .wrap { max-width: 1320px; }
+  html.atlas-on #guideView > .wrap { display: grid; grid-template-columns: 172px minmax(0, 1fr); column-gap: 52px; }
+  html.atlas-on #guideView > .wrap > .hero { grid-column: 1 / -1; }
+  html.atlas-on #guideView > .wrap > section.chapter { grid-column: 2; min-width: 0; }
+  /* the rail owns the numbered chapters here, so the top bar keeps only its two reference links */
+  html.atlas-on:has(#guideView:not([hidden])) .chapters a:has(.n) { display: none; }
+  html.atlas-on:has(#guideView:not([hidden])) .chapters { justify-content: flex-end; mask-image: none; }
+  html.atlas-on:has(#guideView:not([hidden])) .chapters .primer-link { margin-left: 0; }
+
+  html.atlas-on .rail { display: block; grid-column: 1; grid-row: 2 / span 7; align-self: start; position: sticky; top: 132px; max-height: calc(100dvh - 156px); overflow-y: auto; scrollbar-width: none; padding: 56px 0 24px; }
+  html.atlas-on .rail::-webkit-scrollbar { display: none; }
+}
+.rail-path { position: relative; }
+.rail-path ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+/* the line the stops sit on, and the part of it already walked */
+.rail-line, .rail-fill { position: absolute; left: 13px; width: 2px; border-radius: 1px; pointer-events: none; }
+.rail-line { background: color-mix(in srgb, var(--line-strong) 55%, var(--line)); }
+.rail-fill { background: var(--accent); transform: scaleY(0); transform-origin: 50% 0; }
+.rail-stop { position: relative; }
+.rail-stop > a { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 40px; text-decoration: none; color: var(--muted); font-family: var(--font-display); font-weight: 500; font-size: .95rem; line-height: 1.2; border-radius: 8px; transition: color .15s; }
+.rail-stop > a:hover { color: var(--ink); }
+.rail-n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-size: .74rem; font-variant-numeric: tabular-nums; line-height: 1; background: var(--bg); border: 1.5px solid var(--line-strong); color: var(--muted); transition: background-color .2s, border-color .2s, color .2s; }
+.rail-stop.done .rail-n { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
+.rail-stop.active > a { color: var(--ink); font-weight: 700; }
+.rail-stop.active .rail-n { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+/* the parts of the chapter being read: only the active stop opens its list */
+.rail-subs { list-style: none; margin: 0; padding: 0 0 0 40px; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s cubic-bezier(.16, 1, .3, 1); }
+.rail-stop.active .rail-subs { grid-template-rows: 1fr; }
+.rail-subs > div { overflow: hidden; display: grid; }
+.rail-stop:not(.active) .rail-subs > div { visibility: hidden; }
+.rail-subs a { display: grid; grid-template-columns: 9px minmax(0, 1fr); gap: 9px; align-items: baseline; padding: 5px 0; font-family: var(--font-display); font-weight: 500; font-size: .82rem; line-height: 1.25; color: var(--muted); text-decoration: none; transition: color .15s; }
+.rail-subs a:first-child { padding-top: 2px; }
+.rail-subs a:last-child { padding-bottom: 12px; }
+.rail-subs a:hover { color: var(--ink); }
+.rail-subs a::before { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--k, var(--accent)); translate: 0 1px; transition: background-color .2s; }
+.rail-subs a[aria-current] { color: var(--ink); font-weight: 700; }
+.rail-subs a[aria-current]::before { background: var(--k, var(--accent)); }
+.rail-subs a[href="#mis"] { --k: var(--mis); }
+.rail-subs a[href="#con"] { --k: var(--con); }
+.rail-subs a[href="#col"] { --k: var(--col); }
+
+/* ---------- Chapter opener: numeral, headline and introduction on the left, the chapter's specimen on the right ---------- */
+.chapter-head.opener { max-width: none; margin-bottom: 36px; display: grid; gap: 28px 56px; align-items: start; }
+@media (min-width: 900px) {
+  .chapter-head.opener { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .chapter-head.opener:not(:has(.specimen:not([hidden]))) { grid-template-columns: minmax(0, 46rem); }
+}
+section.chapter:has(> .opener) { padding-block: 72px 32px; }
+.opener-text { display: grid; gap: 18px; align-content: start; }
+.opener-num { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 6.4vw, 4.6rem); line-height: .82; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--accent); }
+.opener h2 { font-size: clamp(2rem, 4.6vw, 3.1rem); letter-spacing: -0.025em; line-height: 1.04; max-width: 17em; }
+.opener-lede { max-width: var(--measure); font-size: 1.06rem; }
+.opener .local-nav { margin-top: 2px; }
+
+/* ---------- Specimen: one drawn system per chapter. It sits on the page ground, with a short rule and caption beneath. ---------- */
+.specimen { margin: 0; display: grid; gap: 14px; max-width: 26rem; justify-self: end; width: 100%; }
+@media (max-width: 899px) { .specimen { justify-self: start; } }
+.specimen svg { display: block; width: 100%; height: auto; overflow: visible; }
+.specimen figcaption { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line-strong); font-size: .86rem; line-height: 1.45; color: var(--muted); }
+.specimen-tag { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.specimen-tag b { font-weight: 500; color: var(--accent); }
+
+.sp-ink { stroke: var(--ink); } .sp-rule { stroke: var(--line-strong); } .sp-acc { stroke: var(--accent); }
+.sp-mis { stroke: var(--mis); } .sp-con { stroke: var(--con); } .sp-col { stroke: var(--col); }
+.specimen svg :is(line, path, circle, rect) { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.specimen svg .sp-thin { stroke-width: 1; }
+.specimen svg .f-bg { fill: var(--bg); } .specimen svg .f-ink { fill: var(--ink); } .specimen svg .f-acc { fill: var(--accent); }
+.specimen svg .f-soft { fill: var(--accent-soft); } .specimen svg .f-mis { fill: var(--mis); } .specimen svg .f-con { fill: var(--con); } .specimen svg .f-col { fill: var(--col); }
+.specimen svg .f-none { stroke: none; }
+.specimen svg .sp-dashed { stroke-dasharray: 3 4; }
+.specimen svg text { font-family: var(--font-mono); font-size: 11px; letter-spacing: .01em; fill: var(--muted); }
+.specimen svg text.sp-name { font-family: var(--font-display); font-weight: 700; font-size: 12.5px; letter-spacing: 0; fill: var(--ink); }
+
+/* Motion: claims and hidden messages travel along their lines; a cascade lights nodes hop by hop.
+   The resting drawing (no animation) is the frame a reduced-motion reader sees, so it has to explain itself. */
+.specimen svg .sp-flow { stroke-dasharray: 3 5; animation: sp-flow 1.4s linear infinite; }
+.specimen svg .sp-lit { animation: sp-lit 6.4s cubic-bezier(.16, 1, .3, 1) infinite; animation-delay: calc(var(--hop, 0) * .42s); }
+.specimen svg .sp-beat { transform-box: fill-box; transform-origin: center; animation: sp-beat 2.8s cubic-bezier(.16, 1, .3, 1) infinite; }
+.specimen:not(.in-view) svg * { animation-play-state: paused; }
+@keyframes sp-flow { to { stroke-dashoffset: -16; } }
+@keyframes sp-lit { 0% { fill: var(--bg); } 7%, 58% { fill: var(--accent); } 72%, 100% { fill: var(--bg); } }
+@keyframes sp-beat { 0% { transform: scale(1); opacity: .9; } 70%, 100% { transform: scale(2.1); opacity: 0; } }
+
+/* Specimen 04 is drawn by atlas.js from the case matrix below it, and follows the reader's filter and selection. */
+.specimen svg .sp-row { transition: opacity .2s; }
+.specimen svg .sp-row.dim { opacity: .22; }
+.specimen svg .sp-band { fill: var(--accent-soft); stroke: none; opacity: 0; transition: opacity .2s; }
+.specimen svg .sp-row.picked .sp-band { opacity: 1; }
+.specimen svg .sp-row.picked text { fill: var(--ink); }
+.specimen svg .sp-none { fill: var(--line-strong); stroke: none; }
+
+/* ---------- Risk dossier: four measures per risk, on a three-step scale. The ratings are the guide's own reading. ---------- */
+.dossier { margin: 0 0 40px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line-strong); }
+.dossier table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.dossier caption { caption-side: bottom; text-align: left; padding: 10px 0 12px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .02em; line-height: 1.5; color: var(--muted); }
+.dossier th, .dossier td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; }
+.dossier thead th { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--ink); padding-bottom: 12px; width: 19%; }
+.dossier thead th:first-child { width: 24%; font-size: 1.08rem; }
+.dossier thead th small { display: block; margin-top: 3px; font-family: var(--font-body); font-weight: 400; font-size: .78rem; line-height: 1.35; color: var(--muted); max-width: 15em; }
+.dossier tbody tr { border-top: 1px solid var(--line); }
+.dossier tbody th { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.25; }
+.dossier tbody th a { color: var(--ink); text-decoration-color: var(--k, var(--accent)); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.dossier tbody th a:hover { color: var(--k-ink, var(--accent)); }
+.dossier tr.mis { --k: var(--mis); --k-ink: var(--mis-ink); }
+.dossier tr.con { --k: var(--con); --k-ink: var(--con-ink); }
+.dossier tr.col { --k: var(--col); --k-ink: var(--col); }
+.dossier td { font-family: var(--font-display); font-weight: 500; white-space: nowrap; }
+.dossier td small { display: block; margin-top: 4px; white-space: normal; font-family: var(--font-body); font-weight: 400; font-size: .8rem; line-height: 1.4; color: var(--muted); max-width: 17em; }
+/* three pips; the number filled is the level, and the word beside them says the same thing */
+.pips { display: inline-flex; gap: 3px; margin-right: 9px; vertical-align: 1px; }
+.pips i { width: 9px; height: 9px; border-radius: 2px; border: 1.5px solid var(--k, var(--accent)); }
+.pips[data-level="1"] i:nth-child(-n+1), .pips[data-level="2"] i:nth-child(-n+2), .pips[data-level="3"] i { background: var(--k, var(--accent)); }
+
+@media (max-width: 760px) {
+  .dossier tbody, .dossier tr, .dossier caption { display: block; }
+  .dossier table { display: flex; flex-direction: column; }
+  .dossier caption { order: 1; }
+  .dossier thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .dossier tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; padding: 16px 0; }
+  .dossier tbody tr:first-child { border-top: 0; }
+  .dossier tbody th { grid-column: 1 / -1; padding: 0; font-size: 1.08rem; }
+  .dossier td { padding: 0; white-space: normal; }
+  .dossier td::before { display: block; margin-bottom: 3px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .dossier td:nth-of-type(1)::before { content: "Agents"; }
+  .dossier td:nth-of-type(2)::before { content: "Coupling"; }
+  .dossier td:nth-of-type(3)::before { content: "Speed"; }
+  .dossier td:nth-of-type(4)::before { content: "Visibility"; }
+}
