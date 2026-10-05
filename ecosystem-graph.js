@@ -4,8 +4,8 @@
    influential people, documented ties, or sources cited. The figures and their sources are in size-data.js. An actor with no
    figure under the chosen measure is drawn as a small dashed ring: unknown is not shown as small, and never as zero.
    Arrows that carry money (investment, grants, donations, credits) show a small money sign moving from giver to receiver, and their
-   width is the largest single amount stated on the tie, one step wider for every tenfold increase, with steps twice as large above
-   the 1m to 10m step. Amounts are never summed.
+   width is the largest single amount stated on the tie, one step wider for every tenfold increase, with larger steps for the
+   larger sums. Amounts are never summed.
    A money tie with no disclosed amount is drawn thin with a fainter sign. Every other arrow is a plain line.
    People are not bubbles. A named person with a role or interest in two organisations is drawn as a dotted link between them,
    and every person can be found in the search box under the map, alongside the actors and groups.
@@ -50,13 +50,13 @@
   const MONEY = new Set(["equity_investment", "grant_recommendation", "philanthropic_support", "philanthropic_or_public_support", "research_grant",
     "matching_offer", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits"]);
   // Amounts on the map run from tens of thousands to tens of billions, so width goes up one step per power of ten.
-  // From the 1m to 10m step upwards each step is twice as large, so the big sums stand clear of the small ones.
+  // The steps grow as the sums do, so the big sums stand clear of the small ones. The widths were set by the author.
   const STEPS = ["under 100k", "100k to 1m", "1m to 10m", "10m to 100m", "100m to 1bn", "1bn to 10bn", "10bn or more"];
   const stepOf = v => Math.max(0, Math.min(STEPS.length - 1, Math.floor(Math.log10(v)) - 4));
-  const STEP_UP = 2;   // the "1m to 10m" step
-  const W_TOP = 16;    // width of the top step, "10bn or more"; every other step keeps its proportion to it
-  const widthOf = step => (1.8 + 1.05 * Math.min(step, STEP_UP) + 2.1 * Math.max(0, step - STEP_UP)) * W_TOP / 12.3;
-  const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5;   // from W_WIDE up, the arrowhead grows with the line
+  const WIDTHS = [2.34, 3.71, 5.07, 8, 13, 18, 25];
+  const widthOf = step => WIDTHS[step];
+  const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5, W_BROAD = 12;   // from W_WIDE up, the arrowhead grows with the line; from W_BROAD up it grows more slowly
+  const headOf = w => w >= W_BROAD ? "wmx" : w >= W_WIDE ? "wmw" : "wm";
   const STILL = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const typeLabel = t => EXT_LABEL[t.type] || U.typeLabel(t.type);
 
@@ -282,6 +282,8 @@
     // wide money arrows get a head that grows with the line
     const wide = el("marker", { id: "wmw-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 2, markerHeight: 2, refX: 7.5, refY: 5, orient: "auto" }, defs);
     el("path", { d: "M0,0.4 L10,5 L0,9.6 Z", fill: c.color }, wide);
+    const broad = el("marker", { id: "wmx-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 1.5, markerHeight: 1.5, refX: 7.5, refY: 5, orient: "auto" }, defs);
+    el("path", { d: "M0,0.4 L10,5 L0,9.6 Z", fill: c.color }, broad);
   });
   // names sit in their own top layer so a neighbouring bubble never covers them
   const gLinks = el("g", {}, svg), gFlow = el("g", {}, svg), gHit = el("g", {}, svg), gTitles = el("g", {}, svg), gNodes = el("g", {}, svg), gLabels = el("g", {}, svg);
@@ -295,7 +297,7 @@
     const sa = Math.atan2(my - a.y, mx - a.x), ea = Math.atan2(my - b.y, mx - b.x);
     const f = v => v.toFixed(1);
     l.mid = [(a.x + 2 * mx + b.x) / 4, (a.y + 2 * my + b.y) / 4];
-    const end = l.inter ? 2 : 5 + (l.w >= W_WIDE ? l.w * 0.5 : 0);   // arrows stop short to leave room for the head; person links have none
+    const end = l.inter ? 2 : 5 + (l.w >= W_BROAD ? l.w * 0.375 : l.w >= W_WIDE ? l.w * 0.5 : 0);   // arrows stop short to leave room for the head; person links have none
     return `M${f(a.x + Math.cos(sa) * (a.r + 2))},${f(a.y + Math.sin(sa) * (a.r + 2))}Q${f(mx)},${f(my)} ${f(b.x + Math.cos(ea) * (b.r + end))},${f(b.y + Math.sin(ea) * (b.r + end))}`;
   }
   let linkN = 0;
@@ -340,7 +342,7 @@
     l.key = key;
     l.w = !m.n ? W_PLAIN : m.top ? widthOf(step) : W_UNKNOWN;
     l.el.setAttribute("stroke-width", l.w.toFixed(1));
-    l.el.setAttribute("marker-end", `url(#${l.w >= W_WIDE ? "wmw" : "wm"}-${l.s.cat})`);
+    l.el.setAttribute("marker-end", `url(#${headOf(l.w)}-${l.s.cat})`);
     l.el.classList.toggle("money", !!m.n);
     // ties from the control evidence stay dashed; the dashes grow with the line so a wide arrow still reads as one arrow
     if (l.el.classList.contains("ext")) l.el.style.strokeDasharray = l.w > 2.5 ? `${(l.w * 2.4).toFixed(1)} ${(l.w * 0.8).toFixed(1)}` : "";
@@ -350,7 +352,7 @@
     if (!m.n) return;
     // one to three signs per arrow, all moving at one slow speed, so only width and size say how much
     const len = l.el.getTotalLength(), n = m.top ? Math.max(1, Math.min(3, Math.round(len / 130))) : 1, dur = Math.max(4, len / 15);
-    const size = m.top ? 9.5 + 0.55 * l.w : 8.5;
+    const size = m.top ? Math.min(18, 9.5 + 0.55 * l.w) : 8.5;
     for (let i = 0; i < n; i++) {
       const g = el("g", { class: "coin" + (m.top ? "" : " faint") }, l.flow);
       el("text", { "text-anchor": "middle", dy: ".36em", "font-size": size.toFixed(1), fill: l.color }, g).textContent = m.top && m.top.currency === "EUR" ? "€" : "$";
@@ -676,7 +678,8 @@
   });
   const scale = $("webScale");
   if (scale) {
-    const row = (w, label, faint) => `<li><svg viewBox="0 0 34 18" aria-hidden="true"><path d="M1 9h32" stroke-width="${(+w).toFixed(1)}"/>${faint ? '<text x="17" y="13.4" text-anchor="middle" class="k-sign faint">$</text>' : ""}</svg><span>${label}</span></li>`;
+    const h = w => Math.max(14, Math.ceil(w) + 2);
+    const row = (w, label, faint) => `<li><svg viewBox="0 ${-h(w) / 2} 34 ${h(w)}" style="height:${h(w)}px" aria-hidden="true"><path d="M1 0h32" stroke-width="${w}"/>${faint ? '<text x="17" y="4.4" text-anchor="middle" class="k-sign faint">$</text>' : ""}</svg><span>${label}</span></li>`;
     const used = Array.from(new Set(ORG_EDGES.filter(t => MONEY.has(t.type) && t.amount != null).map(t => stepOf(t.amount)))).sort((a, b) => a - b);
     scale.innerHTML = row(W_UNKNOWN, "amount not disclosed", true) + used.map(st => row(widthOf(st), STEPS[st])).join("");
   }
