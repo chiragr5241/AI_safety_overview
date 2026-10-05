@@ -9,7 +9,7 @@
 window.ECO_SIZE = {
   retrieved: "2026-10-05",
   // rough US dollars per unit, for placing a bubble on a scale where one step is ten times more
-  fx: { USD: 1, EUR: 1.1, GBP: 1.3, CNY: 0.14, JPY: 0.0067, KRW: 0.0007 },
+  fx: { USD: 1, EUR: 1.1, GBP: 1.3, CNY: 0.14, JPY: 0.0067, KRW: 0.0007, SGD: 0.77 },
 
   /* ---------- people: employees or staff ---------- */
   people: {
@@ -52,8 +52,8 @@ window.ECO_SIZE = {
     ftc: { v: 1225, text: "1,225 full-time equivalent staff", when: "fiscal 2025", basis: "FTC appropriation and FTE history", url: "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation" }
   },
 
-  /* ---------- money: one yearly figure per actor ---------- */
-  // kind says what the figure is. Valuations, assets under management, financing rounds and multi-year totals are left out.
+  /* ---------- money, as a yearly flow: one figure per actor ---------- */
+  // kind says what the figure is. Financing rounds and multi-year totals are left out. What an actor is worth is under "worth" below.
   money: {
     nvidia: { fin: "F014", kind: "Revenue" },
     amd: { fin: "F015", kind: "Revenue" },
@@ -97,6 +97,34 @@ window.ECO_SIZE = {
     ftc: { v: 383.6e6, cur: "USD", kind: "Appropriation", when: "fiscal 2026", basis: "FTC appropriation and FTE history", url: "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation" },
     leading: { fin: "F034", kind: "Receipts" },
     publicfirst: { fin: "F036", kind: "Receipts" }
+  },
+
+  /* ---------- money, as worth: what an actor is valued at ---------- */
+  // Market value for a listed company on the day collected; the valuation at the latest financing round for a private one.
+  // These are stocks, not yearly flows, and none is cash. Units inside a larger company, nonprofits and public bodies have no entry.
+  worth: {
+    nvidia: { v: 5.727e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    microsoft: { v: 3.902e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    google: { v: 4.185e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    amazon: { v: 2.724e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    tsmc: { v: 2.511e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    meta: { v: 1.895e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    broadcom: { v: 1.730e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    samsung: { v: 1.349e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    amd: { v: 1.028e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    sk: { v: 975e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    asml: { v: 712.86e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    intel: { v: 618.37e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    oracle: { v: 434.86e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    softbank: { v: 234.18e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    coreweave: { v: 48.2e9, cur: "USD", kind: "Market value", when: "October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/coreweave/marketcap/" },
+    spacex: { v: 2.27e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by StockAnalysis", note: "Listed on Nasdaq since 12 June 2026. Includes xAI and X.", url: "https://stockanalysis.com/stocks/spcx/market-cap/" },
+    openai: { fin: "F002", kind: "Valuation at the latest financing round" },
+    anthropic: { fin: "F008", kind: "Valuation at the latest financing round" },
+    deepseek: { fin: "F013", kind: "Valuation implied by a filing" },
+    mistral: { v: 21e9, cur: "EUR", kind: "Valuation at the latest financing round", when: "8 September 2026", basis: "Press report on the Series D round (TechCrunch)", est: true, note: "Reported as more than EUR 21bn.", url: "https://techcrunch.com/2026/09/08/mistral-raises-e3b-as-sovereign-ai-becomes-big-business/" },
+    foundation: { fin: "F005", kind: "Implied value of its OpenAI stake" },
+    temasek: { v: 518e9, cur: "SGD", kind: "Net portfolio value", when: "31 March 2026", basis: "Temasek announcement", note: "The value of what Temasek holds, not a market price for Temasek itself.", url: "https://www.temasek.com.sg/en/news-and-resources/news-room/news/2026/temasek-net-portfolio-value-grows-to-518b-up-49b-from-last-year" }
   },
 
   /* ---------- influence: one named, published and subjective list ---------- */

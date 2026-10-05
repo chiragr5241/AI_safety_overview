@@ -53,7 +53,7 @@
   // The steps grow as the sums do, so the big sums stand clear of the small ones. The widths were set by the author.
   const STEPS = ["under 100k", "100k to 1m", "1m to 10m", "10m to 100m", "100m to 1bn", "1bn to 10bn", "10bn or more"];
   const stepOf = v => Math.max(0, Math.min(STEPS.length - 1, Math.floor(Math.log10(v)) - 4));
-  const WIDTHS = [2.34, 3.71, 5.07, 8, 13, 18, 25];
+  const WIDTHS = [2.34, 3.71, 5.07, 6.8, 13.5, 18, 25];
   const widthOf = step => WIDTHS[step];
   const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5, W_BROAD = 12;   // from W_WIDE up, the arrowhead grows with the line; from W_BROAD up it grows more slowly
   const headOf = w => w >= W_BROAD ? "wmx" : w >= W_WIDE ? "wmw" : "wm";
@@ -128,17 +128,18 @@
   /* ---------- what a bubble's size stands for ---------- */
   // Each measure reads one figure per actor and turns it into a radius. of(n) returns null where no figure was found.
   // People and money run over five or more powers of ten, so there the radius goes up one even step per tenfold increase.
-  const S = window.ECO_SIZE || { fx: { USD: 1 }, people: {}, money: {}, time100: { matches: {}, groupActors: [] } };
+  const S = window.ECO_SIZE || { fx: { USD: 1 }, people: {}, money: {}, worth: {}, time100: { matches: {}, groupActors: [] } };
   const finById = new Map(D.financials.map(f => [f.id, f]));
-  const SYM = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", KRW: "₩", CNY: "CN¥" };
+  const SYM = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", KRW: "₩", CNY: "CN¥", SGD: "S$" };
   const big = v => { for (const [k, u] of [[1e12, "tn"], [1e9, "bn"], [1e6, "m"], [1e3, "k"]]) if (v >= k) return +(v / k).toPrecision(v / k >= 100 ? 3 : 2) + u; return String(v); };
   const srcLink = (url, label) => url ? `<a href="${esc(url)}">${tidy(label || "Source")}</a>` : "";
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const sentence = s => /[.!?]$/.test(s) ? s : s + ".";
   const T100 = S.time100;
   const t100Date = U.fmtDate(T100.date || "");
-  function moneyOf(n) {
-    const m = S.money[n.id];
+  // a money figure from one of the two money tables: yearly flows (S.money) or what an actor is worth (S.worth)
+  const moneyOf = table => n => {
+    const m = (table || {})[n.id];
     if (!m) return null;
     const f = m.fin ? finById.get(m.fin) : null;
     if (m.fin && (!f || f.amount == null)) return null;
@@ -146,7 +147,7 @@
     return { v: amount * (m.times || 1) * (S.fx[cur] || 1), num: (SYM[cur] || cur + " ") + big(amount * (m.times || 1)), text: `${m.kind}: ${U.fmtAmount(amount, cur)}`,
       when: f ? f.period : m.when, basis: f ? f.basis : m.basis, est: !!m.est, note: [m.note, f && !m.note ? f.caveat : ""].filter(Boolean).join(" "),
       url: src ? src.url : m.url, srcTitle: src ? src.title : "" };
-  }
+  };
   const MEASURES = [
     { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
       keyText: "people employed, where a figure is published; each step up in size is ten times more",
@@ -154,12 +155,18 @@
       r: v => Math.max(6, 7 + 6 * (Math.log10(v) - 1)), ticks: [[10, "10"], [1000, "1,000"], [100000, "100,000 people"]],
       note: k => `Bubble size shows people employed, on a scale where each step is ten times more, so a bubble twice as wide is a far larger employer than twice. ${k} of the ${nodes.length} actors have a figure. A dashed ring means none was found, which does not mean the organisation is small. Figures cover whole organisations, so Amazon's includes its warehouses, and a few are outside estimates. Size here is not influence.`,
       about: "Employees or staff, from a company filing or annual report where there is one, from the organisation's own team page for small research groups, and from a press report or an outside tracker for private companies that publish nothing. Each line says which. Groups of many organisations, and bodies such as a committee or a legislature, have no single headcount and are left as not stated." },
-    { id: "money", pill: "Money", key: "size = yearly money", unit: "a year", log: true,
-      keyText: "one yearly money figure, where a source states one; each step up in size is ten times more",
-      of: moneyOf,
-      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn, in US dollars"]],
-      note: k => `Bubble size shows one yearly money figure for each actor: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Valuations, assets under management, financing rounds and multi-year totals are left out. Size here is not influence.`,
-      about: "One figure per actor, covering a year or less. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings and budget documents collected on 5 October 2026. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
+    { id: "money", pill: "Money (revenue or budget)", key: "size = yearly revenue or budget", unit: "a year", log: true,
+      keyText: "money through the organisation in a year: revenue for a company, budget or funding for others; each step up in size is ten times more",
+      of: moneyOf(S.money),
+      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn a year, in US dollars"]],
+      note: k => `Bubble size shows money through each actor in a year: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. It is not what the actor is worth, which is the next measure along. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Financing rounds and multi-year totals are left out. Size here is not influence.`,
+      about: "One figure per actor, covering a year or less. Microsoft's figure of about USD 332bn, for example, is its revenue for fiscal 2026, not its value on the stock market. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings and budget documents collected on 5 October 2026. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
+    { id: "worth", pill: "Money (worth)", key: "size = what it is worth", unit: "", log: true,
+      keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
+      of: moneyOf(S.worth),
+      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
+      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
+      about: "Stock-market value for listed companies, read on 5 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
       keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
       of: n => { const m = T100.matches[n.id] || []; return { v: m.length, num: String(m.length), text: m.length ? `${m.length} ${m.length === 1 ? "person" : "people"} on the list: ${m.join("; ")}` : "No one on the list", when: `published ${t100Date}`, basis: T100.title, est: false,
