@@ -83,8 +83,8 @@ main > .wrap { padding-top: 16px; }
 #webStage.has-focus .ctitle:not(.sel) { opacity: .55; }
 .web-panel { border-top: 1px solid var(--w-line); padding-top: 18px; margin-top: 2px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px 36px; align-items: start; min-height: 11rem; font-size: .93rem; }
 @media (max-width: 860px) { .web-panel { grid-template-columns: minmax(0, 1fr); } }
-.web-panel h3 { font-size: 1.35rem; margin: 4px 0 8px; }
-.web-panel h4 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); margin-bottom: 6px; }
+.web-panel h2 { font-size: 1.35rem; margin: 4px 0 8px; }
+.web-panel h3 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); margin-bottom: 6px; }
 .wp-main { display: grid; gap: 6px; align-content: start; }
 .wp-lbl { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--w-muted); }
 .wp-small, .wp-none { font-size: .86rem; color: var(--w-muted); }
@@ -96,10 +96,13 @@ main > .wrap { padding-top: 16px; }
 .web-jump { font: inherit; font-family: var(--font-display); font-weight: 700; text-align: left; color: var(--w-ink); background: none; border: 0; padding: 2px 0; cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
 .web-jump i { flex: none; width: 10px; height: 10px; border-radius: 50%; }
 .web-jump:hover { color: var(--w-hi); }
-.wp-notes { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 28px; }
-@media (max-width: 860px) { .wp-notes { grid-template-columns: minmax(0, 1fr); } }
+.wp-notes { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 24px; }
+@media (max-width: 980px) { .wp-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .wp-notes { grid-template-columns: minmax(0, 1fr); } }
+.wp-ext { font-style: normal; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: var(--w-hi); margin-left: 4px; }
+#webStage .link.ext { stroke-dasharray: 6 4; }
 .wp-notes > div { display: grid; gap: 8px; align-content: start; justify-items: start; }
-.wp-notes h3 { font-size: 1.12rem; margin: 0; }
+.wp-notes h2 { font-size: 1.12rem; margin: 0; }
 .wp-notes p { color: var(--w-muted); }
 .web-act { font-family: var(--font-display); font-weight: 700; font-size: .86rem; color: var(--w-hi); background: none; border: 1px solid var(--w-line); border-radius: 999px; min-height: 36px; padding: 0 14px; cursor: pointer; }
 .web-act:hover { border-color: var(--w-hi); }
@@ -108,6 +111,55 @@ main > .wrap { padding-top: 16px; }
 .howto.bridge li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .howto.bridge li:last-child { border-bottom: 0; }
 .howto.bridge a { font-family: var(--font-mono); font-size: .8rem; white-space: nowrap; }
+
+/* Control and incentives */
+.dp-short { list-style: none; margin: 0; padding: 0; counter-reset: dp; display: grid; gap: 0; max-width: 56rem; }
+.dp-short li { counter-increment: dp; display: grid; grid-template-columns: 2.4rem minmax(0, 15rem) minmax(0, 1fr); gap: 4px 14px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.dp-short li::before { content: counter(dp); font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1; color: var(--accent); }
+.dp-short a { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.dp-short span { font-size: .96rem; }
+@media (max-width: 700px) { .dp-short li { grid-template-columns: 2.4rem minmax(0, 1fr); } .dp-short span { grid-column: 2; } }
+.dp-cols { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.dp-cols.one { grid-template-columns: minmax(0, 1fr); max-width: 46rem; }
+@media (max-width: 860px) { .dp-cols { grid-template-columns: minmax(0, 1fr); } }
+.dp-cols > div { border-radius: 14px; padding: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.dp-cols h4 { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; }
+.dp-cols ul { margin: 0; padding-left: 1.15em; display: grid; gap: 9px; font-size: .95rem; }
+.est { background: var(--surface); border: 1px solid var(--line); }
+.est h4 { color: var(--accent); }
+.unk { background: var(--surface-2); }
+.unk h4 { color: var(--muted); }
+.settle { font-size: .9rem; }
+.unk .settle { border-top: 1px dashed var(--line-strong); padding-top: 12px; }
+.qblock > .fold { max-width: none; }
+.labgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 14px; }
+.labcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; align-content: start; font-size: .94rem; }
+.labcard h4 { font-size: 1.2rem; }
+.labcard .used { border-top: 1px dashed var(--line); padding-top: 10px; font-size: .9rem; }
+.rulegrid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .rulegrid { grid-template-columns: minmax(0, 1fr); } }
+.rulegrid > div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; align-content: start; }
+.rulegrid ul { margin: 0; padding-left: 1.15em; display: grid; gap: 10px; font-size: .95rem; }
+.tl-scroll { overflow-x: auto; }
+.tl { display: grid; gap: 4px; min-width: 620px; }
+.tl-row { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); align-items: center; }
+.tl-lab { font-family: var(--font-display); font-weight: 700; font-size: .92rem; }
+.tl-track { position: relative; height: 46px; border-bottom: 1px solid var(--line); margin-right: 14px; }
+.tl-track > span { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--line); }
+.tl-axis .tl-track { height: 20px; border-bottom: 0; }
+.tl-axis .tl-track > span { border-left: 0; padding-left: 4px; font-family: var(--font-mono); font-size: .74rem; color: var(--muted); }
+.tl-dot { font: inherit; font-size: 19px; line-height: 1; width: 26px; height: 26px; display: inline-grid; place-items: center; border-radius: 50%; border: 0; background: none; padding: 0; color: var(--muted); }
+.tl-track .tl-dot { position: absolute; top: 14px; margin-left: -13px; cursor: pointer; }
+.tl-track .tl-dot.up { top: -3px; }
+.tl-track .tl-dot:hover, .tl-track .tl-dot.sel { background: var(--surface-2); outline: 1.5px solid var(--ink); }
+.tl-dot.strengthened { color: var(--accent); }
+.tl-dot.weakened { color: var(--con); }
+.tl-dot.mixed { color: var(--mis); }
+.tl-dot.baseline, .tl-dot.changed { color: var(--muted); }
+.tl-key { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: .84rem; color: var(--muted); }
+.tl-key li { display: inline-flex; align-items: center; gap: 2px; }
+.tl-read { font-size: .93rem; min-height: 4.6em; background: var(--surface-2); border-radius: 10px; padding: 12px 14px; }
+@media (pointer: coarse) { .tl-track .tl-dot { width: 32px; height: 32px; margin-left: -16px; top: 8px; } .tl-track .tl-dot.up { top: -8px; } .tl-track { height: 52px; } }
 
 /* 1. Findings */
 .findings { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; max-width: 52rem; counter-reset: f; }
@@ -120,7 +172,7 @@ main > .wrap { padding-top: 16px; }
 
 /* 2. Six questions and eleven categories */
 .qnav { display: flex; flex-wrap: wrap; gap: 8px; }
-.qblock { padding-top: 44px; display: grid; gap: 18px; scroll-margin-top: 72px; }
+.qblock { padding-top: 44px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; scroll-margin-top: 72px; }
 .qblock-head { display: grid; gap: 6px; max-width: 46rem; }
 .qblock-head .step { font-family: var(--font-mono); font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
 .cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
@@ -247,7 +299,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 .fold summary::after { content: ""; flex: none; width: 8px; height: 8px; margin-top: -4px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .16s; }
 .fold[open] summary::after { transform: rotate(-135deg); margin-top: 4px; }
 .fold summary:hover { background: var(--surface-2); }
-.fold .fold-body { padding: 0 16px 16px; display: grid; gap: 12px; font-size: .95rem; }
+.fold .fold-body { padding: 0 16px 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; font-size: .95rem; }
 .fold .tbl { border-radius: 8px; }
 
 /* 8. Gaps */
@@ -282,6 +334,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <button class="toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="chapters"><span id="tocName">Contents</span></button>
     <nav class="chapters" id="chapters" aria-label="Sections of this page">
       <a href="#map">Map</a>
+      <a href="#control">Control</a>
       <a href="#summary">Summary</a>
       <a href="#questions">Six questions</a>
       <a href="#actors">Actors</a>
@@ -305,12 +358,13 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <span class="web-eyebrow"><a href="index.html#goal-ecosystem">Goal 3</a> · The AI ecosystem</span>
         <h1 id="webTitle">Who has a <span>stake</span> in AI safety?</h1>
         <div class="web-intro">
-          <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests or lobbies to the party on the receiving end.</p>
+          <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests, lobbies or holds a role to the party on the receiving end.</p>
           <ul class="web-key" aria-label="How to read the map">
             <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> number of documented ties</span></li>
             <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 6h24" stroke-width="1.6"/><path d="M2 14h24" stroke-width="4.5"/><path d="M25 2l8 4-8 4zM25 9l8 5-8 5z" stroke="none"/></svg><span><b>Arrow width</b> ties between that pair</span></li>
             <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="2" stroke-dasharray=".1 6" stroke-linecap="round"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Arrow direction</b> from giver to receiver</span></li>
             <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="8" cy="10" r="6" class="k-a"/><circle cx="24" cy="10" r="6" class="k-b"/></svg><span><b>Colour</b> the group, and the group an arrow starts from</span></li>
+            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h24" stroke-width="2" stroke-dasharray="5 4"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Dashed arrow</b> access, role or grant from the <a href="#control">control evidence</a></span></li>
           </ul>
         </div>
       </div>
@@ -319,7 +373,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <div class="pills needs-data" role="group" aria-labelledby="webLensLabel" id="webLens"></div>
       </div>
       <div class="web-scroll">
-        <svg id="webStage" viewBox="0 0 1080 820" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by 105 documented ties. The same information is in the actor and tie lists below."></svg>
+        <svg id="webStage" viewBox="0 0 1080 940" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by 105 documented ties, with 46 further ties and 11 people added from the control evidence. The same information is in the lists and tables below."></svg>
       </div>
       <div class="web-under">
         <p class="web-blurb" id="webBlurb"></p>
@@ -331,7 +385,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">46</b> ties and <b id="nExtPeople">11</b> people from the control evidence · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
     </figure>
 
     <div class="readrow">
@@ -356,6 +410,226 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </ul>
       </div>
     </div>
+
+    <!-- ============ CONTROL AND INCENTIVES ============ -->
+    <section class="chapter" id="control">
+      <div class="chapter-head">
+        <span class="chapter-num">Control and incentives</span>
+        <h2>Who decides, and what do they stand to gain?</h2>
+        <p style="max-width:var(--measure)">The map above shows who is tied to whom but not who holds the right to decide. This section follows five decisions that shape AI safety and asks, for each one, who holds the right, who can block it, and what interests are on record.</p>
+        <p class="small" style="max-width:var(--measure)">It rests on <span id="ctlRows">124</span> rows of added evidence with a cutoff of 4 October 2026, retrieved on 5 October 2026. It is a verified extension with stated gaps, not a census. High confidence means a primary source supports the claim as stated, including where the claim is only an organisation's own policy. It does not certify that the policy is followed. A blank means not established, never zero. No funding or employment tie is treated as control unless a document grants a right.</p>
+      </div>
+
+      <ol class="dp-short">
+        <li><a href="#dp-research">What gets researched</a><span>A handful of funders decide, by documented internal rules. That is authority over grants, not over the organisations that receive them.</span></li>
+        <li><a href="#dp-evaluation">What gets evaluated and published</a><span>Evaluators rely on the labs for model access. Their published policies differ widely, and no signed agreement has been seen.</span></li>
+        <li><a href="#dp-release">Whether a model ships</a><span>Each lab decides for itself. OpenAI and Anthropic name a body beyond management with a formal role, although no use of those powers has been identified.</span></li>
+        <li><a href="#dp-rules">What rules bind</a><span>Binding duties apply in the EU and California now, and in New York from 2027. US federal action is largely voluntary.</span></li>
+        <li><a href="#dp-people">Who sits where, and who holds an interest</a><span>Some funders' principals invested in Anthropic in 2021, and a few people hold roles in more than one place. Recusals and one resignation are also on record.</span></li>
+      </ol>
+
+      <!-- 1 -->
+      <div class="qblock" id="dp-research">
+        <div class="qblock-head">
+          <span class="step">Decision 1 of 5</span>
+          <h3>What gets researched</h3>
+          <p>Independent safety research runs largely on grants, so the question is who signs them off.</p>
+        </div>
+        <div class="dp-cols">
+          <div class="est">
+            <h4>Established</h4>
+            <ul>
+              <li><strong>Coefficient Giving.</strong> A typical grant needs two active approvals: the primary grant investigator and one additional signatory. Exceptions and dollar thresholds are not specified.</li>
+              <li><strong>Survival and Flourishing Fund.</strong> The funders, Jaan Tallinn and Dustin Moskovitz, choose how much weight each recommender gets and adjust the final amounts after the recommender process.</li>
+              <li><strong>Manifund.</strong> Donors pick regrantors and give them budgets. Regrantors recommend, and Manifund may veto any grant.</li>
+              <li><strong>Other funds.</strong> The Frontier Model Forum now manages the AI Safety Fund directly. Longview's Frontier AI Fund is discretionary. Macroscopic and the Transformative AI Fund name the people in charge. None publishes approval thresholds.</li>
+              <li><strong>Largest recorded awards.</strong> Coefficient Giving announced USD 160m approved for Resolution, over USD 70m recommended for Redwood Research across two years, and USD 68m recommended for Epoch AI across three. An announced approval is not proof of a binding commitment or a payment.</li>
+              <li><strong>One recipient in detail.</strong> MATS publishes its receipts. In 2025 it recorded USD 11.8m and USD 3.6m from Coefficient Giving through two intermediaries, and USD 1.5m and USD 3.0m from Good Ventures.</li>
+            </ul>
+          </div>
+          <div class="unk">
+            <h4>Not established</h4>
+            <ul>
+              <li>No organisation's top three funders as a share of its annual budget. This was the central question and it is still open.</li>
+              <li>Expense totals exist for some recipients (METR USD 8.2m and FAR.AI USD 8.6m for 2024, GovAI USD 11.9m for 2025). An expense total is not a budget, and a multi-year award cannot be divided by it.</li>
+              <li>Longview's first disbursement report is offered to prospective donors above USD 100,000 and is not published openly.</li>
+            </ul>
+            <p class="settle"><strong>What would settle it:</strong> recipients' ledgers, audited donor-concentration schedules, grant agreements and payment schedules for 2023 to 2026.</p>
+          </div>
+        </div>
+        <p class="callout"><b>Read it carefully.</b> These rows establish who allocates money, not who controls the organisations that receive it.</p>
+        <details class="fold"><summary>Who signs off grants (<span data-count="evGrantRights">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evGrantRights" data-label="Grant decision rights"></div></div></details>
+        <details class="fold"><summary>Grants, gifts and recommendations (<span data-count="evGrants">0</span> rows)</summary><div class="fold-body"><p class="small">Paid, recommended and committed amounts are different measures and are not summed.</p><div class="needs-data" id="evGrants" data-label="Grants and gifts"></div></div></details>
+        <details class="fold"><summary>Expense totals and forecasts (<span data-count="evTotals">0</span> rows)</summary><div class="fold-body"><p class="small">Whole-organisation expenses or forecasts. None is an annual budget or a funding receipt.</p><div class="needs-data" id="evTotals" data-label="Expense totals"></div></div></details>
+      </div>
+
+      <!-- 2 -->
+      <div class="qblock" id="dp-evaluation">
+        <div class="qblock-head">
+          <span class="step">Decision 2 of 5</span>
+          <h3>What gets evaluated and published</h3>
+          <p>To test a model, an evaluator needs the lab that built it to grant access. That makes the terms of access the place to look for leverage.</p>
+        </div>
+        <div class="dp-cols">
+          <div class="est">
+            <h4>Established</h4>
+            <ul>
+              <li><strong>METR</strong> receives model access and free tokens from OpenAI, Anthropic, Google DeepMind, Meta and Amazon. It says it accepts no funding from AI companies.</li>
+              <li><strong>FAR.AI</strong> caps the revenue it takes from developers at 10% a year. The cap sets a limit and does not report the share it actually earns. Its policy allows a delay to prevent a safety harm and rejects suppression to prevent a competitive harm. Clients keep the authority to act on its advice.</li>
+              <li><strong>Apollo Research</strong> takes no pay that depends on the outcome and recuses evaluators with a financial interest. It published a recommendation against deploying an early Claude checkpoint. Advice of that kind is not a veto.</li>
+              <li><strong>Epoch AI</strong> built its FrontierMath benchmark on commission from OpenAI, which had exclusive lab access at the time. Contributors learned of the sponsor only if they asked. Epoch acknowledged the failure of disclosure.</li>
+              <li><strong>Public evaluators.</strong> The UK AI Security Institute has priority access from Google DeepMind under a voluntary, non-binding memorandum. US CAISI has access before and after deployment under its own memoranda, and shares results in confidence.</li>
+              <li><strong>Conflict rules.</strong> METR requires staff to disclose direct equity or debt but does not ban shareholding outright. GovAI requires recusal for moderate or strong conflicts.</li>
+            </ul>
+          </div>
+          <div class="unk">
+            <h4>Not established</h4>
+            <ul>
+              <li>No case of a lab blocking a publication or withdrawing access has been established.</li>
+              <li>No executed agreement was obtained for any evaluator, so the actual non-disclosure, pre-publication and withdrawal clauses are unknown.</li>
+              <li>No evaluator publishes the share of its revenue that comes from the companies it evaluates.</li>
+            </ul>
+            <p class="settle"><strong>What would settle it:</strong> executed evaluation agreements and amendments, publication correspondence, and annual schedules of client revenue.</p>
+          </div>
+        </div>
+        <p class="callout"><b>Evidence that cuts the other way.</b> Apollo published a finding against a lab's interest, and Epoch disclosed its own lapse. Not every tie between a lab and an evaluator produces compliant advocacy.</p>
+        <details class="fold"><summary>Access, compute and commissioned work (<span data-count="evAccess">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evAccess" data-label="Access and contracts"></div></div></details>
+        <details class="fold"><summary>Conflict-of-interest policies (<span data-count="evCoi">0</span> rows)</summary><div class="fold-body"><p class="small">A linked policy is not an executed contract, and a policy that permits a related-party grant is not evidence of abuse.</p><div class="needs-data" id="evCoi" data-label="Conflict-of-interest policies"></div></div></details>
+        <details class="fold"><summary>Who decides inside research organisations (<span data-count="evOrgRights">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evOrgRights" data-label="Research organisation decision rights"></div></div></details>
+      </div>
+
+      <!-- 3 -->
+      <div class="qblock" id="dp-release">
+        <div class="qblock-head">
+          <span class="step">Decision 3 of 5</span>
+          <h3>Whether a model ships</h3>
+          <p>Who inside each lab can delay or stop a release, and whether anyone outside management has a say.</p>
+        </div>
+        <div class="labgrid">
+          <article class="labcard">
+            <h4>OpenAI</h4>
+            <p>The OpenAI Foundation appoints every director of the operating company and can replace them at any time. That right comes from special voting rights and is separate from its 26% equity at recapitalisation.</p>
+            <p>The Safety and Security Committee, with the full board, may delay a release until safety concerns are addressed.</p>
+            <p class="used"><strong>Ever used:</strong> no documented use by the committee was identified. The company reported a two-week pause of a training run in August 2026 and did not attribute it to the committee.</p>
+          </article>
+          <article class="labcard">
+            <h4>Anthropic</h4>
+            <p>The chief executive and the Responsible Scaling Officer approve risk reports and development decisions. Where the case rests heavily on marginal-risk reasoning, the board and the Long-Term Benefit Trust must also approve.</p>
+            <p>The Trust can request an external review and must approve the reviewer. It elects and removes directors in phases, up to an eventual majority. A supermajority of stockholders can change its powers without its consent.</p>
+            <p class="used"><strong>Ever used:</strong> unknown. The Trust's current voting entitlement was not verified.</p>
+          </article>
+          <article class="labcard">
+            <h4>Google DeepMind</h4>
+            <p>An "appropriate internal governance function", which the framework leaves unnamed, must accept the residual risk before an external deployment or a high-risk internal one.</p>
+            <p>The evidence establishes no named independent veto.</p>
+            <p class="used"><strong>Ever used:</strong> unknown.</p>
+          </article>
+          <article class="labcard">
+            <h4>Meta</h4>
+            <p>The framework gives two accounts. One section says either the Chief AI Officer or the Director of Alignment and Risk can decide. Another requires the Chief AI Officer's approval. The Director reports to the Chief AI Officer.</p>
+            <p class="used"><strong>Ever used:</strong> unknown.</p>
+          </article>
+          <article class="labcard">
+            <h4>xAI</h4>
+            <p>The framework requires systemic risk to be acceptable before development or deployment. It names no final decision-maker and establishes no independent veto.</p>
+            <p class="used"><strong>Ever used:</strong> unknown.</p>
+          </article>
+        </div>
+        <p class="small" style="max-width:var(--measure)">"Unknown" does not mean a body has never acted. It means no record of its acting was found.</p>
+
+        <div class="panel">
+          <div class="panel-head"><span class="eyebrow">Chart · Framework revisions</span><span class="small mono">each mark is one published version</span></div>
+          <p class="headline">The rules the labs set for themselves keep changing, and the labs are the ones who change them.</p>
+          <div class="tl-scroll"><div class="tl needs-data" id="revTimeline"></div></div>
+          <ul class="tl-key" aria-label="Meaning of the marks">
+            <li><span class="tl-dot strengthened" aria-hidden="true">▲</span>Strengthened</li>
+            <li><span class="tl-dot weakened" aria-hidden="true">▼</span>Weakened</li>
+            <li><span class="tl-dot mixed" aria-hidden="true">◆</span>Mixed</li>
+            <li><span class="tl-dot changed" aria-hidden="true">●</span>Changed or verified, direction not scored</li>
+            <li><span class="tl-dot baseline" aria-hidden="true">○</span>First version</li>
+          </ul>
+          <p class="tl-read" id="revRead" aria-live="polite">Pick a mark to read what changed.</p>
+          <p class="panel-note">A reading of "strengthened", "weakened" or "mixed" is an interpretation of a revision and carries medium confidence. This is not a complete line-by-line audit of all five labs. The version histories for Anthropic, Google DeepMind and Meta are clearer than those for OpenAI and xAI.</p>
+        </div>
+        <p class="settle" style="max-width:var(--measure)"><strong>What would settle it:</strong> current charters, delegation matrices, committee minutes, logs of overrides, and every archived version of each framework.</p>
+        <details class="fold"><summary>Decision rights inside the labs (<span data-count="evLabRights">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evLabRights" data-label="Lab decision rights"></div></div></details>
+        <details class="fold"><summary>Every framework revision (<span data-count="evRevisions">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evRevisions" data-label="Framework revisions"></div></div></details>
+      </div>
+
+      <!-- 4 -->
+      <div class="qblock" id="dp-rules">
+        <div class="qblock-head">
+          <span class="step">Decision 4 of 5</span>
+          <h3>What rules bind</h3>
+          <p>A duty a regulator can fine you for is a different thing from a code a company signs. The two are often discussed together.</p>
+        </div>
+        <div class="rulegrid">
+          <div>
+            <h4><span class="tag accent">Binding</span></h4>
+            <ul>
+              <li><strong>EU AI Act, articles 53 and 55.</strong> Documentation, information for downstream users, and for systemic-risk models evaluation, mitigation, incident and cybersecurity duties. Enforced by the European Commission's AI Office from 2 August 2026. The maximum fine is the higher of EUR 15m or 3% of global turnover.</li>
+              <li><strong>California SB 53.</strong> Covered developers must publish and follow a frontier framework and report critical incidents. In force from 1 January 2026. The Attorney General can seek up to USD 1m per violation. Employees have their own right of action under the whistleblower provisions.</li>
+              <li><strong>New York's frontier law, as amended.</strong> Publish and follow a framework, report incidents within 72 hours, and within 24 hours where death or serious injury is imminent. Applies from 1 January 2027. The Attorney General can seek up to USD 1m for a first violation and USD 3m after that. There is no private right of action.</li>
+            </ul>
+          </div>
+          <div>
+            <h4><span class="tag warn">Partly binding</span></h4>
+            <ul>
+              <li><strong>US Executive Order 14409</strong> (2 June 2026). It directs federal agencies on cybersecurity and benchmarking and sets up a voluntary framework for access to frontier models. It creates no mandatory licensing or pre-clearance for labs and no fine for staying out.</li>
+            </ul>
+            <h4 style="margin-top:18px"><span class="tag">Voluntary</span></h4>
+            <ul>
+              <li><strong>EU Code of Practice for general-purpose AI.</strong> One route to showing compliance. The code is voluntary, while the Act underneath it remains binding.</li>
+              <li><strong>US Joint Commitment on Frontier Responsibilities</strong> (announced 29 September 2026). A voluntary accord among participating companies. No statutory enforcement is established. Reported by Reuters, medium confidence.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dp-cols one">
+          <div class="unk">
+            <h4>Not established</h4>
+            <ul>
+              <li>Who lobbied for or against each rule, and how much they spent. One position is on record: Anthropic publicly endorsed SB 53 on 8 September 2025.</li>
+            </ul>
+            <p class="settle"><strong>What would settle it:</strong> the history of each enacted version, enforcement decisions, California and New York lobbying reports, and federal lobbying filings.</p>
+          </div>
+        </div>
+        <details class="fold"><summary>Rules, enforcers and positions (<span data-count="evRules">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evRules" data-label="Rules and positions"></div></div></details>
+      </div>
+
+      <!-- 5 -->
+      <div class="qblock" id="dp-people">
+        <div class="qblock-head">
+          <span class="step">Decision 5 of 5</span>
+          <h3>Who sits where, and who holds an interest</h3>
+          <p>The same people can appear on more than one side of a decision. The record shows roles and interests, which are not the same as motives.</p>
+        </div>
+        <div class="dp-cols">
+          <div class="est">
+            <h4>Established</h4>
+            <ul>
+              <li><strong>Funders with a disclosed investment in a lab.</strong> Jaan Tallinn, Dustin Moskovitz and Eric Schmidt were named as investors in Anthropic's Series A round in May 2021. The amounts, the rights attached and whether they still hold the shares are not disclosed.</li>
+              <li><strong>One person, three institutions.</strong> Paul Christiano joined the OpenAI Foundation board and its safety committee in September 2026 while a senior technical adviser at US CAISI. He was an Anthropic trustee from 2023 to 2024. He recuses from all OpenAI matters and all model evaluations at CAISI.</li>
+              <li><strong>Lab and evaluator staff who also recommend grants.</strong> Manifund's regrantors include a Google DeepMind research lead, an Anthropic research lead, the chief executive of Apollo Research and the chief executive of MATS.</li>
+              <li><strong>A funder and a recipient board.</strong> Macroscopic's president also sits on the board of the Center for AI Safety.</li>
+              <li><strong>Fellows placed in government.</strong> Horizon fellows are recorded at the Department of Energy, the Senate Foreign Relations Committee and DARPA.</li>
+              <li><strong>Who paid for one political committee.</strong> Leading the Future's 2025 year-end filing shows USD 25m from a16z's management company and USD 12.5m each from Greg Brockman and Anna Brockman.</li>
+            </ul>
+          </div>
+          <div class="unk">
+            <h4>Not established</h4>
+            <ul>
+              <li>Current shareholdings. The 2021 investments are historic and no current table of holdings was obtained.</li>
+              <li>Signed annual conflict declarations and registers of recusals for any organisation.</li>
+              <li>Complete filings for the Public First political committee, the Center for AI Safety's electoral entity, and Leading the Future's activity in 2026.</li>
+            </ul>
+            <p class="settle"><strong>What would settle it:</strong> current tables of shareholdings and beneficial interests, signed conflict declarations, recusal registers, board appointment records and complete campaign-finance downloads.</p>
+          </div>
+        </div>
+        <p class="callout"><b>Evidence that cuts the other way.</b> Jason Matheny resigned as an Anthropic trustee in December 2023 to avoid a possible conflict with RAND's policy work, and Christiano's recusal is on record. Both count against an unqualified claim of capture.</p>
+        <details class="fold"><summary>People, roles and disclosed interests (<span data-count="evPeople">0</span> rows)</summary><div class="fold-body"><div class="needs-data" id="evPeople" data-label="People and roles"></div></div></details>
+        <details class="fold"><summary>Political receipts and transfers (<span data-count="evPolitical">0</span> rows)</summary><div class="fold-body"><p class="small">The a16z receipt carries memo attributions of USD 12.5m each to Marc Andreessen and Benjamin Horowitz. Those are not additional receipts. Anthropic's donation to Public First Action is restricted from election use and is not a receipt of the Public First political committee.</p><div class="needs-data" id="evPolitical" data-label="Political money"></div></div></details>
+      </div>
+    </section>
 
     <!-- ============ 1. SUMMARY ============ -->
     <section class="chapter" id="summary">
@@ -1066,6 +1340,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 </footer>
 
 <script src="ecosystem-data.js"></script>
+<script src="control-data.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
@@ -1124,6 +1399,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   $("#nTies").textContent = D.edges.length;
   $("#nFins").textContent = D.financials.length;
   $("#nSources").textContent = Object.keys(D.sources).length;
+  if (window.CONTROL) { $("#nExtTies").textContent = window.CONTROL.graph.edges.length; $("#nExtPeople").textContent = window.CONTROL.graph.people.length; }
   $$("[data-sources]").forEach(el => { el.innerHTML = "Sources: " + srcLinks(el.dataset.sources.split(/\s+/)); });
   $$(".cat-actors").forEach(el => {
     const list = D.nodes.filter(n => String(n.cat) === el.dataset.cat);
@@ -1314,6 +1590,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   route();
 })();
 </script>
+<script src="ecosystem-control.js"></script>
 <script src="ecosystem-graph.js"></script>
 </body>
 </html>
