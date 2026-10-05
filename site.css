@@ -93,7 +93,7 @@ strong { font-weight: 600; }
 .chapters a.active { color: var(--accent); background: var(--accent-soft); }
 .chapters .n { font-family: var(--font-mono); font-size: .72rem; line-height: 1; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; flex: none; }
 .chapters a.active .n { border-color: currentColor; }
-.progress { position: absolute; left: 0; bottom: -1px; height: 3px; background: var(--accent); width: 0; }
+.progress { position: absolute; left: 0; bottom: -1px; height: 3px; background: var(--accent); width: 100%; transform: scaleX(0); transform-origin: 0 50%; }
 .icon-btn { flex: none; width: 40px; height: 40px; display: grid; place-items: center; background: none; border: 1px solid var(--line-strong); color: var(--ink); border-radius: 50%; cursor: pointer; transition: background-color .15s; }
 .icon-btn:hover { background: var(--surface-2); }
 .icon-btn svg { width: 18px; height: 18px; }

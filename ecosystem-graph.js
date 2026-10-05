@@ -6,7 +6,7 @@
   "use strict";
   const D = window.ECOSYSTEM, U = window.ECO_UI, svg = document.getElementById("webStage");
   if (!D || !U || !svg) return;
-  const NS = "http://www.w3.org/2000/svg", W = 1080, H = 820;
+  const NS = "http://www.w3.org/2000/svg", W = 1080, H = 940;
   const $ = id => document.getElementById(id);
   const esc = U.esc, tidy = U.tidy;
   const el = (name, attrs, parent) => {
@@ -16,19 +16,38 @@
     return n;
   };
 
+  // The control and incentives evidence adds ties between actors already on the map, and people with roles in more than one place.
+  // Those ties are drawn dashed and stay out of the base counts.
+  const X = (window.CONTROL && window.CONTROL.graph) || { people: [], edges: [] };
+  const EDGES = D.edges.concat(X.edges);
+  const EXT_FAM = { access_in_kind: "access", commissioned_work: "access", access_mou: "access", compute_credits: "access", grant_paid: "grants", grant_recommended: "grants",
+    political_contribution: "politics", role_board: "people", role_adviser: "people", role_former: "people", role_executive: "people", role_staff: "people",
+    role_regrantor: "people", role_funder: "people", disclosed_investment: "people" };
+  const EXT_LABEL = { access_in_kind: "Model access in kind", commissioned_work: "Commissioned work", access_mou: "Access under a voluntary MoU", compute_credits: "Compute credits",
+    grant_paid: "Grant or gift, paid", grant_recommended: "Grant, recommended", political_contribution: "Political contribution", role_board: "Board or committee seat",
+    role_adviser: "Adviser", role_former: "Former role", role_executive: "Executive", role_staff: "Staff role", role_regrantor: "Regrantor", role_funder: "Funder",
+    disclosed_investment: "Disclosed investment" };
+  const FAMS = U.FAMILIES.concat([
+    { id: "access", label: "Access and contracts", blurb: "What evaluators and training programmes receive from the labs: model access, compute credits and commissioned work. The executed agreements, with any limits on publication, were not obtained." },
+    { id: "people", label: "People and interests", blurb: "People with documented roles in more than one organisation, and disclosed investments. A role or an investment establishes an interest, not a motive, and it is not control." }
+  ]);
+  const famOf = t => EXT_FAM[t.type] || U.famOf[t.type];
+  const typeLabel = t => EXT_LABEL[t.type] || U.typeLabel(t.type);
+
   // One cluster per category. Colour marks the group; arrows take the colour of the group they start from.
   const CLUSTERS = [
-    { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 540, y: 415 },
+    { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 540, y: 405 },
     { cat: 2, label: "Cloud and energy", color: "#7CCBFF", x: 545, y: 122 },
     { cat: 1, label: "Chip supply chain", color: "#4F9DFF", x: 205, y: 150 },
     { cat: 4, label: "Capital", color: "#F7A93B", x: 880, y: 140 },
     { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 925, y: 395 },
-    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 790, y: 690 },
-    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 528, y: 735 },
-    { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 300, y: 705 },
+    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 868, y: 742 },
+    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 300, y: 880 },
+    { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 215, y: 735 },
     { cat: 11, label: "Standards, insurers and users", color: "#F3C9A2", x: 125, y: 590 },
     { cat: 7, label: "Public authority", color: "#B79CFF", x: 150, y: 372 },
-    { cat: 8, label: "Advocacy and political money", color: "#FF6FB1", x: 372, y: 292 }
+    { cat: 8, label: "Advocacy and political money", color: "#FF6FB1", x: 400, y: 288 },
+    { cat: 12, label: "People in more than one place", color: "#A9B8C4", x: 560, y: 720 }
   ];
   const C = new Map(CLUSTERS.map(c => [c.cat, c]));
 
@@ -55,15 +74,16 @@
     return [s.slice(0, cut), s.slice(cut + 1)];
   }
   const deg = new Map();
-  D.edges.forEach(e => { deg.set(e.from, (deg.get(e.from) || 0) + 1); deg.set(e.to, (deg.get(e.to) || 0) + 1); });
-  const nodes = D.nodes.map(n => {
+  EDGES.forEach(e => { deg.set(e.from, (deg.get(e.from) || 0) + 1); deg.set(e.to, (deg.get(e.to) || 0) + 1); });
+  const people = X.people.map(p => ({ id: p.id, name: p.name, cat: 12, person: true, subtype: "Person", country: "" }));
+  const nodes = D.nodes.concat(people).map(n => {
     const d = deg.get(n.id) || 0;
     const short = SHORT[n.id] || n.name;
-    return { id: n.id, name: n.name, short, lines: wrap(short), cat: n.cat, deg: d, r: Math.max(5, 8.2 * Math.sqrt(d)), always: d >= 2, data: n };
+    return { id: n.id, name: n.name, short, lines: wrap(short), cat: n.cat, deg: d, r: Math.max(5, 8.2 * Math.sqrt(d)), always: d >= 2 || !!n.person, person: !!n.person, data: n };
   });
   const byId = new Map(nodes.map(n => [n.id, n]));
   const pairs = new Map();
-  D.edges.forEach(e => {
+  EDGES.forEach(e => {
     const k = e.from + ">" + e.to;
     if (!pairs.has(k)) pairs.set(k, { s: byId.get(e.from), t: byId.get(e.to), ties: [] });
     pairs.get(k).ties.push(e);
@@ -113,7 +133,7 @@
   links.forEach(l => {
     const color = C.get(l.s.cat).color;
     const w = 1.5 + 1.3 * (l.ties.length - 1);
-    l.el = el("path", { class: "link", stroke: color, "stroke-width": w.toFixed(1), "marker-end": `url(#wm-${l.s.cat})` }, gLinks);
+    l.el = el("path", { class: "link" + (l.ties.every(t => t.ext) ? " ext" : ""), stroke: color, "stroke-width": w.toFixed(1), "marker-end": `url(#wm-${l.s.cat})` }, gLinks);
     // the moving dots are the arrow's own colour, a little brighter and wider than the line they ride on
     l.flow = el("path", { class: "flow", stroke: color, "stroke-width": (w + 0.8).toFixed(1) }, gFlow);
     l.draw = () => { const d = linkPath(l); l.el.setAttribute("d", d); l.flow.setAttribute("d", d); };
@@ -147,8 +167,8 @@
 
   /* ---------- state ---------- */
   const state = { sel: null, hover: null, fam: "all" };
-  const famLabel = id => { const f = U.FAMILIES.find(x => x.id === id); return f ? f.label : ""; };
-  const inFam = t => state.fam === "all" || U.famOf[t.type] === state.fam;
+  const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
+  const inFam = t => state.fam === "all" || famOf(t) === state.fam;
   const touches = (l, f) => f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (l.s.cat === f.id || l.t.cat === f.id);
 
   function refresh() {
@@ -171,28 +191,28 @@
 
   /* ---------- the panel under the map ---------- */
   const panel = $("webPanel"), blurb = $("webBlurb"), lens = $("webLens"), pick = $("webPick");
-  const count = fn => D.edges.filter(fn).length;
+  const count = fn => EDGES.filter(fn).length, baseCount = fn => D.edges.filter(fn).length;
   const catOf = id => byId.get(id).cat;
 
   function tieItem(t, out) {
-    const other = byId.get(out ? t.to : t.from), bits = [U.typeLabel(t.type)];
+    const other = byId.get(out ? t.to : t.from), bits = [typeLabel(t)];
     if (t.amount != null) bits.push(U.fmtAmount(t.amount, t.currency));
     if (t.date) bits.push(U.fmtDate(t.date));
-    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${C.get(other.cat).color}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}</span></li>`;
+    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${C.get(other.cat).color}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}</span></li>`;
   }
   function tieBlock(title, list, out) {
-    return `<div><h4>${title} (${list.length})</h4>${list.length ? `<ul>${list.map(t => tieItem(t, out)).join("")}</ul>` : `<p class="wp-none">None recorded${state.fam !== "all" ? " for this kind of tie" : ""}.</p>`}</div>`;
+    return `<div><h3>${title} (${list.length})</h3>${list.length ? `<ul>${list.map(t => tieItem(t, out)).join("")}</ul>` : `<p class="wp-none">None recorded${state.fam !== "all" ? " for this kind of tie" : ""}.</p>`}</div>`;
   }
   function renderPanel() {
     const s = state.sel, filt = state.fam !== "all" ? ` Showing only: ${esc(famLabel(state.fam).toLowerCase())}.` : "";
     if (s && s.type === "node") {
       const n = byId.get(s.id), c = C.get(n.cat);
-      const out = D.edges.filter(t => t.from === n.id && inFam(t)), inc = D.edges.filter(t => t.to === n.id && inFam(t));
+      const out = EDGES.filter(t => t.from === n.id && inFam(t)), inc = EDGES.filter(t => t.to === n.id && inFam(t));
       panel.innerHTML = `<div class="wp-main">
-          <span class="web-eyebrow" style="color:${c.color}">${tidy(c.label)} · ${tidy(n.data.subtype)} · ${tidy(n.data.country)}</span>
-          <h3>${tidy(n.name)}</h3>
-          <p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>
-          <p class="wp-small">${n.deg} documented ${n.deg === 1 ? "tie" : "ties"} in total.${filt} <a href="#a-${esc(n.id)}">Open the full profile</a></p>
+          <span class="web-eyebrow" style="color:${c.color}">${n.person ? "Person · from the control evidence" : `${tidy(c.label)} · ${tidy(n.data.subtype)} · ${tidy(n.data.country)}`}</span>
+          <h2>${tidy(n.name)}</h2>
+          ${n.person ? `<p>The arrows show documented roles and disclosed interests. They establish a specific interest, not a motive, and they are not control.</p>` : `<p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>`}
+          <p class="wp-small">${n.deg} documented ${n.deg === 1 ? "tie" : "ties"} in total.${filt} ${n.person ? `<a href="#dp-people">See the people evidence</a>` : `<a href="#a-${esc(n.id)}">Open the full profile</a>`}</p>
         </div>
         <div class="wp-ties">${tieBlock("Arrows going out to", out, true)}${tieBlock("Arrows coming in from", inc, false)}</div>`;
     } else if (s) {
@@ -202,23 +222,23 @@
       const top = c.nodes.filter(n => n.deg).slice(0, 8);
       panel.innerHTML = `<div class="wp-main">
           <span class="web-eyebrow" style="color:${c.color}">Group · ${c.nodes.length} actors</span>
-          <h3>${tidy(c.label)}</h3>
-          <p>${about ? tidy(about.textContent) : ""}</p>
-          <p class="wp-small">${out} ties go out to other groups, ${inc} come in, and ${within} stay inside the group.${filt} <a href="#cat-${c.cat}">Read about this category</a></p>
+          <h2>${tidy(c.label)}</h2>
+          <p>${about ? tidy(about.textContent) : c.cat === 12 ? "People with documented roles or disclosed interests in more than one organisation on the map." : ""}</p>
+          <p class="wp-small">${out} ties go out to other groups, ${inc} come in, and ${within} stay inside the group.${filt} ${c.cat === 12 ? `<a href="#dp-people">See the people evidence</a>` : `<a href="#cat-${c.cat}">Read about this category</a>`}</p>
         </div>
-        <div class="wp-ties"><div><h4>Most documented ties in this group</h4><ul>${top.map(n => `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${n.deg} ${n.deg === 1 ? "tie" : "ties"}</span></li>`).join("")}</ul></div></div>`;
+        <div class="wp-ties"><div><h3>Most documented ties in this group</h3><ul>${top.map(n => `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${n.deg} ${n.deg === 1 ? "tie" : "ties"}</span></li>`).join("")}</ul></div></div>`;
     } else {
       const labs = t => catOf(t.from) === 3 || catOf(t.to) === 3;
       const two = t => t.from === "openai" || t.to === "openai" || t.from === "anthropic" || t.to === "anthropic";
       const grants = t => catOf(t.from) === 5 && catOf(t.to) === 6;
-      const pub = t => catOf(t.from) === 7 && catOf(t.to) === 3;
-      panel.innerHTML = `<div class="wp-notes">
-          <div><h3>The labs sit in the middle</h3><p>${count(labs)} of the ${D.edges.length} ties touch a frontier developer, and ${count(two)} touch OpenAI or Anthropic. Those two also disclose the most, so part of this is documentation.</p><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
-          <div><h3>Safety research has few paymasters</h3><p>${count(grants)} ties run from a safety funder to a research organisation. In one published list, a single funder accounts for about 72% of the 2025 estimates.</p><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
-          <div><h3>Public bodies test and set scope</h3><p>${count(pub)} ties run from a public authority to a lab. The testing agreements among them are voluntary and are not regulatory approval.</p><button type="button" class="web-act" data-lens="public">Show public authority</button></div>
+          panel.innerHTML = `<div class="wp-notes">
+          <div><h2>The labs sit in the middle</h2><p>${baseCount(labs)} of the ${D.edges.length} ties in the base map touch a frontier developer, and ${baseCount(two)} touch OpenAI or Anthropic. Those two also disclose the most, so part of this is documentation.</p><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
+          <div><h2>Safety research has few paymasters</h2><p>${baseCount(grants)} base ties run from a safety funder to a research organisation. In one published list, a single funder accounts for about 72% of the 2025 estimates.</p><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
+          <div><h2>Evaluators depend on the labs they test</h2><p>${count(t => famOf(t) === "access")} dashed arrows show model access, compute credits and commissioned work flowing from labs to evaluators and training programmes. No executed agreement was obtained.</p><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
+          <div><h2>A few people sit in more than one place</h2><p>${X.people.length} people hold documented roles or disclosed interests across funders, labs, evaluators and public bodies. That is an interest, not proof of a motive.</p><button type="button" class="web-act" data-group="12">Show the people</button></div>
         </div>`;
     }
-    const fam = U.FAMILIES.find(f => f.id === state.fam);
+    const fam = FAMS.find(f => f.id === state.fam);
     blurb.textContent = fam ? `${fam.label}. ${fam.blurb}` : "Pick a bubble or a group name to follow its ties. Pick a kind of tie above the map to see only those arrows. Drag a bubble to untangle it.";
     $("webClear").hidden = !state.sel && state.fam === "all";
   }
@@ -243,9 +263,9 @@
     refresh();
     renderPanel();
   }
-  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training" };
-  lens.innerHTML = [{ id: "all", label: "All ties" }].concat(U.FAMILIES).map(f =>
-    `<button type="button" data-v="${f.id}" aria-pressed="${f.id === "all"}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? D.edges.length : count(t => U.famOf[t.type] === f.id)}</span></button>`).join("");
+  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests" };
+  lens.innerHTML = [{ id: "all", label: "All ties" }].concat(FAMS).map(f =>
+    `<button type="button" data-v="${f.id}" aria-pressed="${f.id === "all"}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? EDGES.length : count(t => famOf(t) === f.id)}</span></button>`).join("");
   lens.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setFam(b.dataset.v); });
 
   pick.innerHTML = `<option value="">Choose an actor or a group</option><optgroup label="Whole groups">${CLUSTERS.map(c => `<option value="g:${c.cat}">${esc(c.label)}</option>`).join("")}</optgroup>` +
