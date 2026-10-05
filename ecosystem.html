@@ -96,6 +96,8 @@ main > .wrap { padding-top: 16px; }
 #webStage .coin.faint text { fill-opacity: .55; }
 #webStage.has-focus .flow.on { opacity: 1; }
 #webStage .link.money { opacity: .56; }
+/* the drawn arrows, money signs and names are never pointer targets; an arrow is pointed at through its wide invisible copy */
+#webStage .link, #webStage .flow, #webStage .nlabel, #webStage .plab { pointer-events: none; }
 #webStage .hit { fill: none; stroke: transparent; stroke-width: 14; pointer-events: stroke; cursor: help; }
 #webStage.has-focus .hit:not(.on) { pointer-events: none; }
 #webStage .link.hot { opacity: 1 !important; }
@@ -196,10 +198,16 @@ main > .wrap { padding-top: 16px; }
 #webStage.lv1 .lab { font-size: 10.5px; stroke-width: 3px; }
 #webStage .lab.sm { font-size: 7.5px; stroke-width: 2.4px; fill: var(--w-muted); }
 #webStage.has-focus .nlabel.on .lab.sm { fill: var(--w-ink); }
-#webStage.lv1 .link { opacity: .16; }
-#webStage.lv1 .link.money { opacity: .15; }
-#webStage.lv1 .flow { opacity: .5; }
-#webStage.lv1.has-focus .link:not(.on) { opacity: .04; }
+/* Zoomed in there are several hundred arrows. They are faded with stroke-opacity, not opacity, so no arrow needs a layer of its own,
+   their heads are drawn only for the arrows of a chosen bubble or filter, nothing moves until a bubble is chosen, and nothing cross-fades. */
+#webStage.lv1 .link, #webStage.lv1 .link.money { opacity: 1; stroke-opacity: .16; transition: none; }
+#webStage.lv1:not(.has-focus) .link:not(.hot), #webStage.lv1.has-focus .link:not(.on):not(.hot) { marker-end: none; }
+#webStage.lv1 .link.hot { stroke-opacity: 1 !important; }
+#webStage.lv1.has-focus .link:not(.on) { opacity: 1; stroke-opacity: .04; }
+#webStage.lv1.has-focus .link.on { opacity: 1; stroke-opacity: .95; }
+#webStage.lv1 .flow { display: none; transition: none; }
+#webStage.lv1.has-pick .flow.on { display: block; opacity: 1; }
+#webStage.lv1 .node, #webStage.lv1 .nlabel { transition: none; }
 #webStage.zoomed { cursor: grab; touch-action: none; }
 #webStage .band { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; fill: var(--w-muted); }
 #webStage .bandline { fill: none; stroke: var(--w-line); stroke-dasharray: 4 5; }
@@ -545,7 +553,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">20</b> ties from the control evidence · <b id="nExtPeople">12</b> named people, shown as dotted links and not as bubbles · public-source evidence through 4 October 2026.</span> <span id="webSizeNote">Bubble size shows people employed, on a scale where each step is ten times more. A dashed ring means no figure was found, which does not mean the organisation is small. Size here is not influence.</span> Position is a layout choice. Arrow width compares unlike kinds of money: a conditional commitment, a recommended grant, a paid grant and the value of compute credits. Select a bubble to see which kind each one is. A thin arrow with a faint money sign has no disclosed amount, which does not mean the amount is small. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.<span id="webFieldNote" hidden> Zoomed in, the entries, their categories and their descriptions are from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a>, read on 5 October 2026 and reused under its CC BY-SA licence. A grant arrow is one funder's public record for one recipient, added up inside that record over the years it covers. Totals from different records are never added together, and a money sign rides only the arrows of 1m or more. Every bubble is named: the small type comes up to reading size when the plate is zoomed.</span></figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">20</b> ties from the control evidence · <b id="nExtPeople">12</b> named people, shown as dotted links and not as bubbles · public-source evidence through 4 October 2026.</span> <span id="webSizeNote">Bubble size shows people employed, on a scale where each step is ten times more. A dashed ring means no figure was found, which does not mean the organisation is small. Size here is not influence.</span> Position is a layout choice. Arrow width compares unlike kinds of money: a conditional commitment, a recommended grant, a paid grant and the value of compute credits. Select a bubble to see which kind each one is. A thin arrow with a faint money sign has no disclosed amount, which does not mean the amount is small. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.<span id="webFieldNote" hidden> Zoomed in, the entries, their categories and their descriptions are from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a>, read on 5 October 2026 and reused under its CC BY-SA licence. A grant arrow is one funder's public record for one recipient, added up inside that record over the years it covers. Totals from different records are never added together. A further set of arrows shows money that AI companies and their foundations have announced for work outside the company, one arrow to an announcement, and most of those are commitments and not payments. Money signs move only on the arrows of a chosen bubble or group. Every bubble is named: the small type comes up to reading size when the plate is zoomed.</span></figcaption>
     </figure>
 
     <div class="readrow">
@@ -1296,8 +1304,24 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <div class="chapter-head">
         <span class="chapter-num">ZOOMED IN · THE AI SAFETY FIELD</span>
         <h2>The AI safety field, entry by entry</h2>
-        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a>. This section holds the same entries as a list, with the grants that four public records show reaching each one.</p>
+        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a>. This section holds the same entries as a list, with the money that AI companies have announced and the grants that four public records show reaching each one.</p>
         <p class="small" style="max-width:var(--measure)">The names, categories and descriptions are AISafety.com's own, read on 5 October 2026 and reused under its CC BY-SA licence, so that part of this page is offered under the same licence. The money figures are not from that map. They come from the four grant records below.</p>
+      </div>
+
+      <div class="sub" id="field-company">
+        <h3>What the AI companies have announced</h3>
+        <div class="prose">
+          <p>The four grant records further down are all from philanthropic funders, so on their own they make it look as if no company money reaches the field. It does. The table lists every announcement found in which an AI company, or the foundation that controls one, puts money into safety research, fellowships or policy work outside the company. Each is one line with its own source, and the map draws each as one arrow under "Company money".</p>
+          <p>Three things limit what the table can say. Most amounts are commitments in the company's own announcement and not confirmed payments. Several of the largest are not safety research: Anthropic's two largest programmes are about the economic effects of AI. And the largest item of all is missing, because no company publishes what it spends on its own safety teams.</p>
+        </div>
+        <div class="tbl-box" tabindex="0" role="region" aria-label="Money announced by AI companies for work outside the company">
+          <table class="tbl">
+            <thead><tr><th>From</th><th>To</th><th>What</th><th>Amount</th><th>When</th><th>Source</th></tr></thead>
+            <tbody class="needs-data" id="fieldCompany"></tbody>
+          </table>
+        </div>
+        <p class="small" style="max-width:var(--measure)" id="fieldCompanyBase"></p>
+        <p class="small" style="max-width:var(--measure)"><strong>Not on the map, but part of the answer.</strong> Much of the philanthropic money is itself from technology fortunes: Coefficient Giving is funded mainly by Dustin Moskovitz and Cari Tuna, and the Survival and Flourishing Fund's recommendations go mostly to Jaan Tallinn. In September 2026 Anthropic's seven co-founders were reported to have pledged 80% of their equity to charity, with no schedule or split between causes published. These are personal pledges, and people are not bubbles on this map. The OpenAI Foundation has said it will commit USD 25bn over time to curing disease and to AI resilience combined; only the USD 130m figure above is tied to resilience grants so far.</p>
       </div>
 
       <div class="sub" id="field-records">
@@ -1816,7 +1840,7 @@ Explore.fold(".findings > li, .frame", "h3");
 Explore.fold("#actors", ".chapter-head", { open: "Open the 100 profiles", close: "Close the profiles" });
 Explore.fold("#ties", ".chapter-head", { open: "Open the relationship ledger", close: "Close the ledger" });
 Explore.fold("#money", ".chapter-head", { open: "Open the money section", close: "Close the money section" });
-Explore.fold("#field", ".chapter-head", { open: "Open the safety field: grant records and every entry", close: "Close the safety field section" });
+Explore.fold("#field", ".chapter-head", { open: "Open the safety field: company money, grant records and every entry", close: "Close the safety field section" });
 Explore.fold("#method", ".chapter-head", { open: "Open method, terms and boundaries", close: "Close the method section" });
 Explore.fold("#sources", ".chapter-head", { open: "Open the 93 sources", close: "Close the sources" });
 </script>

@@ -27,7 +27,22 @@
     outOf.get(f.from).push(f);
   });
   const setText = (id, v) => { const x = $(id); if (x) x.textContent = v; };
-  setText("nFieldEntries", F.entries.length);
+  setText("nFieldEntries", F.entries.filter(e => !e.own).length);
+
+  /* ---------- company money: one line to an announcement ---------- */
+  const CKIND = { grant: "Grant", commitment: "Commitment announced", credits: "Credits committed", equity: "Equity investment", pool: "Share of a joint fund, not stated", open: "Programme funded, budget not published" };
+  const company = (F.company || []).slice().sort((a, b) => (b.amount || 0) - (a.amount || 0) || nameOf(a.from).localeCompare(nameOf(b.from)));
+  const companyBody = $("fieldCompany");
+  if (companyBody) companyBody.innerHTML = company.map(c =>
+    `<tr><td>${tidy(nameOf(c.from))}</td><td>${tidy(nameOf(c.to))}</td><td><strong>${esc(CKIND[c.kind] || c.kind)}.</strong> ${tidy(c.what)}</td>
+      <td class="amt">${c.amount ? esc(usd(c.amount)) : "not stated"}</td><td class="amt">${esc(U.fmtDate(c.date))}</td><td><a href="${esc(c.src.url)}" rel="noopener">${tidy(c.src.title)}</a></td></tr>`).join("");
+  // money ties already in the base map that leave a company or a company-funded body
+  const firms = new Set(D.nodes.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id)), givers = new Set(Array.from(firms).concat(["foundation", "fmf", "aisf"]));
+  const CTL = (window.CONTROL && window.CONTROL.graph && window.CONTROL.graph.edges) || [];
+  const MONEY = ["philanthropic_support", "philanthropic_or_public_support", "research_grant", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "matching_offer"];
+  const baseTies = D.edges.concat(CTL).filter(e => MONEY.indexOf(e.type) >= 0 && givers.has(e.from) && !firms.has(e.to) && actor.has(e.to));
+  setText("fieldCompanyBase", baseTies.length ? `The industry map already held ${baseTies.length} money ties of this kind, and the "Company money" filter shows them too: ` +
+    baseTies.map(e => `${nameOf(e.from)} to ${nameOf(e.to)}${e.amount != null ? " (" + usd(e.amount) + ")" : " (amount not stated)"}`).join("; ") + "." : "");
 
   /* ---------- the records ---------- */
   const order = ["cg", "sff", "ltff", "eaif", "manifund"].filter(k => F.records[k]);
@@ -50,19 +65,21 @@
   const list = F.entries.slice().sort((a, b) => rank.get(a.cats[0]) - rank.get(b.cats[0]) || a.name.localeCompare(b.name));
   function card(e) {
     const id = e.node || e.id, got = (inOf.get(id) || []).slice().sort((a, b) => b.total - a.total), gave = outOf.get(id) || [];
+    const firm = company.filter(c => c.to === id);
     const cats = e.cats.map(c => catLabel.get(c)).join(", ");
     const given = gave.reduce((a, f) => a + f.total, 0);
     const money = (got.length ? `<ul class="fgrants">${got.map(f => `<li><b>${esc(amount(f))}</b> from ${tidy(nameOf(f.from))} <span class="small">(${esc(rows(f))}, ${esc(yrs(f))}${f.cond ? `, plus matching pledges of up to ${esc(usd(f.cond))}` : ""})</span></li>`).join("")}</ul>` : "")
       + (gave.length ? `<p class="small">Its own record lists ${esc(usd(given))} for ${gave.length} ${gave.length === 1 ? "organisation" : "organisations"} on this map.</p>` : "")
-      + (!got.length && !gave.length ? `<p class="small">No row in the four grant records. That is not the same as no funding.</p>` : "");
+      + (firm.length ? `<ul class="fgrants">${firm.map(c => `<li><b>${c.amount ? esc(usd(c.amount)) : "Amount not stated"}</b> from ${tidy(nameOf(c.from))} <span class="small">(${esc((CKIND[c.kind] || c.kind).toLowerCase())}, ${esc(U.fmtDate(c.date))}, company announcement)</span></li>`).join("")}</ul>` : "")
+      + (!got.length && !gave.length && !firm.length ? `<p class="small">No row in the four grant records and no company announcement. That is not the same as no funding.</p>` : "");
     const text = [e.name, e.short, cats, e.desc].concat(got.map(f => nameOf(f.from))).join(" ").toLowerCase();
-    return `<article class="pcard" id="fe-${esc(e.id)}" data-cat="${esc(e.cats.join(" "))}" data-money="${got.length ? "in" : ""} ${gave.length ? "out" : ""} ${!got.length && !gave.length ? "none" : ""}" data-text="${esc(text)}">
+    return `<article class="pcard" id="fe-${esc(e.id)}" data-cat="${esc(e.cats.join(" "))}" data-money="${got.length || firm.length ? "in" : ""} ${gave.length ? "out" : ""} ${!got.length && !gave.length && !firm.length ? "none" : ""}" data-text="${esc(text)}">
       <h3>${tidy(e.name)}</h3>
-      <p class="who">${tidy(cats)}${e.node ? " · also on the industry map" : ""}</p>
+      <p class="who">${tidy(cats)}${e.node ? " · also on the industry map" : ""}${e.own ? " · added by this map, not on the AISafety.com map" : ""}</p>
       <p class="plain">${tidy(e.desc)}</p>
-      <span class="lbl">${got.length ? "Grants in the records" : "Grant records"}</span>
+      <span class="lbl">${got.length || firm.length ? "Money on record" : "Grant records"}</span>
       ${money}
-      <p class="small"><a href="${esc(e.url)}" rel="noopener">Its own site</a> · <button class="link-btn" type="button" data-show="${esc(id)}">Show on the map</button></p>
+      <p class="small"><a href="${esc(e.url)}" rel="noopener">${e.own ? "The announcement" : "Its own site"}</a> · <button class="link-btn" type="button" data-show="${esc(id)}">Show on the map</button></p>
     </article>`;
   }
   grid.innerHTML = list.map(card).join("");

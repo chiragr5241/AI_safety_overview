@@ -43,20 +43,21 @@
   const ORG_EDGES = EDGES.filter(e => !personById.has(e.from) && !personById.has(e.to));
   const EXT_FAM = { access_in_kind: "access", commissioned_work: "access", access_mou: "access", compute_credits: "access", grant_paid: "grants", grant_recommended: "grants",
     political_contribution: "politics", role_board: "people", role_adviser: "people", role_former: "people", role_executive: "people", role_staff: "people",
-    role_regrantor: "people", role_funder: "people", disclosed_investment: "people", grants_on_record: "grants" };
+    role_regrantor: "people", role_funder: "people", disclosed_investment: "people", grants_on_record: "grants", company_money: "corp" };
   const EXT_LABEL = { access_in_kind: "Model access in kind", commissioned_work: "Commissioned work", access_mou: "Access under a voluntary MoU", compute_credits: "Compute credits",
     grant_paid: "Grant or gift, paid", grant_recommended: "Grant, recommended", political_contribution: "Political contribution", role_board: "Board or committee seat",
     role_adviser: "Adviser", role_former: "Former role", role_executive: "Executive", role_staff: "Staff role", role_regrantor: "Regrantor", role_funder: "Funder",
     disclosed_investment: "Disclosed investment" };
   const FAMS = U.FAMILIES.concat([
     { id: "access", label: "Access and contracts", blurb: "What evaluators and training programmes receive from the labs: model access, compute credits and commissioned work. The executed agreements, with any limits on publication, were not obtained." },
+    { id: "corp", label: "Company money", blurb: "Money leaving an AI company, an investor or a company foundation for work outside the companies: grants, fellowships, pooled funds, credits and political donations. Zoomed in, this adds what the companies have announced for safety research and fellowships. Most figures are commitments from the company's own announcement and not confirmed payments. What a company spends on its own safety teams is not published, so it is not on the map." },
     { id: "people", label: "People and interests", blurb: "Each dotted link joins two organisations where the same named person holds a documented role or a disclosed investment. That establishes an interest, not a motive, and it is not control." }
   ]);
   const famOf = t => EXT_FAM[t.type] || U.famOf[t.type];
   // Ties where money, or credit with a stated money value, moves in the direction of the arrow. Supply and lobbying are left out:
   // there the payment runs the other way, or to third parties.
   const MONEY = new Set(["equity_investment", "grant_recommendation", "philanthropic_support", "philanthropic_or_public_support", "research_grant",
-    "matching_offer", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "grants_on_record"]);
+    "matching_offer", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "grants_on_record", "company_money"]);
   // Amounts on the map run from tens of thousands to tens of billions, so width goes up one step per power of ten.
   // The steps grow as the sums do, so the big sums stand clear of the small ones. The widths were set by the author.
   const STEPS = ["under 100k", "100k to 1m", "1m to 10m", "10m to 100m", "100m to 1bn", "1bn to 10bn", "10bn or more"];
@@ -66,7 +67,7 @@
   const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5, W_BROAD = 12;   // from W_WIDE up, the arrowhead grows with the line; from W_BROAD up it grows more slowly
   const headOf = w => w >= W_BROAD ? "wmx" : w >= W_WIDE ? "wmw" : "wm";
   const STILL = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const typeLabel = t => t.flow ? flowLabel(t.flow) : EXT_LABEL[t.type] || U.typeLabel(t.type);
+  const typeLabel = t => t.flow ? flowLabel(t.flow) : t.corp ? KIND[t.corp.kind] : EXT_LABEL[t.type] || U.typeLabel(t.type);
 
   // One cluster per category. Colour marks the group; arrows take the colour of the group they start from.
   const C0 = [
@@ -101,11 +102,12 @@
     podcast: ["#E58FB0", "Podcasts that cover AI safety."],
     video: ["#FF9F68", "Video channels that cover AI safety."],
     resource: ["#9CB6FF", "Reference sites, forums, tools and directories."],
+    company_programmes: ["#DCE6EE", "Grant funds and fellowships that an AI company or its foundation has announced for work outside the company. This map added them from the companies' own announcements. They are not entries on the AISafety.com map."],
     gone: ["#8A94A6", "Projects the field map marks as no longer active. They stay on record because grants to them do."]
   };
   // where a field category's new bubbles come from when the map zooms in: the nearest group on the industry map
   const PARENT = { funding: 5, empirical_research: 6, conceptual_research: 6, strategy: 6, forecasting: 6, research_support: 6, capabilities_research: 3, governance: 7,
-    advocacy: 8, training_and_education: 10, career_support: 10, blog: 9, newsletter: 9, podcast: 9, video: 9, resource: 9, gone: 6 };
+    advocacy: 8, company_programmes: 3, training_and_education: 10, career_support: 10, blog: 9, newsletter: 9, podcast: 9, video: 9, resource: 9, gone: 6 };
   const C1F = F ? F.cats.map(c => ({ cat: "f-" + c.id, fid: c.id, label: c.label, color: (FIELD_CATS[c.id] || ["#A3B5C1", ""])[0], about: (FIELD_CATS[c.id] || ["", ""])[1], field: true, x: 0, y: 0 })) : [];
   const EVERY = C0.concat(C1F);
   let CLUSTERS = C0;   // the clusters on the plate at the current zoom level
@@ -157,8 +159,19 @@
   // Money between bubbles in the public grant records. One tie per funder's record per recipient: its amount is that record's total for that recipient.
   const FLOWS = F ? F.flows.filter(f => byId.has(f.from) && byId.has(f.to)) : [];
   const FLOW_TIES = FLOWS.map((f, i) => ({ id: "G" + (i + 1), from: f.from, to: f.to, type: "grants_on_record", amount: f.total || null, currency: "USD", date: "", status: "", field: true, flow: f }));
+  // Money that AI companies and their foundations have announced for work outside the company: one tie to an announcement, each with its own source.
+  const KIND = { grant: "Grant", commitment: "Commitment announced", credits: "Credits committed", equity: "Equity investment", pool: "Share of a joint fund, not stated", open: "Programme funded, budget not published" };
+  const CORP_TIES = F ? (F.company || []).filter(c => byId.has(c.from) && byId.has(c.to)).map((c, i) =>
+    ({ id: "K" + (i + 1), from: c.from, to: c.to, type: "company_money", amount: c.amount, currency: c.currency, date: c.date, status: c.what, field: true, corp: c })) : [];
+  const FIELD_TIES = FLOW_TIES.concat(CORP_TIES);
+  const CIN = new Map(), COUT = new Map();
+  CORP_TIES.forEach(t => { if (!CIN.has(t.to)) CIN.set(t.to, []); CIN.get(t.to).push(t); if (!COUT.has(t.from)) COUT.set(t.from, []); COUT.get(t.from).push(t); });
+  const NFIELD = F ? F.entries.filter(e => !e.own).length : 0, NSHARED = base.filter(n => n.entry).length;   // entries on the AISafety.com map, and how many are also industry-map bubbles
+  // the "Company money" filter: ties from a company announcement, and money ties in the base map that leave a company, an investor or a company foundation
+  const COMPANY = new Set(base.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id)), GIVER = new Set(Array.from(COMPANY).concat(["foundation", "fmf", "aisf"]));
+  const isCorp = t => !!t.corp || (MONEY.has(t.type) && GIVER.has(t.from) && !COMPANY.has(t.to));
   all.forEach(n => { n.deg1 = n.deg0; });
-  FLOW_TIES.forEach(t => { byId.get(t.from).deg1++; byId.get(t.to).deg1++; });
+  FIELD_TIES.forEach(t => { byId.get(t.from).deg1++; byId.get(t.to).deg1++; });
   const recOf = f => F.records[f.src];
   const yrs = f => f.first === f.last ? f.first : `${f.first} to ${f.last}`;
   const UNIT = { cg: "listed", sff: "recommended", ltff: "paid out", eaif: "paid out" };
@@ -168,7 +181,7 @@
   const GIN = new Map(), GOUT = new Map();
   FLOWS.forEach(f => { if (!GIN.has(f.to)) GIN.set(f.to, []); GIN.get(f.to).push(f); if (!GOUT.has(f.from)) GOUT.set(f.from, []); GOUT.get(f.from).push(f); });
   const pairs = new Map();
-  ORG_EDGES.concat(FLOW_TIES).forEach(e => {
+  ORG_EDGES.concat(FIELD_TIES).forEach(e => {
     const k = e.from + ">" + e.to;
     if (!pairs.has(k)) pairs.set(k, { s: byId.get(e.from), t: byId.get(e.to), ties: [] });
     pairs.get(k).ties.push(e);
@@ -264,26 +277,37 @@
     { id: "gin", field: true, pill: "Grants received", key: "size = grants received", unit: "", log: true,
       keyText: "the largest total that any one funder's public record lists for the organisation; each step up in size is ten times more",
       of: n => {
-        const fs = (GIN.get(n.id) || []).filter(f => f.total > 0).sort((a, b) => b.total - a.total);
-        if (!fs.length) return null;
-        const f = fs[0], r = recOf(f);
-        return { v: f.total, num: "$" + big(f.total), text: `USD ${big(f.total)} from ${byId.get(f.from).short}: ${flowLabel(f)}`, when: "", basis: r.title, est: false,
-          note: fs.length > 1 ? `${fs.length - 1 === 1 ? "One other record lists" : (fs.length - 1) + " other records list"} money for it: ${fs.slice(1).map(x => `${byId.get(x.from).short} USD ${big(x.total)}`).join(", ")}. The records are not added together` : "", url: r.url };
+        // one candidate for each funder's record, each company announcement and, for a joint programme, its stated size; the largest is drawn
+        const c = (GIN.get(n.id) || []).filter(f => f.total > 0).map(f => ({ v: f.total, text: `USD ${big(f.total)} from ${byId.get(f.from).short}: ${flowLabel(f)}`, short: `${byId.get(f.from).short} USD ${big(f.total)}`, basis: recOf(f).title, url: recOf(f).url }))
+          .concat((CIN.get(n.id) || []).filter(t => t.amount && (t.corp.kind === "grant" || t.corp.kind === "commitment")).map(t => ({ v: t.amount, text: `USD ${big(t.amount)} from ${byId.get(t.from).short}: ${KIND[t.corp.kind].toLowerCase()}, ${U.fmtDate(t.date)}`, short: `${byId.get(t.from).short} USD ${big(t.amount)}`, basis: t.corp.src.title, url: t.corp.src.url })))
+          .concat(n.entry && n.entry.stated ? [{ v: n.entry.stated.v, text: n.entry.stated.text, short: "", basis: n.entry.src.title, url: n.entry.src.url }] : [])
+          .sort((a, b) => b.v - a.v);
+        if (!c.length) return null;
+        const rest = c.slice(1).filter(x => x.short);
+        return { v: c[0].v, num: "$" + big(c[0].v), text: c[0].text, when: "", basis: c[0].basis, est: false,
+          note: rest.length ? `Other sources list money for it: ${rest.map(x => x.short).join(", ")}. They are not added together` : "", url: c[0].url };
       },
       r: v => Math.max(4.5, 4.5 + 4.3 * (Math.log10(v) - 3)), ticks: [[1e4, "10k"], [1e6, "1m"], [1e8, "100m, in US dollars"]],
-      note: k => `Bubble size shows the most money that any one funder's public record lists for the organisation, on a scale where each step is ten times more. Four records are read: Coefficient Giving's AI fund list, the Survival and Flourishing Fund's recommendations, the two Effective Altruism Funds payout lists and Manifund's project pages. They cover different years and different kinds of money (listed, recommended, paid out, raised), and one funder's grant can be passed on by another, so the records are not added together. ${k} of the ${nodes.length} bubbles have a figure. A dashed ring means no grant in these records, which is not the same as no funding: company revenue, government budgets and most private gifts are in none of them. Size here is not influence.`,
+      note: k => `Bubble size shows the most money that any one funder's public record lists for the organisation, on a scale where each step is ten times more. Four records are read: Coefficient Giving's AI fund list, the Survival and Flourishing Fund's recommendations, the two Effective Altruism Funds payout lists and Manifund's project pages. They cover different years and different kinds of money (listed, recommended, paid out, raised), and one funder's grant can be passed on by another, so the records are not added together. A company's announced grant or commitment counts in the same way, as one more source. ${k} of the ${nodes.length} bubbles have a figure. A dashed ring means no grant in these records, which is not the same as no funding: company revenue, government budgets and most private gifts are in none of them. Size here is not influence.`,
       about: "For each organisation, the map takes one funder's record at a time and adds up the rows in that record that name the organisation, over all the years the record covers. The bubble shows the largest of those totals. A recipient is matched by its name or by the web address the record links to. A grant to a university counts for a lab there only where the record names the lab. Grants to individuals are left out, because people are not bubbles on this map." },
     { id: "gout", field: true, pill: "Grants given", key: "size = grants given", unit: "", log: true,
       keyText: "what a funder's own public record lists for organisations on this map; each step up in size is ten times more",
       of: n => {
         const fs = (GOUT.get(n.id) || []).filter(f => f.total > 0);
-        if (!fs.length) return null;
-        const r = recOf(fs[0]), v = fs.reduce((a, f) => a + f.total, 0);
-        return { v, num: "$" + big(v), text: `USD ${big(v)} to ${fs.length} ${fs.length === 1 ? "organisation" : "organisations"} on this map`, when: "", basis: r.title, est: false,
-          note: `The whole record holds ${r.rows} rows worth USD ${big(r.listed)}; the rest goes to individuals and to organisations that are not on this map`, url: r.url };
+        if (fs.length) {
+          const r = recOf(fs[0]), v = fs.reduce((a, f) => a + f.total, 0);
+          return { v, num: "$" + big(v), text: `USD ${big(v)} to ${fs.length} ${fs.length === 1 ? "organisation" : "organisations"} on this map`, when: "", basis: r.title, est: false,
+            note: `The whole record holds ${r.rows} rows worth USD ${big(r.listed)}; the rest goes to individuals and to organisations that are not on this map`, url: r.url };
+        }
+        // a company has no grant record, only announcements, and separate announcements are not added together: the largest one is drawn
+        const cs = (COUT.get(n.id) || []).filter(t => t.amount).sort((a, b) => b.amount - a.amount);
+        if (!cs.length) return null;
+        const t = cs[0];
+        return { v: t.amount, num: "$" + big(t.amount), text: `Largest single amount announced: USD ${big(t.amount)} to ${byId.get(t.to).short} (${KIND[t.corp.kind].toLowerCase()}, ${U.fmtDate(t.date)})`, when: "", basis: t.corp.src.title, est: false,
+          note: cs.length > 1 ? `Other announcements on this map: ${cs.slice(1).map(x => `USD ${big(x.amount)} to ${byId.get(x.to).short}`).join(", ")}. They are not added together` : "", url: t.corp.src.url };
       },
       r: v => Math.max(6, 9 + 7 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e7, "10m"], [1e9, "1bn, in US dollars"]],
-      note: k => `Bubble size shows, for each of the ${k} funders whose public record is read here, the total that record lists for organisations on this map. It is part of what each one gives: the rest of a record goes to individuals and to organisations the map does not show. Every other bubble is a dashed ring. That says only that it publishes no record this map reads, not that it gives nothing. Size here is not influence.`,
+      note: k => `Bubble size shows what a funder gives to bubbles on this map. For the five funders with a public grant record it is that record's total for organisations shown here, which is part of what each one gives. For an AI company or its foundation it is the largest single amount it has announced for outside work, because separate announcements are not added together and most are commitments, not payments. ${k} bubbles have a figure. Every other bubble is a dashed ring, which says only that no record or announcement was read for it. Size here is not influence.`,
       about: "Five funders publish a record that this map reads row by row: Coefficient Giving (its AI fund only), the Survival and Flourishing Fund, the Long-Term Future Fund, the EA Infrastructure Fund and Manifund. Longview, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, government programmes and the AI companies' own grant schemes are on the map but publish no list that was read for this version." }
   ];
   const measureById = new Map(MEASURES.map(m => [m.id, m]));
@@ -460,7 +484,6 @@
   // the rule and heading over the groups carried down from the industry map when the plate is zoomed into the field
   band = { g: gBand, line: el("path", { class: "bandline" }, gBand), text: el("text", { class: "band", x: 10 }, gBand) };
   band.text.textContent = "From the industry map · actors with no entry on the AISafety.com map";
-  // gHit holds a wide invisible copy of every arrow, so a thin line is easy to point at
   // (person-link names are added to gLabels before the bubble names, so a bubble name wins where they meet)
 
   function linkPath(l) {
@@ -474,6 +497,7 @@
     return `M${f(a.x + Math.cos(sa) * (a.r + 2))},${f(a.y + Math.sin(sa) * (a.r + 2))}Q${f(mx)},${f(my)} ${f(b.x + Math.cos(ea) * (b.r + end))},${f(b.y + Math.sin(ea) * (b.r + end))}`;
   }
   let linkN = 0;
+  // gHit holds a wide invisible copy of every arrow, so a thin line is easy to point at
   links.forEach((l, i) => {
     l.hit = el("path", { class: "hit", "data-link": i }, gHit);
     if (l.inter) {
@@ -481,6 +505,7 @@
       l.label = el("text", { class: "plab", "text-anchor": "middle" }, gLabels);
       // surnames on the map keep the links readable; full names are in the row under the map and in the panel
       l.label.textContent = l.people.map(p => p.name.split(" ").pop()).join(", ");
+      l.parts = [l.el, l.label, l.hit];
       l.draw = () => { const d = linkPath(l); l.el.setAttribute("d", d); l.hit.setAttribute("d", d); l.label.setAttribute("x", l.mid[0].toFixed(1)); l.label.setAttribute("y", (l.mid[1] - 4).toFixed(1)); };
       l.draw();
       return;
@@ -490,6 +515,7 @@
     // the money signs that ride a money arrow; styleLink fills this in once the filter state exists
     l.flow = el("g", { class: "flow" }, gFlow);
     l.coins = [];
+    l.parts = [l.el, l.flow, l.hit];
     l.draw = () => { const d = linkPath(l); l.el.setAttribute("d", d); l.hit.setAttribute("d", d); if (STILL) parkCoins(l); };
     l.draw();
   });
@@ -522,13 +548,21 @@
     l.el.classList.toggle("ext", ext);
     l.el.style.strokeDasharray = ext && l.w > 2.5 ? `${(l.w * 2.4).toFixed(1)} ${(l.w * 0.8).toFixed(1)}` : "";
     l.draw();
+    l.m = m;
     l.flow.textContent = "";
     l.coins = [];
-    if (!m.n) return;
+    l.coinKey = "";
+  }
+  // The money signs are built only for arrows that will show them: all of them on the whole-industry view,
+  // and only the arrows of a chosen bubble or group when zoomed into the field, where there are several hundred money arrows.
+  function ensureCoins(l) {
+    if (l.coinKey === l.key) return;
+    l.coinKey = l.key;
+    const m = l.m;
+    if (!m || !m.n) return;
     // one to three signs per arrow, all moving at one slow speed, so only width and size say how much
-    // zoomed into the field there are several hundred money arrows, so a sign rides only those of 1m or more, one to an arrow
     const len = l.el.getTotalLength(), dur = Math.max(4, len / 15);
-    const n = level ? (m.top && m.top.amount < 1e6 ? 0 : 1) : m.top ? Math.max(1, Math.min(3, Math.round(len / 130))) : 1;
+    const n = level ? 1 : m.top ? Math.max(1, Math.min(3, Math.round(len / 130))) : 1;
     const size = m.top ? Math.min(18, 9.5 + 0.55 * l.w) : 8.5;
     for (let i = 0; i < n; i++) {
       const g = el("g", { class: "coin" + (m.top ? "" : " faint") }, l.flow);
@@ -578,7 +612,7 @@
 
   // move every bubble, title and arrow from where it is to where the layout now puts it
   let frame = 0;
-  function settle(ms) {
+  function settle(ms, done) {
     cancelAnimationFrame(frame);
     if (STILL || document.hidden) ms = 0;
     const from = nodes.map(n => [n.x, n.y, n.r]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
@@ -590,8 +624,8 @@
         n.place();
       });
       CLUSTERS.forEach((c, i) => { c.title.setAttribute("x", (tf[i][0] + (c.titleX - tf[i][0]) * e).toFixed(1)); c.title.setAttribute("y", (tf[i][1] + (c.titleY - tf[i][1]) * e).toFixed(1)); });
-      links.forEach(l => l.draw());
-      if (k < 1) frame = requestAnimationFrame(step);
+      links.forEach(l => { if (l.vis !== false) l.draw(); });
+      if (k < 1) frame = requestAnimationFrame(step); else if (done) done();
     };
     step(t0);
   }
@@ -599,47 +633,70 @@
   /* ---------- state ---------- */
   const state = { sel: null, hover: null, fam: "all" };
   const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
-  const inFam = t => (!t.field || level === 1) && (state.fam === "all" || famOf(t) === state.fam);   // the grant records show only when zoomed into the field
+  const inLens = (t, id) => id === "all" || (id === "corp" ? isCorp(t) : famOf(t) === id);
+  const inFam = t => (!t.field || level === 1) && inLens(t, state.fam);   // the grant records and company announcements show only when zoomed into the field
   const touches = (l, f) => f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (l.s.c.cat === f.id || l.t.c.cat === f.id);
   const linkVisible = l => l.inter ? (state.fam === "all" || state.fam === "people") : l.ties.some(inFam);
 
+  // An arrow's look can change only when the zoom level or the tie filter changes. Those bump the epoch, and refresh restyles then and not on
+  // every selection. The classes on arrows and bubbles are written only where they differ from what is already there.
+  let epoch = 1;
   function refresh() {
-    const focus = state.hover || state.sel, onNodes = new Set();
+    const focus = state.hover || state.sel, onNodes = new Set(), dim = !!focus || state.fam !== "all";
     links.forEach(l => {
-      if (!l.inter) styleLink(l);
-      const vis = linkVisible(l), on = vis && (!focus || touches(l, focus));
-      [l.el, l.flow, l.label, l.hit].forEach(p => { if (p) { p.classList.toggle("off", !vis); p.classList.toggle("on", on); } });
-      if (on) { onNodes.add(l.s.id); onNodes.add(l.t.id); }
+      if (l.epoch !== epoch) {
+        l.epoch = epoch;
+        l.vis = linkVisible(l);
+        if (l.vis) { if (!l.inter) styleLink(l); l.draw(); }
+      }
+      const on = l.vis && (!focus || touches(l, focus));
+      if (l.visDom !== l.vis) { l.visDom = l.vis; l.parts.forEach(p => p.classList.toggle("off", !l.vis)); }
+      if (l.onDom !== on) { l.onDom = on; l.parts.forEach(p => p.classList.toggle("on", on)); }
+      if (on) {
+        onNodes.add(l.s.id); onNodes.add(l.t.id);
+        if (!l.inter && (!level || focus)) ensureCoins(l);
+      }
     });
     if (focus && focus.type !== "person") (focus.type === "node" ? [byId.get(focus.id)] : C.get(focus.id).nodes).forEach(n => onNodes.add(n.id));
-    const dim = !!focus || state.fam !== "all";
     svg.classList.toggle("has-focus", dim);
+    svg.classList.toggle("has-pick", !!focus);
+    const selId = state.sel && state.sel.type === "node" ? state.sel.id : null;
     nodes.forEach(n => {
-      n.el.classList.toggle("on", dim && onNodes.has(n.id));
-      n.lab.classList.toggle("on", dim && onNodes.has(n.id));
-      n.el.classList.toggle("sel", !!state.sel && state.sel.type === "node" && state.sel.id === n.id);
+      const on = dim && onNodes.has(n.id), sel = n.id === selId;
+      if (n.onDom !== on) { n.onDom = on; n.el.classList.toggle("on", on); n.lab.classList.toggle("on", on); }
+      if (n.selDom !== sel) { n.selDom = sel; n.el.classList.toggle("sel", sel); }
     });
     CLUSTERS.forEach(c => c.title.classList.toggle("sel", !!state.sel && state.sel.type === "group" && state.sel.id === c.cat));
   }
 
   /* ---------- the panel under the map ---------- */
   const panel = $("webPanel"), blurb = $("webBlurb"), lens = $("webLens"), search = $("webSearch"), options = $("webOptions"), fig = svg.closest(".web");
-  const liveEdges = () => level ? ORG_EDGES.concat(FLOW_TIES) : ORG_EDGES;
+  const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
+  const liveEdges = () => LIVE[level];
   const count = fn => liveEdges().filter(fn).length, baseCount = fn => D.edges.filter(fn).length;
-  // every row of one funder's record for one recipient, behind a fold
+  // Every row of one funder's record for one recipient, behind a fold. A large funder has hundreds of rows across its arrows,
+  // so the rows are written only when a fold is first opened.
   function grantList(f) {
-    const r = recOf(f);
-    return `<details class="wp-grants"><summary>${f.n === 1 ? "The row" : `All ${f.n} rows`} in the record</summary><ol>${f.grants.map(g =>
-      `<li><b>${esc(g[0])}</b><strong>${g[1] ? esc(U.fmtAmount(g[1], "USD")) : "pledge only"}</strong><em>${tidy(g[2])}${g[3] ? ` Plus a matching pledge of up to ${esc(U.fmtAmount(g[3], "USD"))}, paid only if outside money is raised.` : ""}</em></li>`).join("")}</ol>
-      <p>${tidy(r.note)} <a href="${esc(r.url)}" rel="noopener">${tidy(r.title)}</a></p></details>`;
+    return `<details class="wp-grants" data-flow="${FLOWS.indexOf(f)}"><summary>${f.n === 1 ? "The row" : `All ${f.n} rows`} in the record</summary></details>`;
   }
+  function grantRows(f) {
+    const r = recOf(f);
+    return `<ol>${f.grants.map(g =>
+      `<li><b>${esc(g[0])}</b><strong>${g[1] ? esc(U.fmtAmount(g[1], "USD")) : "pledge only"}</strong><em>${tidy(g[2])}${g[3] ? ` Plus a matching pledge of up to ${esc(U.fmtAmount(g[3], "USD"))}, paid only if outside money is raised.` : ""}</em></li>`).join("")}</ol>
+      <p>${tidy(r.note)} <a href="${esc(r.url)}" rel="noopener">${tidy(r.title)}</a></p>`;
+  }
+  panel.addEventListener("toggle", e => {
+    const d = e.target;
+    if (!d.open || !d.dataset || d.dataset.flow == null || d.dataset.filled) return;
+    d.dataset.filled = "1";
+    d.insertAdjacentHTML("beforeend", grantRows(FLOWS[+d.dataset.flow]));
+  }, true);
   const catOf = id => { const n = byId.get(id); return n ? n.cat : 0; };   // a person has no group
-
   function tieItem(t, out) {
     const other = byId.get(out ? t.to : t.from), bits = [typeLabel(t)];
     if (t.amount != null) bits.push(U.fmtAmount(t.amount, t.currency));
     if (t.date) bits.push(U.fmtDate(t.date));
-    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${other.c.color}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}</li>`;
+    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${other.c.color}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}</li>`;
   }
   const roleBits = r => [typeLabel(r)].concat(r.date ? [U.fmtDate(r.date)] : []).join(", ");
   // a person's role at an organisation: listed under the organisation with the name, and under the person with the organisation
@@ -672,7 +729,12 @@
       const here = PEOPLE.reduce((a, p) => a.concat(p.roles.filter(r => r.to === n.id)), []);
       const listed = e ? e.cats.map(k => catLabel.get(k)).join(", ") : "";
       // a bubble that exists only on the field map is described in that map's words; one from the industry map keeps this map's reading of its stake
-      const head = n.field
+      const head = n.field && e.own
+        ? `<span class="web-eyebrow" style="color:${c.color}">${tidy(c.label)} · added by this map</span>
+          <h2>${tidy(n.name)}</h2>
+          <p><span class="wp-lbl">What it is, from the announcement</span>${tidy(e.desc)}</p>
+          <p class="wp-small">This programme is not an entry on the AISafety.com map. <a href="${esc(e.src.url)}" rel="noopener">${tidy(e.src.title)}</a></p>`
+        : n.field
         ? `<span class="web-eyebrow" style="color:${c.color}">${tidy(c.label)} · on the AISafety.com map</span>
           <h2>${tidy(n.name)}</h2>
           <p><span class="wp-lbl">What it is, in the AISafety.com map's words</span>${tidy(e.desc)}</p>
@@ -681,7 +743,7 @@
           <h2>${tidy(n.name)}</h2>
           <p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>
           ${level && e ? `<p class="wp-small"><span class="wp-lbl">On the AISafety.com map · ${tidy(listed)}</span>${tidy(e.desc)}</p>` : ""}`;
-      const none = level && !GIN.has(n.id) && !GOUT.has(n.id) ? " No grant to or from it appears in the four grant records read here, which is not the same as no funding." : "";
+      const none = level && !GIN.has(n.id) && !GOUT.has(n.id) && !CIN.has(n.id) && !COUT.has(n.id) ? " No grant to or from it appears in the four grant records or the company announcements read here, which is not the same as no funding." : "";
       panel.innerHTML = `<div class="wp-main">
           ${head}
           ${measure.id === "ties" ? "" : `<p class="wp-small"><span class="wp-lbl">Bubble size · ${esc(measure.pill)}</span>${valueLine(n)}</p>`}
@@ -703,12 +765,12 @@
         <div class="wp-ties"><div><h3>Most documented ties in this group</h3>${top.length ? `<ul>${top.map(n => `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${n.deg} ${n.deg === 1 ? "tie" : "ties"}</span></li>`).join("")}</ul>` : `<p class="wp-none">None recorded in this version.</p>`}</div></div>`;
     } else if (level) {
       const got = new Set(FLOWS.map(f => f.to)), gives = new Set(FLOWS.map(f => f.from)), R = F.records;
-      const cgN = FLOWS.filter(f => f.src === "cg").length, chained = FLOWS.filter(f => gives.has(f.to)).length, labs = (C.get("f-capabilities_research") || { nodes: [] }).nodes.length;
+      const cgN = FLOWS.filter(f => f.src === "cg").length, chained = FLOWS.filter(f => gives.has(f.to)).length;
       panel.innerHTML = `<div class="wp-notes">
           <div><h2>Four public records, one dominant funder</h2><p>${FLOWS.length} arrows join a funder to an organisation on this plate. ${cgN} of them come from Coefficient Giving's AI fund list, which holds ${R.cg.rows} grants worth USD ${big(R.cg.listed)}. USD ${big(R.cg.matchedTotal)} of that goes to organisations shown here.</p><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
           <div><h2>Most bubbles show no grant</h2><p>${all.length - got.size} of the ${all.length} bubbles receive nothing in these records. That is a limit of the records and not a finding: company revenue, government budgets and most private gifts are in none of them.</p><button type="button" class="web-act" data-lens="grants">Show only the grants</button></div>
           <div><h2>Funders fund funders</h2><p>${chained} arrows end at an organisation that itself gives grants, so the same money can appear on two arrows. This is why totals from different records are never added together.</p><button type="button" class="web-act" data-group="f-funding">Show the funders</button></div>
-          <div><h2>The developers are inside the field</h2><p>The AISafety.com map lists ${labs} frontier developers under capabilities research, because they also run safety teams. Their ties from the industry map stay on the plate.</p><button type="button" class="web-act" data-group="f-capabilities_research">Show the developers</button></div>
+          <div><h2>Company money is small on the public record</h2><p>${CORP_TIES.length} arrows carry money that an AI company or its foundation has announced for work outside the company. The largest are commitments to the companies' own programmes, and several are not safety research. What a company spends on its own safety teams is not published.</p><button type="button" class="web-act" data-lens="corp">Show company money</button></div>
         </div>`;
     } else {
       const labs = t => catOf(t.from) === 3 || catOf(t.to) === 3;
@@ -719,7 +781,7 @@
           <div><h2>Safety research has few paymasters</h2><p>${baseCount(grants)} base ties run from a safety funder to a research organisation. In one published list, a single funder accounts for about 72% of the 2025 estimates.</p><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
           <div><h2>Evaluators depend on the labs they test</h2><p>${count(t => famOf(t) === "access")} dashed arrows show model access, compute credits and commissioned work flowing from labs to evaluators and training programmes. No executed agreement was obtained.</p><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
           <div><h2>A few people sit in more than one place</h2><p>${PEOPLE.length} named people hold roles or disclosed interests in more than one organisation. They are drawn as ${nInter} dotted links between those organisations and can be found in the search under the map.</p><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
-          ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${F.entries.length} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
+          ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${NFIELD} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them and ${CORP_TIES.length} for money the AI companies have announced.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
         </div>`;
     }
     // zoomed in, the panel for a chosen bubble stays at the foot of the window, so it carries its own way out
@@ -761,6 +823,7 @@
   }
   function setFam(v) {
     state.fam = v;
+    epoch++;
     Array.from(lens.querySelectorAll("button")).forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false"));
     refresh();
     renderPanel();
@@ -825,10 +888,10 @@
     setSize(measure.id, 0);
   });
 
-  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests" };
+  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests", corp: "Company money" };
   function renderLens() {
     lens.innerHTML = [{ id: "all", label: "All ties" }].concat(FAMS).map(f =>
-      `<button type="button" data-v="${f.id}" aria-pressed="${f.id === state.fam}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? liveEdges().length + nInter : f.id === "people" ? nInter : count(t => famOf(t) === f.id)}</span></button>`).join("");
+      `<button type="button" data-v="${f.id}" aria-pressed="${f.id === state.fam}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? liveEdges().length + nInter : f.id === "people" ? nInter : count(t => inLens(t, f.id))}</span></button>`).join("");
   }
   renderLens();
   lens.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setFam(b.dataset.v); });
@@ -959,20 +1022,20 @@
   tip.className = "web-tip";
   tip.hidden = true;
   svg.closest(".web").appendChild(tip);
-  let tipLink = null;
+  let tipAt = null, tipW = 0, tipH = 0;   // the bubble or arrow the card is showing
   function tipHtml(l) {
     const head = `<b>${tidy(l.s.name)} ${l.inter ? "and" : "→"} ${tidy(l.t.name)}</b>`;
     if (l.inter) return head + `<ul>${l.people.map(p => `<li><span>${tidy(p.name)}</span><em>shared person</em></li>`).join("")}</ul>`;
     return head + `<ul>${l.ties.filter(inFam).map(t => {
       const what = [typeLabel(t)].concat(t.date ? [U.fmtDate(t.date)] : []).join(", ");
       const amt = t.amount != null ? `<strong>${esc(U.fmtAmount(t.amount, t.currency))}</strong>` : t.flow ? "<em>matching pledge only</em>" : MONEY.has(t.type) ? "<em>amount not disclosed</em>" : "<em>no payment along this arrow</em>";
-      // a tie from a grant record names the record: its amount is that record's total for this pair, over the years shown
-      const small = t.flow ? `Total in ${recOf(t.flow).title}` : t.status && t.amount != null ? t.status : "";
+      // a tie from a grant record names the record, and one from a company announcement carries its note
+      const small = t.flow ? `Total in ${recOf(t.flow).title}` : t.corp ? t.corp.what : t.status && t.amount != null ? t.status : "";
       return `<li><span>${esc(what)}${small ? `<small>${tidy(small)}</small>` : ""}</span>${amt}</li>`;
     }).join("")}</ul>`;
   }
   function moveTip(e) {
-    const w = tip.offsetWidth, h = tip.offsetHeight, vw = document.documentElement.clientWidth;
+    const w = tipW, h = tipH, vw = document.documentElement.clientWidth;
     tip.style.left = Math.max(8, Math.min(e.clientX + 14, vw - w - 8)) + "px";
     tip.style.top = (e.clientY + h + 22 > window.innerHeight ? e.clientY - h - 12 : e.clientY + 16) + "px";
   }
@@ -981,42 +1044,43 @@
     const c = n.c, v = n.val, where = v ? [v.basis, v.when].filter(Boolean).join(", ") : "";
     const fig = `<li><span>${esc(measure.pill)}<small>${v ? tidy(sentence(cap(v.text) + (v.est ? " (estimate)" : ""))) + (where ? " " + tidy(sentence(cap(where))) : "") : "Not zero, and not a sign that the organisation is small."}</small></span>${v ? `<strong>${esc(v.num)}</strong>` : "<em>no figure found</em>"}</li>`;
     const ties = measure.id === "ties" ? "" : `<li><span>Documented ties</span><strong>${n.deg}</strong></li>`;
+    // the bubble's card names its largest stated amounts, so the money can be read without picking out each arrow
+    const money = liveEdges().filter(t => (t.from === n.id || t.to === n.id) && MONEY.has(t.type) && t.amount != null && inFam(t)).sort((a, b) => b.amount * (S.fx[b.currency] || 1) - a.amount * (S.fx[a.currency] || 1)).slice(0, 3)
+      .map(t => `<li><span>${t.from === n.id ? "To " + tidy(byId.get(t.to).short) : "From " + tidy(byId.get(t.from).short)}<small>${esc(typeLabel(t))}</small></span><strong>${esc(U.fmtAmount(t.amount, t.currency))}</strong></li>`).join("");
     // a bubble from the field map carries that map's one-line description, since its name alone often says little
     const what = n.field ? `<span class="tip-what">${tidy(n.entry.desc)}</span>` : "";
-    return `<b>${tidy(n.name)}</b><span class="tip-grp"><i style="background:${c.color}"></i>${tidy(c.label)}${n.field && n.entry.cats.length < 2 ? "" : ` · ${tidy(n.data.subtype)}`}</span>${what}<ul>${fig}${ties}</ul><span class="tip-more">Select the bubble for its ties and sources.</span>`;
-  }
-  function showNodeTip(n, e) {
-    if (tipLink) { tipLink.el.classList.remove("hot"); tipLink = null; }
-    tip.innerHTML = nodeTipHtml(n);
-    tip.hidden = false;
-    moveTip(e);
-  }
-  function showTip(l, e) {
-    if (tipLink && tipLink !== l) tipLink.el.classList.remove("hot");
-    tipLink = l;
-    l.el.classList.add("hot");
-    tip.innerHTML = tipHtml(l);
-    tip.hidden = false;
-    moveTip(e);
+    return `<b>${tidy(n.name)}</b><span class="tip-grp"><i style="background:${c.color}"></i>${tidy(c.label)}${n.field && n.entry.cats.length < 2 ? "" : ` · ${tidy(n.data.subtype)}`}</span>${what}<ul>${fig}${ties}${money}</ul><span class="tip-more">Select the bubble to follow its arrows and see every amount and source.</span>`;
   }
   function hideTip() {
     if (tip.hidden) return;
-    if (tipLink) tipLink.el.classList.remove("hot");
-    tipLink = null;
+    if (tipAt && tipAt.hit) tipAt.el.classList.remove("hot");
+    tipAt = null;
     tip.hidden = true;
+  }
+  // Pointing shows a card for the bubble or the arrow under the pointer. It does not fade the rest of the map: that happens only when a bubble is chosen.
+  function showTip(at, e) {
+    if (at !== tipAt) {
+      if (tipAt && tipAt.hit) tipAt.el.classList.remove("hot");
+      tipAt = at;
+      if (at.hit) at.el.classList.add("hot");
+      tip.innerHTML = at.hit ? tipHtml(at) : nodeTipHtml(at);
+      tip.hidden = false;
+      tipW = tip.offsetWidth; tipH = tip.offsetHeight;
+    }
+    moveTip(e);
   }
   const linkAt = e => { const h = e.target.closest && e.target.closest(".hit"); return h ? links[+h.getAttribute("data-link")] : null; };
   svg.addEventListener("pointermove", e => {
     if (e.pointerType !== "mouse" || drag || pan) return;
-    const n = nodeAt(e), l = n ? null : linkAt(e);
-    if (n) showNodeTip(n, e); else if (l) showTip(l, e); else hideTip();
+    const at = nodeAt(e) || linkAt(e);
+    if (at) showTip(at, e); else hideTip();
   });
   svg.addEventListener("pointerleave", hideTip);
   let lastPointer = "mouse";   // click events do not carry the pointer type in every browser
   svg.addEventListener("pointerdown", e => { lastPointer = e.pointerType; }, true);
   window.addEventListener("scroll", hideTip, { passive: true });
 
-  /* ---------- pointer: hover to preview, click to keep, drag a bubble (mouse) to untangle ---------- */
+  /* ---------- pointer: point for a bubble's card, click to follow its arrows, drag a bubble (mouse) to untangle ---------- */
   const nodeAt = e => { const g = e.target.closest && e.target.closest(".node"); return g ? byId.get(g.getAttribute("data-id")) : null; };
   let drag = null, pan = null, camFrame = 0;
   function toStage(e) {
@@ -1024,17 +1088,6 @@
     p.x = e.clientX; p.y = e.clientY;
     return p.matrixTransform(svg.getScreenCTM().inverse());
   }
-  svg.addEventListener("pointerover", e => {
-    const n = nodeAt(e);
-    if (!n || drag || e.pointerType !== "mouse") return;
-    state.hover = { type: "node", id: n.id };
-    refresh();
-  });
-  svg.addEventListener("pointerout", e => {
-    if (!nodeAt(e) || drag || !state.hover) return;
-    state.hover = null;
-    refresh();
-  });
   svg.addEventListener("pointerdown", e => {
     const n = nodeAt(e);
     // on the zoomed plate, a press that is not on a bubble, a group name or an arrow drags the plate itself
@@ -1093,7 +1146,7 @@
     if (justDragged) { justDragged = false; return; }
     const n = nodeAt(e), t = e.target.closest && e.target.closest(".ctitle"), l = linkAt(e);
     // a tap on an arrow shows its card (there is no hover on a touch screen) and leaves the selection alone
-    if (l && !n) { if (tipLink === l && lastPointer !== "mouse") hideTip(); else showTip(l, e); return; }
+    if (l && !n) { if (tipAt === l && lastPointer !== "mouse") hideTip(); else showTip(l, e); return; }
     hideTip();
     if (n) select({ type: "node", id: n.id });
     else if (t) select({ type: "group", id: catKey(t.getAttribute("data-cat")) });
@@ -1153,12 +1206,12 @@
     if (levelPills) levelPills.innerHTML = [["Whole industry", base.length], ["AI safety field", all.length]].map((p, i) =>
       `<button type="button" data-v="${i}" aria-pressed="${i === level}">${p[0]}<span class="c">${p[1]}</span></button>`).join("");
     setText("webLevelNote", level
-      ? `Zoomed into the AI safety field: ${F.entries.length} entries from the AISafety.com map in that map's own categories, ${F.entries.length - fieldNodes.length} of them already on the industry map, with ${FLOWS.length} funder-to-recipient arrows from four public grant records. The rest of the industry map is in the band at the bottom.`
-      : `The whole AI industry. Zooming in opens up the AI safety field: the ${F.entries.length} organisations, programmes and resources on the AISafety.com map, and the money on public record between them.`);
+      ? `Zoomed into the AI safety field: ${NFIELD} entries from the AISafety.com map in that map's own categories, ${NSHARED} of them already on the industry map. Money arrows come from two places: ${FLOWS.length} from four public grant records, and ${CORP_TIES.length} from what AI companies and their foundations have announced. The rest of the industry map is in the band at the bottom.`
+      : `The whole AI industry. Zooming in opens up the AI safety field: the ${NFIELD} organisations, programmes and resources on the AISafety.com map, and the money on public record between them.`);
     const note = $("webFieldNote");
     if (note) note.hidden = !level;
     if (!svg.dataset.label0) svg.dataset.label0 = svg.getAttribute("aria-label") || "";
-    svg.setAttribute("aria-label", level ? `Network map zoomed into the AI safety field: ${all.length} bubbles. ${F.entries.length} entries from the AISafety.com field map are grouped under its ${C1F.length} categories, and the groups of the industry map that it does not list sit in a band underneath. ${FLOWS.length} arrows from four public grant records join funders to recipients, wider for larger totals, next to the ties of the industry map. The same information is in the lists and tables below.` : svg.dataset.label0);
+    svg.setAttribute("aria-label", level ? `Network map zoomed into the AI safety field: ${all.length} bubbles. ${NFIELD} entries from the AISafety.com field map are grouped under its categories, with the companies' own grant programmes in a group of their own, and the groups of the industry map that it does not list sit in a band underneath. ${FLOWS.length} arrows from four public grant records and ${CORP_TIES.length} from company announcements join funders to recipients, wider for larger amounts, next to the ties of the industry map. The same information is in the lists and tables below.` : svg.dataset.label0);
   }
   function setLevel(v, ms) {
     v = v && F ? 1 : 0;
@@ -1171,6 +1224,7 @@
     fig.classList.toggle("lv1", !!level);
     widths.clear();   // names are set in smaller type when zoomed in, so they are measured again
     assign();
+    epoch++;
     // the field's own bubbles start from the group on the industry map nearest to what they do, so the zoom reads as that group opening up
     fieldNodes.forEach(n => {
       n.el.classList.toggle("away", !level);
@@ -1193,7 +1247,8 @@
     });
     labelNodes();
     refresh();
-    settle(ms);
+    // the number of money signs on an arrow follows its length, so they are set again once the bubbles have arrived
+    settle(ms, () => { links.forEach(l => { if (!l.inter) { l.flow.textContent = ""; l.coins = []; l.coinKey = ""; } }); refresh(); });
     renderSize();
     renderPanel();
     renderScale();
