@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="explore.css">
 <style>
 /* Ecosystem page: a reference page. The map plate is the page header; hand-written reading sections follow, then lists drawn from ecosystem-data.js. */
 main > .wrap { padding-top: 16px; }
@@ -27,12 +28,27 @@ main > .wrap { padding-top: 16px; }
 .web a { color: var(--w-hi); }
 .web :focus-visible { outline-color: var(--w-hi); }
 .web-head { display: grid; gap: 0; }
-.web-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 14px 36px; align-items: start; margin-top: 12px; }
-@media (max-width: 860px) { .web-intro { grid-template-columns: minmax(0, 1fr); } }
 .web-eyebrow { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); }
 .web h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.04; margin-top: 6px; }
 .web h1 span { color: #2EE6C8; }
 .web-sub { font-size: .92rem; line-height: 1.5; color: var(--w-muted); max-width: 44em; }
+.web-head > .web-sub { margin-top: 10px; }
+/* One line of legend under the title. The full reading guide, with the width steps, opens beneath it. */
+.web-legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font-mono); font-size: .74rem; color: var(--w-muted); }
+.web-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.web-legend svg { width: 26px; height: 14px; flex: none; fill: var(--w-ink); stroke: var(--w-ink); }
+.web-legend svg circle { stroke: none; }
+.web-legend .k-a, .web-key .k-a { fill: #2EE6C8; } .web-legend .k-b, .web-key .k-b { fill: #F7A93B; }
+.web .k-sign { fill: var(--w-ink); stroke: var(--w-bg); stroke-width: 3px; paint-order: stroke; font: 700 11px var(--font-display); }
+.web .k-sign.faint { fill-opacity: .5; }
+.web-more { margin-top: 8px; font-size: .84rem; }
+.web-more summary { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; cursor: pointer; color: var(--w-muted); font-family: var(--font-display); font-weight: 500; list-style: none; border-radius: 6px; }
+.web-more summary::-webkit-details-marker { display: none; }
+.web-more summary::before { content: ""; width: 9px; height: 9px; background: linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat, linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat; transition: transform .2s; }
+.web-more[open] summary::before { transform: rotate(45deg); }
+.web-more summary:hover { color: var(--w-ink); }
+.web-more-body { display: grid; gap: 14px; padding: 10px 0 4px; max-width: 62rem; }
+@media (pointer: coarse) { .web-more summary { min-height: 44px; } }
 .web-facts { font-family: var(--font-mono); font-size: .76rem; }
 .web-facts b { color: var(--w-ink); font-weight: 500; }
 .web-key { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; font-size: .84rem; line-height: 1.35; color: var(--w-muted); }
@@ -40,7 +56,6 @@ main > .wrap { padding-top: 16px; }
 .web-key li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; }
 .web-key svg { width: 34px; height: 20px; fill: var(--w-ink); stroke: var(--w-ink); }
 .web-key svg circle { stroke: none; }
-.web-key .k-a { fill: #2EE6C8; } .web-key .k-b { fill: #F7A93B; }
 .web-key b { color: var(--w-ink); font-family: var(--font-display); font-weight: 700; display: block; }
 .web-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; border-top: 1px solid var(--w-line); padding-top: 12px; }
 .web-tools .pills { flex: 1 1 30rem; }
@@ -53,17 +68,46 @@ main > .wrap { padding-top: 16px; }
 .web .pills button:hover { color: var(--w-ink); border-color: var(--w-ink); }
 .web .pills button[aria-pressed="true"] { background: var(--w-ink); color: var(--w-bg); border-color: var(--w-ink); }
 .web-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.web-actions select, .web-btn { font-family: var(--font-display); font-weight: 500; font-size: .88rem; min-height: 38px; border-radius: 10px; border: 1px solid var(--w-line); background: var(--w-raise); color: var(--w-ink); padding: 0 12px; cursor: pointer; }
-.web-actions select { max-width: 15.5rem; }
-.web-btn:hover, .web-actions select:hover { border-color: var(--w-ink); }
-@media (pointer: coarse) { .web-actions select, .web-btn { min-height: 44px; } }
+.web-find input, .web-btn { font-family: var(--font-display); font-weight: 500; font-size: .88rem; min-height: 38px; border-radius: 10px; border: 1px solid var(--w-line); background: var(--w-raise); color: var(--w-ink); padding: 0 12px; cursor: pointer; }
+.web-btn:hover, .web-find input:hover { border-color: var(--w-ink); }
+@media (pointer: coarse) { .web-find input, .web-btn { min-height: 44px; } }
+/* One search for every bubble, group and person. The list scrolls, and the row under the pointer previews on the map. */
+.web-find { position: relative; }
+.web-find input { width: 17rem; max-width: 100%; cursor: text; padding-left: 34px; background: var(--w-raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A3B5C1' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l5 5'/%3E%3C/svg%3E") 11px center / 15px no-repeat; }
+.web-find input::placeholder { color: var(--w-muted); }
+.web-find ul { position: absolute; z-index: 5; left: 0; top: calc(100% + 6px); width: max(100%, 21rem); max-width: calc(100vw - 48px); max-height: 19rem; overflow-y: auto; overscroll-behavior: contain; list-style: none; margin: 0; padding: 6px; background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 12px; box-shadow: 0 14px 28px -12px rgb(0 0 0 / .7); }
+.web-find li { font-size: .88rem; line-height: 1.3; }
+.web-find .grp { padding: 9px 8px 4px; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); }
+.web-find [role="option"] { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 9px; align-items: center; min-height: 34px; padding: 4px 8px; border-radius: 7px; cursor: pointer; font-family: var(--font-display); font-weight: 500; }
+.web-find [role="option"] i { width: 10px; height: 10px; border-radius: 50%; }
+.web-find [role="option"] i.who { border-radius: 0; height: 0; border-top: 2px dotted #DCE4EA; }
+.web-find [role="option"] i.grp-mark { border-radius: 2px; }
+.web-find [role="option"].active { background: #1B3A4E; }
+.web-find [role="option"][aria-selected="true"] { color: var(--w-hi); }
+.web-find .none { padding: 10px 8px; color: var(--w-muted); }
+@media (pointer: coarse) { .web-find [role="option"] { min-height: 44px; } }
 .web-blurb { font-size: .92rem; color: var(--w-muted); max-width: 44em; flex: 1 1 20rem; min-height: 3em; }
 .web-scroll { overflow-x: auto; margin-inline: -10px; }
 #webStage { display: block; width: 100%; min-width: 760px; height: auto; font-family: var(--font-display); user-select: none; -webkit-user-select: none; }
 #webStage .link { fill: none; opacity: .5; transition: opacity .2s; }
-#webStage .flow { fill: none; stroke-linecap: round; stroke-dasharray: .1 30; opacity: .7; pointer-events: none; animation: webflow 2.6s linear infinite; transition: opacity .2s; }
-@keyframes webflow { to { stroke-dashoffset: -30.1; } }
-#webStage.paused .flow { animation-play-state: paused; }
+/* A small money sign rides each arrow that carries money. It is fainter where no amount is stated. */
+#webStage .flow { pointer-events: none; opacity: .8; transition: opacity .2s; }
+#webStage .coin text { font-weight: 700; paint-order: stroke; stroke: var(--w-bg); stroke-width: 3px; stroke-linejoin: round; }
+#webStage .coin.faint text { fill-opacity: .55; }
+#webStage.has-focus .flow.on { opacity: 1; }
+#webStage .link.money { opacity: .56; }
+#webStage .hit { fill: none; stroke: transparent; stroke-width: 14; pointer-events: stroke; cursor: help; }
+#webStage.has-focus .hit:not(.on) { pointer-events: none; }
+#webStage .link.hot { opacity: 1 !important; }
+.web-asof b { color: var(--w-ink); font-weight: 500; }
+/* The card that follows the pointer along an arrow: who, what kind of tie, and the amount if one is stated. */
+.web-tip { position: fixed; z-index: 30; left: 0; top: 0; max-width: min(24rem, calc(100vw - 16px)); pointer-events: none; background: var(--w-raise); color: var(--w-ink); border: 1px solid var(--w-line); border-radius: 10px; padding: 10px 12px; font-size: .84rem; line-height: 1.35; box-shadow: 0 12px 24px -10px rgb(0 0 0 / .7); }
+.web-tip > b { font-family: var(--font-display); display: block; margin-bottom: 6px; }
+.web-tip ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.web-tip li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: baseline; color: var(--w-muted); }
+.web-tip li strong { font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; color: var(--w-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.web-tip li em { font-style: normal; font-family: var(--font-mono); font-size: .7rem; white-space: nowrap; }
+.web-tip li small { display: block; font-size: .76rem; opacity: .8; }
 #webStage .off { display: none; }
 #webStage.has-focus .link:not(.on) { opacity: .06; }
 #webStage.has-focus .flow:not(.on) { opacity: 0; }
@@ -101,6 +145,16 @@ main > .wrap { padding-top: 16px; }
 @media (max-width: 560px) { .wp-notes { grid-template-columns: minmax(0, 1fr); } }
 .wp-ext { font-style: normal; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: var(--w-hi); margin-left: 4px; }
 #webStage .link.ext { stroke-dasharray: 6 4; }
+#webStage .link.inter { stroke: #DCE4EA; stroke-dasharray: .1 5.5; stroke-linecap: round; opacity: .7; }
+#webStage .plab { display: none; font-size: 11.5px; font-weight: 700; fill: #DCE4EA; paint-order: stroke; stroke: var(--w-bg); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+#webStage.has-focus .plab.on { display: block; }
+.web-scale { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
+.web-scale ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font-mono); font-size: .74rem; color: var(--w-muted); }
+.web-scale li { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.web-scale svg { width: 34px; height: 14px; fill: var(--w-ink); stroke: var(--w-ink); }
+.web-scale .note { font-size: .84rem; color: var(--w-muted); flex: 1 1 100%; }
+.web-jump i.who { border-radius: 2px; width: 10px; height: 2px; align-self: center; border-top: 2px dotted #DCE4EA; background: none; }
+.wp-ties.one { grid-template-columns: minmax(0, 1fr); }
 .wp-notes > div { display: grid; gap: 8px; align-content: start; justify-items: start; }
 .wp-notes h2 { font-size: 1.12rem; margin: 0; }
 .wp-notes p { color: var(--w-muted); }
@@ -355,37 +409,62 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ THE MAP (also the page header) ============ -->
     <figure class="web" id="map" aria-labelledby="webTitle">
       <div class="web-head" id="top">
-        <span class="web-eyebrow"><a href="index.html#goal-ecosystem">Goal 3</a> · The AI ecosystem</span>
+        <span class="web-eyebrow"><a href="index.html#goal-ecosystem">Goal 3</a> · The AI ecosystem · <span class="web-asof">Data as of <b id="webAsOf">October 2026</b></span></span>
         <h1 id="webTitle">Who has a <span>stake</span> in AI safety?</h1>
-        <div class="web-intro">
-          <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests, lobbies or holds a role to the party on the receiving end.</p>
-          <ul class="web-key" aria-label="How to read the map">
-            <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> number of documented ties</span></li>
-            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 6h24" stroke-width="1.6"/><path d="M2 14h24" stroke-width="4.5"/><path d="M25 2l8 4-8 4zM25 9l8 5-8 5z" stroke="none"/></svg><span><b>Arrow width</b> ties between that pair</span></li>
-            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="2" stroke-dasharray=".1 6" stroke-linecap="round"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Arrow direction</b> from giver to receiver</span></li>
-            <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="8" cy="10" r="6" class="k-a"/><circle cx="24" cy="10" r="6" class="k-b"/></svg><span><b>Colour</b> the group, and the group an arrow starts from</span></li>
-            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h24" stroke-width="2" stroke-dasharray="5 4"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Dashed arrow</b> access, role or grant from the <a href="#control">control evidence</a></span></li>
-          </ul>
-        </div>
+        <p class="web-sub">Bubbles are organisations, arrows are documented ties from giver to receiver, and a moving $ marks money on the way.</p>
+        <ul class="web-legend" aria-label="Map legend">
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><circle cx="5" cy="9" r="3"/><circle cx="17" cy="7" r="6"/></svg>size = ties</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7L25 3.6V10.4Z" stroke="none"/></svg>width = money, &times;10 a step</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h24" stroke-width="1.4"/><text x="13" y="11.4" text-anchor="middle" class="k-sign">$</text></svg>money moving</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h24" stroke-width="1"/><text x="13" y="11.4" text-anchor="middle" class="k-sign faint">$</text></svg>amount not stated</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h18" stroke-width="1.2"/><path d="M18 3l7 4-7 4z" stroke="none"/></svg>not a payment</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="k-a"/><circle cx="19" cy="7" r="4.5" class="k-b"/></svg>colour = group</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h24" stroke-width="1.6" stroke-dasharray="5 3"/></svg>control evidence</li>
+          <li><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h23" stroke-width="2.2" stroke-dasharray=".1 5" stroke-linecap="round"/></svg>shared person</li>
+        </ul>
+        <details class="web-more">
+          <summary>How to read the map in full</summary>
+          <div class="web-more-body">
+            <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests or lobbies to the party on the receiving end. People are not bubbles: a dotted link joins two organisations that share a named person.</p>
+            <ul class="web-key" aria-label="How to read the map">
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> number of documented ties</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 6h24" stroke-width="1.6"/><path d="M2 14h24" stroke-width="4.5"/><path d="M25 2l8 4-8 4zM25 9l8 5-8 5z" stroke="none"/></svg><span><b>Arrow width</b> the money stated on that tie; each step wider is ten times more</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="2"/><path d="M24 5l9 5-9 5z" stroke="none"/><text x="12" y="14.5" text-anchor="middle" class="k-sign">$</text></svg><span><b>Moving money sign</b> money flows along this arrow, from giver to receiver</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="1.2"/><path d="M24 5l9 5-9 5z" stroke="none"/><text x="12" y="14.5" text-anchor="middle" class="k-sign faint">$</text></svg><span><b>Faint money sign</b> money moves, but no amount is disclosed</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="1.4"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Plain arrow</b> a tie that is not a payment: control, supply, rules, advocacy</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="8" cy="10" r="6" class="k-a"/><circle cx="24" cy="10" r="6" class="k-b"/></svg><span><b>Colour</b> the group, and the group an arrow starts from</span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h24" stroke-width="2" stroke-dasharray="5 4"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Dashed arrow</b> access or grant from the <a href="#control">control evidence</a></span></li>
+              <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M3 10h28" stroke-width="2.4" stroke-dasharray=".1 6" stroke-linecap="round"/></svg><span><b>Dotted link</b> a named person with a role or interest at both ends</span></li>
+            </ul>
+            <div class="web-scale">
+              <span class="web-eyebrow" id="webScaleLabel">Arrow width, in USD or EUR</span>
+              <ul class="needs-data" aria-labelledby="webScaleLabel" id="webScale"></ul>
+              <p class="note"><b id="nMoneyAmt">15</b> of the <b id="nMoney">46</b> money ties state an amount. Width takes the largest single amount on a tie, and nothing is added up.</p>
+            </div>
+          </div>
+        </details>
       </div>
       <div class="web-tools">
         <span class="web-eyebrow" id="webLensLabel">Show one kind of tie</span>
         <div class="pills needs-data" role="group" aria-labelledby="webLensLabel" id="webLens"></div>
       </div>
       <div class="web-scroll">
-        <svg id="webStage" viewBox="0 0 1080 940" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by 105 documented ties, with 46 further ties and 11 people added from the control evidence. The same information is in the lists and tables below."></svg>
+        <svg id="webStage" viewBox="0 0 1080 870" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by documented ties, with further ties added from the control evidence. Twelve named people appear as dotted links between the organisations they connect and can be found with the search under the map. Arrows that carry money show a moving money sign and are wider for larger stated amounts. The same information is in the lists and tables below."></svg>
       </div>
       <div class="web-under">
         <p class="web-blurb" id="webBlurb"></p>
         <div class="web-actions">
-          <label for="webPick" class="vh">Find an actor or a group</label>
-          <select id="webPick"></select>
+          <div class="web-find">
+            <label for="webSearch" class="vh">Find an actor, a group or a person</label>
+            <input type="text" id="webSearch" role="combobox" aria-expanded="false" aria-controls="webOptions" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Search actors, groups, people">
+            <ul id="webOptions" role="listbox" aria-label="Actors, groups and people" hidden></ul>
+          </div>
           <button type="button" class="web-btn" id="webClear" hidden>Show everything</button>
           <button type="button" class="web-btn" id="webMotion" aria-pressed="false">Pause motion</button>
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">46</b> ties and <b id="nExtPeople">11</b> people from the control evidence · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources in the base map, plus <b id="nExtTies">20</b> ties from the control evidence · <b id="nExtPeople">12</b> named people, shown as dotted links and not as bubbles · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. Arrow width compares unlike kinds of money: a conditional commitment, a recommended grant, a paid grant and the value of compute credits. Select a bubble to see which kind each one is. A thin arrow with a faint money sign has no disclosed amount, which does not mean the amount is small. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
     </figure>
 
     <div class="readrow">
@@ -1399,7 +1478,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   $("#nTies").textContent = D.edges.length;
   $("#nFins").textContent = D.financials.length;
   $("#nSources").textContent = Object.keys(D.sources).length;
-  if (window.CONTROL) { $("#nExtTies").textContent = window.CONTROL.graph.edges.length; $("#nExtPeople").textContent = window.CONTROL.graph.people.length; }
   $$("[data-sources]").forEach(el => { el.innerHTML = "Sources: " + srcLinks(el.dataset.sources.split(/\s+/)); });
   $$(".cat-actors").forEach(el => {
     const list = D.nodes.filter(n => String(n.cat) === el.dataset.cat);
@@ -1592,5 +1670,16 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 </script>
 <script src="ecosystem-control.js"></script>
 <script src="ecosystem-graph.js"></script>
+<script src="explore.js"></script>
+<script>
+/* The map and the one-line answers stay in view. The reasoning, tables and lists wait behind a button each. */
+Explore.fold("#control .qblock, #questions .qblock", ".qblock-head");
+Explore.fold(".findings > li, .frame", "h3");
+Explore.fold("#actors", ".chapter-head", { open: "Open the 100 profiles", close: "Close the profiles" });
+Explore.fold("#ties", ".chapter-head", { open: "Open the relationship ledger", close: "Close the ledger" });
+Explore.fold("#money", ".chapter-head", { open: "Open the money section", close: "Close the money section" });
+Explore.fold("#method", ".chapter-head", { open: "Open method, terms and boundaries", close: "Close the method section" });
+Explore.fold("#sources", ".chapter-head", { open: "Open the 93 sources", close: "Close the sources" });
+</script>
 </body>
 </html>

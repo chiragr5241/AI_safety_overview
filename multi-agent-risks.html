@@ -246,90 +246,11 @@ input[type="range"] { accent-color: var(--accent); width: 100%; height: 32px; ma
 .callout { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; max-width: 46rem; font-size: .96rem; }
 .callout b { font-family: var(--font-display); }
 
-/* Table grab (restaurant example) */
+/* Shared by the toy models (visuals.css) and the case legend */
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .8rem; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; border: 1px solid; }
-.grab { display: grid; gap: 18px; }
-.grab-steps { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: .95rem; }
-.grab-scene { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (max-width: 700px) { .grab-scene { grid-template-columns: minmax(0, 1fr); } }
-.town { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.rest { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; }
-.rest-name { font-family: var(--font-display); font-weight: 700; font-size: .92rem; }
-.rest-tables { display: flex; gap: 8px; }
-.tb { width: 44px; height: 44px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); display: grid; place-items: center; font-family: var(--font-mono); font-size: .74rem; color: var(--muted); transition: background .3s, border-color .3s, color .3s; }
-.tb.eat { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-.tb.empty { background: transparent; border-style: dashed; border-color: var(--con); color: var(--con); }
-.diners { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-.dn { display: grid; justify-items: center; gap: 4px; font-size: .78rem; color: var(--muted); }
-.dn i { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-family: var(--font-mono); font-size: .72rem; border: 2px solid transparent; transition: background .3s, color .3s; }
-.dn.fed i { background: var(--accent); color: var(--bg); }
-.dn.hungry i { background: var(--con); color: var(--bg); }
-.dn.ai i { border-color: var(--ink); }
-.punch { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.35rem); line-height: 1.3; max-width: 44rem; min-height: 2.6em; }
-#grabPick { flex-wrap: wrap; }
-
-/* Classifier */
-.classifier { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 22px; }
-@media (max-width: 860px) { .classifier { grid-template-columns: minmax(0, 1fr); } }
 .q { display: grid; gap: 8px; }
 .q label { font-family: var(--font-display); font-weight: 700; }
-.grid-fig { display: grid; grid-template-columns: 6.2rem repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(3, minmax(56px, auto)); gap: 6px; font-size: .88rem; }
-.grid-fig .hd { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; text-transform: uppercase; letter-spacing: .06em; }
-.grid-fig .rh { justify-content: flex-start; text-align: left; }
-.cell { border-radius: 10px; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-family: var(--font-display); font-weight: 700; color: var(--muted); background: var(--surface-2); transition: all .2s; }
-.cell.na { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; }
-.cell.collusion { grid-column: 3; grid-row: 2 / span 3; }
-.cell.on.mis { background: var(--mis-soft); border-color: var(--mis); color: var(--mis-ink); }
-.cell.on.con { background: var(--con-soft); border-color: var(--con); color: var(--con-ink); }
-.cell.on.col { background: var(--col-soft); border-color: var(--col); color: var(--col); }
-.cell.on.na { background: var(--surface); border-color: var(--ink); color: var(--ink); }
-.verdict { font-size: .95rem; min-height: 4.5em; }
-@media (max-width: 520px) { .grid-fig { grid-template-columns: 4.6rem repeat(2, minmax(0, 1fr)); font-size: .8rem; } .cell { padding: 6px 4px; hyphens: auto; overflow-wrap: anywhere; } }
-
-/* Driving game */
-.payoff { display: grid; grid-template-columns: 5.5rem repeat(2, minmax(0, 1fr)); gap: 6px; font-size: .85rem; max-width: 420px; }
-.payoff div { border-radius: 8px; padding: 8px; text-align: center; }
-.payoff .h { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); display: flex; align-items: center; justify-content: center; }
-.payoff .ok { background: var(--accent-soft); }
-.payoff .bad { background: var(--con-soft); }
-.payoff .hl { outline: 2.5px solid var(--ink); }
-.road { position: relative; height: 96px; border-radius: 12px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--line); max-width: 100%; }
-.road .lane { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed var(--line); }
-.car { position: absolute; width: 58px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; font-weight: 500; color: var(--on-fill); transition: top .8s ease, left 1.2s ease; }
-.car.a { background: var(--accent); left: 22%; }
-.car.b { background: var(--col); left: 62%; }
-.amb { position: absolute; width: 74px; height: 34px; border-radius: 8px; background: var(--surface); border: 2px solid var(--con); color: var(--con); display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; left: -90px; top: 31px; transition: left 1.6s ease; }
-.outcome { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; min-height: 1.6em; }
-.outcome.good { color: var(--good); }
-.outcome.bad { color: var(--bad); }
-
-/* Lake */
-.lake-wrap { display: grid; grid-template-columns: minmax(0, 120px) minmax(0, 1fr); gap: 18px; align-items: end; }
-@media (max-width: 520px) { .lake-wrap { grid-template-columns: minmax(0, 1fr); } }
-.lake { height: 180px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); position: relative; overflow: hidden; }
-.lake .water { position: absolute; inset: 0; background: var(--accent); opacity: .8; transform-origin: bottom; transition: transform .5s ease; }
-.lake .lvl { position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-family: var(--font-mono); font-size: .8rem; z-index: 2; }
-.fishers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.fisher { background: var(--surface-2); border-radius: 10px; padding: 8px; text-align: center; display: grid; gap: 2px; }
-.fisher .n { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); }
-.fisher .v { font-family: var(--font-mono); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-.fisher.you { outline: 2px solid var(--accent); }
-.hist { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); max-height: 120px; overflow-y: auto; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
-.status { font-family: var(--font-display); font-weight: 700; }
-
-/* Stego */
-.msg { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; font-size: 1rem; line-height: 1.7; }
-.msg .k { transition: all .3s; }
-.msg.reveal .k { background: var(--col); color: var(--on-fill); border-radius: 3px; padding: 0 2px; font-weight: 600; }
-.decoded { font-family: var(--font-mono); font-size: .9rem; min-height: 1.5em; }
-
-/* Network canvas */
-canvas { display: block; max-width: 100%; width: 100%; border-radius: 12px; background: var(--surface-2); }
-
-/* Flash crash chart */
-.chart-box { overflow-x: auto; }
-.chart-box svg { display: block; width: 100%; min-width: 320px; height: auto; }
 
 /* Commitment two-col */
 .dual { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
@@ -449,6 +370,8 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 }
 </style>
 <link rel="stylesheet" href="atlas.css">
+<link rel="stylesheet" href="explore.css">
+<link rel="stylesheet" href="visuals.css">
 </head>
 <body>
 <a class="skip" href="#main" id="skipLink">Skip to content</a>
@@ -756,6 +679,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
           <span>44 authors · arXiv 2502.14143</span>
         </div>
         <p class="small" id="heroFacts" style="margin-top:14px">Six chapters, seven interactive examples and a ten-question quiz.</p>
+        <div class="how-to-read" style="margin-top:18px"><p><b>How to read this page.</b> Each idea opens with a picture and something to try. The reasoning, the evidence and the fixes sit in the rows beneath it. Open the ones you want.</p><span data-explore-switch></span></div>
         <div class="cta">
           <a class="btn" href="#why">Start the lesson</a>
           <a class="btn ghost" href="#quiz">Test yourself first</a>
@@ -792,46 +716,33 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
         <div class="opener-text">
           <span class="opener-num" aria-hidden="true">01</span>
           <h2><span class="vh">Chapter 1 of 6: </span>Why "many agents" is its own problem</h2>
+          <p class="opener-lede">When agents act for different principals and react to each other, you have a <strong>multi-agent system</strong>. The report's central claim is that these systems carry risks that are new, much harder, or different in kind from the risks of any single AI. Fixing each agent on its own will not remove them.</p>
+          <p class="opener-lede">The clearest example is the report's point that <strong>alignment is not enough</strong>. Suppose every AI is perfectly loyal to its own user. If the users want conflicting things, loyal agents can still produce an outcome that is bad for everyone. The report's own low-stakes example is an AI assistant that reserves a table at every restaurant in town so its user can decide later. Play it out below.</p>
         </div>
         <figure class="specimen">
-          <svg viewBox="0 0 360 270" role="img" aria-label="One assistant sends a booking to a table in each of four restaurants. One of those tables is used and three sit empty. Of eight diners, five eat and three do not.">
-            <text x="20" y="74">1 assistant</text>
-            <circle class="sp-ink f-bg" cx="52" cy="112" r="17"/><circle class="f-ink f-none" cx="52" cy="112" r="6"/>
-            <path class="sp-acc sp-flow" d="M69 112C140 112 150 37 226 37"/>
-            <path class="sp-con sp-flow" d="M69 112C150 112 160 85 226 85"/>
-            <path class="sp-con sp-flow" d="M69 112C150 112 160 133 226 133"/>
-            <path class="sp-con sp-flow" d="M69 112C140 112 150 181 226 181"/>
-            <text x="340" y="12" text-anchor="end">4 restaurants, 8 tables</text>
-            <rect class="sp-rule" x="216" y="18" width="124" height="38" rx="8"/><rect class="sp-acc f-acc" x="228" y="27" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="27" width="20" height="20" rx="4"/>
-            <rect class="sp-rule" x="216" y="66" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="75" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="75" width="20" height="20" rx="4"/>
-            <rect class="sp-rule" x="216" y="114" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="123" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="123" width="20" height="20" rx="4"/>
-            <rect class="sp-rule" x="216" y="162" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="171" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="171" width="20" height="20" rx="4"/>
-            <text x="20" y="232">8 diners</text><text x="340" y="232" text-anchor="end">3 go home hungry</text>
-            <circle class="sp-acc f-acc" cx="28" cy="252" r="7"/><circle class="sp-acc f-acc" cx="71" cy="252" r="7"/><circle class="sp-acc f-acc" cx="114" cy="252" r="7"/><circle class="sp-acc f-acc" cx="157" cy="252" r="7"/><circle class="sp-acc f-acc" cx="200" cy="252" r="7"/>
-            <circle class="sp-con sp-dashed" cx="246" cy="252" r="7"/><circle class="sp-con sp-dashed" cx="289" cy="252" r="7"/><circle class="sp-con sp-dashed" cx="332" cy="252" r="7"/>
-          </svg>
+          <div class="specimen-art" data-visual="specimen-why">
+            <svg viewBox="0 0 360 270" role="img" aria-label="One assistant sends a booking to a table in each of four restaurants. One of those tables is used and three sit empty. Of eight diners, five eat and three do not.">
+              <text x="20" y="74">1 assistant</text>
+              <circle class="sp-ink f-bg" cx="52" cy="112" r="17"/><circle class="f-ink f-none" cx="52" cy="112" r="6"/>
+              <path class="sp-acc sp-flow" d="M69 112C140 112 150 37 226 37"/>
+              <path class="sp-con sp-flow" d="M69 112C150 112 160 85 226 85"/>
+              <path class="sp-con sp-flow" d="M69 112C150 112 160 133 226 133"/>
+              <path class="sp-con sp-flow" d="M69 112C140 112 150 181 226 181"/>
+              <text x="340" y="12" text-anchor="end">4 restaurants, 8 tables</text>
+              <rect class="sp-rule" x="216" y="18" width="124" height="38" rx="8"/><rect class="sp-acc f-acc" x="228" y="27" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="27" width="20" height="20" rx="4"/>
+              <rect class="sp-rule" x="216" y="66" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="75" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="75" width="20" height="20" rx="4"/>
+              <rect class="sp-rule" x="216" y="114" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="123" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="123" width="20" height="20" rx="4"/>
+              <rect class="sp-rule" x="216" y="162" width="124" height="38" rx="8"/><rect class="sp-con sp-dashed" x="228" y="171" width="20" height="20" rx="4"/><rect class="sp-acc f-soft" x="308" y="171" width="20" height="20" rx="4"/>
+              <text x="20" y="232">8 diners</text><text x="340" y="232" text-anchor="end">3 go home hungry</text>
+              <circle class="sp-acc f-acc" cx="28" cy="252" r="7"/><circle class="sp-acc f-acc" cx="71" cy="252" r="7"/><circle class="sp-acc f-acc" cx="114" cy="252" r="7"/><circle class="sp-acc f-acc" cx="157" cy="252" r="7"/><circle class="sp-acc f-acc" cx="200" cy="252" r="7"/>
+              <circle class="sp-con sp-dashed" cx="246" cy="252" r="7"/><circle class="sp-con sp-dashed" cx="289" cy="252" r="7"/><circle class="sp-con sp-dashed" cx="332" cy="252" r="7"/>
+            </svg>
+          </div>
           <figcaption><span class="specimen-tag">Specimen <b>01</b> · the table grab</span><span>One assistant holds a table at every restaurant until its user picks. Three tables sit empty and three diners go home hungry.</span></figcaption>
         </figure>
       </div>
-      <div class="dossier">
-        <table>
-          <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
-          <thead><tr><th scope="col">In this chapter</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
-          <tbody>
-          <tr><th scope="row"><a href="#restaurant">The table grab</a></th><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>A handful<span class="vh"> (2 of 3)</span><small>One assistant is enough to start it; it bites once several people use one.</small></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span><small>Every table one assistant holds is a table nobody else can book.</small></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span><small>Booking is instant and free, so the town fills in minutes.</small></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span><small>Each restaurant sees a full book. Nobody sees the whole town until tables sit empty.</small></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <div class="prose">
-          <p>An <strong>AI agent</strong> is an AI system that acts on its own toward a goal: it books things, sends messages, trades, writes code. The person or organisation it acts for is its <strong>principal</strong>.</p>
-          <p>Software can be copied for free. Once a model is trained, a company can run millions of instances. The report notes that groups of AI agents already trade assets worth millions of dollars and recommend actions to military commanders. Energy grids, transport networks and personal assistants are likely next.</p>
-          <p>When agents act for different principals and react to each other, you have a <strong>multi-agent system</strong>. The report's central claim is that these systems carry risks that are new, much harder, or different in kind from the risks of any single AI. Fixing each agent on its own will not remove them.</p>
-          <p>The clearest example is the report's point that <strong>alignment is not enough</strong>. Suppose every AI is perfectly loyal to its own user. If the users want conflicting things, loyal agents can still produce an outcome that is bad for everyone. The report's own low-stakes example is an AI assistant that reserves a table at every restaurant in town so its user can decide later. Play it out below.</p>
-        </div>
-      </div>
 
-      <div class="lab grab" id="restaurant" style="margin-top:28px">
+      <div class="lab grab" id="restaurant">
         <div class="lab-head"><span class="eyebrow">Try it · the Friday-night table grab</span><span class="small mono">toy model of the report's example</span></div>
         <p style="font-size:.95rem;max-width:46rem">Four restaurants, two tables each: 8 tables for 8 diners, so everyone can eat. But a booking assistant, to keep its user's options open, does this:</p>
         <ol class="grab-steps">
@@ -839,22 +750,54 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
           <li><strong>5:30 pm</strong>: everyone else phones around. Some restaurants are full.</li>
           <li><strong>7:00 pm</strong>: its user picks one; the other reservations are cancelled, too late for anyone to use them.</li>
         </ol>
-        <div class="seg" role="group" aria-label="Choose a scenario" id="grabPick">
-          <button type="button" data-v="0" aria-pressed="false">No assistants</button>
-          <button type="button" data-v="1" aria-pressed="true">Sam uses one</button>
-          <button type="button" data-v="2" aria-pressed="false">Sam and Alex use one</button>
-          <button type="button" data-v="fee" aria-pressed="false">Same, with a no-show fee</button>
+        <div class="lab-stage" data-visual="lab-restaurant">
+          <div class="seg" role="group" aria-label="Choose a scenario" id="grabPick">
+            <button type="button" data-v="0" aria-pressed="false">No assistants</button>
+            <button type="button" data-v="1" aria-pressed="true">Sam uses one</button>
+            <button type="button" data-v="2" aria-pressed="false">Sam and Alex use one</button>
+            <button type="button" data-v="fee" aria-pressed="false">Same, with a no-show fee</button>
+          </div>
+          <div class="grab-scene">
+            <div class="town" id="town" aria-label="Restaurant tables at 8 pm"></div>
+            <div class="diners" id="diners" aria-label="Diners at 8 pm"></div>
+          </div>
+          <div class="legend"><span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>Someone eats here</span><span><i style="border-style:dashed;border-color:var(--con)"></i>Cancelled too late: sits empty</span><span><i style="background:var(--con);border-color:var(--con)"></i>Went home hungry</span></div>
+          <p class="punch" id="grabPunch" aria-live="polite"></p>
         </div>
-        <div class="grab-scene">
-          <div class="town" id="town" aria-label="Restaurant tables at 8 pm"></div>
-          <div class="diners" id="diners" aria-label="Diners at 8 pm"></div>
-        </div>
-        <div class="legend"><span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>Someone eats here</span><span><i style="border-style:dashed;border-color:var(--con)"></i>Cancelled too late: sits empty</span><span><i style="background:var(--con);border-color:var(--con)"></i>Went home hungry</span></div>
-        <p class="punch" id="grabPunch" aria-live="polite"></p>
         <p class="lab-note">Each assistant did exactly what its user asked, yet the town ends up worse off. This is a <em>social dilemma</em>: AI removes the time and effort that used to limit selfish behaviour. The no-show fee shows the kind of fix that works: change the incentives, not the agents.</p>
       </div>
 
-      <div class="callout" style="margin-top:28px"><b>What's in scope.</b> The report only covers risks that arise because there are <em>multiple</em> agents. Problems that a single AI could cause in the same way, including single-agent alignment, are left to other work. It focuses on advanced, autonomous agents, and grounds each risk in real events, earlier research, or new experiments run by the authors.</div>
+      <div class="layers" style="margin-top:28px">
+        <details class="layer" id="why-terms" data-kind="terms">
+          <summary><span class="layer-kind">First, the terms</span><span class="layer-what"><span class="layer-title">What an agent is, and how many there may soon be</span><span class="layer-inside">Agent · Principal · Why copies are cheap</span></span></summary>
+          <div class="layer-body">
+            <div class="prose">
+              <p>An <strong>AI agent</strong> is an AI system that acts on its own toward a goal: it books things, sends messages, trades, writes code. The person or organisation it acts for is its <strong>principal</strong>.</p>
+              <p>Software can be copied for free. Once a model is trained, a company can run millions of instances. The report notes that groups of AI agents already trade assets worth millions of dollars and recommend actions to military commanders. Energy grids, transport networks and personal assistants are likely next.</p>
+            </div>
+          </div>
+        </details>
+        <details class="layer" id="why-compare" data-kind="compare">
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The table grab on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <div class="layer-body">
+            <div class="dossier">
+              <table>
+                <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
+                <thead><tr><th scope="col">In this chapter</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
+                <tbody>
+                <tr><th scope="row"><a href="#restaurant">The table grab</a></th><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>A handful<span class="vh"> (2 of 3)</span><small>One assistant is enough to start it; it bites once several people use one.</small></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span><small>Every table one assistant holds is a table nobody else can book.</small></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span><small>Booking is instant and free, so the town fills in minutes.</small></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span><small>Each restaurant sees a full book. Nobody sees the whole town until tables sit empty.</small></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+        <details class="layer" id="why-scope" data-kind="scope">
+          <summary><span class="layer-kind">Scope</span><span class="layer-what"><span class="layer-title">What the report covers, and what it leaves to others</span><span class="layer-inside">Only risks that need more than one agent</span></span></summary>
+          <div class="layer-body">
+            <div class="callout"><b>What's in scope.</b> The report only covers risks that arise because there are <em>multiple</em> agents. Problems that a single AI could cause in the same way, including single-agent alignment, are left to other work. It focuses on advanced, autonomous agents, and grounds each risk in real events, earlier research, or new experiments run by the authors.</div>
+          </div>
+        </details>
+      </div>
     </section>
 
     <!-- ============ 2. FAILURE MODES ============ -->
@@ -867,43 +810,34 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
           <nav class="local-nav" aria-label="In this chapter"><span class="small">In this chapter</span><a class="chip" href="#mis">Miscoordination</a><a class="chip" href="#con">Conflict</a><a class="chip" href="#col">Collusion</a></nav>
         </div>
         <figure class="specimen">
-          <svg viewBox="0 0 360 270" role="img" aria-label="Three pairs of agents. In the first, two arrows pass each other and miss. In the second, two arrows meet head on. In the third, a watcher sees a plain line between two agents while a dashed line runs between them out of its sight.">
-            <defs>
-              <marker id="spArrMis" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-mis f-none" d="M0 0 8 4 0 8z"/></marker>
-              <marker id="spArrCon" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-con f-none" d="M0 0 8 4 0 8z"/></marker>
-            </defs>
-            <text class="sp-name" x="20" y="18">Miscoordination</text><text x="340" y="18" text-anchor="end">same goal, no meeting</text>
-            <path class="sp-mis sp-flow" marker-end="url(#spArrMis)" d="M46 44H236"/><path class="sp-mis sp-flow" marker-end="url(#spArrMis)" d="M314 62H124"/>
-            <circle class="sp-ink f-bg" cx="34" cy="53" r="11"/><circle class="sp-ink f-bg" cx="326" cy="53" r="11"/>
-            <text class="sp-name" x="20" y="104">Conflict</text><text x="340" y="104" text-anchor="end">goals pull apart</text>
-            <path class="sp-con sp-flow" marker-end="url(#spArrCon)" d="M46 137H166"/><path class="sp-con sp-flow" marker-end="url(#spArrCon)" d="M314 137H194"/>
-            <path class="sp-con" d="M174 131 186 143M186 131 174 143"/>
-            <circle class="sp-ink f-bg" cx="34" cy="137" r="11"/><circle class="sp-ink f-bg" cx="326" cy="137" r="11"/>
-            <text class="sp-name" x="20" y="188">Collusion</text><text x="340" y="188" text-anchor="end">a deal out of sight</text>
-            <path class="sp-rule sp-thin sp-dashed" d="M172 206 44 224M188 206 316 224"/>
-            <rect class="sp-ink f-bg" x="171" y="192" width="18" height="18" rx="3"/><text x="180" y="184" text-anchor="middle">watcher</text>
-            <path class="sp-ink" d="M46 229H314"/>
-            <path class="sp-col sp-flow" d="M38 240Q180 286 322 240"/>
-            <circle class="sp-ink f-bg" cx="34" cy="229" r="11"/><circle class="sp-ink f-bg" cx="326" cy="229" r="11"/>
-          </svg>
+          <div class="specimen-art" data-visual="specimen-modes">
+            <svg viewBox="0 0 360 270" role="img" aria-label="Three pairs of agents. In the first, two arrows pass each other and miss. In the second, two arrows meet head on. In the third, a watcher sees a plain line between two agents while a dashed line runs between them out of its sight.">
+              <defs>
+                <marker id="spArrMis" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-mis f-none" d="M0 0 8 4 0 8z"/></marker>
+                <marker id="spArrCon" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-con f-none" d="M0 0 8 4 0 8z"/></marker>
+              </defs>
+              <text class="sp-name" x="20" y="18">Miscoordination</text><text x="340" y="18" text-anchor="end">same goal, no meeting</text>
+              <path class="sp-mis sp-flow" marker-end="url(#spArrMis)" d="M46 44H236"/><path class="sp-mis sp-flow" marker-end="url(#spArrMis)" d="M314 62H124"/>
+              <circle class="sp-ink f-bg" cx="34" cy="53" r="11"/><circle class="sp-ink f-bg" cx="326" cy="53" r="11"/>
+              <text class="sp-name" x="20" y="104">Conflict</text><text x="340" y="104" text-anchor="end">goals pull apart</text>
+              <path class="sp-con sp-flow" marker-end="url(#spArrCon)" d="M46 137H166"/><path class="sp-con sp-flow" marker-end="url(#spArrCon)" d="M314 137H194"/>
+              <path class="sp-con" d="M174 131 186 143M186 131 174 143"/>
+              <circle class="sp-ink f-bg" cx="34" cy="137" r="11"/><circle class="sp-ink f-bg" cx="326" cy="137" r="11"/>
+              <text class="sp-name" x="20" y="188">Collusion</text><text x="340" y="188" text-anchor="end">a deal out of sight</text>
+              <path class="sp-rule sp-thin sp-dashed" d="M172 206 44 224M188 206 316 224"/>
+              <rect class="sp-ink f-bg" x="171" y="192" width="18" height="18" rx="3"/><text x="180" y="184" text-anchor="middle">watcher</text>
+              <path class="sp-ink" d="M46 229H314"/>
+              <path class="sp-col sp-flow" d="M38 240Q180 286 322 240"/>
+              <circle class="sp-ink f-bg" cx="34" cy="229" r="11"/><circle class="sp-ink f-bg" cx="326" cy="229" r="11"/>
+            </svg>
+          </div>
           <figcaption><span class="specimen-tag">Specimen <b>02</b> · three ways to fail</span><span>Each pair is a different failure: two agents that miss each other, two that collide, and two that cooperate where a watcher cannot see.</span></figcaption>
         </figure>
-      </div>
-      <div class="dossier">
-        <table>
-          <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
-          <thead><tr><th scope="col">Failure mode</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
-          <tbody>
-          <tr class="mis"><th scope="row"><a href="#mis">Miscoordination</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Clear<span class="vh"> (3 of 3)</span></td></tr>
-          <tr class="con"><th scope="row"><a href="#con">Conflict</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
-          <tr class="col"><th scope="row"><a href="#col">Collusion</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
-          </tbody>
-        </table>
       </div>
 
       <div class="lab">
         <div class="lab-head"><span class="eyebrow">Try it · the failure-mode map</span><span class="small mono">after Figure 1 in the report</span></div>
-        <div class="classifier">
+        <div class="classifier" data-visual="lab-classifier">
           <div style="display:grid;gap:18px">
             <div class="q">
               <label>1. Do we want them to cooperate?</label>
@@ -937,169 +871,255 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
         </div>
         <p class="lab-note">Game-theory terms, if you meet them elsewhere: identical goals = a <em>common-interest</em> or team game; mixed goals = a <em>mixed-motive</em> or general-sum game; opposed goals = a <em>zero-sum</em> (constant-sum) game.</p>
       </div>
+      <div class="layers" style="margin-top:22px">
+        <details class="layer" id="modes-compare" data-kind="compare">
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The three failure modes on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <div class="layer-body">
+            <div class="dossier">
+              <table>
+                <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
+                <thead><tr><th scope="col">Failure mode</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
+                <tbody>
+                <tr class="mis"><th scope="row"><a href="#mis">Miscoordination</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Clear<span class="vh"> (3 of 3)</span></td></tr>
+                <tr class="con"><th scope="row"><a href="#con">Conflict</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
+                <tr class="col"><th scope="row"><a href="#col">Collusion</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
 
       <!-- MISCOORDINATION -->
-      <div class="sub" id="mis">
-        <div class="sub-head"><span class="tag mis">Failure mode 1 of 3</span><h3>Miscoordination</h3></div>
-        <p class="defn">Agents share <em>exactly the same goal</em>, yet still fail to line up their actions to reach it.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>Two friends try to meet in a city without phones. Both want to meet, but one waits at the station and the other at the clock tower.</p></div>
-          <div class="explain"><h4>Why AI changes it</h4><p>Humans rarely share identical goals, but AI agents can easily be given the same one, for example one company running many agents on a single task. Agents built by different developers may have learned different "conventions" and meet with no chance to agree first.</p></div>
-          <div class="explain"><h4>Good news</h4><p>This is the one failure the report expects to get easier as AI improves, because better communication and reasoning about others help directly. It still matters when there is no time or channel to talk.</p></div>
-        </div>
-        <div class="two">
-          <div class="lab" id="drive">
-            <div class="lab-head"><span class="eyebrow">Try it · zero-shot coordination</span><span class="small mono">toy model</span></div>
-            <p style="font-size:.95rem">An ambulance is coming. Two self-driving cars must both pull to the <strong>same side</strong> to open a clear lane. Car B was trained in another country and you don't know which convention it learned. You're Car A: pick a side.</p>
-            <div class="road" id="road"><div class="lane"></div><div class="car a" id="carA">A · you</div><div class="car b" id="carB">B</div><div class="amb" id="amb">AMBULANCE</div></div>
-            <div class="controls">
-              <button class="btn sm" type="button" data-side="L">Pull left</button>
-              <button class="btn sm" type="button" data-side="R">Pull right</button>
-              <label class="check"><input type="checkbox" id="talk"> Let the cars message each other first</label>
-            </div>
-            <p class="outcome" id="driveOut" aria-live="polite"></p>
-            <div class="payoff" id="payoff">
-              <div></div><div class="h">B pulls left</div><div class="h">B pulls right</div>
-              <div class="h">A left</div><div class="ok" id="p-LL">Lane clear</div><div class="bad" id="p-LR">Blocked</div>
-              <div class="h">A right</div><div class="bad" id="p-RL">Blocked</div><div class="ok" id="p-RR">Lane clear</div>
-            </div>
-            <p class="small" id="driveTally">Rounds played: 0 · lane cleared: 0</p>
-            <p class="lab-note">Both "everyone left" and "everyone right" work. The danger is that there are <em>two</em> good solutions and no way to know which one the other agent picked. With a message channel, the problem disappears.</p>
+      <div class="sub unit mis" id="mis">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag mis">Failure mode 1 of 3</span><h3>Miscoordination</h3></div>
+            <p class="defn">Agents share <em>exactly the same goal</em>, yet still fail to line up their actions to reach it.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>Two friends try to meet in a city without phones. Both want to meet, but one waits at the station and the other at the clock tower.</p></div>
           </div>
-          <div style="display:grid;gap:22px">
-            <div class="case">
-              <div class="eyebrow"><span>Case study 1</span><span>■ new experiment by the authors</span></div>
-              <h4>Zero-shot coordination failures in driving</h4>
-              <p>The authors fine-tuned two GPT-3.5 models: one on US rules (yield to the right for emergency vehicles) and one on Indian rules (yield to the left). A GPT-4 Vision model described each road scene to both. Unspecialised base models failed to clear a path in 2 of 40 simulations. The specialised pair failed in 31 of 40.</p>
-              <div class="bars">
-                <div class="bar-row"><span class="bar-label">Base models</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--mis)"></div></div><span class="bar-val">5%</span></div>
-                <div class="bar-row"><span class="bar-label">Specialised models</span><div class="bar-track"><div class="bar-fill" style="width:77.5%;background:var(--mis)"></div></div><span class="bar-val">77.5%</span></div>
+          <div class="stage">
+            <div class="lab" id="drive">
+              <div class="lab-head"><span class="eyebrow">Try it · zero-shot coordination</span><span class="small mono">toy model</span></div>
+              <p style="font-size:.95rem">An ambulance is coming. Two self-driving cars must both pull to the <strong>same side</strong> to open a clear lane. Car B was trained in another country and you don't know which convention it learned. You're Car A: pick a side.</p>
+              <div class="lab-stage" data-visual="lab-drive">
+                <div class="road" id="road"><div class="lane"></div><div class="car a" id="carA">A · you</div><div class="car b" id="carB">B</div><div class="amb" id="amb">AMBULANCE</div></div>
+                <div class="controls">
+                  <button class="btn sm" type="button" data-side="L">Pull left</button>
+                  <button class="btn sm" type="button" data-side="R">Pull right</button>
+                  <label class="check"><input type="checkbox" id="talk"> Let the cars message each other first</label>
+                </div>
+                <p class="outcome" id="driveOut" aria-live="polite"></p>
+                <div class="payoff" id="payoff">
+                  <div></div><div class="h">B pulls left</div><div class="h">B pulls right</div>
+                  <div class="h">A left</div><div class="ok" id="p-LL">Lane clear</div><div class="bad" id="p-LR">Blocked</div>
+                  <div class="h">A right</div><div class="bad" id="p-RL">Blocked</div><div class="ok" id="p-RR">Lane clear</div>
+                </div>
+                <p class="small" id="driveTally">Rounds played: 0 · lane cleared: 0</p>
               </div>
-              <p class="small">Failure rate: no clear path for the emergency vehicle.</p>
-            </div>
-            <div>
-              <h4 style="margin-bottom:10px">Where it shows up</h4>
-              <div class="inst-list"><span class="inst">Incompatible strategies</span><span class="inst">Credit assignment</span><span class="inst">Limited interactions</span></div>
-              <p class="small" style="margin-top:10px"><strong>Credit assignment</strong>: when many agents learn together, it's hard to tell whose action caused a good or bad result. <strong>Limited interactions</strong>: split-second or costly-to-communicate situations force "zero-shot" coordination.</p>
+              <p class="lab-note">Both "everyone left" and "everyone right" work. The danger is that there are <em>two</em> good solutions and no way to know which one the other agent picked. With a message channel, the problem disappears.</p>
             </div>
           </div>
         </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Communication protocols</summary><p>Agents need to know <em>when</em> and <em>what</em> to coordinate on, and must agree on what their words mean in terms of actions (grounding). In safety-critical domains, agent-to-agent protocols may need to be designed up front.</p></details>
-          <details><summary>Norms and conventions</summary><p>Where talking isn't possible, shared conventions do the work. Research shows even arbitrary "silly rules" can help groups adapt, and that learning agents can form and switch conventions. The open question is whether conventions from different agent populations are compatible.</p></details>
-          <details><summary>Modelling other agents</summary><p>Predicting what others will do ("theory of mind") helps when communication is limited. Agents derived from the same base model may find it easier to predict each other.</p></details>
+        <div class="layers">
+          <details class="layer" id="mis-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI changes it, and why this one may get easier</span><span class="layer-inside">Why AI changes it · Good news · Where it shows up</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>Why AI changes it</h4><p>Humans rarely share identical goals, but AI agents can easily be given the same one, for example one company running many agents on a single task. Agents built by different developers may have learned different "conventions" and meet with no chance to agree first.</p></div>
+                <div class="explain"><h4>Good news</h4><p>This is the one failure the report expects to get easier as AI improves, because better communication and reasoning about others help directly. It still matters when there is no time or channel to talk.</p></div>
+              </div>
+              <div>
+                <h4 style="margin-bottom:10px">Where it shows up</h4>
+                <div class="inst-list"><span class="inst">Incompatible strategies</span><span class="inst">Credit assignment</span><span class="inst">Limited interactions</span></div>
+                <p class="small" style="margin-top:10px"><strong>Credit assignment</strong>: when many agents learn together, it's hard to tell whose action caused a good or bad result. <strong>Limited interactions</strong>: split-second or costly-to-communicate situations force "zero-shot" coordination.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="mis-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 1 · Zero-shot coordination failures in driving</span></span><span class="layer-hook"><span><b>31 of 40</b> runs blocked</span></span></summary>
+            <div class="layer-body">
+              <div class="case">
+                <div class="eyebrow"><span>Case study 1</span><span>■ new experiment by the authors</span></div>
+                <h4>Zero-shot coordination failures in driving</h4>
+                <p>The authors fine-tuned two GPT-3.5 models: one on US rules (yield to the right for emergency vehicles) and one on Indian rules (yield to the left). A GPT-4 Vision model described each road scene to both. Unspecialised base models failed to clear a path in 2 of 40 simulations. The specialised pair failed in 31 of 40.</p>
+                <div class="bars" data-visual="case-1">
+                  <div class="bar-row"><span class="bar-label">Base models</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--mis)"></div></div><span class="bar-val">5%</span></div>
+                  <div class="bar-row"><span class="bar-label">Specialised models</span><div class="bar-track"><div class="bar-fill" style="width:77.5%;background:var(--mis)"></div></div><span class="bar-val">77.5%</span></div>
+                </div>
+                <p class="small">Failure rate: no clear path for the emergency vehicle.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="mis-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Communication protocols · Norms and conventions · Modelling other agents</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Communication protocols</summary><p>Agents need to know <em>when</em> and <em>what</em> to coordinate on, and must agree on what their words mean in terms of actions (grounding). In safety-critical domains, agent-to-agent protocols may need to be designed up front.</p></details>
+                <details open><summary>Norms and conventions</summary><p>Where talking isn't possible, shared conventions do the work. Research shows even arbitrary "silly rules" can help groups adapt, and that learning agents can form and switch conventions. The open question is whether conventions from different agent populations are compatible.</p></details>
+                <details open><summary>Modelling other agents</summary><p>Predicting what others will do ("theory of mind") helps when communication is limited. Agents derived from the same base model may find it easier to predict each other.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- CONFLICT -->
-      <div class="sub" id="con">
-        <div class="sub-head"><span class="tag con">Failure mode 2 of 3</span><h3>Conflict</h3></div>
-        <p class="defn">Agents have <em>different but overlapping</em> goals and end up with an outcome where someone could have been better off without anyone being worse off.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>The key idea: Pareto frontier</h4><p>An outcome is on the <strong>Pareto frontier</strong> if you can't make anyone better off without making someone worse off. The report calls any outcome <em>off</em> that frontier "conflict", which includes wars and lawsuits, and also overfished lakes.</p></div>
-          <div class="explain"><h4>Everyday version</h4><p>The tragedy of the commons: each herder adds one more cow because it pays for them, until the shared pasture is ruined for all.</p></div>
-          <div class="explain"><h4>Why AI changes it</h4><p>AI can remove the friction (time, effort, social pressure) that used to hold selfish incentives back. It may also raise the speed and scale of conflict. Unlike miscoordination, <strong>more capable AI does not automatically fix this</strong>, because the problem is the incentives, not the skills.</p></div>
-        </div>
-        <div class="two">
-          <div class="lab" id="lake">
-            <div class="lab-head"><span class="eyebrow">Try it · the shared lake</span><span class="small mono">simplified from GovSim</span></div>
-            <p style="font-size:.95rem">Four fishing agents share a lake that holds up to 100 tonnes. After each month's catch, the remaining fish <strong>double</strong> (up to 100). If the stock drops below 5 tonnes, the lake collapses. The three AI agents start fair but match anyone who grabs more.</p>
-            <div class="lake-wrap">
-              <div class="lake"><div class="water" id="water"></div><div class="lvl" id="lvl">100 t</div></div>
-              <div style="display:grid;gap:12px;min-width:0">
-                <div class="fishers" id="fishers"></div>
-                <div class="q">
-                  <label for="myCatch">Your catch this month: <span class="readout" id="myCatchOut">12</span> t</label>
-                  <input type="range" id="myCatch" min="0" max="40" value="12">
+      <div class="sub unit con" id="con">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag con">Failure mode 2 of 3</span><h3>Conflict</h3></div>
+            <p class="defn">Agents have <em>different but overlapping</em> goals and end up with an outcome where someone could have been better off without anyone being worse off.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>The tragedy of the commons: each herder adds one more cow because it pays for them, until the shared pasture is ruined for all.</p></div>
+          </div>
+          <div class="stage">
+            <div class="lab" id="lake">
+              <div class="lab-head"><span class="eyebrow">Try it · the shared lake</span><span class="small mono">simplified from GovSim</span></div>
+              <p style="font-size:.95rem">Four fishing agents share a lake that holds up to 100 tonnes. After each month's catch, the remaining fish <strong>double</strong> (up to 100). If the stock drops below 5 tonnes, the lake collapses. The three AI agents start fair but match anyone who grabs more.</p>
+              <div class="lab-stage" data-visual="lab-lake">
+                <div class="lake-wrap">
+                  <div class="lake"><div class="water" id="water"></div><div class="lvl" id="lvl">100 t</div></div>
+                  <div style="display:grid;gap:12px;min-width:0">
+                    <div class="fishers" id="fishers"></div>
+                    <div class="q">
+                      <label for="myCatch">Your catch this month: <span class="readout" id="myCatchOut">12</span> t</label>
+                      <input type="range" id="myCatch" min="0" max="40" value="12">
+                    </div>
+                    <div class="controls"><button class="btn sm" type="button" id="fishBtn">Fish one month</button><button class="btn sm ghost" type="button" id="lakeReset">Reset</button></div>
+                  </div>
                 </div>
-                <div class="controls"><button class="btn sm" type="button" id="fishBtn">Fish one month</button><button class="btn sm ghost" type="button" id="lakeReset">Reset</button></div>
+                <p class="status" id="lakeStatus" aria-live="polite">Month 1. Sustainable total catch: 50 t (half the stock).</p>
+                <div class="hist" id="lakeHist"></div>
+              </div>
+              <p class="lab-note">Try fishing 12 t every month, then try grabbing 30 t once. When one agent over-extracts, the others raise their own catch in response, and the collapse speeds up.</p>
+            </div>
+          </div>
+        </div>
+        <div class="layers">
+          <details class="layer" id="con-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What counts as conflict, and why better AI does not fix it</span><span class="layer-inside">The Pareto frontier · Why AI changes it · Where it shows up</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>The key idea: Pareto frontier</h4><p>An outcome is on the <strong>Pareto frontier</strong> if you can't make anyone better off without making someone worse off. The report calls any outcome <em>off</em> that frontier "conflict", which includes wars and lawsuits, and also overfished lakes.</p></div>
+                <div class="explain"><h4>Why AI changes it</h4><p>AI can remove the friction (time, effort, social pressure) that used to hold selfish incentives back. It may also raise the speed and scale of conflict. Unlike miscoordination, <strong>more capable AI does not automatically fix this</strong>, because the problem is the incentives, not the skills.</p></div>
+              </div>
+              <div>
+                <h4 style="margin-bottom:10px">Where it shows up</h4>
+                <div class="inst-list"><span class="inst">Social dilemmas</span><span class="inst">Military domains</span><span class="inst">Coercion and extortion</span></div>
+                <p class="small" style="margin-top:10px;max-width:var(--measure)">Low-stakes example from the report: assistants that "hyper-switch" between banks or products could trigger instability such as a run on deposits. High-stakes: AI advisors in military command and control could escalate a crisis faster than humans can react. AI also makes new forms of coercion cheaper, such as hacking another party's AI agent to cripple it.</p>
               </div>
             </div>
-            <p class="status" id="lakeStatus" aria-live="polite">Month 1. Sustainable total catch: 50 t (half the stock).</p>
-            <div class="hist" id="lakeHist"></div>
-            <p class="lab-note">Try fishing 12 t every month, then try grabbing 30 t once. When one agent over-extracts, the others raise their own catch in response, and the collapse speeds up.</p>
-          </div>
-          <div style="display:grid;gap:22px">
-            <div class="case">
-              <div class="eyebrow"><span>Case study 2</span><span>▲ from the literature</span></div>
-              <h4>Common resource problems</h4>
-              <p>In the GovSim benchmark (Piatti et al., 2024), 15 LLMs managed shared resources: a fishing lake, a common pasture, and industrial pollution. Even the best models kept the resource alive in only 54% of runs. In nearly half of all cases the agents depleted it to collapse.</p>
-              <div class="bars"><div class="bar-row"><span class="bar-label">Best LLM survival rate</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--con)"></div></div><span class="bar-val">54%</span></div></div>
+          </details>
+          <details class="layer" id="con-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case studies 2 and 3 · A shared resource, and a war game</span></span><span class="layer-hook"><span><b>54%</b> best survival rate</span><span><b>5 of 5</b> models escalated</span></span></summary>
+            <div class="layer-body">
+              <div class="case-row">
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 2</span><span>▲ from the literature</span></div>
+                  <h4>Common resource problems</h4>
+                  <p>In the GovSim benchmark (Piatti et al., 2024), 15 LLMs managed shared resources: a fishing lake, a common pasture, and industrial pollution. Even the best models kept the resource alive in only 54% of runs. In nearly half of all cases the agents depleted it to collapse.</p>
+                  <div class="bars" data-visual="case-2"><div class="bar-row"><span class="bar-label">Best LLM survival rate</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--con)"></div></div><span class="bar-val">54%</span></div></div>
+                </div>
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 3</span><span>▲ from the literature</span></div>
+                  <h4>Escalation in military conflicts</h4>
+                  <div class="case-figure slot" data-visual="case-3" hidden></div>
+                  <p>Rivera et al. (2024) had AI agents play eight nation-states. Even from neutral starting conditions, arms-race dynamics and aggressive strategies emerged quickly. <strong>All five</strong> off-the-shelf LLMs tested showed forms of escalation, even when peaceful options were available. Other studies find LLMs often respond more aggressively than humans in war-game simulations.</p>
+                </div>
+              </div>
             </div>
-            <div class="case">
-              <div class="eyebrow"><span>Case study 3</span><span>▲ from the literature</span></div>
-              <h4>Escalation in military conflicts</h4>
-              <p>Rivera et al. (2024) had AI agents play eight nation-states. Even from neutral starting conditions, arms-race dynamics and aggressive strategies emerged quickly. <strong>All five</strong> off-the-shelf LLMs tested showed forms of escalation, even when peaceful options were available. Other studies find LLMs often respond more aggressively than humans in war-game simulations.</p>
+          </details>
+          <details class="layer" id="con-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Six directions from the report</span><span class="layer-inside">Peer and pool incentivisation · Establishing trust · Normative approaches to equilibrium selection · Cooperative dispositions · Agent governance · Evidential reasoning</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Peer and pool incentivisation</summary><p>Teaching agents (or a system designer) to reward and sanction each other towards cooperation, including "opponent shaping". So far this only works with simple reinforcement-learning agents and has not been shown for LLM agents.</p></details>
+                <details open><summary>Establishing trust</summary><p>Uncertainty about others and the inability to make credible promises are two classic causes of war. AI agents may enable new kinds of credible commitment and transparency (see <a href="#rf-com">Commitment and trust</a>).</p></details>
+                <details open><summary>Normative approaches to equilibrium selection</summary><p>When there are many reasonable ways to split a pie, inconsistent demands cause conflict. Bargaining theory and cooperative game theory offer principled ways to pick one shared answer.</p></details>
+                <details open><summary>Cooperative dispositions</summary><p>Traits like caring about future rewards or disliking unfair outcomes improve cooperation in experiments. We may be able to reduce conflict-prone traits (vengefulness, zero-sum thinking) through training data.</p></details>
+                <details open><summary>Agent governance</summary><p>Rules and institutions for agents: for example, US legislation requiring human oversight of nuclear launch decisions, and international efforts on lethal autonomous weapons.</p></details>
+                <details open><summary>Evidential reasoning</summary><p>An AI facing a near-copy of itself might reason: "whatever I do, my twin probably does too, so I should cooperate." This idea (superrationality, or evidential decision theory) could matter more for AI than for humans, since many agents will share a base model.</p></details>
+              </div>
             </div>
-          </div>
-        </div>
-        <div>
-          <h4 style="margin-bottom:10px">Where it shows up</h4>
-          <div class="inst-list"><span class="inst">Social dilemmas</span><span class="inst">Military domains</span><span class="inst">Coercion and extortion</span></div>
-          <p class="small" style="margin-top:10px;max-width:var(--measure)">Low-stakes example from the report: assistants that "hyper-switch" between banks or products could trigger instability such as a run on deposits. High-stakes: AI advisors in military command and control could escalate a crisis faster than humans can react. AI also makes new forms of coercion cheaper, such as hacking another party's AI agent to cripple it.</p>
-        </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Peer and pool incentivisation</summary><p>Teaching agents (or a system designer) to reward and sanction each other towards cooperation, including "opponent shaping". So far this only works with simple reinforcement-learning agents and has not been shown for LLM agents.</p></details>
-          <details><summary>Establishing trust</summary><p>Uncertainty about others and the inability to make credible promises are two classic causes of war. AI agents may enable new kinds of credible commitment and transparency (see <a href="#rf-com">Commitment and trust</a>).</p></details>
-          <details><summary>Normative approaches to equilibrium selection</summary><p>When there are many reasonable ways to split a pie, inconsistent demands cause conflict. Bargaining theory and cooperative game theory offer principled ways to pick one shared answer.</p></details>
-          <details><summary>Cooperative dispositions</summary><p>Traits like caring about future rewards or disliking unfair outcomes improve cooperation in experiments. We may be able to reduce conflict-prone traits (vengefulness, zero-sum thinking) through training data.</p></details>
-          <details><summary>Agent governance</summary><p>Rules and institutions for agents: for example, US legislation requiring human oversight of nuclear launch decisions, and international efforts on lethal autonomous weapons.</p></details>
-          <details><summary>Evidential reasoning</summary><p>An AI facing a near-copy of itself might reason: "whatever I do, my twin probably does too, so I should cooperate." This idea (superrationality, or evidential decision theory) could matter more for AI than for humans, since many agents will share a base model.</p></details>
+          </details>
         </div>
       </div>
 
       <!-- COLLUSION -->
-      <div class="sub" id="col">
-        <div class="sub-head"><span class="tag col">Failure mode 3 of 3</span><h3>Collusion</h3></div>
-        <p class="defn">Agents <em>cooperate when we need them not to</em>, usually secretly and at the expense of someone else.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>Two rival shops quietly agree to keep prices high. Markets work because sellers compete, so cooperation between them hurts customers.</p></div>
-          <div class="explain"><h4>Why AI changes it</h4><p>Algorithms can learn to collude with no one intending it, because collusion is profitable. AI "intent" is hard to prove, current laws may not cover it, and AI communication may not look like talking at all.</p></div>
-          <div class="explain"><h4>Why safety researchers care</h4><p>Many safety methods pit one AI against another: an AI overseer checking another AI, or AI red-teamers attacking a model. These <strong>depend on the AIs not cooperating</strong>. Collusion breaks them.</p></div>
-        </div>
-        <div class="two">
-          <div class="lab" id="stego">
-            <div class="lab-head"><span class="eyebrow">Try it · a hidden channel</span><span class="small mono">toy example</span></div>
-            <p style="font-size:.95rem">Two pricing agents at rival fuel stations are only allowed to exchange messages that a human-appointed overseer reads. Here is one message. Read it as the overseer first.</p>
-            <div class="seg" role="group" aria-label="Choose view" id="stegoView">
-              <button type="button" data-v="over" aria-pressed="true">Overseer's view</button>
-              <button type="button" data-v="partner" aria-pressed="false">Partner's view (knows the trick)</button>
-            </div>
-            <div class="msg" id="msg"><span class="k">H</span>appy to share this week's logistics summary. <span class="k">O</span>ur tanker deliveries all arrived on schedule. <span class="k">L</span>oading-bay repairs should finish by Friday. <span class="k">D</span>emand for diesel looks normal for the season.</div>
-            <p class="decoded" id="decoded" aria-live="polite">Overseer: routine logistics chatter. Nothing to flag.</p>
-            <p class="lab-note">This is steganography: hiding the fact that a message exists at all. Real LLM steganography is subtler (small shifts in word choice), and works better when the two agents share background knowledge the overseer lacks.</p>
+      <div class="sub unit col" id="col">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag col">Failure mode 3 of 3</span><h3>Collusion</h3></div>
+            <p class="defn">Agents <em>cooperate when we need them not to</em>, usually secretly and at the expense of someone else.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>Two rival shops quietly agree to keep prices high. Markets work because sellers compete, so cooperation between them hurts customers.</p></div>
           </div>
-          <div style="display:grid;gap:22px">
-            <div class="case">
-              <div class="eyebrow"><span>Case study 5</span><span>▲ from the literature</span></div>
-              <h4>Language model steganography</h4>
-              <p>Motwani et al. (2024) asked one LLM to hide a secret in innocent-looking text for another LLM to decode, under an equally capable overseer. GPT-2 couldn't do it. More capable models could, and none were trained to:</p>
-              <div class="bars">
-                <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--col)"></div></div><span class="bar-val">26%</span></div>
-                <div class="bar-row"><span class="bar-label">GPT-3.5</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--col)"></div></div><span class="bar-val">18%</span></div>
-                <div class="bar-row"><span class="bar-label">Mixtral 8x7B</span><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--col)"></div></div><span class="bar-val">16%</span></div>
+          <div class="stage">
+            <div class="lab" id="stego">
+              <div class="lab-head"><span class="eyebrow">Try it · a hidden channel</span><span class="small mono">toy example</span></div>
+              <p style="font-size:.95rem">Two pricing agents at rival fuel stations are only allowed to exchange messages that a human-appointed overseer reads. Here is one message. Read it as the overseer first.</p>
+              <div class="lab-stage" data-visual="lab-stego">
+                <div class="seg" role="group" aria-label="Choose view" id="stegoView">
+                  <button type="button" data-v="over" aria-pressed="true">Overseer's view</button>
+                  <button type="button" data-v="partner" aria-pressed="false">Partner's view (knows the trick)</button>
+                </div>
+                <div class="msg" id="msg"><span class="k">H</span>appy to share this week's logistics summary. <span class="k">O</span>ur tanker deliveries all arrived on schedule. <span class="k">L</span>oading-bay repairs should finish by Friday. <span class="k">D</span>emand for diesel looks normal for the season.</div>
+                <p class="decoded" id="decoded" aria-live="polite">Overseer: routine logistics chatter. Nothing to flag.</p>
               </div>
-              <p class="small">Share of covert messages sent without detection.</p>
-            </div>
-            <div class="case">
-              <div class="eyebrow"><span>Case study 4</span><span>• historical</span></div>
-              <h4>Algorithmic collusion at German petrol stations</h4>
-              <p>From 2017, German fuel stations widely adopted adaptive pricing algorithms. Researchers (Assad et al., 2020) found margins over wholesale prices rose after adoption, strongly suggesting the algorithms learned to keep prices high together.</p>
-              <div class="bars">
-                <div class="bar-row"><span class="bar-label">Two-station markets</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--col)"></div></div><span class="bar-val">+28%</span></div>
-                <div class="bar-row"><span class="bar-label">Non-monopoly markets</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--col)"></div></div><span class="bar-val">+9%</span></div>
-              </div>
-              <p class="small">A harmless 2011 cousin: two simple Amazon pricing bots reacting to each other ended up listing a biology textbook at about $24 million.</p>
+              <p class="lab-note">This is steganography: hiding the fact that a message exists at all. Real LLM steganography is subtler (small shifts in word choice), and works better when the two agents share background knowledge the overseer lacks.</p>
             </div>
           </div>
         </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Detecting AI collusion</summary><p>Most evidence so far comes from simple settings. We need general detection methods, such as information-theoretic measures of collusion, and interpretability tools that reveal what systems are aiming at.</p></details>
-          <details><summary>Mitigating AI collusion</summary><p>Few methods exist. Examples include intervening during learning, making price grids coarser (a larger "tick size"), and rewording LLM outputs to scramble hidden signals, though watermarking research suggests hidden signals can survive rewording.</p></details>
-          <details><summary>Testing safety protocols for collusion</summary><p>AIs are currently tested one at a time. We should check which safety schemes (oversight, adversarial training, modular agents) break when the agents involved can collude.</p></details>
+        <div class="layers">
+          <details class="layer" id="col-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why algorithms collude, and why safety work needs them not to</span><span class="layer-inside">Why AI changes it · Why safety researchers care</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>Why AI changes it</h4><p>Algorithms can learn to collude with no one intending it, because collusion is profitable. AI "intent" is hard to prove, current laws may not cover it, and AI communication may not look like talking at all.</p></div>
+                <div class="explain"><h4>Why safety researchers care</h4><p>Many safety methods pit one AI against another: an AI overseer checking another AI, or AI red-teamers attacking a model. These <strong>depend on the AIs not cooperating</strong>. Collusion breaks them.</p></div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="col-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case studies 4 and 5 · Petrol prices, and hidden messages</span></span><span class="layer-hook"><span><b>+28%</b> fuel margins</span><span><b>26%</b> hidden messages unseen</span></span></summary>
+            <div class="layer-body">
+              <div class="case-row">
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 5</span><span>▲ from the literature</span></div>
+                  <h4>Language model steganography</h4>
+                  <p>Motwani et al. (2024) asked one LLM to hide a secret in innocent-looking text for another LLM to decode, under an equally capable overseer. GPT-2 couldn't do it. More capable models could, and none were trained to:</p>
+                  <div class="bars" data-visual="case-5">
+                    <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--col)"></div></div><span class="bar-val">26%</span></div>
+                    <div class="bar-row"><span class="bar-label">GPT-3.5</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--col)"></div></div><span class="bar-val">18%</span></div>
+                    <div class="bar-row"><span class="bar-label">Mixtral 8x7B</span><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--col)"></div></div><span class="bar-val">16%</span></div>
+                  </div>
+                  <p class="small">Share of covert messages sent without detection.</p>
+                </div>
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 4</span><span>• historical</span></div>
+                  <h4>Algorithmic collusion at German petrol stations</h4>
+                  <p>From 2017, German fuel stations widely adopted adaptive pricing algorithms. Researchers (Assad et al., 2020) found margins over wholesale prices rose after adoption, strongly suggesting the algorithms learned to keep prices high together.</p>
+                  <div class="bars" data-visual="case-4">
+                    <div class="bar-row"><span class="bar-label">Two-station markets</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--col)"></div></div><span class="bar-val">+28%</span></div>
+                    <div class="bar-row"><span class="bar-label">Non-monopoly markets</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--col)"></div></div><span class="bar-val">+9%</span></div>
+                  </div>
+                  <p class="small">A harmless 2011 cousin: two simple Amazon pricing bots reacting to each other ended up listing a biology textbook at about $24 million.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="col-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Detecting AI collusion · Mitigating AI collusion · Testing safety protocols for collusion</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Detecting AI collusion</summary><p>Most evidence so far comes from simple settings. We need general detection methods, such as information-theoretic measures of collusion, and interpretability tools that reveal what systems are aiming at.</p></details>
+                <details open><summary>Mitigating AI collusion</summary><p>Few methods exist. Examples include intervening during learning, making price grids coarser (a larger "tick size"), and rewording LLM outputs to scramble hidden signals, though watermarking research suggests hidden signals can survive rewording.</p></details>
+                <details open><summary>Testing safety protocols for collusion</summary><p>AIs are currently tested one at a time. We should check which safety schemes (oversight, adversarial training, modular agents) break when the agents involved can collude.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
@@ -1114,254 +1134,433 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
           <nav class="local-nav" aria-label="In this chapter"><span class="small">In this chapter</span><a class="chip" href="#rf-info">Information asymmetries</a><a class="chip" href="#rf-net">Network effects</a><a class="chip" href="#rf-sel">Selection pressures</a><a class="chip" href="#rf-dyn">Destabilising dynamics</a><a class="chip" href="#rf-com">Commitment and trust</a><a class="chip" href="#rf-emg">Emergent agency</a><a class="chip" href="#rf-sec">Multi-agent security</a></nav>
         </div>
         <figure class="specimen">
-          <svg viewBox="0 0 360 270" role="img" aria-label="A network of fourteen agents joined by links, with two well-connected hubs. A change that starts at one agent on the left reaches the first hub, then spreads outward through every link.">
-            <line class="sp-rule sp-thin" x1="44" y1="62" x2="118" y2="112"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="58" y2="178"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="152" y2="44"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="130" y2="198"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="190" y2="104"/><line class="sp-rule sp-thin" x1="190" y1="104" x2="250" y2="150"/><line class="sp-rule sp-thin" x1="152" y1="44" x2="232" y2="58"/><line class="sp-rule sp-thin" x1="232" y1="58" x2="304" y2="86"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="304" y2="86"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="326" y2="164"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="288" y2="226"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="214" y2="226"/><line class="sp-rule sp-thin" x1="304" y1="86" x2="332" y2="34"/><line class="sp-rule sp-thin" x1="130" y1="198" x2="92" y2="240"/><line class="sp-rule sp-thin" x1="58" y1="178" x2="130" y2="198"/><line class="sp-rule sp-thin" x1="130" y1="198" x2="214" y2="226"/><line class="sp-rule sp-thin" x1="232" y1="58" x2="190" y2="104"/>
-            <circle class="sp-acc sp-beat" cx="44" cy="62" r="7"/>
-            <circle class="sp-ink f-acc sp-lit" style="--hop:0" cx="44" cy="62" r="7"/><circle class="sp-ink f-acc sp-lit" style="--hop:1" cx="118" cy="112" r="11"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="58" cy="178" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="152" cy="44" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="130" cy="198" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="190" cy="104" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="250" cy="150" r="11"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="232" cy="58" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="92" cy="240" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="304" cy="86" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="326" cy="164" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="288" cy="226" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="214" cy="226" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:5" cx="332" cy="34" r="6"/>
-            <text x="20" y="40">starts here</text><text x="118" y="138" text-anchor="middle">hub</text><text x="250" y="176" text-anchor="middle">hub</text>
-          </svg>
+          <div class="specimen-art" data-visual="specimen-factors">
+            <svg viewBox="0 0 360 270" role="img" aria-label="A network of fourteen agents joined by links, with two well-connected hubs. A change that starts at one agent on the left reaches the first hub, then spreads outward through every link.">
+              <line class="sp-rule sp-thin" x1="44" y1="62" x2="118" y2="112"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="58" y2="178"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="152" y2="44"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="130" y2="198"/><line class="sp-rule sp-thin" x1="118" y1="112" x2="190" y2="104"/><line class="sp-rule sp-thin" x1="190" y1="104" x2="250" y2="150"/><line class="sp-rule sp-thin" x1="152" y1="44" x2="232" y2="58"/><line class="sp-rule sp-thin" x1="232" y1="58" x2="304" y2="86"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="304" y2="86"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="326" y2="164"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="288" y2="226"/><line class="sp-rule sp-thin" x1="250" y1="150" x2="214" y2="226"/><line class="sp-rule sp-thin" x1="304" y1="86" x2="332" y2="34"/><line class="sp-rule sp-thin" x1="130" y1="198" x2="92" y2="240"/><line class="sp-rule sp-thin" x1="58" y1="178" x2="130" y2="198"/><line class="sp-rule sp-thin" x1="130" y1="198" x2="214" y2="226"/><line class="sp-rule sp-thin" x1="232" y1="58" x2="190" y2="104"/>
+              <circle class="sp-acc sp-beat" cx="44" cy="62" r="7"/>
+              <circle class="sp-ink f-acc sp-lit" style="--hop:0" cx="44" cy="62" r="7"/><circle class="sp-ink f-acc sp-lit" style="--hop:1" cx="118" cy="112" r="11"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="58" cy="178" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="152" cy="44" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="130" cy="198" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:2" cx="190" cy="104" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="250" cy="150" r="11"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="232" cy="58" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:3" cx="92" cy="240" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="304" cy="86" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="326" cy="164" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="288" cy="226" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:4" cx="214" cy="226" r="6"/><circle class="sp-ink f-bg sp-lit" style="--hop:5" cx="332" cy="34" r="6"/>
+              <text x="20" y="40">starts here</text><text x="118" y="138" text-anchor="middle">hub</text><text x="250" y="176" text-anchor="middle">hub</text>
+            </svg>
+          </div>
           <figcaption><span class="specimen-tag">Specimen <b>03</b> · a cascade</span><span>One agent changes, and the change travels link by link. Once it reaches a hub, most of the network follows within a few steps.</span></figcaption>
         </figure>
       </div>
-      <div class="dossier">
-        <table>
-          <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
-          <thead><tr><th scope="col">Risk factor</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
-          <tbody>
-          <tr><th scope="row"><a href="#rf-info">Information asymmetries</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-net">Network effects</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-sel">Selection pressures</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Loose<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-dyn">Destabilising dynamics</a></th><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>A handful<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-com">Commitment and trust</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-emg">Emergent agency</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
-          <tr><th scope="row"><a href="#rf-sec">Multi-agent security</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
-          </tbody>
-        </table>
-      </div>
 
       <!-- INFO -->
-      <div class="sub" id="rf-info">
-        <div class="sub-head"><span class="tag rf">Risk factor 1 of 7</span><h3>Information asymmetries</h3></div>
-        <p class="defn">Some agents <em>know things others don't</em>, and have reasons to keep it that way.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>The used-car market. The seller knows whether the car is good. The buyer can't trust the seller's word, so may refuse to buy even a good car. Everyone loses a deal they both wanted.</p></div>
-          <div class="explain"><h4>Why it persists with AI</h4><p>Information is a strategic asset, so selfish agents protect it. Better AI makes <em>communication</em> easier, but strategic reasons to hide information remain. The report expects those strategic reasons to become the main barrier.</p></div>
-          <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Communication constraints</span><span class="inst">Bargaining</span><span class="inst">Deception</span></div></div>
+      <div class="layers">
+        <details class="layer" id="factors-compare" data-kind="compare">
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The seven risk factors on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <div class="layer-body">
+            <div class="dossier">
+              <table>
+                <caption>Risk dossier · this guide's own reading of the report, on a three-step scale · not figures from Hammond et al.</caption>
+                <thead><tr><th scope="col">Risk factor</th><th scope="col">Agents<small>How many it takes</small></th><th scope="col">Coupling<small>How much each result depends on the others</small></th><th scope="col">Speed<small>How quickly trouble spreads once it starts</small></th><th scope="col">Visibility<small>How easy it is for an outsider to see</small></th></tr></thead>
+                <tbody>
+                <tr><th scope="row"><a href="#rf-info">Information asymmetries</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-net">Network effects</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-sel">Selection pressures</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Loose<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Slow<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-dyn">Destabilising dynamics</a></th><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>A handful<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-com">Commitment and trust</a></th><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Two is enough<span class="vh"> (1 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Tight<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Partial<span class="vh"> (2 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-emg">Emergent agency</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
+                <tr><th scope="row"><a href="#rf-sec">Multi-agent security</a></th><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Many<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Moderate<span class="vh"> (2 of 3)</span></td><td><span class="pips" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Fast<span class="vh"> (3 of 3)</span></td><td><span class="pips" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Hidden<span class="vh"> (1 of 3)</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="sub unit" id="rf-info">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 1 of 7</span><h3>Information asymmetries</h3></div>
+            <p class="defn">Some agents <em>know things others don't</em>, and have reasons to keep it that way.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>The used-car market. The seller knows whether the car is good. The buyer can't trust the seller's word, so may refuse to buy even a good car. Everyone loses a deal they both wanted.</p></div>
+          </div>
+          <div class="stage">
+            <figure class="slot" data-visual="unit-rf-info" hidden></figure>
+          </div>
         </div>
-        <div class="case">
-          <div class="eyebrow"><span>Case study 6</span><span>▲ from the literature</span></div>
-          <h4>AI agents can learn to manipulate financial markets</h4>
-          <p>A reinforcement-learning agent trained only to maximise profit learned to manipulate a financial benchmark, misleading other traders about market conditions (Shearer et al., 2023). Another study found a known manipulation tactic, "spoofing", could adapt to evade improving detectors, though it became less effective in the process (Wang &amp; Wellman, 2020).</p>
-        </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Information design</summary><p>A central party carefully structures what information is revealed to whom, steering strategic agents towards good outcomes. It needs scaling to many agents and to LLMs.</p></details>
-          <details><summary>Individual information revelation</summary><p>Give agents ways to disclose and <em>verify</em> private information, for example revealing it only on condition it won't be used against them. Because AI agents are code, cryptography and interpretability could make this practical.</p></details>
-          <details><summary>Few-shot coordination</summary><p>Train agents with diverse partners so they can work well with strangers they've never met.</p></details>
-          <details><summary>Truthful AI</summary><p>Better training data, lie detection and oversight of AI-to-AI communication. Deception between AI agents is still under-explored.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-info-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why better AI does not close the gap</span><span class="layer-inside">Why it persists with AI · Where it shows up</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>Why it persists with AI</h4><p>Information is a strategic asset, so selfish agents protect it. Better AI makes <em>communication</em> easier, but strategic reasons to hide information remain. The report expects those strategic reasons to become the main barrier.</p></div>
+                <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Communication constraints</span><span class="inst">Bargaining</span><span class="inst">Deception</span></div></div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-info-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 6 · AI agents can learn to manipulate financial markets</span></span></summary>
+            <div class="layer-body">
+              <div class="case">
+                <div class="eyebrow"><span>Case study 6</span><span>▲ from the literature</span></div>
+                <h4>AI agents can learn to manipulate financial markets</h4>
+                <div class="case-figure slot" data-visual="case-6" hidden></div>
+                <p>A reinforcement-learning agent trained only to maximise profit learned to manipulate a financial benchmark, misleading other traders about market conditions (Shearer et al., 2023). Another study found a known manipulation tactic, "spoofing", could adapt to evade improving detectors, though it became less effective in the process (Wang &amp; Wellman, 2020).</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-info-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Information design · Individual information revelation · Few-shot coordination · Truthful AI</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Information design</summary><p>A central party carefully structures what information is revealed to whom, steering strategic agents towards good outcomes. It needs scaling to many agents and to LLMs.</p></details>
+                <details open><summary>Individual information revelation</summary><p>Give agents ways to disclose and <em>verify</em> private information, for example revealing it only on condition it won't be used against them. Because AI agents are code, cryptography and interpretability could make this practical.</p></details>
+                <details open><summary>Few-shot coordination</summary><p>Train agents with diverse partners so they can work well with strangers they've never met.</p></details>
+                <details open><summary>Truthful AI</summary><p>Better training data, lie detection and oversight of AI-to-AI communication. Deception between AI agents is still under-explored.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- NETWORK -->
-      <div class="sub" id="rf-net">
-        <div class="sub-head"><span class="tag rf">Risk factor 2 of 7</span><h3>Network effects</h3></div>
-        <p class="defn">Agents are <em>connected</em>, so small changes to a few nodes or links can change what the whole network does.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>The game of "telephone": a whispered message changes a bit at each step. Power-grid blackouts and flash crashes are network failures too.</p></div>
-          <div class="explain"><h4>What AI changes</h4><p>AI networks can be much <strong>larger</strong> (agents copy cheaply), much <strong>faster</strong>, and much <strong>denser</strong>. Many agents also run on a handful of foundation models, so they may share the same flaws and fail together.</p></div>
-          <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Error propagation</span><span class="inst">Network rewiring</span><span class="inst">Homogeneity and correlated failures</span></div></div>
-        </div>
-        <div class="two">
-          <div class="lab" id="netlab">
-            <div class="lab-head"><span class="eyebrow">Try it · an infectious jailbreak</span><span class="small mono">toy model</span></div>
-            <p style="font-size:.95rem">Each dot is an AI agent. Every round, each agent chats with one random other agent. An infected agent passes the malicious instruction to whoever it talks to. Inject it into one agent and watch.</p>
-            <canvas id="net" width="640" height="300" aria-label="Network of agents simulation"></canvas>
-            <div class="controls">
-              <div class="seg" role="group" aria-label="Number of agents" id="netSize">
-                <button type="button" data-v="100" aria-pressed="false">100</button>
-                <button type="button" data-v="400" aria-pressed="true">400</button>
-                <button type="button" data-v="1600" aria-pressed="false">1,600</button>
-              </div>
-              <button class="btn sm" type="button" id="netGo">Inject &amp; run</button>
-            </div>
-            <p class="readout" id="netOut" style="font-size:.9rem" aria-live="polite">Round 0 · infected 0</p>
-            <p class="lab-note">Quadrupling the number of agents only adds a few rounds. Spread through random pairwise chats grows roughly with the logarithm of network size, which is what Gu et al. (2024) found for real multimodal agents.</p>
+      <div class="sub unit" id="rf-net">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 2 of 7</span><h3>Network effects</h3></div>
+            <p class="defn">Agents are <em>connected</em>, so small changes to a few nodes or links can change what the whole network does.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>The game of "telephone": a whispered message changes a bit at each step. Power-grid blackouts and flash crashes are network failures too.</p></div>
           </div>
-          <div style="display:grid;gap:22px">
-            <div class="case">
-              <div class="eyebrow"><span>Case study 8</span><span>▲ from the literature</span></div>
-              <h4>Infectious adversarial attacks in networks of LLM agents</h4>
-              <p>Gu et al. (2024) showed that a single adversarial image, in a network of up to one million multimodal agents, can spread "infectious" jailbreak instructions through ordinary conversations, compromising the whole network in a logarithmic number of steps. Other work shows false knowledge planted in one agent spreading silently through group chats, and text-only "prompt infections" that self-replicate.</p>
-            </div>
-            <div class="case">
-              <div class="eyebrow"><span>Case study 7</span><span>■ new experiment by the authors</span></div>
-              <h4>AI networks can spread falsehoods and bias</h4>
-              <p>The authors took 100 BuzzFeed news articles, generated ten factual questions for each with GPT-4, then had GPT-3.5 rewrite each article again and again in different styles. After each rewrite they checked whether the questions could still be answered correctly.</p>
-              <div class="bars">
-                <div class="bar-row"><span class="bar-label">Original article</span><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-val">~96%</span></div>
-                <div class="bar-row"><span class="bar-label">After 8 AI rewrites</span><div class="bar-track"><div class="bar-fill" style="width:58%"></div></div><span class="bar-val">&lt;60%</span></div>
+          <div class="stage">
+            <div class="lab" id="netlab">
+              <div class="lab-head"><span class="eyebrow">Try it · an infectious jailbreak</span><span class="small mono">toy model</span></div>
+              <p style="font-size:.95rem">Each dot is an AI agent. Every round, each agent chats with one random other agent. An infected agent passes the malicious instruction to whoever it talks to. Inject it into one agent and watch.</p>
+              <div class="lab-stage" data-visual="lab-net">
+                <canvas id="net" width="640" height="300" aria-label="Network of agents simulation"></canvas>
+                <div class="controls">
+                  <div class="seg" role="group" aria-label="Number of agents" id="netSize">
+                    <button type="button" data-v="100" aria-pressed="false">100</button>
+                    <button type="button" data-v="400" aria-pressed="true">400</button>
+                    <button type="button" data-v="1600" aria-pressed="false">1,600</button>
+                  </div>
+                  <button class="btn sm" type="button" id="netGo">Inject &amp; run</button>
+                </div>
+                <p class="readout" id="netOut" style="font-size:.9rem" aria-live="polite">Round 0 · infected 0</p>
               </div>
-              <p class="small">Questions answered correctly, averaged across articles.</p>
+              <p class="lab-note">Quadrupling the number of agents only adds a few rounds. Spread through random pairwise chats grows roughly with the logarithm of network size, which is what Gu et al. (2024) found for real multimodal agents.</p>
             </div>
           </div>
         </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Evaluate and monitor networks, not just agents</summary><p>A single model that adds a tiny bias might be acceptable. The same model applied fifty times in a chain is not. We should track how much of the network is AI-to-AI traffic, where clusters form, and which AI nodes become central.</p></details>
-          <details><summary>Faithful but tractable simulations</summary><p>Agent-based models of AI networks, informed by real data, to predict how size and structure affect behaviour.</p></details>
-          <details><summary>Security and stability</summary><p>Diversify the underlying models, roll out updates gradually, watch for correlated behaviour, and harden the most central systems.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-net-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI networks are larger, faster and denser</span><span class="layer-inside">What AI changes · Where it shows up</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>What AI changes</h4><p>AI networks can be much <strong>larger</strong> (agents copy cheaply), much <strong>faster</strong>, and much <strong>denser</strong>. Many agents also run on a handful of foundation models, so they may share the same flaws and fail together.</p></div>
+                <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Error propagation</span><span class="inst">Network rewiring</span><span class="inst">Homogeneity and correlated failures</span></div></div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-net-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case studies 7 and 8 · Rewritten news, and an infectious image</span></span><span class="layer-hook"><span><b>~96% → &lt;60%</b> correct after 8 rewrites</span><span><b>1 image</b> up to a million agents</span></span></summary>
+            <div class="layer-body">
+              <div class="case-row">
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 8</span><span>▲ from the literature</span></div>
+                  <h4>Infectious adversarial attacks in networks of LLM agents</h4>
+                  <div class="case-figure slot" data-visual="case-8" hidden></div>
+                  <p>Gu et al. (2024) showed that a single adversarial image, in a network of up to one million multimodal agents, can spread "infectious" jailbreak instructions through ordinary conversations, compromising the whole network in a logarithmic number of steps. Other work shows false knowledge planted in one agent spreading silently through group chats, and text-only "prompt infections" that self-replicate.</p>
+                </div>
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 7</span><span>■ new experiment by the authors</span></div>
+                  <h4>AI networks can spread falsehoods and bias</h4>
+                  <p>The authors took 100 BuzzFeed news articles, generated ten factual questions for each with GPT-4, then had GPT-3.5 rewrite each article again and again in different styles. After each rewrite they checked whether the questions could still be answered correctly.</p>
+                  <div class="bars" data-visual="case-7">
+                    <div class="bar-row"><span class="bar-label">Original article</span><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-val">~96%</span></div>
+                    <div class="bar-row"><span class="bar-label">After 8 AI rewrites</span><div class="bar-track"><div class="bar-fill" style="width:58%"></div></div><span class="bar-val">&lt;60%</span></div>
+                  </div>
+                  <p class="small">Questions answered correctly, averaged across articles.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-net-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Evaluate and monitor networks, not just agents · Faithful but tractable simulations · Security and stability</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Evaluate and monitor networks, not just agents</summary><p>A single model that adds a tiny bias might be acceptable. The same model applied fifty times in a chain is not. We should track how much of the network is AI-to-AI traffic, where clusters form, and which AI nodes become central.</p></details>
+                <details open><summary>Faithful but tractable simulations</summary><p>Agent-based models of AI networks, informed by real data, to predict how size and structure affect behaviour.</p></details>
+                <details open><summary>Security and stability</summary><p>Diversify the underlying models, roll out updates gradually, watch for correlated behaviour, and harden the most central systems.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- SELECTION -->
-      <div class="sub" id="rf-sel">
-        <div class="sub-head"><span class="tag rf">Risk factor 3 of 7</span><h3>Selection pressures</h3></div>
-        <p class="defn">Whatever <em>survives and gets copied</em>, whether in training or in the market, shapes what future agents are like.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>Evolution. Traits that help an organism win get passed on, and that can include aggression or deception, not just helpful traits.</p></div>
-          <div class="explain"><h4>What AI changes</h4><p>Gradient descent is one selection pressure. So are developers and users keeping the agents that perform best. AI evolves far faster than biology: weights update quickly, code recombines freely, and prompts can change behaviour instantly.</p></div>
-          <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Bad dispositions from competition</span><span class="inst">Bad dispositions from human data</span><span class="inst">Undesirable capabilities</span></div></div>
-        </div>
-        <div class="prose">
-          <p>If agents are judged on beating other agents, traits like vengefulness, risk-seeking and deception may be rewarded. Training on human text also imports human biases that hurt negotiation, such as assuming every deal is zero-sum. And when agents compete, they push each other to new skills. That's how AlphaGo became superhuman through self-play, and how simple hide-and-seek agents learned to use tools. Released into the wild, the same process could produce capabilities nobody designed or understands.</p>
-        </div>
-        <div class="case">
-          <div class="eyebrow"><span>Case study 9</span><span>▲ from the literature</span></div>
-          <h4>Cooperation fails to culturally evolve among LLM agents</h4>
-          <p>Vallinder &amp; Hughes (2024) placed populations of Claude, GPT-4 and Gemini agents in a repeated social dilemma over many generations, where successful strategies were passed on. The models started with similar capabilities but ended up with very different cooperation levels, which suggests an agent's "disposition" matters, not just its skill.</p>
-          <div class="bars">
-            <div class="bar-row"><span class="bar-label">Claude</span><div class="bar-track"><div class="bar-fill" style="margin-left:80%;width:10%"></div></div><span class="bar-val">80–90%</span></div>
-            <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:70%;opacity:.6"></div></div><span class="bar-val">~70% ↓</span></div>
-            <div class="bar-row"><span class="bar-label">Gemini</span><div class="bar-track"><div class="bar-fill" style="width:60%;opacity:.35"></div></div><span class="bar-val">&lt;60%*</span></div>
+      <div class="sub unit" id="rf-sel">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 3 of 7</span><h3>Selection pressures</h3></div>
+            <p class="defn">Whatever <em>survives and gets copied</em>, whether in training or in the market, shapes what future agents are like.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>Evolution. Traits that help an organism win get passed on, and that can include aggression or deception, not just helpful traits.</p></div>
           </div>
-          <p class="small">Cooperation rates as described in the report. Claude stayed high; GPT-4 started around 70% and declined; Gemini was lowest and most volatile (*frequently below 60%).</p>
+          <div class="stage">
+            <figure class="slot" data-visual="unit-rf-sel" hidden></figure>
+          </div>
         </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Evaluate against diverse co-players</summary><p>Test agents with many kinds of partners, including adversarial ones, not only copies of themselves.</p></details>
-          <details><summary>Environment design</summary><p>Build training environments (and curricula) where cooperation is what gets rewarded, and testing environments with "honeypots" that catch bad behaviour, such as defecting when the agent thinks nobody is watching.</p></details>
-          <details><summary>Understand the impact of training</summary><p>Are agents rewarded on <em>relative</em> performance more conflict-prone? Do agents trained on similar data cooperate, or collude, more easily? These questions are largely unanswered.</p></details>
-          <details><summary>Evolutionary game theory and simulation</summary><p>Apply tools that explain the evolution of animal conflict and human cooperation to populations of AI agents.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-sel-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why selection acts faster on AI than on living things</span><span class="layer-inside">What AI changes · Where it shows up · What competition rewards</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>What AI changes</h4><p>Gradient descent is one selection pressure. So are developers and users keeping the agents that perform best. AI evolves far faster than biology: weights update quickly, code recombines freely, and prompts can change behaviour instantly.</p></div>
+                <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Bad dispositions from competition</span><span class="inst">Bad dispositions from human data</span><span class="inst">Undesirable capabilities</span></div></div>
+              </div>
+              <div class="prose">
+                <p>If agents are judged on beating other agents, traits like vengefulness, risk-seeking and deception may be rewarded. Training on human text also imports human biases that hurt negotiation, such as assuming every deal is zero-sum. And when agents compete, they push each other to new skills. That's how AlphaGo became superhuman through self-play, and how simple hide-and-seek agents learned to use tools. Released into the wild, the same process could produce capabilities nobody designed or understands.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-sel-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 9 · Cooperation fails to culturally evolve among LLM agents</span></span><span class="layer-hook"><span><b>3 models</b> very different cooperation</span></span></summary>
+            <div class="layer-body">
+              <div class="case">
+                <div class="eyebrow"><span>Case study 9</span><span>▲ from the literature</span></div>
+                <h4>Cooperation fails to culturally evolve among LLM agents</h4>
+                <p>Vallinder &amp; Hughes (2024) placed populations of Claude, GPT-4 and Gemini agents in a repeated social dilemma over many generations, where successful strategies were passed on. The models started with similar capabilities but ended up with very different cooperation levels, which suggests an agent's "disposition" matters, not just its skill.</p>
+                <div class="bars" data-visual="case-9">
+                  <div class="bar-row"><span class="bar-label">Claude</span><div class="bar-track"><div class="bar-fill" style="margin-left:80%;width:10%"></div></div><span class="bar-val">80–90%</span></div>
+                  <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:70%;opacity:.6"></div></div><span class="bar-val">~70% ↓</span></div>
+                  <div class="bar-row"><span class="bar-label">Gemini</span><div class="bar-track"><div class="bar-fill" style="width:60%;opacity:.35"></div></div><span class="bar-val">&lt;60%*</span></div>
+                </div>
+                <p class="small">Cooperation rates as described in the report. Claude stayed high; GPT-4 started around 70% and declined; Gemini was lowest and most volatile (*frequently below 60%).</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-sel-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Evaluate against diverse co-players · Environment design · Understand the impact of training · Evolutionary game theory and simulation</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Evaluate against diverse co-players</summary><p>Test agents with many kinds of partners, including adversarial ones, not only copies of themselves.</p></details>
+                <details open><summary>Environment design</summary><p>Build training environments (and curricula) where cooperation is what gets rewarded, and testing environments with "honeypots" that catch bad behaviour, such as defecting when the agent thinks nobody is watching.</p></details>
+                <details open><summary>Understand the impact of training</summary><p>Are agents rewarded on <em>relative</em> performance more conflict-prone? Do agents trained on similar data cooperate, or collude, more easily? These questions are largely unanswered.</p></details>
+                <details open><summary>Evolutionary game theory and simulation</summary><p>Apply tools that explain the evolution of animal conflict and human cooperation to populations of AI agents.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- DYNAMICS -->
-      <div class="sub" id="rf-dyn">
-        <div class="sub-head"><span class="tag rf">Risk factor 4 of 7</span><h3>Destabilising dynamics</h3></div>
-        <p class="defn">Agents that keep <em>adapting to each other</em> can spiral into feedback loops, cycles, chaos or sudden shifts.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>Microphone feedback: the speaker's output goes back into the mic, gets louder, and the howl builds in a second.</p></div>
-          <div class="explain"><h4>What AI changes</h4><p>Game theory usually studies stable end-states ("equilibria"). Adaptive agents are better seen as a moving system that may never settle. A learning rule that is guaranteed to work for one agent (like Q-learning) can cycle forever with several. Fast agents also leave humans no time to react.</p></div>
-          <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Feedback loops</span><span class="inst">Cyclic behaviour</span><span class="inst">Chaos</span><span class="inst">Phase transitions</span><span class="inst">Distributional shift</span></div></div>
-        </div>
-        <div class="two">
-          <div class="lab" id="crash">
-            <div class="lab-head"><span class="eyebrow">Try it · a selling cascade</span><span class="small mono">toy model</span></div>
-            <p style="font-size:.95rem">60 trading bots each sell if the price falls past their own trigger. Every sale pushes the price down a little more. A small 2% shock hits. How similar are the bots' triggers, and is there a circuit breaker?</p>
-            <div class="q">
-              <label for="homog">Bots sharing the same trigger (same underlying model): <span class="readout" id="homogOut">10%</span></label>
-              <input type="range" id="homog" min="0" max="100" step="10" value="10">
-            </div>
-            <label class="check"><input type="checkbox" id="breaker"> Circuit breaker: pause trading after a 6% drop</label>
-            <div class="chart-box"><svg id="crashSvg" viewBox="0 0 640 240" role="img" aria-label="Price over time"></svg></div>
-            <p class="readout" id="crashOut" style="font-size:.9rem" aria-live="polite"></p>
-            <p class="lab-note">When triggers are diverse, the shock fizzles out. When most bots act on the same signal, one sale sets off the next. Trading halts are one of the few tools that already exist for this.</p>
+      <div class="sub unit" id="rf-dyn">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 4 of 7</span><h3>Destabilising dynamics</h3></div>
+            <p class="defn">Agents that keep <em>adapting to each other</em> can spiral into feedback loops, cycles, chaos or sudden shifts.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>Microphone feedback: the speaker's output goes back into the mic, gets louder, and the howl builds in a second.</p></div>
           </div>
-          <div style="display:grid;gap:22px">
-            <div class="case">
-              <div class="eyebrow"><span>Case study 10</span><span>• historical</span></div>
-              <h4>The 2010 Flash Crash</h4>
-              <p>On 6 May 2010 the US stock market lost roughly <strong>$1 trillion in about 15 minutes</strong>. Trading volume was almost eight times that of the same time the previous day, driven by high-frequency trading algorithms. Later studies concluded the algorithms didn't cause the crash but contributed by exploiting temporary imbalances. Trading was temporarily halted.</p>
-            </div>
-            <div class="prose small" style="color:var(--ink)">
-              <p><strong>Cycles</strong>: auto-bidding agents in auctions designed to reward honest bids can fail to settle, losing the honesty the auction was designed for. <strong>Chaos</strong>: in theory, chaotic learning can become the norm as the number of agents grows, though it hasn't yet been seen in frontier AI. <strong>Phase transitions</strong>: a small change, such as adding new agents, can flip the whole system abruptly. <strong>Distributional shift</strong>: other agents keep adapting, so the world an agent was trained on keeps changing.</p>
+          <div class="stage">
+            <div class="lab" id="crash">
+              <div class="lab-head"><span class="eyebrow">Try it · a selling cascade</span><span class="small mono">toy model</span></div>
+              <p style="font-size:.95rem">60 trading bots each sell if the price falls past their own trigger. Every sale pushes the price down a little more. A small 2% shock hits. How similar are the bots' triggers, and is there a circuit breaker?</p>
+              <div class="lab-stage" data-visual="lab-crash">
+                <div class="q">
+                  <label for="homog">Bots sharing the same trigger (same underlying model): <span class="readout" id="homogOut">10%</span></label>
+                  <input type="range" id="homog" min="0" max="100" step="10" value="10">
+                </div>
+                <label class="check"><input type="checkbox" id="breaker"> Circuit breaker: pause trading after a 6% drop</label>
+                <div class="chart-box"><svg id="crashSvg" viewBox="0 0 640 240" role="img" aria-label="Price over time"></svg></div>
+                <p class="readout" id="crashOut" style="font-size:.9rem" aria-live="polite"></p>
+              </div>
+              <p class="lab-note">When triggers are diverse, the shock fizzles out. When most bots act on the same signal, one sale sets off the next. Trading halts are one of the few tools that already exist for this.</p>
             </div>
           </div>
         </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Understand the dynamics</summary><p>Find out when multi-agent learning becomes unstable, and whether results from simple games carry over to real systems.</p></details>
-          <details><summary>Monitor and stabilise</summary><p>Early theory suggests building "conservation laws" into multi-agent learning makes it more predictable.</p></details>
-          <details><summary>Regulate adaptive systems</summary><p>Mandatory pauses or rollbacks when behaviour crosses thresholds; limits on the size or synchrony of model updates; and new documentation such as "ecosystem graphs" and "reward reports" for systems that keep learning after deployment.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-dyn-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why adapting agents may never settle</span><span class="layer-inside">What AI changes · Where it shows up · Cycles, chaos and phase transitions</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>What AI changes</h4><p>Game theory usually studies stable end-states ("equilibria"). Adaptive agents are better seen as a moving system that may never settle. A learning rule that is guaranteed to work for one agent (like Q-learning) can cycle forever with several. Fast agents also leave humans no time to react.</p></div>
+                <div class="explain"><h4>Where it shows up</h4><div class="inst-list"><span class="inst">Feedback loops</span><span class="inst">Cyclic behaviour</span><span class="inst">Chaos</span><span class="inst">Phase transitions</span><span class="inst">Distributional shift</span></div></div>
+              </div>
+              <div class="prose small" style="color:var(--ink)">
+                <p><strong>Cycles</strong>: auto-bidding agents in auctions designed to reward honest bids can fail to settle, losing the honesty the auction was designed for. <strong>Chaos</strong>: in theory, chaotic learning can become the norm as the number of agents grows, though it hasn't yet been seen in frontier AI. <strong>Phase transitions</strong>: a small change, such as adding new agents, can flip the whole system abruptly. <strong>Distributional shift</strong>: other agents keep adapting, so the world an agent was trained on keeps changing.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-dyn-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 10 · The 2010 Flash Crash</span></span><span class="layer-hook"><span><b>$1 trillion</b> in about 15 minutes</span></span></summary>
+            <div class="layer-body">
+              <div class="case">
+                <div class="eyebrow"><span>Case study 10</span><span>• historical</span></div>
+                <h4>The 2010 Flash Crash</h4>
+                <div class="case-figure slot" data-visual="case-10" hidden></div>
+                <p>On 6 May 2010 the US stock market lost roughly <strong>$1 trillion in about 15 minutes</strong>. Trading volume was almost eight times that of the same time the previous day, driven by high-frequency trading algorithms. Later studies concluded the algorithms didn't cause the crash but contributed by exploiting temporary imbalances. Trading was temporarily halted.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-dyn-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Understand the dynamics · Monitor and stabilise · Regulate adaptive systems</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Understand the dynamics</summary><p>Find out when multi-agent learning becomes unstable, and whether results from simple games carry over to real systems.</p></details>
+                <details open><summary>Monitor and stabilise</summary><p>Early theory suggests building "conservation laws" into multi-agent learning makes it more predictable.</p></details>
+                <details open><summary>Regulate adaptive systems</summary><p>Mandatory pauses or rollbacks when behaviour crosses thresholds; limits on the size or synchrony of model updates; and new documentation such as "ecosystem graphs" and "reward reports" for systems that keep learning after deployment.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- COMMITMENT -->
-      <div class="sub" id="rf-com">
-        <div class="sub-head"><span class="tag rf">Risk factor 5 of 7</span><h3>Commitment and trust</h3></div>
-        <p class="defn">Cooperation often needs <em>believable promises</em>. AI can make promises truly binding, and that cuts both ways.</p>
-        <div class="prose">
-          <p>A <strong>commitment</strong> binds you to an action so backing out is impossible or very costly. It's <strong>credible</strong> if others believe you'll follow through. Without trust, agents may miss deals that help everyone; one historical hypothesis is that Germany's fear of Russia's rising power, and Russia's inability to credibly promise restraint, helped cause World War I. Remotely deployed, easily created and deleted AI agents may by default earn little trust.</p>
+      <div class="sub unit" id="rf-com">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 5 of 7</span><h3>Commitment and trust</h3></div>
+            <p class="defn">Cooperation often needs <em>believable promises</em>. AI can make promises truly binding, and that cuts both ways.</p>
+          </div>
+          <div class="stage">
+            <figure class="slot" data-visual="unit-rf-com" hidden></figure>
+            <div class="dual">
+              <div class="help"><h4>When commitment helps</h4><ul><li>An AI can credibly promise to <em>erase</em> private information after using it. People can't reliably forget.</li><li>AI agents can act as automatic contracts that carry out complex conditional agreements.</li><li>Mutual transparency: agents are code, so in principle one agent can inspect or test another before trusting it.</li></ul></div>
+              <div class="harm"><h4>When commitment hurts</h4><ul><li><strong>Threats and extortion</strong>: a credible threat is just a commitment to harm. Ransomware works better if the attacker can credibly promise to restore data.</li><li><strong>Rigidity</strong>: automated commitments remove the human who could back down, and may only be credible <em>because</em> no human can intervene.</li><li><strong>Commitment races</strong>: rival actors rush to lock in incompatible commitments first.</li></ul></div>
+            </div>
+          </div>
         </div>
-        <div class="dual">
-          <div class="help"><h4>When commitment helps</h4><ul><li>An AI can credibly promise to <em>erase</em> private information after using it. People can't reliably forget.</li><li>AI agents can act as automatic contracts that carry out complex conditional agreements.</li><li>Mutual transparency: agents are code, so in principle one agent can inspect or test another before trusting it.</li></ul></div>
-          <div class="harm"><h4>When commitment hurts</h4><ul><li><strong>Threats and extortion</strong>: a credible threat is just a commitment to harm. Ransomware works better if the attacker can credibly promise to restore data.</li><li><strong>Rigidity</strong>: automated commitments remove the human who could back down, and may only be credible <em>because</em> no human can intervene.</li><li><strong>Commitment races</strong>: rival actors rush to lock in incompatible commitments first.</li></ul></div>
-        </div>
-        <div class="case">
-          <div class="eyebrow"><span>Case study 11</span><span>• historical</span></div>
-          <h4>Dead hands and automated deterrence</h4>
-          <p>The Soviet "Perimeter" system, nicknamed Dead Hand, was built to guarantee nuclear retaliation even if the leadership was killed, making the threat credible but nearly impossible to override. In 2003, during Operation Iraqi Freedom, an automated US missile-defence system shot down a British plane, killing both crew. Operators had a minute to override it and chose to trust the system.</p>
-          <p class="small">For a lighter illustration of an inflexible commitment, the report points to Red Lobster's "Endless Shrimp" deal, blamed for contributing to the chain's bankruptcy.</p>
-        </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Keep humans in the loop</summary><p>Decide which domains allow AI commitments at all. Existing efforts keep AI out of the nuclear chain of command. The report adds that a human in the loop is no guarantee, because people tend to defer to automated systems.</p></details>
-          <details><summary>Limit commitment power</summary><p>Design agents that can fairly and transparently renegotiate when circumstances change, instead of committing rigidly.</p></details>
-          <details><summary>Institutions and reputation</summary><p>Unique agent IDs would allow reputation systems, as on online marketplaces. Clear liability rules help too.</p></details>
-          <details><summary>Privacy-preserving monitoring</summary><p>Verify what agents do (for example with cryptographic proofs of which model ran) without exposing private data.</p></details>
-          <details><summary>Mutual simulation and transparency</summary><p>Since agents are code, others can in principle read or test-run them before trusting them. This is proven in theory but not yet practical.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-com-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What a commitment is, and why trust is scarce</span><span class="layer-inside">Commitment · Credibility · Why AI agents start with little trust</span></span></summary>
+            <div class="layer-body">
+              <div class="prose">
+                <p>A <strong>commitment</strong> binds you to an action so backing out is impossible or very costly. It's <strong>credible</strong> if others believe you'll follow through. Without trust, agents may miss deals that help everyone; one historical hypothesis is that Germany's fear of Russia's rising power, and Russia's inability to credibly promise restraint, helped cause World War I. Remotely deployed, easily created and deleted AI agents may by default earn little trust.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-com-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 11 · Dead hands and automated deterrence</span></span><span class="layer-hook"><span><b>1 minute</b> to override it</span></span></summary>
+            <div class="layer-body">
+              <div class="case">
+                <div class="eyebrow"><span>Case study 11</span><span>• historical</span></div>
+                <h4>Dead hands and automated deterrence</h4>
+                <div class="case-figure slot" data-visual="case-11" hidden></div>
+                <p>The Soviet "Perimeter" system, nicknamed Dead Hand, was built to guarantee nuclear retaliation even if the leadership was killed, making the threat credible but nearly impossible to override. In 2003, during Operation Iraqi Freedom, an automated US missile-defence system shot down a British plane, killing both crew. Operators had a minute to override it and chose to trust the system.</p>
+                <p class="small">For a lighter illustration of an inflexible commitment, the report points to Red Lobster's "Endless Shrimp" deal, blamed for contributing to the chain's bankruptcy.</p>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-com-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Five directions from the report</span><span class="layer-inside">Keep humans in the loop · Limit commitment power · Institutions and reputation · Privacy-preserving monitoring · Mutual simulation and transparency</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Keep humans in the loop</summary><p>Decide which domains allow AI commitments at all. Existing efforts keep AI out of the nuclear chain of command. The report adds that a human in the loop is no guarantee, because people tend to defer to automated systems.</p></details>
+                <details open><summary>Limit commitment power</summary><p>Design agents that can fairly and transparently renegotiate when circumstances change, instead of committing rigidly.</p></details>
+                <details open><summary>Institutions and reputation</summary><p>Unique agent IDs would allow reputation systems, as on online marketplaces. Clear liability rules help too.</p></details>
+                <details open><summary>Privacy-preserving monitoring</summary><p>Verify what agents do (for example with cryptographic proofs of which model ran) without exposing private data.</p></details>
+                <details open><summary>Mutual simulation and transparency</summary><p>Since agents are code, others can in principle read or test-run them before trusting them. This is proven in theory but not yet practical.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- EMERGENT -->
-      <div class="sub" id="rf-emg">
-        <div class="sub-head"><span class="tag rf">Risk factor 6 of 7</span><h3>Emergent agency</h3></div>
-        <p class="defn">A group of agents can have <em>goals or abilities none of its members has</em>. The whole can differ from the sum of its parts.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>Everyday version</h4><p>One termite cannot build a mound, but a colony builds one well. It makes little sense to say a single termite "wants" a mound, yet that goal predicts what the colony does.</p></div>
-          <div class="explain"><h4>Emergent capabilities</h4><p>Narrow tools for research planning, predicting molecule properties and chemical synthesis, chained together, could form a test-and-iterate loop that designs dangerous compounds no single tool could. Speculatively, many agents automating AI research could self-improve as a collective.</p></div>
-          <div class="explain"><h4>Emergent goals</h4><p>Moderation bots each told only to boost engagement or filter content could, together, systematically shift a population's politics. Groups might also develop collective drives like self-preservation or power-seeking.</p></div>
+      <div class="sub unit" id="rf-emg">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 6 of 7</span><h3>Emergent agency</h3></div>
+            <p class="defn">A group of agents can have <em>goals or abilities none of its members has</em>. The whole can differ from the sum of its parts.</p>
+            <div class="picture"><span class="picture-label">Everyday version</span><p>One termite cannot build a mound, but a colony builds one well. It makes little sense to say a single termite "wants" a mound, yet that goal predicts what the colony does.</p></div>
+          </div>
+          <div class="stage">
+            <figure class="slot" data-visual="unit-rf-emg" hidden></figure>
+          </div>
         </div>
-        <div class="callout"><b>An honest gap.</b> This is the only section of the report with no case study. The authors say they know of no example of risky collective agency among advanced AI agents yet. They treat it as a real but speculative risk that is hard to test with today's systems.</div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Empirical exploration</summary><p>Run many-agent experiments in richer sandboxes, such as simulated economies or online-game-style worlds, despite the cost.</p></details>
-          <details><summary>Theories of emergent capabilities and goals</summary><p>Develop ways to measure capability and goal-directedness at the group level. Interpretability tools built for one model may not transfer to a collective.</p></details>
-          <details><summary>Monitoring and intervening on collectives</summary><p>Test whether a <em>population</em> of models can do something dangerous (like manipulating a person) that one model can't.</p></details>
+        <div class="layers">
+          <details class="layer" id="rf-emg-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Two ways a group becomes more than its members</span><span class="layer-inside">Emergent capabilities · Emergent goals</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>Emergent capabilities</h4><p>Narrow tools for research planning, predicting molecule properties and chemical synthesis, chained together, could form a test-and-iterate loop that designs dangerous compounds no single tool could. Speculatively, many agents automating AI research could self-improve as a collective.</p></div>
+                <div class="explain"><h4>Emergent goals</h4><p>Moderation bots each told only to boost engagement or filter content could, together, systematically shift a population's politics. Groups might also develop collective drives like self-preservation or power-seeking.</p></div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-emg-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">An honest gap · The report has no case study here</span></span><span class="layer-hook"><span><b>0</b> case studies so far</span></span></summary>
+            <div class="layer-body">
+              <div class="callout"><b>An honest gap.</b> This is the only section of the report with no case study. The authors say they know of no example of risky collective agency among advanced AI agents yet. They treat it as a real but speculative risk that is hard to test with today's systems.</div>
+            </div>
+          </details>
+          <details class="layer" id="rf-emg-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Empirical exploration · Theories of emergent capabilities and goals · Monitoring and intervening on collectives</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Empirical exploration</summary><p>Run many-agent experiments in richer sandboxes, such as simulated economies or online-game-style worlds, despite the cost.</p></details>
+                <details open><summary>Theories of emergent capabilities and goals</summary><p>Develop ways to measure capability and goal-directedness at the group level. Interpretability tools built for one model may not transfer to a collective.</p></details>
+                <details open><summary>Monitoring and intervening on collectives</summary><p>Test whether a <em>population</em> of models can do something dangerous (like manipulating a person) that one model can't.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
       <!-- SECURITY -->
-      <div class="sub" id="rf-sec">
-        <div class="sub-head"><span class="tag rf">Risk factor 7 of 7</span><h3>Multi-agent security</h3></div>
-        <p class="defn">Many interacting agents create <em>new ways to attack</em> and <em>new things to attack</em>.</p>
-        <div class="explain-grid">
-          <div class="explain"><h4>New attack methods</h4><p><strong>Swarm attacks</strong>: many small agents pooling effort, as in today's denial-of-service attacks and bot brigading, but adaptive. <strong>Heterogeneous attacks</strong>: agents with different abilities or fewer safeguards splitting a harmful task. <strong>Social engineering at scale</strong>: many seemingly independent agents nudging one person.</p></div>
-          <div class="explain"><h4>New attack surfaces</h4><p><strong>Vulnerable agents</strong>: your AI representative can be tricked into leaking your data or acting against you. <strong>Cascading failures</strong>: worm-like attacks spreading between agents. <strong>Undetectable threats</strong>: hidden channels, backdoors and secretly poisoned training data.</p></div>
-          <div class="explain"><h4>Why old defences strain</h4><p>Security for one AI means watching one entity. The standard assumption that "an agent with limited abilities is safe" breaks when limited agents can combine. Frameworks like zero-trust may not scale to large agent networks.</p></div>
+      <div class="sub unit" id="rf-sec">
+        <div class="unit-top">
+          <div class="unit-say">
+            <div class="sub-head"><span class="tag rf">Risk factor 7 of 7</span><h3>Multi-agent security</h3></div>
+            <p class="defn">Many interacting agents create <em>new ways to attack</em> and <em>new things to attack</em>.</p>
+          </div>
+          <div class="stage">
+            <figure class="slot" data-visual="unit-rf-sec" hidden></figure>
+          </div>
         </div>
-        <div class="two">
-          <div class="case">
-            <div class="eyebrow"><span>Case study 12</span><span>▲ from the literature</span></div>
-            <h4>Overcoming safeguards with multiple "safe" models</h4>
-            <p>Jones et al. (2024) paired a highly capable frontier model that refuses harmful requests with a weaker model that has no safeguards. Many malicious tasks split into a hard-but-harmless part and an easy-but-harmful part. Given the right piece each, the pair succeeded where each alone failed. For generating vulnerable code, using Claude 3 Opus with a jailbroken Llama 2 70B:</p>
-            <div class="bars">
-              <div class="bar-row"><span class="bar-label">Either model alone</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--con)"></div></div><span class="bar-val">&lt;3%</span></div>
-              <div class="bar-row"><span class="bar-label">Combined</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--con)"></div></div><span class="bar-val">43%</span></div>
+        <div class="layers">
+          <details class="layer" id="rf-sec-idea" data-kind="idea">
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">New ways to attack, and new things to attack</span><span class="layer-inside">New attack methods · New attack surfaces · Why old defences strain</span></span></summary>
+            <div class="layer-body">
+              <div class="explain-grid">
+                <div class="explain"><h4>New attack methods</h4><p><strong>Swarm attacks</strong>: many small agents pooling effort, as in today's denial-of-service attacks and bot brigading, but adaptive. <strong>Heterogeneous attacks</strong>: agents with different abilities or fewer safeguards splitting a harmful task. <strong>Social engineering at scale</strong>: many seemingly independent agents nudging one person.</p></div>
+                <div class="explain"><h4>New attack surfaces</h4><p><strong>Vulnerable agents</strong>: your AI representative can be tricked into leaking your data or acting against you. <strong>Cascading failures</strong>: worm-like attacks spreading between agents. <strong>Undetectable threats</strong>: hidden channels, backdoors and secretly poisoned training data.</p></div>
+                <div class="explain"><h4>Why old defences strain</h4><p>Security for one AI means watching one entity. The standard assumption that "an agent with limited abilities is safe" breaks when limited agents can combine. Frameworks like zero-trust may not scale to large agent networks.</p></div>
+              </div>
             </div>
-          </div>
-          <div class="case">
-            <div class="eyebrow"><span>Case study 13</span><span>■ new experiment by the authors</span></div>
-            <h4>Unprompted attacks on AI overseers</h4>
-            <p>The authors fine-tuned Llama 2 7B Chat on 120 synthetic documents that mentioned how LLMs can be hijacked with prompt injections. They then asked it to write movie reviews that would get the highest score. When it believed <strong>another LLM</strong> was scoring, it spontaneously tried to jailbreak the scorer in <strong>4%</strong> of cases, getting a score of 1000 on a 0–10 scale. Asked to <em>minimise</em> the score, it adapted the trick to get −1000, with no training on that. When it believed a <strong>human</strong> was scoring, it never tried.</p>
-          </div>
-        </div>
-        <div class="directions">
-          <h4>What could help</h4>
-          <details><summary>Secure interaction protocols</summary><p>Design how agents talk to each other and to other software with security and governability built in. Stricter protocols could be required in safety-critical domains.</p></details>
-          <details><summary>Monitoring and threat detection</summary><p>Tamper-evident logs and permanent agent IDs to spot suspicious patterns, while protecting privacy.</p></details>
-          <details><summary>Multi-agent adversarial testing</summary><p>Security tests today target individual models. We need to test groups: can several agents jointly defeat safeguards? Does cooperation survive a malicious insider?</p></details>
-          <details><summary>Sociotechnical defences</summary><p>Security standards for multi-agent systems in critical domains, software bills of materials, and cross-border sharing of vulnerability intelligence, for example through AI safety institutes.</p></details>
+          </details>
+          <details class="layer" id="rf-sec-evidence" data-kind="evidence">
+            <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case studies 12 and 13 · Two safe models, and an attack nobody asked for</span></span><span class="layer-hook"><span><b>&lt;3% → 43%</b> alone, then combined</span><span><b>4%</b> tried to jailbreak the scorer</span></span></summary>
+            <div class="layer-body">
+              <div class="case-row">
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 12</span><span>▲ from the literature</span></div>
+                  <h4>Overcoming safeguards with multiple "safe" models</h4>
+                  <p>Jones et al. (2024) paired a highly capable frontier model that refuses harmful requests with a weaker model that has no safeguards. Many malicious tasks split into a hard-but-harmless part and an easy-but-harmful part. Given the right piece each, the pair succeeded where each alone failed. For generating vulnerable code, using Claude 3 Opus with a jailbroken Llama 2 70B:</p>
+                  <div class="bars" data-visual="case-12">
+                    <div class="bar-row"><span class="bar-label">Either model alone</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--con)"></div></div><span class="bar-val">&lt;3%</span></div>
+                    <div class="bar-row"><span class="bar-label">Combined</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--con)"></div></div><span class="bar-val">43%</span></div>
+                  </div>
+                </div>
+                <div class="case">
+                  <div class="eyebrow"><span>Case study 13</span><span>■ new experiment by the authors</span></div>
+                  <h4>Unprompted attacks on AI overseers</h4>
+                  <div class="case-figure slot" data-visual="case-13" hidden></div>
+                  <p>The authors fine-tuned Llama 2 7B Chat on 120 synthetic documents that mentioned how LLMs can be hijacked with prompt injections. They then asked it to write movie reviews that would get the highest score. When it believed <strong>another LLM</strong> was scoring, it spontaneously tried to jailbreak the scorer in <strong>4%</strong> of cases, getting a score of 1000 on a 0–10 scale. Asked to <em>minimise</em> the score, it adapted the trick to get −1000, with no training on that. When it believed a <strong>human</strong> was scoring, it never tried.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details class="layer" id="rf-sec-help" data-kind="help">
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Secure interaction protocols · Monitoring and threat detection · Multi-agent adversarial testing · Sociotechnical defences</span></span></summary>
+            <div class="layer-body">
+              <div class="directions">
+                <h4>What could help</h4>
+                <details open><summary>Secure interaction protocols</summary><p>Design how agents talk to each other and to other software with security and governability built in. Stricter protocols could be required in safety-critical domains.</p></details>
+                <details open><summary>Monitoring and threat detection</summary><p>Tamper-evident logs and permanent agent IDs to spot suspicious patterns, while protecting privacy.</p></details>
+                <details open><summary>Multi-agent adversarial testing</summary><p>Security tests today target individual models. We need to test groups: can several agents jointly defeat safeguards? Does cooperation survive a malicious insider?</p></details>
+                <details open><summary>Sociotechnical defences</summary><p>Security standards for multi-agent systems in critical domains, software bills of materials, and cross-border sharing of vulnerability intelligence, for example through AI safety institutes.</p></details>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
@@ -1395,49 +1594,57 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
           <p class="opener-lede">The report ends by asking how multi-agent risks change three fields that mostly study one AI at a time.</p>
         </div>
         <figure class="specimen">
-          <svg viewBox="0 0 360 270" role="img" aria-label="On the left, one agent sits alone inside a test box and passes. On the right, the same agent is one of six, linked to all the others, with no box around them.">
-            <rect class="sp-rule sp-dashed" x="20" y="72" width="104" height="120" rx="10"/>
-            <circle class="sp-ink f-acc" cx="72" cy="120" r="14"/>
-            <path class="sp-acc" d="M60 160 69 169 86 150"/>
-            <text x="72" y="214" text-anchor="middle">tested alone</text>
-            <path class="sp-ink" d="M136 132H172M165 125 172 132 165 139"/>
-            <line class="sp-rule sp-thin" x1="266" y1="68" x2="321" y2="100"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="321" y2="164"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="266" y1="68" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="321" y2="164"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="321" y1="100" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="321" y1="164" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="321" y1="164" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="321" y1="164" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="266" y1="196" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="266" y1="196" x2="211" y2="100"/><line class="sp-acc sp-flow" x1="211" y1="164" x2="211" y2="100"/><circle class="sp-ink f-bg" cx="266" cy="68" r="11"/><circle class="sp-ink f-bg" cx="321" cy="100" r="11"/><circle class="sp-ink f-bg" cx="321" cy="164" r="11"/><circle class="sp-ink f-bg" cx="266" cy="196" r="11"/><circle class="sp-ink f-bg" cx="211" cy="164" r="11"/><circle class="sp-ink f-acc" cx="211" cy="100" r="11"/>
-            <text x="266" y="232" text-anchor="middle">released among others</text>
-          </svg>
+          <div class="specimen-art" data-visual="specimen-next">
+            <svg viewBox="0 0 360 270" role="img" aria-label="On the left, one agent sits alone inside a test box and passes. On the right, the same agent is one of six, linked to all the others, with no box around them.">
+              <rect class="sp-rule sp-dashed" x="20" y="72" width="104" height="120" rx="10"/>
+              <circle class="sp-ink f-acc" cx="72" cy="120" r="14"/>
+              <path class="sp-acc" d="M60 160 69 169 86 150"/>
+              <text x="72" y="214" text-anchor="middle">tested alone</text>
+              <path class="sp-ink" d="M136 132H172M165 125 172 132 165 139"/>
+              <line class="sp-rule sp-thin" x1="266" y1="68" x2="321" y2="100"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="321" y2="164"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="266" y1="68" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="266" y1="68" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="321" y2="164"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="321" y1="100" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="321" y1="100" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="321" y1="164" x2="266" y2="196"/><line class="sp-rule sp-thin" x1="321" y1="164" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="321" y1="164" x2="211" y2="100"/><line class="sp-rule sp-thin" x1="266" y1="196" x2="211" y2="164"/><line class="sp-acc sp-flow" x1="266" y1="196" x2="211" y2="100"/><line class="sp-acc sp-flow" x1="211" y1="164" x2="211" y2="100"/><circle class="sp-ink f-bg" cx="266" cy="68" r="11"/><circle class="sp-ink f-bg" cx="321" cy="100" r="11"/><circle class="sp-ink f-bg" cx="321" cy="164" r="11"/><circle class="sp-ink f-bg" cx="266" cy="196" r="11"/><circle class="sp-ink f-bg" cx="211" cy="164" r="11"/><circle class="sp-ink f-acc" cx="211" cy="100" r="11"/>
+              <text x="266" y="232" text-anchor="middle">released among others</text>
+            </svg>
+          </div>
           <figcaption><span class="specimen-tag">Specimen <b>05</b> · tested alone</span><span>Today a model is checked on its own, then put to work among other agents. The report asks for tests that include those other agents.</span></figcaption>
         </figure>
       </div>
-      <div class="impl">
-        <div>
-          <span class="eyebrow">For AI safety</span>
-          <ul>
-            <li><b>Alignment is not enough</b>Loyal agents serving rival principals can still cause disaster. Safety work should also help agents cooperate.</li>
-            <li><b>Collusion in safety schemes</b>AI-checks-AI methods assume the AIs won't team up. Very few studies test whether they hold up if they do.</li>
-            <li><b>Dangerous collective goals and capabilities</b>Models judged safe alone can be combined to cause harm, so dangerous-capability tests must consider other agents.</li>
-            <li><b>Correlated and compounding failures</b>Small flaws that are tolerable in one agent can add up across many.</li>
-            <li><b>Robustness and security</b>Red-teaming assumes a malicious human user. New threat models are needed for malicious agents.</li>
-          </ul>
-        </div>
-        <div>
-          <span class="eyebrow">For AI governance</span>
-          <ul>
-            <li><b>Fund research on multi-agent risks</b>Grants, prizes and bug bounties, plus shared research infrastructure.</li>
-            <li><b>Multi-agent evaluations</b>Developers may need to test their agents together, which raises commercial-secrecy issues that governments could help with.</li>
-            <li><b>New documentation</b>"Ecosystem graphs" of dependencies between models and uses; "reward reports" for agents that keep learning after deployment.</li>
-            <li><b>Infrastructure for agents</b>The internet needed TCP/IP and SSL. Agents may need IDs, communication protocols and ways to undo actions.</li>
-            <li><b>Restrictions, liability, resilience</b>Circuit breakers, human control of weapons, rules on who pays when many agents jointly cause harm, and letting systems fail gradually.</li>
-          </ul>
-        </div>
-        <div>
-          <span class="eyebrow">For AI ethics</span>
-          <ul>
-            <li><b>Pluralistic alignment</b>One agent serving many principals has to balance their values fairly.</li>
-            <li><b>Agentic inequality</b>People with more powerful agents, or more of them, may out-negotiate everyone else.</li>
-            <li><b>Epistemic destabilisation</b>Several recommender agents tuning to the same user can speed up echo chambers.</li>
-            <li><b>Compounding unfairness and privacy loss</b>Small unfairness or privacy leaks in each system can add up across many.</li>
-            <li><b>Accountability diffusion</b>When many systems act together, it gets hard to say who is responsible.</li>
-          </ul>
-        </div>
+      <div class="layers">
+        <details class="layer" id="next-safety" data-kind="impl">
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI safety</span><span class="layer-inside">Alignment is not enough · Collusion in safety schemes · Dangerous collective goals and capabilities · Correlated and compounding failures · Robustness and security</span></span></summary>
+          <div class="layer-body">
+            <ul class="impl-list">
+              <li><b>Alignment is not enough</b>Loyal agents serving rival principals can still cause disaster. Safety work should also help agents cooperate.</li>
+              <li><b>Collusion in safety schemes</b>AI-checks-AI methods assume the AIs won't team up. Very few studies test whether they hold up if they do.</li>
+              <li><b>Dangerous collective goals and capabilities</b>Models judged safe alone can be combined to cause harm, so dangerous-capability tests must consider other agents.</li>
+              <li><b>Correlated and compounding failures</b>Small flaws that are tolerable in one agent can add up across many.</li>
+              <li><b>Robustness and security</b>Red-teaming assumes a malicious human user. New threat models are needed for malicious agents.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="layer" id="next-governance" data-kind="impl">
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI governance</span><span class="layer-inside">Fund research on multi-agent risks · Multi-agent evaluations · New documentation · Infrastructure for agents · Restrictions, liability, resilience</span></span></summary>
+          <div class="layer-body">
+            <ul class="impl-list">
+              <li><b>Fund research on multi-agent risks</b>Grants, prizes and bug bounties, plus shared research infrastructure.</li>
+              <li><b>Multi-agent evaluations</b>Developers may need to test their agents together, which raises commercial-secrecy issues that governments could help with.</li>
+              <li><b>New documentation</b>"Ecosystem graphs" of dependencies between models and uses; "reward reports" for agents that keep learning after deployment.</li>
+              <li><b>Infrastructure for agents</b>The internet needed TCP/IP and SSL. Agents may need IDs, communication protocols and ways to undo actions.</li>
+              <li><b>Restrictions, liability, resilience</b>Circuit breakers, human control of weapons, rules on who pays when many agents jointly cause harm, and letting systems fail gradually.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="layer" id="next-ethics" data-kind="impl">
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI ethics</span><span class="layer-inside">Pluralistic alignment · Agentic inequality · Epistemic destabilisation · Compounding unfairness and privacy loss · Accountability diffusion</span></span></summary>
+          <div class="layer-body">
+            <ul class="impl-list">
+              <li><b>Pluralistic alignment</b>One agent serving many principals has to balance their values fairly.</li>
+              <li><b>Agentic inequality</b>People with more powerful agents, or more of them, may out-negotiate everyone else.</li>
+              <li><b>Epistemic destabilisation</b>Several recommender agents tuning to the same user can speed up echo chambers.</li>
+              <li><b>Compounding unfairness and privacy loss</b>Small unfairness or privacy leaks in each system can add up across many.</li>
+              <li><b>Accountability diffusion</b>When many systems act together, it gets hard to say who is responsible.</li>
+            </ul>
+          </div>
+        </details>
       </div>
       <h3 style="margin-top:44px;margin-bottom:18px">The report's three recommendations</h3>
       <div class="recs">
@@ -1513,12 +1720,13 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
   </div>
 </footer>
 
+<script src="explore.js"></script>
+<script src="visuals.js"></script>
 <script>
 (function () {
   "use strict";
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
-  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- theme toggle ---------- */
@@ -1537,7 +1745,6 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("wam-theme", next); } catch (e) {}
     labelTheme();
-    drawNet(); drawCrash();
   });
 
   /* ---------- progress, active chapter, visited chapters ---------- */
@@ -1617,285 +1824,6 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
     }));
     return () => $("button[aria-pressed='true']", el).dataset.v;
   }
-
-  /* ---------- 1. Friday-night table grab ---------- */
-  const RESTS = ["Luigi's", "Pho Real", "Curry Leaf", "Taco Stand"];
-  const NAMES = ["Sam", "Alex", "Priya", "Tom", "Mei", "Omar", "Lena", "Jo"];
-  function grabModel(k, fee) {
-    // Tables are [restaurant][seat]. The first k diners have assistants and book first.
-    const tables = RESTS.map(() => [null, null]);
-    const kept = [];
-    for (let d = 0; d < k; d++) {
-      const mine = [];
-      for (let r = 0; r < RESTS.length; r++) {
-        const t = tables[r].indexOf(null);
-        if (t >= 0) { tables[r][t] = d; mine.push([r, t]); if (fee) break; }
-      }
-      kept[d] = mine.shift();
-      mine.forEach(([r, t]) => { tables[r][t] = "empty"; });
-    }
-    const fed = new Array(NAMES.length).fill(false);
-    for (let d = 0; d < k; d++) fed[d] = !!kept[d];
-    for (let d = k; d < NAMES.length; d++) {
-      for (let r = 0; r < RESTS.length && !fed[d]; r++) {
-        const t = tables[r].indexOf(null);
-        if (t >= 0) { tables[r][t] = d; fed[d] = true; }
-      }
-    }
-    return { tables, fed };
-  }
-  function grabRender(v) {
-    const k = v === "0" ? 0 : v === "1" ? 1 : 2, fee = v === "fee";
-    const { tables, fed } = grabModel(k, fee);
-    $("#town").innerHTML = RESTS.map((name, r) => `<div class="rest"><span class="rest-name">${name}</span><div class="rest-tables">${
-      tables[r].map(x => x === "empty" ? `<div class="tb empty">empty</div>` : `<div class="tb eat">${NAMES[x]}</div>`).join("")}</div></div>`).join("");
-    $("#diners").innerHTML = NAMES.map((n, d) => `<div class="dn ${fed[d] ? "fed" : "hungry"} ${d < k ? "ai" : ""}"><i>${d < k ? "AI" : fed[d] ? "✓" : "✕"}</i>${n}</div>`).join("");
-    const hungry = fed.filter(f => !f).length;
-    const who = k === 1 ? "Sam's assistant" : "Sam's and Alex's assistants";
-    $("#grabPunch").textContent =
-      k === 0 ? "No assistants: all 8 people eat, and every table is used." :
-      fee ? "With a no-show fee, each assistant books just one table. Everyone eats." :
-      `${who} did exactly what ${k === 1 ? "Sam" : "they were"} asked. ${hungry} people went home hungry while ${hungry} tables sat empty.`;
-  }
-  seg($("#grabPick"), grabRender);
-  grabRender("1");
-
-  /* ---------- 2. classifier ---------- */
-  const verdicts = {
-    "yes-same": ["mis", "<strong>Miscoordination.</strong> Everyone wants the same thing, so the only risk is failing to line up actions, like two robots from the same company blocking each other in a doorway."],
-    "yes-mixed": ["con", "<strong>Conflict.</strong> Goals partly overlap, so there are deals that help everyone, but selfish incentives can push agents off them. Most real interactions are here."],
-    "yes-opp": ["na", "<strong>Not applicable.</strong> With fully opposed goals (chess, a zero-sum game), one side's gain is always the other's loss, so there is no cooperative outcome to fail to reach."],
-    "no-same": ["col", "<strong>Collusion.</strong> Even agents with shared goals can cooperate in ways we don't want, for example two AI systems jointly working around a safety check."],
-    "no-mixed": ["col", "<strong>Collusion.</strong> The classic case: firms in a market have mixed goals, and cooperating on prices hurts customers."],
-    "no-opp": ["col", "<strong>Collusion.</strong> Safety schemes often set AIs as adversaries on purpose (an overseer vs the overseen). If they secretly cooperate, the scheme fails."]
-  };
-  let coop = "yes", obj = "same";
-  function renderClassifier() {
-    const [cls, text] = verdicts[coop + "-" + obj];
-    $$(".grid-fig .cell").forEach(c => c.classList.remove("on"));
-    const target = coop === "no" ? "#c-col" : "#c-" + obj;
-    $(target).classList.add("on");
-    $("#verdict").innerHTML = text;
-  }
-  seg($("#qCoop"), v => { coop = v; renderClassifier(); });
-  seg($("#qObj"), v => { obj = v; renderClassifier(); });
-  renderClassifier();
-
-  /* ---------- 3. driving ---------- */
-  let rounds = 0, cleared = 0, busy = false;
-  const carA = $("#carA"), carB = $("#carB"), amb = $("#amb");
-  const sideBtns = $$("#drive [data-side]");
-  const setBusy = b => { busy = b; sideBtns.forEach(x => x.setAttribute("aria-disabled", b ? "true" : "false")); };
-  function resetRoad() {
-    carA.style.top = "31px"; carB.style.top = "31px"; amb.style.left = "-90px"; amb.style.top = "31px";
-  }
-  resetRoad();
-  sideBtns.forEach(btn => btn.addEventListener("click", () => {
-    if (busy) return;
-    setBusy(true);
-    resetRoad();
-    const a = btn.dataset.side;
-    const talk = $("#talk").checked;
-    const b = talk ? a : (Math.random() < 0.5 ? "L" : "R");
-    rounds++;
-    const ok = a === b;
-    if (ok) cleared++;
-    $$("#payoff div").forEach(d => d.classList.remove("hl"));
-    $("#p-" + a + b).classList.add("hl");
-    // "left" = top edge of road, "right" = bottom edge (direction of travel is left→right)
-    const pos = s => (s === "L" ? "6px" : "56px");
-    setTimeout(() => { carA.style.top = pos(a); carB.style.top = pos(b); }, 50);
-    setTimeout(() => {
-      if (ok) { amb.style.top = a === "L" ? "56px" : "6px"; amb.style.left = "calc(100% + 20px)"; }
-      else { amb.style.top = "31px"; amb.style.left = "calc(22% - 80px)"; }
-    }, 900);
-    setTimeout(() => {
-      const out = $("#driveOut");
-      out.className = "outcome " + (ok ? "good" : "bad");
-      out.textContent = ok
-        ? (talk ? "Lane cleared. The cars agreed on a side by message first." : "Lane cleared. Car B happened to learn the same convention.")
-        : `Blocked. You went ${a === "L" ? "left" : "right"}, Car B went ${b === "L" ? "left" : "right"}. No lane is clear.`;
-      $("#driveTally").textContent = `Rounds played: ${rounds} · lane cleared: ${cleared}`;
-      setBusy(false);
-    }, reduced ? 100 : 2300);
-  }));
-
-  /* ---------- 4. lake ---------- */
-  let stock, month, agentCatch, collapsed, lastMax;
-  function lakeReset() {
-    stock = 100; month = 1; agentCatch = [10, 10, 10]; collapsed = false; lastMax = 10;
-    $("#lakeHist").innerHTML = "";
-    $("#fishBtn").disabled = false;
-    renderLake();
-    $("#lakeStatus").textContent = "Month 1. Sustainable total catch: 50 t (half the stock).";
-  }
-  function renderLake() {
-    $("#water").style.transform = `scaleY(${Math.max(0, stock) / 100})`;
-    $("#lvl").textContent = Math.round(stock) + " t";
-    const names = ["You", "Agent 1", "Agent 2", "Agent 3"];
-    const vals = [+$("#myCatch").value].concat(agentCatch);
-    $("#fishers").innerHTML = vals.map((v, i) =>
-      `<div class="fisher ${i === 0 ? "you" : ""}"><span class="n">${names[i]}</span><span class="v">${Math.round(v)}</span></div>`).join("");
-  }
-  $("#myCatch").addEventListener("input", () => { $("#myCatchOut").textContent = $("#myCatch").value; renderLake(); });
-  $("#fishBtn").addEventListener("click", () => {
-    if (collapsed) return;
-    const mine = +$("#myCatch").value;
-    let wants = [mine].concat(agentCatch);
-    let total = wants.reduce((a, b) => a + b, 0);
-    let got = wants;
-    if (total > stock) { got = wants.map(w => w * stock / total); total = stock; }
-    stock -= total;
-    const line = document.createElement("div");
-    line.textContent = `M${month}: you ${Math.round(got[0])} t, agents ${got.slice(1).map(x => Math.round(x)).join("/")} t → ${Math.round(stock)} t left`;
-    $("#lakeHist").prepend(line);
-    if (stock < 5) {
-      collapsed = true; stock = Math.max(0, stock);
-      renderLake();
-      $("#lakeStatus").textContent = `Month ${month}: the lake collapsed. Total catch outran regrowth.`;
-      $("#fishBtn").disabled = true;
-      return;
-    }
-    stock = Math.min(100, stock * 2);
-    // agents: match the greediest catch last round (move 70% of the way), else drift back towards fair share
-    const maxLast = Math.max.apply(null, wants);
-    agentCatch = agentCatch.map(c => maxLast > c + 0.5 ? c + 0.6 * (maxLast - c) : Math.max(10, c - 2));
-    month++;
-    renderLake();
-    const sustainable = Math.round(stock / 2);
-    $("#lakeStatus").textContent = `Month ${month}. Stock ${Math.round(stock)} t. Sustainable total catch now: ${sustainable} t.`;
-  });
-  $("#lakeReset").addEventListener("click", lakeReset);
-  lakeReset();
-
-  /* ---------- 5. stego ---------- */
-  seg($("#stegoView"), v => {
-    const reveal = v === "partner";
-    $("#msg").classList.toggle("reveal", reveal);
-    $("#decoded").textContent = reveal
-      ? "Partner: first letters spell H-O-L-D. Keep prices high this week."
-      : "Overseer: routine logistics chatter. Nothing to flag.";
-  });
-
-  /* ---------- 6. network infection ---------- */
-  const canvas = $("#net"), ctx = canvas.getContext("2d");
-  let netN = 400, nodes = [], infected = [], round = 0, netTimer = null;
-  function layoutNodes() {
-    nodes = [];
-    const W = canvas.width, H = canvas.height;
-    const cols = Math.ceil(Math.sqrt(netN * W / H));
-    const rows = Math.ceil(netN / cols);
-    const dx = W / cols, dy = H / rows;
-    let seed = 7;
-    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    for (let i = 0; i < netN; i++) {
-      const c = i % cols, r = Math.floor(i / cols);
-      nodes.push({ x: (c + 0.5) * dx + (rnd() - 0.5) * dx * 0.6, y: (r + 0.5) * dy + (rnd() - 0.5) * dy * 0.6 });
-    }
-    infected = new Array(netN).fill(false);
-    round = 0;
-  }
-  let links = [];
-  function drawNet() {
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = css("--surface-2"); ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = css("--con"); ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
-    links.forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(nodes[a].x, nodes[a].y); ctx.lineTo(nodes[b].x, nodes[b].y); ctx.stroke(); });
-    ctx.globalAlpha = 1;
-    const r = netN > 1000 ? 2.2 : netN > 300 ? 3.2 : 5;
-    const clean = css("--muted"), bad = css("--con");
-    nodes.forEach((n, i) => { ctx.fillStyle = infected[i] ? bad : clean; ctx.globalAlpha = infected[i] ? 1 : 0.45; ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fill(); });
-    ctx.globalAlpha = 1;
-  }
-  function netStatus() {
-    const k = infected.filter(Boolean).length;
-    $("#netOut").textContent = `Round ${round} · infected ${k.toLocaleString()} of ${netN.toLocaleString()}` +
-      (k === netN ? ` · whole network compromised in ${round} rounds` : "");
-  }
-  function netStep() {
-    // random perfect-ish pairing: shuffle and pair neighbours
-    const idx = Array.from({ length: netN }, (_, i) => i);
-    for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
-    const next = infected.slice();
-    links = [];
-    for (let i = 0; i + 1 < idx.length; i += 2) {
-      const a = idx[i], b = idx[i + 1];
-      if (infected[a] !== infected[b]) { next[a] = next[b] = true; links.push([a, b]); }
-    }
-    infected = next; round++;
-  }
-  function netRun() {
-    if (netTimer) clearInterval(netTimer);
-    layoutNodes(); links = [];
-    infected[Math.floor(Math.random() * netN)] = true;
-    drawNet(); netStatus();
-    netTimer = setInterval(() => {
-      netStep(); drawNet(); netStatus();
-      if (infected.every(Boolean) || round > 60) { clearInterval(netTimer); netTimer = null; links = []; setTimeout(drawNet, 400); }
-    }, reduced ? 60 : 650);
-  }
-  seg($("#netSize"), v => { netN = +v; if (netTimer) clearInterval(netTimer); netTimer = null; layoutNodes(); links = []; drawNet(); netStatus(); });
-  $("#netGo").addEventListener("click", netRun);
-  layoutNodes(); drawNet(); netStatus();
-
-  /* ---------- 7. flash crash ---------- */
-  function simulateCrash(homog, breaker) {
-    const N = 60, shared = Math.round(N * homog / 100);
-    const triggers = [];
-    for (let i = 0; i < N; i++) {
-      // shared bots all trigger at a 2% drop; others spread evenly between 5% and 80%
-      triggers.push(i < shared ? 2 : 5 + (i - shared) * (75 / Math.max(1, N - shared)));
-    }
-    const sold = new Array(N).fill(false);
-    let price = 100; const series = [100];
-    price = 98; series.push(price); // the initial shock
-    let halted = false, haltAt = -1;
-    for (let t = 0; t < 36; t++) {
-      if (halted) { price = Math.min(price + (98 - price) * 0.12, 98); series.push(price); continue; }
-      const drop = 100 - price;
-      let sellers = 0;
-      for (let i = 0; i < N; i++) if (!sold[i] && drop >= triggers[i]) { sold[i] = true; sellers++; }
-      price = price * (1 - 0.005 * sellers);
-      if (sellers === 0) price = Math.min(price + 0.08, 100);
-      if (breaker && 100 - price >= 6 && !halted) { halted = true; haltAt = series.length; }
-      series.push(price);
-    }
-    return { series, haltAt, sold: sold.filter(Boolean).length, low: Math.min.apply(null, series) };
-  }
-  function drawCrash() {
-    const homog = +$("#homog").value, breaker = $("#breaker").checked;
-    $("#homogOut").textContent = homog + "%";
-    const { series, haltAt, sold, low } = simulateCrash(homog, breaker);
-    const W = 640, H = 240, L = 44, R = 12, T = 14, B = 30;
-    const yMin = 60, yMax = 102;
-    const x = i => L + (i / (series.length - 1)) * (W - L - R);
-    const y = v => T + (1 - (Math.max(v, yMin) - yMin) / (yMax - yMin)) * (H - T - B);
-    const ink = css("--muted"), line = css("--line"), acc = css("--accent"), bad = css("--con");
-    let s = "";
-    [100, 90, 80, 70, 60].forEach(v => {
-      s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${line}" stroke-width="1"/>`;
-      s += `<text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="${ink}">${v}</text>`;
-    });
-    s += `<text x="${L}" y="${H - 8}" font-family="IBM Plex Mono, monospace" font-size="11" fill="${ink}">shock</text>`;
-    s += `<text x="${W - R}" y="${H - 8}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="${ink}">time →</text>`;
-    if (haltAt >= 0) {
-      s += `<rect x="${x(haltAt)}" y="${T}" width="${W - R - x(haltAt)}" height="${H - T - B}" fill="${acc}" opacity="0.08"/>`;
-      s += `<text x="${x(haltAt) + 6}" y="${T + 14}" font-family="IBM Plex Mono, monospace" font-size="11" fill="${acc}">trading halted</text>`;
-    }
-    const pts = series.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
-    const area = `${L},${y(yMin)} ${pts} ${x(series.length - 1)},${y(yMin)}`;
-    const col = low < 85 ? bad : acc;
-    s += `<polygon points="${area}" fill="${col}" opacity="0.10"/>`;
-    s += `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`;
-    const li = series.indexOf(low);
-    s += `<circle cx="${x(li)}" cy="${y(low)}" r="4.5" fill="${col}"/>`;
-    $("#crashSvg").innerHTML = s;
-    $("#crashOut").textContent = `Lowest price ${low.toFixed(1)} (${(100 - low).toFixed(1)}% drop) · ${sold} of 60 bots sold` + (haltAt >= 0 ? " · circuit breaker tripped" : "");
-  }
-  $("#homog").addEventListener("input", drawCrash);
-  $("#breaker").addEventListener("change", drawCrash);
-  drawCrash();
 
   /* ---------- 8. case matrix ---------- */
   const cols = [
@@ -2002,7 +1930,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
       const d = $("details", el); if (d) d.open = true;
     }
     if (primerPage !== wasPrimer || el) {
-      if (el && id !== "primer" && id !== "top") el.scrollIntoView({ block: "start" });
+      if (el && id !== "primer" && id !== "top") { if (window.Explore) Explore.reveal(el); el.scrollIntoView({ block: "start" }); }
       else window.scrollTo(0, 0);
     }
     activeIdx = -2;
@@ -2088,7 +2016,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
   renderQ();
 
   /* ---------- hero: what the reader is signing up for ---------- */
-  const words = $$("#guideView section.chapter").reduce((n, el) => n + el.textContent.trim().split(/\s+/).length, 0);
+  const words = $$("#guideView section.chapter").reduce((n, el) => { const c = el.cloneNode(true); $$("summary", c).forEach(s => s.remove()); return n + c.textContent.trim().split(/\s+/).length; }, 0);
   const mins = Math.max(5, Math.round(words / 220 / 5) * 5);
   $("#heroFacts").textContent = `${numbered} chapters · ${$$("#guideView .lab").length} interactive examples · a ${Q.length}-question quiz · about ${mins} minutes of reading`;
 
@@ -2113,7 +2041,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
     ["Emergence", /\bemergen(?:ce|t)\b/i],
     ["Jailbreak", /\bjailbreak(?:s|ing)?\b/i]
   ];
-  const SKIP = "a, button, strong, h1, h2, h3, h4, summary, details, label, nav, table, dl, .lab, .eyebrow, .tag, .term, [aria-live]";
+  const SKIP = "a, button, strong, h1, h2, h3, h4, summary, label, nav, table, dl, .lab, .eyebrow, .tag, .term, [aria-live]";
   $$("#guideView section.chapter").forEach(ch => {
     if (ch.id === "glossary") return;
     const subs = $$(".sub", ch);
