@@ -1,0 +1,1318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Has a Stake in AI Safety?</title>
+<meta name="description" content="A descriptive map of the AI industry and its safety ecosystem for political scientists: 100 actors, 105 typed relationships, 48 financial observations and 93 sources, with public-source evidence through 4 October 2026.">
+<meta name="color-scheme" content="light dark">
+<script>try { var t = localStorage.getItem("wam-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+/* Ecosystem page: a reference page. The map plate is the page header; hand-written reading sections follow, then lists drawn from ecosystem-data.js. */
+main > .wrap { padding-top: 16px; }
+.howto { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: grid; gap: 14px; }
+.howto ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; font-size: .95rem; }
+.readrow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
+@media (max-width: 860px) { .readrow { grid-template-columns: minmax(0, 1fr); } }
+
+/* The map. The stage is dark in both themes, like a printed chart plate, so its colours are fixed here and not theme tokens. */
+.web { --w-bg: #07131C; --w-raise: #102433; --w-ink: #EEF3F6; --w-muted: #A3B5C1; --w-line: #27414F; --w-hi: #7FE9D8;
+  margin: 0; background: var(--w-bg); color: var(--w-ink); border: 1px solid var(--w-line); border-radius: 20px; padding: 22px 26px 24px; display: grid; gap: 14px; min-width: 0; color-scheme: dark; scroll-margin-top: 112px; }
+@media (max-width: 600px) { .web { padding: 18px 16px; border-radius: 16px; } }
+.web a { color: var(--w-hi); }
+.web :focus-visible { outline-color: var(--w-hi); }
+.web-head { display: grid; gap: 0; }
+.web-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 14px 36px; align-items: start; margin-top: 12px; }
+@media (max-width: 860px) { .web-intro { grid-template-columns: minmax(0, 1fr); } }
+.web-eyebrow { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); }
+.web h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.04; margin-top: 6px; }
+.web h1 span { color: #2EE6C8; }
+.web-sub { font-size: .92rem; line-height: 1.5; color: var(--w-muted); max-width: 44em; }
+.web-facts { font-family: var(--font-mono); font-size: .76rem; }
+.web-facts b { color: var(--w-ink); font-weight: 500; }
+.web-key { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; font-size: .84rem; line-height: 1.35; color: var(--w-muted); }
+@media (max-width: 520px) { .web-key { grid-template-columns: minmax(0, 1fr); } }
+.web-key li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; }
+.web-key svg { width: 34px; height: 20px; fill: var(--w-ink); stroke: var(--w-ink); }
+.web-key svg circle { stroke: none; }
+.web-key .k-a { fill: #2EE6C8; } .web-key .k-b { fill: #F7A93B; }
+.web-key b { color: var(--w-ink); font-family: var(--font-display); font-weight: 700; display: block; }
+.web-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; border-top: 1px solid var(--w-line); padding-top: 12px; }
+.web-tools .pills { flex: 1 1 30rem; }
+.web .pills { gap: 6px; }
+.web .pills button { font-size: .84rem; min-height: 34px; padding: 0 11px; }
+@media (pointer: coarse) { .web .pills button { min-height: 44px; } }
+.web-under { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: start; justify-content: space-between; }
+.web .pills { margin: 0; }
+.web .pills button { background: transparent; border-color: var(--w-line); color: var(--w-muted); }
+.web .pills button:hover { color: var(--w-ink); border-color: var(--w-ink); }
+.web .pills button[aria-pressed="true"] { background: var(--w-ink); color: var(--w-bg); border-color: var(--w-ink); }
+.web-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.web-actions select, .web-btn { font-family: var(--font-display); font-weight: 500; font-size: .88rem; min-height: 38px; border-radius: 10px; border: 1px solid var(--w-line); background: var(--w-raise); color: var(--w-ink); padding: 0 12px; cursor: pointer; }
+.web-actions select { max-width: 15.5rem; }
+.web-btn:hover, .web-actions select:hover { border-color: var(--w-ink); }
+@media (pointer: coarse) { .web-actions select, .web-btn { min-height: 44px; } }
+.web-blurb { font-size: .92rem; color: var(--w-muted); max-width: 44em; flex: 1 1 20rem; min-height: 3em; }
+.web-scroll { overflow-x: auto; margin-inline: -10px; }
+#webStage { display: block; width: 100%; min-width: 760px; height: auto; font-family: var(--font-display); user-select: none; -webkit-user-select: none; }
+#webStage .link { fill: none; opacity: .5; transition: opacity .2s; }
+#webStage .flow { fill: none; stroke-linecap: round; stroke-dasharray: .1 30; opacity: .7; pointer-events: none; animation: webflow 2.6s linear infinite; transition: opacity .2s; }
+@keyframes webflow { to { stroke-dashoffset: -30.1; } }
+#webStage.paused .flow { animation-play-state: paused; }
+#webStage .off { display: none; }
+#webStage.has-focus .link:not(.on) { opacity: .06; }
+#webStage.has-focus .flow:not(.on) { opacity: 0; }
+#webStage.has-focus .link.on { opacity: .95; }
+#webStage .node { cursor: pointer; transition: opacity .2s; }
+#webStage .node circle { stroke: var(--w-bg); stroke-width: 1.5; }
+#webStage.has-focus .node:not(.on) { opacity: .15; }
+#webStage .node.sel circle { stroke: #fff; stroke-width: 3; }
+#webStage .nlabel { display: none; pointer-events: none; transition: opacity .2s; }
+#webStage .nlabel.always, #webStage.has-focus .nlabel.on { display: block; }
+#webStage.has-focus .nlabel:not(.on) { opacity: .15; }
+#webStage .lab { font-size: 13px; font-weight: 500; fill: var(--w-ink); paint-order: stroke; stroke: var(--w-bg); stroke-width: 3.5px; stroke-linejoin: round; pointer-events: none; }
+#webStage .in { font-size: 12.5px; font-weight: 800; fill: #07131C; pointer-events: none; }
+#webStage .in.num { font-family: var(--font-mono); font-weight: 500; font-size: 12px; }
+#webStage .ctitle { font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; paint-order: stroke; stroke: var(--w-bg); stroke-width: 4px; }
+#webStage .ctitle:hover, #webStage .ctitle.sel { text-decoration: underline; }
+#webStage.has-focus .ctitle:not(.sel) { opacity: .55; }
+.web-panel { border-top: 1px solid var(--w-line); padding-top: 18px; margin-top: 2px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px 36px; align-items: start; min-height: 11rem; font-size: .93rem; }
+@media (max-width: 860px) { .web-panel { grid-template-columns: minmax(0, 1fr); } }
+.web-panel h3 { font-size: 1.35rem; margin: 4px 0 8px; }
+.web-panel h4 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); margin-bottom: 6px; }
+.wp-main { display: grid; gap: 6px; align-content: start; }
+.wp-lbl { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--w-muted); }
+.wp-small, .wp-none { font-size: .86rem; color: var(--w-muted); }
+.wp-ties { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 28px; }
+@media (max-width: 600px) { .wp-ties { grid-template-columns: minmax(0, 1fr); } }
+.wp-ties ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.wp-ties li { display: grid; gap: 0; padding: 6px 0; border-bottom: 1px solid var(--w-line); }
+.wp-ties li span { font-size: .8rem; color: var(--w-muted); padding-left: 18px; }
+.web-jump { font: inherit; font-family: var(--font-display); font-weight: 700; text-align: left; color: var(--w-ink); background: none; border: 0; padding: 2px 0; cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
+.web-jump i { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.web-jump:hover { color: var(--w-hi); }
+.wp-notes { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 28px; }
+@media (max-width: 860px) { .wp-notes { grid-template-columns: minmax(0, 1fr); } }
+.wp-notes > div { display: grid; gap: 8px; align-content: start; justify-items: start; }
+.wp-notes h3 { font-size: 1.12rem; margin: 0; }
+.wp-notes p { color: var(--w-muted); }
+.web-act { font-family: var(--font-display); font-weight: 700; font-size: .86rem; color: var(--w-hi); background: none; border: 1px solid var(--w-line); border-radius: 999px; min-height: 36px; padding: 0 14px; cursor: pointer; }
+.web-act:hover { border-color: var(--w-hi); }
+.web figcaption { font-size: .82rem; color: var(--w-muted); border-top: 1px dashed var(--w-line); padding-top: 12px; max-width: 70em; }
+.howto.bridge ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: .92rem; }
+.howto.bridge li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.howto.bridge li:last-child { border-bottom: 0; }
+.howto.bridge a { font-family: var(--font-mono); font-size: .8rem; white-space: nowrap; }
+
+/* 1. Findings */
+.findings { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; max-width: 52rem; counter-reset: f; }
+.findings li { counter-increment: f; display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 6px 14px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.findings li::before { content: counter(f); font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1; color: var(--accent); grid-row: span 3; }
+.findings h3 { font-size: clamp(1.2rem, 2.4vw, 1.45rem); }
+.srcline { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); line-height: 1.7; }
+.srcline a { color: var(--accent); }
+@media (max-width: 520px) { .findings li { grid-template-columns: minmax(0, 1fr); } .findings li::before { grid-row: auto; } }
+
+/* 2. Six questions and eleven categories */
+.qnav { display: flex; flex-wrap: wrap; gap: 8px; }
+.qblock { padding-top: 44px; display: grid; gap: 18px; scroll-margin-top: 72px; }
+.qblock-head { display: grid; gap: 6px; max-width: 46rem; }
+.qblock-head .step { font-family: var(--font-mono); font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.cats.one { grid-template-columns: minmax(0, 1fr); max-width: 52rem; }
+@media (max-width: 860px) { .cats { grid-template-columns: minmax(0, 1fr); } }
+.cat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; scroll-margin-top: 80px; }
+.cat:target { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.cat-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.cat .oneline { font-family: var(--font-display); font-weight: 500; font-size: 1.08rem; line-height: 1.35; }
+.cat ul.pts { margin: 0; padding-left: 1.15em; display: grid; gap: 8px; font-size: .95rem; }
+.bound { margin: 0; display: grid; gap: 6px; font-size: .88rem; border-top: 1px dashed var(--line); padding-top: 12px; }
+.bound div { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 10px; }
+.bound dt { font-family: var(--font-mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding-top: 2px; }
+.bound dd { margin: 0; }
+.cat-actors { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-actors .chip { font-size: .82rem; min-height: 32px; padding: 0 10px; }
+
+/* Tools shared by the data lists */
+.tools { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: end; margin-bottom: 10px; }
+.tools label { display: grid; gap: 4px; font-size: .88rem; color: var(--muted); }
+.tools input[type="search"], .tools select { font: inherit; font-size: 1rem; min-width: min(100%, 17rem); padding: 9px 12px; min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.tools input[type="search"]:focus, .tools select:focus { border-color: var(--accent); outline: none; }
+.readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.empty { font-size: .95rem; color: var(--muted); padding-top: 20px; }
+.more { margin-top: 16px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.pills button { font-family: var(--font-display); font-weight: 500; font-size: .88rem; padding: 0 13px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s; }
+.pills button:hover { color: var(--ink); border-color: var(--ink); }
+.pills button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pills button .c { font-family: var(--font-mono); font-size: .76rem; margin-left: 4px; opacity: .8; }
+@media (pointer: coarse) { .pills button { min-height: 44px; } }
+
+/* 3. Actors */
+.pcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+@media (max-width: 760px) { .pcards { grid-template-columns: minmax(0, 1fr); } }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; scroll-margin-top: 80px; }
+.pcard:target { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.pcard h3 { font-size: 1.2rem; }
+.pcard .who { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); line-height: 1.6; }
+.pcard .plain { font-size: .96rem; }
+.pcard .lbl { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pcard details summary { cursor: pointer; font-family: var(--font-mono); font-size: .82rem; color: var(--accent); padding-block: 6px; }
+.pcard dl { margin: 0; display: grid; gap: 10px; font-size: .9rem; line-height: 1.55; }
+.pcard dt { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pcard dd { margin: 2px 0 0; }
+.pcard dd ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+
+/* 4. Ties */
+.flows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-width: 46rem; font-size: .95rem; }
+.flows li { display: grid; grid-template-columns: minmax(0, 1fr) 1.5rem minmax(0, 1.2fr); gap: 8px; align-items: center; padding: 8px 12px; background: var(--surface-2); border-radius: 10px; }
+.flows .arrow { color: var(--accent); font-family: var(--font-mono); text-align: center; }
+.ties { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.tie { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .8fr) minmax(0, 1.5fr); gap: 6px 20px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: start; font-size: .93rem; }
+@media (max-width: 860px) { .tie { grid-template-columns: minmax(0, 1fr); } }
+.tie-pair { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.3; }
+.tie-pair a { color: var(--ink); text-decoration-color: var(--line-strong); }
+.tie-pair a:hover { color: var(--accent); }
+.tie-pair .arrow { color: var(--accent); font-family: var(--font-mono); font-weight: 400; }
+.tie-kind { display: grid; gap: 4px; justify-items: start; }
+.tie-kind .tag { white-space: normal; }
+.tie-body { display: grid; gap: 4px; }
+
+/* 5. Money */
+.rule3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .rule3 { grid-template-columns: minmax(0, 1fr); } }
+.rule3 > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; font-size: .95rem; }
+.rule3 h3 { font-family: var(--font-mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 500; }
+.panel { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 16px; padding: 22px; display: grid; gap: 16px; min-width: 0; max-width: 56rem; }
+.panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.panel-head .eyebrow { color: var(--accent); }
+.panel-note { font-size: .84rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.headline { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 2.4vw, 1.35rem); line-height: 1.3; }
+.bars { display: grid; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 7.5rem; gap: 10px; align-items: center; font-size: .86rem; }
+.bar-track { background: color-mix(in srgb, var(--ink) 11%, transparent); border-radius: 6px; height: 16px; position: relative; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; background: var(--accent); min-width: 2px; }
+.bar-fill.forecast { background: transparent; border: 2px dashed var(--accent); }
+.bar-val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.bar-label { line-height: 1.25; }
+@media (max-width: 620px) { .bar-row { grid-template-columns: minmax(0, 1fr) auto; } .bar-row .bar-label { grid-column: 1 / -1; } }
+.slips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .slips { grid-template-columns: minmax(0, 1fr); } }
+.slip { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.slip p { font-size: .9rem; color: var(--muted); }
+.slip table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.slip td { padding: 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.slip td.amt { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: 12px; text-align: right; }
+.slip td.when { font-size: .82rem; color: var(--muted); text-align: right; }
+/* the box only scrolls sideways; the frame sits on the table so cell padding is the inset */
+.tbl-box { overflow-x: auto; }
+table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .88rem; line-height: 1.5; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.tbl th, .tbl td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+.tbl thead th { font-family: var(--font-mono); font-weight: 500; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl td.amt { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl.ledger { min-width: 860px; }
+.tbl.wide { min-width: 620px; }
+.tbl-hint { display: none; margin-bottom: 8px; }
+@media (max-width: 900px) { .tbl-hint { display: block; } }
+
+/* 6. Debates */
+.frames { display: grid; gap: 14px; max-width: 60rem; }
+.frame { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; }
+.frame-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; font-size: .94rem; }
+@media (max-width: 860px) { .frame-cols { grid-template-columns: minmax(0, 1fr); } }
+.frame-cols > div { display: grid; gap: 6px; align-content: start; }
+.frame-cols h4 { margin: 0; font-family: var(--font-mono); font-size: .74rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.frame-cols .can { background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; }
+.frame-cols .can h4 { color: var(--accent); }
+
+/* 7. Method */
+.method { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; max-width: 60rem; }
+@media (max-width: 760px) { .method { grid-template-columns: minmax(0, 1fr); } }
+.method > div { padding: 16px 0; border-bottom: 1px solid var(--line); display: grid; gap: 6px; align-content: start; font-size: .95rem; }
+.method h3 { font-size: 1.2rem; }
+.gloss { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 0; }
+@media (max-width: 760px) { .gloss { grid-template-columns: minmax(0, 1fr); } }
+.gloss div { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: .94rem; }
+.gloss dt { font-family: var(--font-display); font-weight: 700; }
+.gloss dd { margin: 2px 0 0; }
+.fold { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; max-width: 60rem; }
+.fold summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 8px 16px; border-radius: 10px; transition: background-color .15s; }
+.fold summary::-webkit-details-marker { display: none; }
+.fold summary::after { content: ""; flex: none; width: 8px; height: 8px; margin-top: -4px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .16s; }
+.fold[open] summary::after { transform: rotate(-135deg); margin-top: 4px; }
+.fold summary:hover { background: var(--surface-2); }
+.fold .fold-body { padding: 0 16px 16px; display: grid; gap: 12px; font-size: .95rem; }
+.fold .tbl { border-radius: 8px; }
+
+/* 8. Gaps */
+.qa { display: grid; gap: 10px; max-width: 56rem; }
+.qa .fold p { padding: 0; }
+
+/* 9. Sources */
+.srcgroup { padding-top: 22px; display: grid; gap: 8px; max-width: 60rem; }
+.srcgroup h3 { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.srcgroup ul { list-style: none; margin: 0; padding: 0; }
+.srcgroup li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .93rem; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.srcgroup li .small { font-family: var(--font-mono); font-size: .76rem; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <nav class="sitebar" aria-label="Site pages">
+    <div class="sitebar-in">
+      <a class="site-name" href="index.html">AI Safety Overview</a>
+      <div class="site-links">
+        <a href="index.html">Goals</a>
+        <a href="multi-agent-risks.html"><span class="n">1</span>Risks</a>
+        <a href="multi-agent-risks.html#primer"><span class="n">2</span>Terms</a>
+        <a href="ecosystem.html" aria-current="page"><span class="n">3</span>Ecosystem</a>
+      </div>
+    </div>
+  </nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Who has a stake?</a>
+    <button class="toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="chapters"><span id="tocName">Contents</span></button>
+    <nav class="chapters" id="chapters" aria-label="Sections of this page">
+      <a href="#map">Map</a>
+      <a href="#summary">Summary</a>
+      <a href="#questions">Six questions</a>
+      <a href="#actors">Actors</a>
+      <a href="#ties">Ties</a>
+      <a href="#money">Money</a>
+      <a href="#debates">Debates</a>
+      <a href="#method">Method</a>
+      <a href="#gaps">Gaps</a>
+      <a href="#sources">Sources</a>
+    </nav>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+    <!-- ============ THE MAP (also the page header) ============ -->
+    <figure class="web" id="map" aria-labelledby="webTitle">
+      <div class="web-head" id="top">
+        <span class="web-eyebrow"><a href="index.html#goal-ecosystem">Goal 3</a> · The AI ecosystem</span>
+        <h1 id="webTitle">Who has a <span>stake</span> in AI safety?</h1>
+        <div class="web-intro">
+          <p class="web-sub">Each bubble is an organisation or group. Each arrow is one documented tie, pointing from the party that invests, supplies, funds, tests or lobbies to the party on the receiving end.</p>
+          <ul class="web-key" aria-label="How to read the map">
+            <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="23" cy="10" r="9"/></svg><span><b>Bubble size</b> number of documented ties</span></li>
+            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 6h24" stroke-width="1.6"/><path d="M2 14h24" stroke-width="4.5"/><path d="M25 2l8 4-8 4zM25 9l8 5-8 5z" stroke="none"/></svg><span><b>Arrow width</b> ties between that pair</span></li>
+            <li><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h22" stroke-width="2" stroke-dasharray=".1 6" stroke-linecap="round"/><path d="M24 5l9 5-9 5z" stroke="none"/></svg><span><b>Arrow direction</b> from giver to receiver</span></li>
+            <li><svg viewBox="0 0 34 20" aria-hidden="true"><circle cx="8" cy="10" r="6" class="k-a"/><circle cx="24" cy="10" r="6" class="k-b"/></svg><span><b>Colour</b> the group, and the group an arrow starts from</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="web-tools">
+        <span class="web-eyebrow" id="webLensLabel">Show one kind of tie</span>
+        <div class="pills needs-data" role="group" aria-labelledby="webLensLabel" id="webLens"></div>
+      </div>
+      <div class="web-scroll">
+        <svg id="webStage" viewBox="0 0 1080 820" role="img" aria-label="Network map of 100 actors in eleven groups arranged around the frontier developers, joined by 105 documented ties. The same information is in the actor and tie lists below."></svg>
+      </div>
+      <div class="web-under">
+        <p class="web-blurb" id="webBlurb"></p>
+        <div class="web-actions">
+          <label for="webPick" class="vh">Find an actor or a group</label>
+          <select id="webPick"></select>
+          <button type="button" class="web-btn" id="webClear" hidden>Show everything</button>
+          <button type="button" class="web-btn" id="webMotion" aria-pressed="false">Pause motion</button>
+        </div>
+      </div>
+      <div class="web-panel" id="webPanel" aria-live="polite"></div>
+      <figcaption><span class="web-facts"><b id="nActors">100</b> actors · <b id="nTies">105</b> ties · <b id="nFins">48</b> financial observations · <b id="nSources">93</b> sources · public-source evidence through 4 October 2026.</span> Bubble size and position do not measure influence. A large bubble has many documented ties in this map, which partly reflects how much an organisation discloses. Position is a layout choice. A bubble with no arrows has no tie recorded in this version, which does not mean none exists.</figcaption>
+    </figure>
+
+    <div class="readrow">
+      <div class="howto" aria-label="How to read this page">
+        <span class="eyebrow">Read it the way it was built</span>
+        <ol>
+          <li><strong>It is a map of documented ties.</strong> It does not rank actors by influence, sincerity or effectiveness.</li>
+          <li><strong>Every tie has a type.</strong> Owning shares, holding control, selling a service, giving a grant, testing a model and lobbying are recorded as different things.</li>
+          <li><strong>The money figures do not add up.</strong> A commitment, a valuation, a year of revenue and a grant measure different things. <a href="#terms">See the terms.</a></li>
+          <li><strong>A missing tie is a missing record.</strong> It means nothing was found in public sources. It does not mean no relationship exists.</li>
+        </ol>
+      </div>
+      <div class="howto bridge">
+        <span class="eyebrow">Find it by a concept you know</span>
+        <ul>
+          <li><span>Corporate governance and principal-agent problems</span><a href="#q-control">Who controls</a></li>
+          <li><span>Interest groups, lobbying and campaign finance</span><a href="#cat-8">Advocacy</a></li>
+          <li><span>Binding rules versus voluntary commitments</span><a href="#cat-7">Public authority</a></li>
+          <li><span>Capture, interlocks and the revolving door</span><a href="#debates">Debates</a></li>
+          <li><span>Think tanks and expert communities</span><a href="#cat-6">Research</a></li>
+          <li><span>Representation of affected publics</span><a href="#cat-9">Critical voices</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============ 1. SUMMARY ============ -->
+    <section class="chapter" id="summary">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 1 · THE SHORT VERSION</span>
+        <h2>Five findings</h2>
+        <p style="max-width:var(--measure)">If you read only one section, read this one. Each finding names the evidence it rests on and the limit of what it shows.</p>
+      </div>
+      <ol class="findings">
+        <li>
+          <h3>There is no single hierarchy</h3>
+          <p>AI safety is organised through overlapping commercial, philanthropic, scientific and governmental relationships. One organisation can sit in several positions at once. A chip supplier can also invest in a lab. A cloud provider can sell computing power to a company it finances. A safety researcher can receive grants and also sell evaluations. The map therefore separates ownership, formal control, purchases, grants, testing agreements and advocacy. It is a synthesis of documented relationships, not a causal theory of who controls policy.</p>
+        </li>
+        <li>
+          <h3>Formal authority and financial exposure are different things</h3>
+          <p>The OpenAI Foundation controls OpenAI's public benefit corporation through special governance rights. Microsoft's reported ownership stake is a different kind of tie. Anthropic combines a public benefit corporation with a mission-oriented trust, and Reuters reports a proposed further governance structure for a public share offering. Apollo Research's announced move to a public benefit corporation shows that independent safety research does not all sit inside nonprofits.</p>
+          <p class="srcline" data-sources="openai_structure ltbt anthropic_ipo apollo"></p>
+        </li>
+        <li>
+          <h3>The commercial economy is far larger than safety grant-making, but no ratio can be defended</h3>
+          <p>Financing, valuations, revenue, infrastructure intentions and grants measure different things. OpenAI announced $122bn in financing commitments. Anthropic announced a $65bn round. Coefficient Giving reports $351m of commitments in 2025 within its stated AI-related scope, and expected more than $1bn in 2026. None of these can stand in for audited annual spending on safety, so the numbers do not support a global ratio of safety spending to capabilities spending.</p>
+          <p class="srcline" data-sources="openai_round anthropic_round cg"></p>
+        </li>
+        <li>
+          <h3>Safety philanthropy is concentrated, at least in one published list</h3>
+          <p>Coefficient Giving accounts for about 72.2% of the $566.2m of 2025 estimates summed in Manifund's selected list of funders. That is a share of one compilation, not of the world's safety funding. The compilation gives $409m for the funder, while the funder's own, narrower report gives $351m. Regranting and differing scopes prevent a clean total for the field. <a href="#concentration">See the chart.</a></p>
+          <p class="srcline" data-sources="bulletin cg"></p>
+        </li>
+        <li>
+          <h3>Many actors have a stake without funding any research</h3>
+          <p>Governments, standards bodies, labour, civil society and affected communities have stakes even when they pay for no technical alignment work. Their roles include legal authority, public research, employment rights, accountability, insurance and exposure when systems fail. Their participation cannot be ranked by grant dollars. Regulatory duties, voluntary government testing and private ratings are kept separate.</p>
+          <p class="srcline" data-sources="eu caisi2026 labor ainow iso"></p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ 2. SIX QUESTIONS ============ -->
+    <section class="chapter" id="questions">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 2 · THE STRUCTURE</span>
+        <h2>Six questions, eleven categories</h2>
+        <p style="max-width:var(--measure)">The map sorts its 100 actors into eleven categories. They are grouped here under six questions a political scientist might ask of any policy field. The grouping is a reading aid. Many actors play more than one role, and a category is a display choice, not an exclusive identity.</p>
+        <div class="qnav" aria-label="Jump to a question">
+          <a class="chip" href="#q-supply">Who supplies?</a>
+          <a class="chip" href="#q-finance">Who finances?</a>
+          <a class="chip" href="#q-control">Who controls?</a>
+          <a class="chip" href="#q-research">Who researches?</a>
+          <a class="chip" href="#q-policy">Who shapes policy?</a>
+          <a class="chip" href="#q-bears">Who bears the consequences?</a>
+        </div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="qblock" id="q-supply">
+        <div class="qblock-head">
+          <span class="step">Question 1 of 6</span>
+          <h3>Who supplies the infrastructure?</h3>
+          <p>Advanced AI needs specialised chips, data centres and a great deal of electricity. A small number of firms supply them.</p>
+        </div>
+        <div class="cats">
+          <article class="cat" id="cat-1">
+            <div class="cat-top"><h4>Compute supply chain</h4><span class="small mono">Category 1 of 11</span></div>
+            <p class="oneline">The firms that design and manufacture the chips AI runs on. Some of them also invest in the labs they supply.</p>
+            <ul class="pts">
+              <li>NVIDIA and AMD design accelerators, the specialised chips used to train and run models. TSMC is a foundry: it manufactures chips that others design. ASML makes the lithography machines that foundries need. SK hynix and Samsung supply memory, and Samsung has other semiconductor businesses as well. Intel both designs chips and runs foundries.</li>
+              <li>Their revenue figures cover the whole business and are not safety budgets. The source set includes NVIDIA's revenue of $215.9bn for fiscal 2026 and AMD's audited revenue of $34.6bn for fiscal 2025.</li>
+              <li>Suppliers are not only upstream. ASML announced a €1.3bn investment in Mistral, with representation on an advisory committee. Memory companies appear among Anthropic's investors. OpenAI names several chip partners.</li>
+              <li>These ties give a supplier a financial interest in model development. They do not establish that a supplier directs a lab's safety policy.</li>
+              <li>Export controls give public authorities a say over particular chips and destinations.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Designers, foundries, lithography and memory firms with direct relevance to compute or to lab capital.</dd></div>
+              <div><dt>Left out</dt><dd>Equipment assemblers, networking, packaging, materials and individual power suppliers are not profiled one by one. Full supplier trees with no documented safety-relevant tie are excluded.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="1"></div>
+            <p class="srcline" data-sources="nvidia amd tsmc asml sk samsung intel asml_mistral anthropic_round openai_round bis"></p>
+          </article>
+
+          <article class="cat" id="cat-2">
+            <div class="cat-top"><h4>Cloud, data centres and energy</h4><span class="small mono">Category 2 of 11</span></div>
+            <p class="oneline">The firms that rent out computing power and build data centres, and the electricity systems those depend on.</p>
+            <ul class="pts">
+              <li>Microsoft, Amazon and Google each combine an infrastructure role with their own model development or with investments in labs. Oracle, CoreWeave and SpaceX also appear in disclosed compute relationships.</li>
+              <li>A US Federal Trade Commission (FTC) inquiry into partnerships between cloud firms and labs identifies possible switching costs, information sharing, and requirements to spend investment proceeds on the investor's own cloud. That is a reason to record investment and purchase as separate ties. It does not justify treating every contract as circular or anticompetitive.</li>
+              <li>Stargate's $500bn launch figure is an intention over four years, not completed investment. Who finances it and who operates it should be tracked separately.</li>
+              <li>The International Energy Agency's work on energy brings in utilities, grid operators and host communities. They can have a material stake without holding a grant or a board seat. The map marks this general physical dependence as its own synthesis, not as a signed utility contract.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Named cloud, infrastructure and energy dependencies.</dd></div>
+              <div><dt>Left out</dt><dd>Not all capital spending by the largest cloud firms is AI spending or safety spending. Meta is treated as a developer that owns infrastructure, not as a seller of cloud services.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="2"></div>
+            <p class="srcline" data-sources="openai_round spacex_anthropic ftc ftc_analysis stargate iea"></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="qblock" id="q-finance">
+        <div class="qblock-head">
+          <span class="step">Question 2 of 6</span>
+          <h3>Who finances development?</h3>
+          <p>Two very different pools of money. Investors finance the building of models. Philanthropic funds finance much of the independent safety research.</p>
+        </div>
+        <div class="cats">
+          <article class="cat" id="cat-4">
+            <div class="cat-top"><h4>Capital</h4><span class="small mono">Category 4 of 11</span></div>
+            <p class="oneline">The investors who pay for model development: corporations, venture firms and state-backed funds.</p>
+            <ul class="pts">
+              <li>Financing comes from strategic corporations, venture and growth firms, sovereign investment vehicles and diversified institutional investors. OpenAI's and Anthropic's announcements show investor groups that overlap but are not identical.</li>
+              <li>A list of participants does not reveal exact allocations, board rights, liquidation preferences or ultimate beneficiaries. Shareholding in public companies is a further layer, mostly grouped into one entry here.</li>
+              <li>Three quantities must be kept apart: cash or commitments entering a firm, the valuation implied by the price of its equity, and continuing purchases of compute. They cannot be added.</li>
+              <li>The same dollar can appear in an investor's commitment, a lab's financing announcement and a cloud purchase. The map keeps transaction types distinct and does not claim a deduplicated flow of capital across the whole system.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Named strategic, venture and sovereign investors.</dd></div>
+              <div><dt>Left out</dt><dd>Passive public-market holders are grouped into one entry. Beneficial ownership or voting control is not inferred from an asset manager's name.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="4"></div>
+            <p class="srcline" data-sources="openai_round anthropic_round xai_round"></p>
+          </article>
+
+          <article class="cat" id="cat-5">
+            <div class="cat-top"><h4>Philanthropy and safety funds</h4><span class="small mono">Category 5 of 11</span></div>
+            <p class="oneline">The foundations and funds that pay for safety research and for building the field.</p>
+            <ul class="pts">
+              <li>Coefficient Giving (formerly Open Philanthropy), the Survival and Flourishing Fund, Longview, Manifund, Schmidt Sciences and other funds are documented as allocators, advisers or sources of support. Their legal and accounting roles differ.</li>
+              <li>Coefficient Giving's September 2026 disclosure separates recommended commitments from disbursements. Its commitments to Redwood Research and Epoch AI run over several years. Turning them into annual spending would need payment schedules.</li>
+              <li>Industry money is present too. The Frontier Model Forum's AI Safety Fund is distinct from the companies that contribute to it and from its grantees.</li>
+              <li>The value of the OpenAI Foundation's equity is not a liquid grant budget.</li>
+              <li>The Long-Term Future Fund closed and a new fund was set up. The two are recorded as separate entries, not as a simple change of name.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Major safety funders, regranters and industry funds.</dd></div>
+              <div><dt>Left out</dt><dd>Upstream donors and downstream regrant receipts are not summed. Individual donors without verified transaction records are left unquantified.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="5"></div>
+            <p class="srcline" data-sources="cg bulletin sff fmf fmf_awards openai_structure ltff"></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="qblock" id="q-control">
+        <div class="qblock-head">
+          <span class="step">Question 3 of 6</span>
+          <h3>Who controls decisions?</h3>
+          <p>Inside the companies that build the models, the right to decide and the right to profit are often held by different parties.</p>
+        </div>
+        <div class="cats one">
+          <article class="cat" id="cat-3">
+            <div class="cat-top"><h4>Frontier developers and their internal safety governance</h4><span class="small mono">Category 3 of 11</span></div>
+            <p class="oneline">The companies that build the most capable models, and the internal bodies meant to oversee them.</p>
+            <ul class="pts">
+              <li>The map separates formal control from economic ownership. OpenAI's October 2025 recapitalisation gives the OpenAI Foundation control. It also records the Foundation's 26% equity and Microsoft's approximately 27% equity at that date. Those percentages cannot be carried forward through later financing without a new table of shareholdings.</li>
+              <li>Anthropic's Long-Term Benefit Trust is a separate governance institution. A founder governance structure that Reuters reported in September 2026 is a reported proposal, not an implemented change.</li>
+              <li>Google DeepMind publishes a frontier safety framework and describes a Responsibility and Safety Council. Meta's April 2026 disclosure introduces an updated scaling framework and preparedness reports. xAI was acquired in February 2026, so its parent has to be shown. Mistral's tie to an industrial investor is a different arrangement from these internal corporate structures.</li>
+              <li>Coverage of Chinese developers is thinner. Press reports support DeepSeek's capital and its tie to Huawei. Alibaba supplies a governance account for Qwen. Moonshot's cited security policy supports one fact about vulnerability reporting, not a conclusion about its safety governance as a whole.</li>
+              <li>Internal safety teams are not all separately budgeted legal entities. Public documents do not give a consistent census across labs of headcount, spending, escalation rights or veto powers. The map records governance structures where a source supports them and does not fill the gaps with inferred organisation charts.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>The major labs, and internal governance structures where documented.</dd></div>
+              <div><dt>Left out</dt><dd>Exhaustive model catalogues and unverified team rosters. SSI and other emerging labs are candidates for a later version. No claim about their relative significance follows from their absence.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="3"></div>
+            <p class="srcline" data-sources="openai_structure ltbt anthropic_ipo deepmind deepmind_gov meta xai asml_mistral deepseek huawei qwen kimi"></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="qblock" id="q-research">
+        <div class="qblock-head">
+          <span class="step">Question 4 of 6</span>
+          <h3>Who does the research?</h3>
+          <p>Independent organisations test models, study how they work and advise on policy. Training programmes bring new people in.</p>
+        </div>
+        <div class="cats">
+          <article class="cat" id="cat-6">
+            <div class="cat-top"><h4>Researchers, academic centres and think tanks</h4><span class="small mono">Category 6 of 11</span></div>
+            <p class="oneline">The organisations that test models, study how they work, and advise on policy.</p>
+            <ul class="pts">
+              <li>Technical evaluation, interpretability, alignment, control research and policy analysis are different functions.</li>
+              <li>METR reports about $71m of commitments over six months. It discloses limits on cash from AI companies and acknowledges that access provided in kind is valuable.</li>
+              <li>FAR.AI reports more than $30m committed in 2025 and publishes its funding and consulting policies. Apollo Research's move to a public benefit corporation adds an explicit commercial-service model. MIRI's fundraising materials describe an emphasis on advocacy.</li>
+              <li>These are differences between institutions, not performance rankings.</li>
+              <li>GovAI discloses a majority funder. IAPS publishes independence and funding policies. CSET, RAND, CNAS, Brookings and Carnegie contribute policy expertise from different institutional homes. CHAI offers an academic pathway at Berkeley.</li>
+              <li>Public mission statements and donor lists do not prove donor control. They do not prove insulation from influence either.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Technical research, academic centres and policy intermediaries.</dd></div>
+              <div><dt>Left out</dt><dd>CSIS and many smaller academic centres are candidates for a later version. A think tank's budget is not treated as a safety budget.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="6"></div>
+            <p class="srcline" data-sources="metr far far_transparency apollo miri govai iaps cset rand cnas brookings carnegie chai"></p>
+          </article>
+
+          <article class="cat" id="cat-10">
+            <div class="cat-top"><h4>Talent and personnel</h4><span class="small mono">Category 10 of 11</span></div>
+            <p class="oneline">The fellowships and courses that bring new people into the field, and the movement of people between organisations.</p>
+            <ul class="pts">
+              <li>MATS, SPAR, BlueDot and university communities are routes into research.</li>
+              <li>Evidence that a training programme exists is not evidence of a successful placement, of coordinated policy influence or of a continuing employment relationship.</li>
+              <li>A rigorous account of personnel would need names, roles, start and end dates and primary biographies.</li>
+              <li>One concrete interlock is recorded. Mariano-Florentino Cuéllar was appointed to Anthropic's Long-Term Benefit Trust while associated with Carnegie's leadership. This is a governance affiliation. It is not proof that Carnegie funds Anthropic or that a government institution controls the trust.</li>
+              <li>The map does not build a "revolving door" network out of vague affiliations.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Structured training programmes and routes through academic communities.</dd></div>
+              <div><dt>Left out</dt><dd>Local project partners, TARA and university outreach contacts are excluded pending public verification. Mentoring is not evidence of employment or policy control.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="10"></div>
+            <p class="srcline" data-sources="mats spar map cuellar carnegie"></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="qblock" id="q-policy">
+        <div class="qblock-head">
+          <span class="step">Question 5 of 6</span>
+          <h3>Who shapes policy?</h3>
+          <p>Public bodies hold legal authority. Companies, advocacy groups and political committees try to influence how it is used.</p>
+        </div>
+        <div class="cats">
+          <article class="cat" id="cat-7">
+            <div class="cat-top"><h4>Public authority and international coordination</h4><span class="small mono">Category 7 of 11</span></div>
+            <p class="oneline">The public bodies with legal authority, testing capacity or a convening role.</p>
+            <ul class="pts">
+              <li>Public bodies play different roles. The US Bureau of Industry and Security (BIS) controls specified exports. EU authorities implement legal obligations. California and New York legislate.</li>
+              <li>The UK AI Security Institute and the US Center for AI Standards and Innovation (CAISI) carry out research and testing. The OECD facilitates voluntary reporting. The UN and the International AI Safety Report process organise evidence and dialogue.</li>
+              <li>Government testing is not the same as statutory product approval. The EU's duties for general-purpose AI models and its enforcement powers take effect on different dates.</li>
+              <li>China's TC260 framework is a relevant primary statement. It does not replace a full map of the powers of the Cyberspace Administration of China, the ministries and local enforcement.</li>
+              <li>The national-security frame also runs through access to compute and through think-tank work. The map does not assume that the US, China or "government" has a single institutional preference.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Authorities with legal relevance, public evaluators and international processes.</dd></div>
+              <div><dt>Left out</dt><dd>The US executive, Congress and defence procurement are represented by one grouped entry, not contract by contract. Summit communiqués are not treaties or regulatory powers.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="7"></div>
+            <p class="srcline" data-sources="bis eu california ny aisi caisi2026 oecd un iasr china cnas"></p>
+          </article>
+
+          <article class="cat" id="cat-8">
+            <div class="cat-top"><h4>Advocacy, lobbying and electoral finance</h4><span class="small mono">Category 8 of 11</span></div>
+            <p class="oneline">The organisations that lobby, publish policy positions or spend money on elections.</p>
+            <ul class="pts">
+              <li>Public Citizen counts 3,570 lobbyists who reported AI-related work in 2025, about 26% of the federal total in its analysis. Its category includes adjacent issues such as data centres and autonomous vehicles. It is not a count of full-time AI lobbyists and not a dollar total specific to safety.</li>
+              <li>Corporate lobbying, published policy positions and transactions by electoral committees are separate types of tie.</li>
+              <li>The financial ledger states the Federal Election Commission (FEC) reporting windows for Leading the Future and Public First. A transfer to another committee cannot be treated as the originating committee's own advertising spending.</li>
+              <li>Anthropic's cumulative $40m to Public First Action is restricted to policy and education work and excludes elections. The map therefore draws no tie from Anthropic to the Public First political committee.</li>
+              <li>The Center for AI Safety's political committee is likewise separate from its research nonprofit.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Named committees, corporate lobbying and public advocacy ties.</dd></div>
+              <div><dt>Left out</dt><dd>Campaign donations are not inferred from employment. Advocacy funds are not carried over into political committee accounts. Transfers to individual candidates are not fully traced.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="8"></div>
+            <p class="srcline" data-sources="publiccitizen a16z leading publicfirst pfa cais_pac"></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="qblock" id="q-bears">
+        <div class="qblock-head">
+          <span class="step">Question 6 of 6</span>
+          <h3>Who bears the consequences?</h3>
+          <p>Workers, performers, communities and the firms that deploy AI live with the results. This group also includes the bodies that check and insure: standards organisations, assessors and insurers.</p>
+        </div>
+        <div class="cats">
+          <article class="cat" id="cat-9">
+            <div class="cat-top"><h4>Critical voices and affected groups</h4><span class="small mono">Category 9 of 11</span></div>
+            <p class="oneline">The researchers, unions and journalists who press on accountability, and the people who live with the results.</p>
+            <ul class="pts">
+              <li>The AI Now Institute emphasises corporate power and democratic accountability. DAIR's research and the Ada Lovelace Institute widen the lens to social experience, participation and governance.</li>
+              <li>The AFL-CIO and SAG-AFTRA bring in employment, bargaining, consent and compensation.</li>
+              <li>The public is a constituency that bears risk. It is not a unified actor with one policy preference.</li>
+              <li>Journalism examines funding, personal networks and access to policymakers. Older Politico reporting and commentary from Stanford PACS question the effects of philanthropic influence linked to effective altruism. Those interpretations stay attributed to their authors.</li>
+              <li>Semafor's October 2026 reporting identifies the funding of journalism as another area of dispute. Its full text was unavailable, so the map does not turn the reported plan into a verified payment.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Critical researchers, labour, performers, journalism and public exposure.</dd></div>
+              <div><dt>Left out</dt><dd>Corporate Europe Observatory and the Tech Transparency Project are priority additions that are not yet fully profiled. NGOs are not assumed to represent every affected group.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="9"></div>
+            <p class="srcline" data-sources="ainow dair ada labor sag politico blueprint tarbell"></p>
+          </article>
+
+          <article class="cat" id="cat-11">
+            <div class="cat-top"><h4>Standards, assurance, insurance and users</h4><span class="small mono">Category 11 of 11</span></div>
+            <p class="oneline">The bodies that write standards, check compliance and insure against failure, and the firms that buy and deploy AI.</p>
+            <ul class="pts">
+              <li>ISO/IEC 42001 concerns how an organisation manages AI. CEN-CENELEC's AI programme develops technical standards. Both differ from empirical evaluations of models and from government enforcement.</li>
+              <li>SaferAI rates the risk-management practices that companies disclose. That is not the same as estimating how safe a system actually is.</li>
+              <li>Insurers offer risk transfer one contract at a time. The description of Munich Re and HSB's aiSure product supports a role in insuring AI performance, not insurance against every catastrophic outcome.</li>
+              <li>Downstream buyers carry operational and liability stakes. Standards bodies, auditors and users form markets around assurance.</li>
+              <li>A more detailed map would need contracts, exclusions and accreditation records.</li>
+            </ul>
+            <dl class="bound">
+              <div><dt>Counted</dt><dd>Standards, assurance, insurance and downstream deployers.</dd></div>
+              <div><dt>Left out</dt><dd>Not all evaluators are accredited auditors. Individual insurance contracts and enterprise purchasing agreements are not inferred from product pages.</dd></div>
+            </dl>
+            <div class="cat-actors needs-data" data-cat="11"></div>
+            <p class="srcline" data-sources="iso cen safer insurance eu"></p>
+          </article>
+        </div>
+      </div>
+
+      <p class="callout" style="margin-top:32px"><b>What the exclusions mean.</b> They are decisions about coverage, not claims that the excluded actors are irrelevant. The map is deliberately broader than philanthropy focused on existential risk, but it still leans on US, UK and English-language sources. China, other ecosystems outside the US, the supply chain of workers who annotate data, civil-rights groups, communities that host electricity infrastructure, and public procurement all need deeper treatment before the map could claim to be globally complete.</p>
+    </section>
+
+    <!-- ============ 3. ACTORS ============ -->
+    <section class="chapter" id="actors">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 3 · THE 100 PROFILES</span>
+        <h2>The actors</h2>
+        <p style="max-width:var(--measure)">Every actor and group in the map. Each card gives a one-line reading of the actor's stake. Open "Full profile" for its stated mission, formal governance, key figures, recorded ties and sources.</p>
+        <p class="small" style="max-width:var(--measure)">Two labels matter. <strong>Stake</strong> is this map's own synthesis. The mission and governance fields are taken from sources. An unknown budget is not evidence that an actor does no safety work. <span id="isolatedNote"></span></p>
+      </div>
+      <div class="tools">
+        <label for="actorSearch">Search the actors
+          <input type="search" id="actorSearch" placeholder="Try &quot;trust&quot;, &quot;Singapore&quot; or &quot;union&quot;" autocomplete="off">
+        </label>
+        <label for="actorCat">Category
+          <select id="actorCat"><option value="all">All eleven categories</option></select>
+        </label>
+        <label for="actorLevel">Depth of profile
+          <select id="actorLevel">
+            <option value="all">Any depth</option>
+            <option value="Core">Core: built from the actor's own or official disclosures</option>
+            <option value="Abstracted">Abstracted: role sourced, finances and governance not fully extracted</option>
+          </select>
+        </label>
+      </div>
+      <p class="readout small" id="actorCount" aria-live="polite"></p>
+      <div class="pcards needs-data" id="actorGrid"></div>
+      <p class="more"><button class="btn ghost sm" type="button" id="actorMore" hidden></button></p>
+      <p class="empty" id="actorEmpty" hidden>No actor matches. <button class="link-btn" type="button" id="actorReset">Clear the filters</button></p>
+    </section>
+
+    <!-- ============ 4. TIES ============ -->
+    <section class="chapter" id="ties">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 4 · THE 105 RELATIONSHIPS</span>
+        <h2>The ties between them</h2>
+        <p style="max-width:var(--measure)">Each row is one documented relationship, read from left to right. An arrow shows the stated relationship. It is not a general score of influence. Amounts are not additive, and a missing date does not mean the tie began at the evidence cutoff.</p>
+        <p class="small" style="max-width:var(--measure)">Ties that describe a general dependency or the scope of a regulation rest on weaker evidence than signed or disclosed transactions. They are marked "Medium confidence".</p>
+      </div>
+
+      <div class="sub" style="padding-top:0">
+        <h3>Seven flows that can be documented</h3>
+        <ul class="flows">
+          <li><span>Capital providers</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>labs</span></li>
+          <li><span>Labs</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>infrastructure purchases</span></li>
+          <li><span>Donors</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>research commitments</span></li>
+          <li><span>Industry participants</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>safety fund initiatives</span></li>
+          <li><span>Governments</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>research support and testing</span></li>
+          <li><span>Companies</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>policy advocacy</span></li>
+          <li><span>Electoral committees</span><span class="arrow" aria-hidden="true">→</span><span><span class="vh">to </span>separate campaign-finance transfers</span></li>
+        </ul>
+        <p class="small" style="max-width:var(--measure)">The map records individual supported ties. Gaps prevent a complete diagram of where every dollar goes. In particular, adding philanthropy at the donor end to grants at the recipient end would count the same money twice.</p>
+      </div>
+
+      <div class="sub">
+        <h3>The relationship ledger</h3>
+        <div class="pills needs-data" role="group" aria-label="Filter by kind of tie" id="tieFamilies"></div>
+        <p class="small" id="tieBlurb" style="max-width:var(--measure);min-height:1.6em"></p>
+        <div class="tools">
+          <label for="tieSearch">Search the ties
+            <input type="search" id="tieSearch" placeholder="Try an actor or &quot;testing&quot;" autocomplete="off">
+          </label>
+        </div>
+        <p class="readout small" id="tieCount" aria-live="polite"></p>
+        <ul class="ties needs-data" id="tieList"></ul>
+        <p class="more"><button class="btn ghost sm" type="button" id="tieMore" hidden></button></p>
+        <p class="empty" id="tieEmpty" hidden>No tie matches. <button class="link-btn" type="button" id="tieReset">Clear the filters</button></p>
+      </div>
+    </section>
+
+    <!-- ============ 5. MONEY ============ -->
+    <section class="chapter" id="money">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 5 · THE FINANCIAL LEDGER</span>
+        <h2>Money: what the numbers can and cannot say</h2>
+        <p style="max-width:var(--measure)">The headline numbers in this field are very large and very uneven. They also measure different things, so most of them cannot be added or divided into one another.</p>
+      </div>
+
+      <div class="rule3">
+        <div><h3>Money coming in</h3><p>Cash or commitments entering a firm in a financing round. A commitment may be conditional and may not yet have been paid.</p></div>
+        <div><h3>What the firm is priced at</h3><p>A valuation implied by the price of its shares. It is a stock, not a flow. It is not money anyone can spend.</p></div>
+        <div><h3>Money going out</h3><p>Continuing purchases, such as compute. The same dollar can show up in an investor's commitment, a lab's announcement and a cloud bill.</p></div>
+      </div>
+
+      <div class="sub" id="concentration">
+        <h3>One valid concentration figure</h3>
+        <div class="panel">
+          <div class="panel-head"><span class="eyebrow">Chart · Manifund's 2025 list</span><span class="small mono">estimates for safety funders, USD million</span></div>
+          <p class="headline">One funder accounts for 72.24% of this list. The top two account for 82.83%.</p>
+          <div class="bars needs-data" id="concBars"></div>
+          <p class="panel-note">These are shares of one selected list, reproduced from Manifund's compilation updated on 1 October 2026. They were not independently audited. The list mixes advisory and regranting roles and uses estimates with different boundaries. A zero is the compilation's estimate, not proof of no activity. Lightcone Commons appears in the list but has no full profile in this map.</p>
+        </div>
+        <div class="prose">
+          <p>The sum is simple: 409 divided by 566.2 is 72.24%. No valid global figure exists, because that would need consistent coverage of government, academic, industry, regranted and international funding.</p>
+          <p>The compilation gives $409m for Coefficient Giving. The funder's own report gives $351m for a narrower set of activities. The difference is a difference of scope and is not treated as an accounting error.</p>
+          <p class="srcline" data-sources="bulletin cg"></p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>One funder over three years</h3>
+        <div class="panel">
+          <div class="panel-head"><span class="eyebrow">Chart · One funder, by year</span><span class="small mono">Coefficient Giving, AI-related grant commitments, USD million</span></div>
+          <div class="bars">
+            <div class="bar-row"><span class="bar-label">2024</span><div class="bar-track"><div class="bar-fill" style="width:16.8%"></div></div><span class="bar-val">168</span></div>
+            <div class="bar-row"><span class="bar-label">2025</span><div class="bar-track"><div class="bar-fill" style="width:35.1%"></div></div><span class="bar-val">351</span></div>
+            <div class="bar-row"><span class="bar-label">2026, expected (forecast made 9 September 2026)</span><div class="bar-track"><div class="bar-fill forecast" style="width:100%"></div></div><span class="bar-val">over 1,000</span></div>
+          </div>
+          <p class="panel-note">Funder's own report. The scope is technical safety, security and field building. Figures are recommended or committed grants, not money paid out. The 2026 figure is a forecast of a lower bound, drawn as a dashed bar.</p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>Four kinds of money, kept apart</h3>
+        <p class="prose">Each box below holds one kind of number. Compare within a box with care. Do not add across boxes or work out ratios between them.</p>
+        <div class="slips">
+          <div class="slip">
+            <h4>Lab financing rounds</h4>
+            <p>Capital announced by the company. Committed or raised, not revenue and not verified cash received.</p>
+            <table>
+              <tr><td>OpenAI, financing commitments</td><td class="amt">$122bn</td><td class="when">31 Mar 2026</td></tr>
+              <tr><td>Anthropic, Series H. Includes $15bn previously committed by large cloud firms.</td><td class="amt">$65bn</td><td class="when">28 May 2026</td></tr>
+              <tr><td>xAI, Series E. Before its acquisition by SpaceX.</td><td class="amt">$20bn</td><td class="when">6 Jan 2026</td></tr>
+            </table>
+          </div>
+          <div class="slip">
+            <h4>Chip-maker revenue</h4>
+            <p>Revenue of the whole business for one financial year. Not AI revenue alone and not a safety budget.</p>
+            <table>
+              <tr><td>NVIDIA</td><td class="amt">$215.9bn</td><td class="when">FY2026</td></tr>
+              <tr><td>TSMC</td><td class="amt">$122.4bn</td><td class="when">FY2025</td></tr>
+              <tr><td>AMD, audited. Of which data-centre revenue was $16.6bn.</td><td class="amt">$34.6bn</td><td class="when">FY2025</td></tr>
+            </table>
+          </div>
+          <div class="slip">
+            <h4>Safety research funding</h4>
+            <p>Commitments reported by a funder or a recipient. Periods differ, and commitments are not cash received.</p>
+            <table>
+              <tr><td>Coefficient Giving, AI-related commitments</td><td class="amt">$351m</td><td class="when">2025</td></tr>
+              <tr><td>METR, commitments from many donors</td><td class="amt">about $71m</td><td class="when">six months to 14 Aug 2026</td></tr>
+              <tr><td>FAR.AI, commitments from several funders</td><td class="amt">over $30m</td><td class="when">2025</td></tr>
+            </table>
+          </div>
+          <div class="slip">
+            <h4>Political money in the US</h4>
+            <p>Filed committee receipts and one donor-reported donation. Reporting windows differ.</p>
+            <table>
+              <tr><td>Leading the Future, a super PAC: total receipts</td><td class="amt">$75.8m</td><td class="when">15 Aug 2025 to 30 Jun 2026</td></tr>
+              <tr><td>Anthropic to Public First Action. Restricted to policy and education; excludes elections.</td><td class="amt">$40m</td><td class="when">cumulative to 21 Jul 2026</td></tr>
+              <tr><td>Public First, a super PAC: total receipts</td><td class="amt">$4.9m</td><td class="when">1 Jan to 30 Jun 2026</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>What a comparison of scale can say</h3>
+        <div class="prose">
+          <p>The lab financing rounds, hardware revenue and infrastructure intentions in the ledger are much larger numbers than many individual safety grants. That is a comparison of orders of magnitude across different financial measures. It is not a ratio of budget allocation.</p>
+          <p>No audited series of safety costs across labs was found. A single sampled share of compute, a company's headcount or a run-rate cannot supply the missing denominator.</p>
+          <p>Three further series give context, each with its own definition:</p>
+          <ul>
+            <li>The International Energy Agency estimates that capital expenditure by the largest technology companies exceeded $400bn in 2025, and describes a further substantial increase in 2026. The boundary is large-company capital expenditure, not AI, capabilities or safety alone.</li>
+            <li>The Stanford AI Index reports $285.9bn of US private investment in AI for 2025. This is an investment measure and is not the same cash flow as capital expenditure.</li>
+            <li>Epoch's work on training costs gives modelled costs, not audited company expenses on safety.</li>
+          </ul>
+          <p>These series belong in separate charts with their own units and definitions.</p>
+          <p class="srcline" data-sources="iea index epoch"></p>
+        </div>
+      </div>
+
+      <div class="sub">
+        <h3>The full financial ledger</h3>
+        <p class="prose">All 48 observations, each kept as its own row. The original currency is preserved, and no exchange conversion is made. A blank means unknown or not applicable. It never means zero.</p>
+        <div class="tools">
+          <label for="finSearch">Search the ledger
+            <input type="search" id="finSearch" placeholder="Try &quot;valuation&quot;, &quot;FEC&quot; or an actor" autocomplete="off">
+          </label>
+        </div>
+        <p class="readout small" id="finCount" aria-live="polite"></p>
+        <p class="small tbl-hint">Scroll the table sideways to see every column.</p>
+        <div class="tbl-box" tabindex="0" role="region" aria-label="Financial ledger">
+          <table class="tbl ledger">
+            <thead><tr><th>Actor</th><th>What is measured</th><th>Amount</th><th>Period</th><th>Basis and scope</th><th>Caveat</th></tr></thead>
+            <tbody class="needs-data" id="finBody"></tbody>
+          </table>
+        </div>
+        <p class="more"><button class="btn ghost sm" type="button" id="finMore" hidden></button></p>
+      </div>
+    </section>
+
+    <!-- ============ 6. DEBATES ============ -->
+    <section class="chapter" id="debates">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 6 · CONTESTED FRAMINGS</span>
+        <h2>Seven disagreements the map does not settle</h2>
+        <p style="max-width:var(--measure)">People in this field disagree about what the problem is and whose account to trust. Each disagreement below is attributed to those who hold it. The third column says what the evidence in this map can establish, which is usually less than either side claims.</p>
+      </div>
+      <div class="frames">
+        <article class="frame">
+          <h3>Catastrophic risk, or present harms?</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>Coefficient Giving and the International AI Safety Report emphasise research into the risks of advanced AI and ways to reduce them.</p><p class="srcline" data-sources="cg iasr"></p></div>
+            <div><h4>A different emphasis</h4><p>AI Now and labour sources emphasise present institutions, rights and the distribution of harms.</p><p class="srcline" data-sources="ainow labor"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>These are different definitions of the problem. The map does not assume that every researcher falls into one of two exclusive camps.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>"AI ethics" versus "AI safety"</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>AI Now's report criticises concentrated power and the prevailing industry approach to governance.</p><p class="srcline" data-sources="ainow"></p></div>
+            <div><h4>A different emphasis</h4><p>Technical evaluators publish empirical methods and institutional safeguards.</p><p class="srcline" data-sources="metr far_transparency"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>The issues and the institutions overlap. There is no evidence for a complete division into two camps.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>Philanthropic influence linked to effective altruism</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>Older Politico reporting and commentary from Stanford PACS question whether donors shape policy agendas and staffing.</p><p class="srcline" data-sources="politico blueprint"></p></div>
+            <div><h4>A different emphasis</h4><p>GovAI and IAPS disclose their funding and their rules on independence.</p><p class="srcline" data-sources="govai iaps"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>Funding ties, affiliations and stated safeguards. It gives no causal estimate of policy capture. Independence policies do not by themselves disprove influence.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>Industry safety framing and market power</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>The FTC describes competition questions in partnerships between cloud firms and labs. AI Now criticises corporate power.</p><p class="srcline" data-sources="ftc_analysis ainow"></p></div>
+            <div><h4>A different emphasis</h4><p>Companies publish mission governance structures and risk frameworks.</p><p class="srcline" data-sources="openai_structure deepmind meta"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>Control rights, contracts and public commitments. Effectiveness and motives are not established.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>Innovation and the cost of entry</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>The venture firm a16z argues for regulating uses of AI, not its development.</p><p class="srcline" data-sources="a16z"></p></div>
+            <div><h4>A different emphasis</h4><p>Anthropic explains its support for stronger public discussion of safety policy.</p><p class="srcline" data-sources="pfa"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>Documented policy positions. The map does not assume that all investors or developers share either one.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>National security and strategic competition</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>BIS licensing policy and the CNAS programme describe concerns about security and leadership.</p><p class="srcline" data-sources="bis cnas"></p></div>
+            <div><h4>A different emphasis</h4><p>The OECD, the UN and international scientific work emphasise coordination across borders and shared evidence.</p><p class="srcline" data-sources="oecd un iasr"></p></div>
+            <div class="can"><h4>What the map can establish</h4><p>Security and international cooperation are different institutional functions. They sometimes coexist.</p></div>
+          </div>
+        </article>
+        <article class="frame">
+          <h3>Independence of journalism funded by safety donors</h3>
+          <div class="frame-cols">
+            <div><h4>One account</h4><p>Semafor reports disputes concerning journalism backed by Tarbell. The full text was unavailable.</p><p class="srcline" data-sources="tarbell"></p></div>
+            <div><h4>A different emphasis</h4><p>Reported funding without formal editorial conditions is not the same as demonstrated editorial independence.</p></div>
+            <div class="can"><h4>What the map can establish</h4><p>A lead for further investigation only. No tie from a donor to a story or to editorial control is drawn without support.</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 7. METHOD ============ -->
+    <section class="chapter" id="method">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 7 · HOW THE MAP WAS BUILT</span>
+        <h2>Method and boundaries</h2>
+        <p style="max-width:var(--measure)">What counts as evidence here, what unit is being counted, and how much weight each entry can bear.</p>
+      </div>
+      <div class="method">
+        <div><h3>What "AI safety" means here</h3><p>The centre of the map is advanced-AI alignment, interpretability, evaluations, AI security and the governance of catastrophic risk. Around it are actors that supply a material input, provide capital, shape research or governance, claim to represent affected interests, or bear relevant consequences. Including an actor does not endorse its framing of "safety". Adjacent industries are not relabelled as safety organisations.</p></div>
+        <div><h3>Evidence and synthesis are labelled</h3><p>Primary facts are limited to what the cited party, filing or public authority discloses. Characterisations by outsiders stay attributed. The "stake" field, the category assignments and the general dependency ties are this map's synthesis. They identify a possible material stake from an observed role. They do not infer concealed intent, success at persuasion or control by donors.</p></div>
+        <div><h3>Unit of analysis</h3><p>Legal organisations are separated where authority or accounting would otherwise mislead: the OpenAI Foundation, Group and committee; Anthropic and its trust; Public First Action and the Public First political committee; the Center for AI Safety's nonprofit and its political committee. Some entries deliberately stand for a whole industry or public constituency and say so. Macroscopic is kept as a provisional label for a network whose legal entities have not yet been separated.</p></div>
+        <div><h3>Which sources come first</h3><p>Audited filings and filed disclosures come first for financial facts. Direct announcements come next for commitments and structures. Independent reports and journalism follow. A self-report establishes that an actor made a claim, not that the claimed safeguards work. A directory finds actors but does not establish grant amounts. Restricted or paywalled material was not treated as fully read.</p></div>
+        <div><h3>Dates</h3><p>The date of an event or financial period takes precedence over the date a page was retrieved. Evidence dated before 4 October 2025 is flagged as older. An undated live page is not presumed to be new. A founding structure, a past investment or a former fiscal sponsor is not assumed to be a current legal arrangement. Proposals reported in late September 2026 are described as proposals.</p></div>
+        <div><h3>Confidence</h3><p>High means a direct record from the party or an official body supports the precise, limited claim. It is not an audit of the underlying truth. Medium means an estimate, a secondary account, a grouped entry or an inference about scope. Weakly supported, speculative relationships are withheld and are not drawn. Confidence describes the evidence for a claim. It says nothing about how trustworthy or important an actor is.</p></div>
+        <div><h3>What was left out on purpose</h3><p>An earlier funder landscape from this project was the starting point. Private outreach, tentative invitations, university contacts and proposed sponsorships are not public evidence, and none has been turned into a tie. CHAI is at Berkeley. It is not a centre at the University of Illinois.</p></div>
+        <div><h3>How to read the lists</h3><p>Start with the five findings and the eleven categories. Then pick an actor and read its formal rights, stated interests and financial definitions before interpreting its neighbours. The order and length of an actor's list of ties do not encode influence. A heavily documented actor may simply be better documented.</p></div>
+      </div>
+
+      <div class="sub" id="terms">
+        <h3>Terms used in this map</h3>
+        <dl class="gloss">
+          <div><dt>Frontier developer, or lab</dt><dd>A company that builds the most capable general-purpose AI models.</dd></div>
+          <div><dt>Compute</dt><dd>The chips and data-centre capacity needed to train and run AI models.</dd></div>
+          <div><dt>Accelerator</dt><dd>A chip built for the kind of calculation AI models need.</dd></div>
+          <div><dt>Foundry</dt><dd>A company that manufactures chips designed by other firms.</dd></div>
+          <div><dt>Evaluation</dt><dd>A structured test of what a model can do or how it behaves.</dd></div>
+          <div><dt>Interpretability</dt><dd>Research into what is happening inside a model.</dd></div>
+          <div><dt>Public benefit corporation (PBC)</dt><dd>A for-profit company whose charter commits it to a stated public purpose alongside returns to shareholders.</dd></div>
+          <div><dt>Formal control</dt><dd>The legal right to make or block decisions, for example by appointing or removing directors. It can differ from the share of equity held.</dd></div>
+          <div><dt>Equity stake</dt><dd>A share of ownership. It carries a financial interest and may or may not carry control.</dd></div>
+          <div><dt>Commitment</dt><dd>Money promised. It may be paid over several years and may be conditional.</dd></div>
+          <div><dt>Recommendation</dt><dd>A decision by a funder or its adviser to recommend a grant. It is not cash received.</dd></div>
+          <div><dt>Disbursement</dt><dd>Money actually paid out.</dd></div>
+          <div><dt>Regranting</dt><dd>Passing on money received from other donors as grants. Counting both the donor and the regranter counts the same money twice.</dd></div>
+          <div><dt>Valuation</dt><dd>What a company's equity is priced at in a financing round. It is a stock, not a flow of spending.</dd></div>
+          <div><dt>Run-rate</dt><dd>Recent revenue scaled up to a full year. It is not booked annual revenue.</dd></div>
+          <div><dt>Super PAC</dt><dd>A US political committee that can raise and spend unlimited sums on independent political activity. It reports receipts and disbursements to the Federal Election Commission.</dd></div>
+          <div><dt>General-purpose AI (GPAI)</dt><dd>The EU AI Act's term for models that can perform a wide range of tasks.</dd></div>
+          <div><dt>Grouped entry</dt><dd>A map entry that stands for a whole group, such as "downstream enterprise users". It is not a legal entity and has no single position.</dd></div>
+        </dl>
+      </div>
+
+      <div class="sub">
+        <h3>Built for a later comparison</h3>
+        <p class="prose">No comparison with the history of other industries is made on this page. That is reserved for the next phase. The fields below do not depend on the industry, so the same coding could later be applied to another one.</p>
+        <details class="fold">
+          <summary>The coding scheme: twelve fields and their rules</summary>
+          <div class="fold-body">
+            <div class="tbl-box" tabindex="0" role="region" aria-label="Coding scheme">
+              <table class="tbl wide">
+                <thead><tr><th>Field</th><th>Permitted meaning or rule</th></tr></thead>
+                <tbody>
+                  <tr><td>Organisation type</td><td>Profit, nonprofit, public, hybrid, university unit, internal unit, programme or project, political committee, aggregate, individual. Legal uncertainty stays explicit.</td></tr>
+                  <tr><td>Category and subtype</td><td>Functional role. A category is a display choice, not an exclusive identity. Multiple roles are kept through ties and profile text.</td></tr>
+                  <tr><td>Vertical integration</td><td>Single principal stage, multiple adjacent stages, part of an integrated group, or unknown. A qualitative code, not a scored measure of market power.</td></tr>
+                  <tr><td>Funding dependence</td><td>An exact percentage and period if available, a disclosed majority without a percentage, or unknown. Donor concentration is not inferred from a short list of supporters.</td></tr>
+                  <tr><td>Regulatory role</td><td>Regulator, legislator, regulated provider, public evaluator, standards, buyer, convenor, neither, or unknown. Multiple roles are allowed.</td></tr>
+                  <tr><td>Self-regulation</td><td>Disclosed framework, internal governance, funding safeguards, voluntary reporting, or unknown. Unknown is not absence.</td></tr>
+                  <tr><td>Government personnel overlap</td><td>A verified, dated public or private affiliation, or unknown. Nothing is inferred from policy work or former public service in general.</td></tr>
+                  <tr><td>Relationship type</td><td>Equity, control, supply, grant, recommendation, collaboration, testing, regulation, advocacy, training, board interlock, assurance, or an explicitly aggregate dependency.</td></tr>
+                  <tr><td>Amount, currency and measurement status</td><td>The original currency is preserved. US dollars are used only when the source states them. Paid, committed, recommended, offered as a match, valuation, revenue, forecast and estimate are distinguished.</td></tr>
+                  <tr><td>Date and date basis</td><td>Event, announcement, financial period or observation. An exact date is never manufactured from a source that gives only a year.</td></tr>
+                  <tr><td>Confidence and reason</td><td>High, medium or low, relating to the specific evidence for a claim. Not a rating of an actor's trustworthiness or importance.</td></tr>
+                  <tr><td>Source identifiers and older evidence</td><td>A stable link to the bibliography. Flags for evidence older than twelve months and for limits on access are preserved.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="small">The full dataset behind this page is in <a href="ecosystem-data.js">ecosystem-data.js</a>: actor profiles, typed directional ties, financial observations and sources.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 8. GAPS ============ -->
+    <section class="chapter" id="gaps">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 8 · WHAT IS NOT KNOWN</span>
+        <h2>Twelve open questions</h2>
+        <p style="max-width:var(--measure)">Each question names the evidence that would be needed to answer it. Several of these are research questions a political scientist could take up.</p>
+      </div>
+      <div class="qa">
+        <details class="fold"><summary>How much do labs actually spend on safety?</summary><div class="fold-body"><p>Needed: audited definitions of cost centres, the allocation of payroll and compute, a separation of internal security from alignment work, and comparable annual periods.</p></div></details>
+        <details class="fold"><summary>Who currently controls each lab?</summary><div class="fold-body"><p>Needed: the latest operative charters, tables of shareholdings, voting agreements, thresholds for trust appointments and completed transaction documents, especially after the financing and public-offering proposals of 2026.</p></div></details>
+        <details class="fold"><summary>Which capital commitments were paid, and then spent back on compute?</summary><div class="fold-body"><p>Needed: payment schedules, cloud contracts, credits, minimum-purchase obligations and related-party disclosures.</p></div></details>
+        <details class="fold"><summary>How concentrated is safety funding worldwide?</summary><div class="fold-body"><p>Needed: unified grant-level data on donors and recipients, tracing to the ultimate source, the inclusion of public, university, corporate and non-English records, and the removal of double-counted regrants.</p></div></details>
+        <details class="fold"><summary>Do donors change research or policy outcomes?</summary><div class="fold-body"><p>Needed: grant conditions, publication rights, board minutes, staff interviews and the drafting histories of policies. Closeness in a network cannot establish causation by itself.</p></div></details>
+        <details class="fold"><summary>What does electoral money ultimately buy?</summary><div class="fold-body"><p>Needed: downloads of FEC transactions, joins to recipient committees, data on advertising placement, and records of support or opposition at the level of the candidate. Promises have to be distinguished from receipts.</p></div></details>
+        <details class="fold"><summary>How much lobbying is about safety in particular?</summary><div class="fold-body"><p>Needed: issue descriptions and spending allocations in US Lobbying Disclosure Act filings, records in the EU Transparency Register, state filings, and corroboration at the level of the organisation. Lobbying totals for a whole firm are not enough.</p></div></details>
+        <details class="fold"><summary>Who moves between labs, government and NGOs?</summary><div class="fold-body"><p>Needed: dated employment biographies, appointments, secondments and advisory disclosures. The current map contains one example of an interlock, not a census of personnel.</p></div></details>
+        <details class="fold"><summary>What is missing outside the US and UK?</summary><div class="fold-body"><p>Needed: Chinese-language filings, the responsibilities of the Cyberspace Administration of China and the ministries, and developers' frameworks. Also institutions in EU member states, Canada, Japan, Korea, India and the Global South.</p></div></details>
+        <details class="fold"><summary>Who bears costs without institutional representation?</summary><div class="fold-body"><p>Needed: research on workers and data labellers, disability and civil-rights perspectives, communities near facilities, data on consumer incidents and participatory research.</p></div></details>
+        <details class="fold"><summary>How independent are assurance and journalism institutions?</summary><div class="fold-body"><p>Needed: the concentration of clients and donors, contract clauses, editorial and publication safeguards, accreditation and actual enforcement practice.</p></div></details>
+        <details class="fold"><summary>How current and complete are the ratings and directories?</summary><div class="fold-body"><p>Needed: versioned exports and methods from the FLI AI Safety Index, AI Lab Watch, AISafety.com, SaferAI and other maps. A change in coverage or in a grade should not be mistaken for a change in real-world safety.</p></div></details>
+      </div>
+
+      <div class="sub">
+        <h3>Known limitations</h3>
+        <div class="prose">
+          <p>This is a broad first map that can be reviewed. It is not an exhaustive audited census.</p>
+          <ul>
+            <li>Visible, English-language organisations that disclose a lot are overrepresented.</li>
+            <li>Statements by organisations may be selective. Press reporting can be incomplete. Financial filings lag.</li>
+            <li>Many source pages were available through substantive indexed excerpts and not as complete underlying documents. Private contracts, confidential prospectuses and the full text of paywalled standards were unavailable.</li>
+            <li>A missing tie does not prove a missing relationship. A dense set of ties around a well-documented actor may reflect documentation, not greater influence in the real world.</li>
+          </ul>
+          <p><strong>Gaps kept on the list for a later version:</strong> complete histories of individual donors; capital expenditure for all public companies, reconciled for leases; current staff directories for labs; government procurement; EU lobbying transactions; the attribution of budgets at CNAS, Brookings and Carnegie; and material from CSIS, Corporate Europe Observatory, the Tech Transparency Project, FLI, AI Lab Watch and the State of AI Report. These are targets for expansion. They are not treated as if they had been researched.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. SOURCES ============ -->
+    <section class="chapter" id="sources">
+      <div class="chapter-head">
+        <span class="chapter-num">PART 9 · BIBLIOGRAPHY</span>
+        <h2>The 93 sources</h2>
+        <p style="max-width:var(--measure)">Grouped by type of source. "Older" marks evidence dated before 4 October 2025. "Undated" means no fixed date was extracted, so the age is unknown. All were accessed on 4 October 2026.</p>
+      </div>
+      <div class="tools">
+        <label for="srcSearch">Search the sources
+          <input type="search" id="srcSearch" placeholder="Try &quot;FEC&quot;, &quot;Reuters&quot; or &quot;filing&quot;" autocomplete="off">
+        </label>
+      </div>
+      <p class="readout small" id="srcCount" aria-live="polite"></p>
+      <div class="needs-data" id="srcList"></div>
+      <p class="more"><button class="btn ghost sm" type="button" id="srcMore" hidden></button></p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>Keep reading</h2>
+    <div class="res">
+      <a href="index.html">All goals of this site</a>
+      <a href="multi-agent-risks.html">Goal 1. Risks: When AIs Meet AIs</a>
+      <a href="multi-agent-risks.html#primer">Goal 2. Terms: a field primer of 31 ideas</a>
+    </div>
+    <p class="small" style="max-width:var(--measure)">Version 1.0. Public-source evidence through 4 October 2026. This is a sourced study map. It does not judge any actor's sincerity, effectiveness or influence, it does not rank actors, and it makes no comparison with the history of other industries. It is unofficial and is not affiliated with, or endorsed by, any organisation it describes.</p>
+  </div>
+</footer>
+
+<script src="ecosystem-data.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.ECOSYSTEM;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  if (!D) {
+    $$(".needs-data").forEach(el => { el.textContent = "The dataset (ecosystem-data.js) did not load, so this list is empty."; });
+    return;
+  }
+
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  // dataset text uses a spaced dash as a separator; the site's house style is a colon
+  const tidy = s => esc(String(s == null ? "" : s).replace(/\s+—\s+/g, ": ").replace(/—/g, ", "));
+  const N = new Map(D.nodes.map(n => [n.id, n]));
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const fmtDate = d => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ""); return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : (d || ""); };
+  function fmtAmount(v, cur) {
+    if (v == null || v === "") return "";
+    for (const [k, u] of [[1e12, "tn"], [1e9, "bn"], [1e6, "m"], [1e3, "k"]]) if (Math.abs(v) >= k) return `${cur} ${+(v / k).toPrecision(5)}${u}`;
+    return `${cur} ${v}`;
+  }
+  const srcLinks = ids => ids.map(id => { const s = D.sources[id]; return s ? `<a href="${esc(s.url)}">${tidy(s.title)}</a>` : esc(id); }).join(" · ");
+  const actorLink = id => { const n = N.get(id); return n ? `<a href="#a-${esc(id)}">${tidy(n.name)}</a>` : esc(id); };
+  const catName = id => D.categories[String(id)] || "";
+
+  // Long lists open short. With no filter set they show the first few rows and a "Show all" button; a filter shows every match.
+  function listView(rows, o) {
+    let open = false, match = () => true, filtered = false;
+    function refresh() {
+      let hits = 0, shown = 0;
+      rows.forEach(r => {
+        const ok = match(r);
+        if (ok) hits++;
+        const vis = ok && (open || filtered || hits <= o.limit);
+        r.hidden = !vis;
+        if (vis) shown++;
+      });
+      o.count.textContent = filtered ? `Showing ${hits} of ${rows.length}` : `Showing ${shown} of ${rows.length}`;
+      if (o.empty) o.empty.hidden = hits !== 0;
+      o.more.hidden = filtered || rows.length <= o.limit;
+      o.more.textContent = open ? "Show fewer" : `Show all ${rows.length}`;
+      o.more.setAttribute("aria-expanded", open ? "true" : "false");
+      if (o.after) o.after();
+    }
+    o.more.addEventListener("click", () => { open = !open; refresh(); });
+    return {
+      filter(fn, isFiltered) { match = fn; filtered = isFiltered; refresh(); },
+      expand() { open = true; refresh(); }
+    };
+  }
+
+  /* ---------- counts, source lines, actor chips in the category cards ---------- */
+  $("#nActors").textContent = D.nodes.length;
+  $("#nTies").textContent = D.edges.length;
+  $("#nFins").textContent = D.financials.length;
+  $("#nSources").textContent = Object.keys(D.sources).length;
+  $$("[data-sources]").forEach(el => { el.innerHTML = "Sources: " + srcLinks(el.dataset.sources.split(/\s+/)); });
+  $$(".cat-actors").forEach(el => {
+    const list = D.nodes.filter(n => String(n.cat) === el.dataset.cat);
+    el.setAttribute("aria-label", `${list.length} actors in this category`);
+    el.innerHTML = list.map(n => `<a class="chip" href="#a-${esc(n.id)}">${tidy(n.name)}</a>`).join("");
+  });
+
+  /* ---------- kinds of tie ---------- */
+  const FAMILIES = [
+    { id: "control", label: "Ownership and control", blurb: "Who owns a share of whom, and who holds formal rights to decide. These are kept apart from investment because holding equity does not by itself confer control.", types: ["formal_control", "equity_ownership", "governance_rights", "corporate_parent", "acquisition", "internal_safety_oversight", "board_interlock", "leadership_role"] },
+    { id: "invest", label: "Investment", blurb: "Named participation in a financing round. Individual amounts, board rights and allocations are usually not disclosed.", types: ["equity_investment"] },
+    { id: "supply", label: "Commercial supply and projects", blurb: "Chips, cloud capacity, manufacturing partnerships and joint infrastructure projects. Contract amounts are rarely disclosed.", types: ["compute_cloud_supply", "silicon_partner", "compute_infrastructure_partner", "manufacturing_technology_collaboration", "research_software_collaboration", "project_participation", "infrastructure_dependency"] },
+    { id: "grants", label: "Grants and philanthropy", blurb: "Support, recommendations and grants for research. A named supporter is not evidence of donor control, and an aggregate figure is not assigned to each donor.", types: ["philanthropic_support", "philanthropic_or_public_support", "grant_recommendation", "research_grant", "matching_offer", "fund_management"] },
+    { id: "public", label: "Public authority", blurb: "Testing agreements, regulatory scope, export rules, inquiries and a government-led research coalition. A voluntary testing agreement is not regulatory approval.", types: ["government_testing_agreement", "export_regulatory_jurisdiction", "regulatory_scope", "potential_provider_obligations", "frontier_transparency_scope", "partnership_inquiry", "alignment_project_participation"] },
+    { id: "politics", label: "Advocacy and political spending", blurb: "Lobbying, published policy positions, restricted donations and the representation of workers and performers. Lobbying dollars specific to safety are not isolated.", types: ["restricted_policy_donation", "reported_ai_related_lobbying", "policy_advocacy", "public_policy_critique", "worker_representation", "performer_representation"] },
+    { id: "field", label: "Industry bodies, standards and training", blurb: "Membership of an industry forum, standards, ratings, insurance offerings and routes into research.", types: ["industry_forum_participation", "research_training", "assurance_standard", "standards_development", "risk_transfer_offering", "public_risk_management_rating"] }
+  ];
+  const famOf = {};
+  FAMILIES.forEach(f => f.types.forEach(t => { famOf[t] = f.id; }));
+  const TYPE_LABEL = { compute_cloud_supply: "Compute and cloud supply", reported_ai_related_lobbying: "Reported AI-related lobbying", alignment_project_participation: "Alignment Project participation", philanthropic_or_public_support: "Philanthropic or public support" };
+  const typeLabel = t => TYPE_LABEL[t] || (t.charAt(0).toUpperCase() + t.slice(1).replace(/_/g, " "));
+  window.ECO_UI = { FAMILIES, famOf, typeLabel, fmtDate, fmtAmount, esc, tidy };  // shared with ecosystem-graph.js
+
+  /* ---------- 3. actors ---------- */
+  const degree = new Map();
+  D.edges.forEach(e => { degree.set(e.from, (degree.get(e.from) || 0) + 1); degree.set(e.to, (degree.get(e.to) || 0) + 1); });
+  const isolated = D.nodes.filter(n => !degree.get(n.id)).length;
+  $("#isolatedNote").textContent = `${isolated} of the ${D.nodes.length} actors have no recorded tie in this version. That means none was extracted, not that none exists.`;
+
+  function tieLine(e, outgoing) {
+    const other = actorLink(outgoing ? e.to : e.from);
+    const bits = [typeLabel(e.type).toLowerCase()];
+    if (e.amount != null) bits.push(fmtAmount(e.amount, e.currency));
+    if (e.date) bits.push(fmtDate(e.date));
+    return `<li>${outgoing ? "To" : "From"} ${other}: ${esc(bits.join(", "))}.${e.note ? " " + tidy(e.note) : ""}</li>`;
+  }
+  function actorCard(n) {
+    const out = D.edges.filter(e => e.from === n.id), inc = D.edges.filter(e => e.to === n.id);
+    const coded = [["Vertical integration", n.integration], ["Funding dependence", n.fundingDependence], ["Regulatory role", n.regulatoryRole], ["Self-regulation", n.selfRegulation], ["Government personnel overlap", n.personnelOverlap]];
+    const known = coded.filter(c => c[1] && c[1] !== "Unknown");
+    const unknown = coded.filter(c => !c[1] || c[1] === "Unknown").map(c => c[0].toLowerCase());
+    const codedHtml = known.map(c => `<li>${esc(c[0])}: ${tidy(c[1])}</li>`).join("") + (unknown.length ? `<li>Not established: ${esc(unknown.join(", "))}. Unknown is not absence.</li>` : "");
+    const tiesHtml = out.length + inc.length
+      ? `<ul>${out.map(e => tieLine(e, true)).join("")}${inc.map(e => tieLine(e, false)).join("")}</ul>`
+      : "None recorded in this version. That does not mean none exists.";
+    const text = [n.name, n.subtype, n.country, n.orgType, catName(n.cat), n.mission, n.stake, n.governance, n.figures].join(" ").toLowerCase();
+    return `<article class="pcard" id="a-${esc(n.id)}" data-cat="${esc(n.cat)}" data-detail="${esc(n.detail)}" data-text="${esc(text)}">
+      <h3>${tidy(n.name)}</h3>
+      <p class="who">${tidy(catName(n.cat))} · ${tidy(n.subtype)} · ${tidy(n.country)} · ${tidy(n.orgType)}</p>
+      <p class="plain"><span class="lbl">Stake, as read by this map</span><br>${tidy(n.stake)}</p>
+      <details><summary>Full profile</summary>
+        <dl>
+          <div><dt>Stated mission or interest</dt><dd>${tidy(n.mission)}</dd></div>
+          <div><dt>Formal governance</dt><dd>${tidy(n.governance)}</dd></div>
+          <div><dt>How others characterise it</dt><dd>${tidy(n.external)}</dd></div>
+          <div><dt>Key figures</dt><dd>${tidy(n.figures)}</dd></div>
+          <div><dt>Coded attributes</dt><dd><ul>${codedHtml}</ul></dd></div>
+          <div><dt>Recorded ties (${out.length + inc.length})</dt><dd>${tiesHtml}</dd></div>
+          <div><dt>Evidence</dt><dd>${esc(n.confidence)} confidence. ${tidy(n.confidenceReason)}${n.olderEvidence ? " Some of the evidence is older than twelve months." : ""}</dd></div>
+          <div><dt>Sources</dt><dd>${srcLinks(n.sources)}</dd></div>
+        </dl>
+      </details>
+    </article>`;
+  }
+  const actorGrid = $("#actorGrid"), actorSearch = $("#actorSearch"), actorCat = $("#actorCat"), actorLevel = $("#actorLevel");
+  const byCat = D.nodes.slice().sort((a, b) => a.cat - b.cat);
+  actorGrid.innerHTML = byCat.map(actorCard).join("");
+  const actorCards = $$(".pcard", actorGrid);
+  Object.keys(D.categories).sort((a, b) => a - b).forEach(k => {
+    const n = D.nodes.filter(x => String(x.cat) === k).length;
+    actorCat.insertAdjacentHTML("beforeend", `<option value="${esc(k)}">${tidy(D.categories[k])} (${n})</option>`);
+  });
+  const actorView = listView(actorCards, { limit: 12, count: $("#actorCount"), empty: $("#actorEmpty"), more: $("#actorMore") });
+  function filterActors() {
+    const q = actorSearch.value.trim().toLowerCase(), cat = actorCat.value, lvl = actorLevel.value;
+    actorView.filter(c => (!q || c.dataset.text.includes(q)) && (cat === "all" || c.dataset.cat === cat) && (lvl === "all" || c.dataset.detail === lvl),
+      !!q || cat !== "all" || lvl !== "all");
+  }
+  function resetActors() { actorSearch.value = ""; actorCat.value = "all"; actorLevel.value = "all"; filterActors(); }
+  actorSearch.addEventListener("input", filterActors);
+  actorCat.addEventListener("change", filterActors);
+  actorLevel.addEventListener("change", filterActors);
+  $("#actorReset").addEventListener("click", resetActors);
+  filterActors();
+
+  /* ---------- 4. ties ---------- */
+  const tieList = $("#tieList"), tieSearch = $("#tieSearch"), tieFamilies = $("#tieFamilies");
+  let tieFam = "all";
+  tieList.innerHTML = D.edges.map(e => {
+    const from = N.get(e.from), to = N.get(e.to);
+    const meta = [];
+    if (e.amount != null) meta.push(`Amount: ${esc(fmtAmount(e.amount, e.currency))}`);
+    if (e.status && e.status !== "Disclosed relationship") meta.push(`Status: ${tidy(e.status)}`);
+    if (e.policyTarget) meta.push(`Policy target: ${tidy(e.policyTarget)}`);
+    if (e.olderEvidence) meta.push("Evidence older than twelve months");
+    const text = [from && from.name, to && to.name, typeLabel(e.type), e.note, e.status, e.policyTarget].join(" ").toLowerCase();
+    return `<li class="tie" data-fam="${esc(famOf[e.type] || "other")}" data-text="${esc(text)}">
+      <div class="tie-pair">${actorLink(e.from)} <span class="arrow" aria-hidden="true">→</span><span class="vh"> to </span> ${actorLink(e.to)}</div>
+      <div class="tie-kind"><span class="tag accent">${esc(typeLabel(e.type))}</span><span class="small mono">${e.date ? esc(fmtDate(e.date)) : "date not extracted"}</span>${e.confidence !== "High" ? `<span class="tag warn">${esc(e.confidence)} confidence</span>` : ""}</div>
+      <div class="tie-body">${e.note ? `<p>${tidy(e.note)}</p>` : ""}${meta.length ? `<p class="small">${meta.join(" · ")}</p>` : ""}<p class="srcline">Sources: ${srcLinks(e.sources)}</p></div>
+    </li>`;
+  }).join("");
+  const tieRows = $$(".tie", tieList);
+  const famButtons = [{ id: "all", label: "All ties" }].concat(FAMILIES);
+  tieFamilies.innerHTML = famButtons.map(f => {
+    const n = f.id === "all" ? tieRows.length : tieRows.filter(r => r.dataset.fam === f.id).length;
+    return `<button type="button" data-v="${f.id}" aria-pressed="${f.id === "all"}">${esc(f.label)}<span class="c">${n}</span></button>`;
+  }).join("");
+  const tieView = listView(tieRows, { limit: 12, count: $("#tieCount"), empty: $("#tieEmpty"), more: $("#tieMore") });
+  function filterTies() {
+    const q = tieSearch.value.trim().toLowerCase();
+    tieView.filter(r => (tieFam === "all" || r.dataset.fam === tieFam) && (!q || r.dataset.text.includes(q)), !!q || tieFam !== "all");
+    const fam = FAMILIES.find(f => f.id === tieFam);
+    $("#tieBlurb").textContent = fam ? fam.blurb : "Seven kinds of tie. Pick one to see what it does and does not show.";
+  }
+  function setFam(v) {
+    tieFam = v;
+    $$("button", tieFamilies).forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false"));
+    filterTies();
+  }
+  tieFamilies.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setFam(b.dataset.v); });
+  tieSearch.addEventListener("input", filterTies);
+  $("#tieReset").addEventListener("click", () => { tieSearch.value = ""; setFam("all"); });
+  filterTies();
+
+  /* ---------- 5. money ---------- */
+  const comp = D.financials.filter(f => f.scope === "Funder compilation").sort((a, b) => b.amount - a.amount);
+  const compTotal = comp.reduce((s, f) => s + f.amount, 0), compMax = comp.length ? comp[0].amount : 1;
+  const finActor = f => f.actor && N.get(f.actor) ? N.get(f.actor).name : f.metric.split(":")[0];
+  $("#concBars").innerHTML = comp.map(f => {
+    const m = f.amount / 1e6, share = compTotal ? (f.amount / compTotal * 100) : 0;
+    return `<div class="bar-row"><span class="bar-label">${tidy(finActor(f))}</span><div class="bar-track">${f.amount ? `<div class="bar-fill" style="width:${(f.amount / compMax * 100).toFixed(1)}%"></div>` : ""}</div><span class="bar-val">${+m.toPrecision(4)} · ${share.toFixed(1)}%</span></div>`;
+  }).join("") + `<div class="bar-row"><span class="bar-label"><strong>Total of this list</strong></span><span></span><span class="bar-val">${+(compTotal / 1e6).toPrecision(5)} · 100%</span></div>`;
+
+  const finBody = $("#finBody"), finSearch = $("#finSearch");
+  finBody.innerHTML = D.financials.map(f => {
+    const name = finActor(f), metric = f.actor && N.get(f.actor) ? f.metric : f.metric.split(":").slice(1).join(":").trim() || f.metric;
+    const who = f.actor && N.get(f.actor) ? actorLink(f.actor) : tidy(name);
+    const text = [name, f.metric, f.currency, f.period, f.basis, f.scope, f.caveat].join(" ").toLowerCase();
+    return `<tr data-text="${esc(text)}"><td>${who}</td><td>${tidy(metric)}</td><td class="amt">${esc(fmtAmount(f.amount, f.currency))}</td><td>${tidy(f.period.replace(/\d{4}-\d{2}-\d{2}/g, fmtDate))}</td><td>${tidy(f.basis)}. Scope: ${tidy(f.scope).toLowerCase()}.${f.confidence !== "High" ? ` <span class="tag warn">${esc(f.confidence)} confidence</span>` : ""}</td><td>${tidy(f.caveat)} <span class="srcline">${srcLinks(f.sources)}</span></td></tr>`;
+  }).join("");
+  const finRows = $$("tr", finBody);
+  const finView = listView(finRows, { limit: 12, count: $("#finCount"), more: $("#finMore") });
+  function filterFin() {
+    const q = finSearch.value.trim().toLowerCase();
+    finView.filter(r => !q || r.dataset.text.includes(q), !!q);
+  }
+  finSearch.addEventListener("input", filterFin);
+  filterFin();
+
+  /* ---------- 9. sources ---------- */
+  const srcList = $("#srcList"), srcSearch = $("#srcSearch");
+  const groups = {};
+  Object.keys(D.sources).forEach(id => { const s = D.sources[id]; (groups[s.type] = groups[s.type] || []).push(s); });
+  srcList.innerHTML = Object.keys(groups).sort().map(type => {
+    const items = groups[type].sort((a, b) => a.title.localeCompare(b.title)).map(s => {
+      const notes = [s.date ? fmtDate(s.date) : "undated"];
+      if (s.older === "Yes") notes.push("older");
+      if (!/^Public text/.test(s.access)) notes.push(s.access.toLowerCase());
+      const text = [s.title, s.type, s.url, s.access].join(" ").toLowerCase();
+      return `<li data-text="${esc(text)}"><a href="${esc(s.url)}">${tidy(s.title)}</a><span class="small">${tidy(notes.join(" · "))}</span></li>`;
+    }).join("");
+    return `<div class="srcgroup"><h3>${tidy(type)}</h3><ul>${items}</ul></div>`;
+  }).join("");
+  const srcRows = $$("li", srcList);
+  const srcView = listView(srcRows, { limit: 15, count: $("#srcCount"), more: $("#srcMore"),
+    after() { $$(".srcgroup", srcList).forEach(g => { g.hidden = !$$("li", g).some(li => !li.hidden); }); } });
+  function filterSrc() {
+    const q = srcSearch.value.trim().toLowerCase();
+    srcView.filter(r => !q || r.dataset.text.includes(q), !!q);
+  }
+  srcSearch.addEventListener("input", filterSrc);
+  filterSrc();
+
+  /* ---------- deep links to an actor card: #a-<id> clears the filters if needed and opens the profile ---------- */
+  function route() {
+    const id = location.hash.slice(1);
+    if (id.indexOf("a-") !== 0) return;
+    const el = document.getElementById(id);
+    if (!el || !el.classList.contains("pcard")) return;
+    if (el.hidden) resetActors();
+    if (el.hidden) actorView.expand();
+    const d = $("details", el);
+    if (d) d.open = true;
+    el.scrollIntoView({ block: "start" });
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+<script src="ecosystem-graph.js"></script>
+</body>
+</html>
