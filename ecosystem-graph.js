@@ -199,6 +199,7 @@
     }
   });
   const links = Array.from(pairs.values()).concat(Array.from(shared.values()));
+  pairs.forEach(l => { l.twin = l.s.id > l.t.id && pairs.has(l.t.id + ">" + l.s.id); });   // the second of two arrows that run opposite ways between one pair
   const nInter = shared.size;
   C0.forEach(c => { c.ax = c.x; c.ay = c.y; });
   // Which bubbles and groups are on the plate, and which group each bubble sits in, at the current zoom level.
@@ -488,15 +489,39 @@
   band.text.textContent = "From the industry map · actors with no entry on the AISafety.com map";
   // (person-link names are added to gLabels before the bubble names, so a bubble name wins where they meet)
 
+  // Two bubbles packed side by side leave no room between them for a line and its head, and the direct curve would run backwards.
+  // Such a link leaves the first bubble, arches over the gap and comes down on the second, on the side away from the middle of their group.
+  const HOP_TURNS = [0, 0.45, -0.45, 0.9, -0.9, Math.PI, Math.PI - 0.45, Math.PI + 0.45];   // leans to try, in radians, when the arch would leave the plate
+  function hopPath(l, end) {
+    const a = l.s, b = l.t, dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1, w = l.w || 0;
+    let nx = -dy / len, ny = dx / len;
+    const out = ((a.x + b.x - a.c.x - b.c.x) * nx + (a.y + b.y - a.c.y - b.c.y) * ny) / 2;
+    if ((out < 0) !== !!l.twin) { nx = -nx; ny = -ny; }   // the arrow back the other way, if there is one, takes the other side
+    const ha = a.r + 2, hb = b.r + end, top = Math.max(ha, hb) + Math.max(10, len * 0.4, w * 1.5);
+    const mid = 0.75 * top + (ha + hb) / 8, m = w / 2 + 2;
+    let ux = nx, uy = ny, px = 0, py = 0;
+    for (const t of HOP_TURNS) {
+      ux = nx * Math.cos(t) - ny * Math.sin(t); uy = nx * Math.sin(t) + ny * Math.cos(t);
+      px = (a.x + b.x) / 2 + ux * mid; py = (a.y + b.y) / 2 + uy * mid;
+      if (px > m && px < W - m && py > m && py < H - m) break;
+    }
+    const f = v => v.toFixed(1), at = (n, h) => `${f(n.x + ux * h)},${f(n.y + uy * h)}`;
+    l.mid = [px, py];
+    return `M${at(a, ha)}C${at(a, top)} ${at(b, top)} ${at(b, hb)}`;
+  }
   function linkPath(l) {
     const a = l.s, b = l.t, dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
-    const bend = Math.min(64, len * 0.17);
-    const mx = (a.x + b.x) / 2 - dy / len * bend, my = (a.y + b.y) / 2 + dx / len * bend;
-    const sa = Math.atan2(my - a.y, mx - a.x), ea = Math.atan2(my - b.y, mx - b.x);
-    const f = v => v.toFixed(1);
-    l.mid = [(a.x + 2 * mx + b.x) / 4, (a.y + 2 * my + b.y) / 4];
     const end = l.inter ? 2 : (l.w >= W_WIDE ? 5 : 3) + tipOf(l.w);   // arrows stop short to leave room for the head; person links have none
-    return `M${f(a.x + Math.cos(sa) * (a.r + 2))},${f(a.y + Math.sin(sa) * (a.r + 2))}Q${f(mx)},${f(my)} ${f(b.x + Math.cos(ea) * (b.r + end))},${f(b.y + Math.sin(ea) * (b.r + end))}`;
+    const vis = len - a.r - 2 - b.r - end;   // the length left between the two bubbles for the line itself
+    if (vis < Math.max(6, (l.w || 0) / 2)) return hopPath(l, end);
+    // The curve turns over the middle of that length. Taken between the two centres, the turning point could fall inside a large bubble and hook the arrow back out of it.
+    const along = a.r + 2 + vis / 2, bend = Math.min(64, len * 0.17, vis * 0.4);
+    const mx = a.x + (dx * along - dy * bend) / len, my = a.y + (dy * along + dx * bend) / len;
+    const sa = Math.atan2(my - a.y, mx - a.x), ea = Math.atan2(my - b.y, mx - b.x);
+    const sx = a.x + Math.cos(sa) * (a.r + 2), sy = a.y + Math.sin(sa) * (a.r + 2), ex = b.x + Math.cos(ea) * (b.r + end), ey = b.y + Math.sin(ea) * (b.r + end);
+    const f = v => v.toFixed(1);
+    l.mid = [(sx + 2 * mx + ex) / 4, (sy + 2 * my + ey) / 4];
+    return `M${f(sx)},${f(sy)}Q${f(mx)},${f(my)} ${f(ex)},${f(ey)}`;
   }
   let linkN = 0;
   // gHit holds a wide invisible copy of every arrow, so a thin line is easy to point at
