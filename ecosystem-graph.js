@@ -66,6 +66,8 @@
   const widthOf = step => WIDTHS[step];
   const W_PLAIN = 1.1, W_UNKNOWN = 1.4, W_WIDE = 5.5, W_BROAD = 12;   // from W_WIDE up, the arrowhead grows with the line; from W_BROAD up it grows more slowly
   const headOf = w => w >= W_BROAD ? "wmx" : w >= W_WIDE ? "wmw" : "wm";
+  // How far the head's point reaches past the end of the line. The line ends inside the wide part of the head, so its square end never shows beside the point.
+  const tipOf = w => w >= W_BROAD ? w * 1.35 : w >= W_WIDE ? w * 1.6 : 8;
   const STILL = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const typeLabel = t => t.flow ? flowLabel(t.flow) : t.corp ? KIND[t.corp.kind] : EXT_LABEL[t.type] || U.typeLabel(t.type);
 
@@ -471,12 +473,12 @@
   /* ---------- drawing ---------- */
   const defs = el("defs", {}, svg);
   EVERY.forEach(c => {
-    const m = el("marker", { id: "wm-" + c.cat, markerUnits: "userSpaceOnUse", markerWidth: 11, markerHeight: 11, refX: 8, refY: 5.5, orient: "auto" }, defs);
+    const m = el("marker", { id: "wm-" + c.cat, markerUnits: "userSpaceOnUse", markerWidth: 11, markerHeight: 11, refX: 2, refY: 5.5, orient: "auto" }, defs);
     el("path", { d: "M0,1 L10,5.5 L0,10 Z", fill: c.color }, m);
     // wide money arrows get a head that grows with the line
-    const wide = el("marker", { id: "wmw-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 2, markerHeight: 2, refX: 7.5, refY: 5, orient: "auto" }, defs);
+    const wide = el("marker", { id: "wmw-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 2, markerHeight: 2, refX: 2, refY: 5, orient: "auto" }, defs);
     el("path", { d: "M0,0.4 L10,5 L0,9.6 Z", fill: c.color }, wide);
-    const broad = el("marker", { id: "wmx-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 1.5, markerHeight: 1.5, refX: 7.5, refY: 5, orient: "auto" }, defs);
+    const broad = el("marker", { id: "wmx-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 1.5, markerHeight: 1.5, refX: 1, refY: 5, orient: "auto" }, defs);
     el("path", { d: "M0,0.4 L10,5 L0,9.6 Z", fill: c.color }, broad);
   });
   // names sit in their own top layer so a neighbouring bubble never covers them
@@ -493,7 +495,7 @@
     const sa = Math.atan2(my - a.y, mx - a.x), ea = Math.atan2(my - b.y, mx - b.x);
     const f = v => v.toFixed(1);
     l.mid = [(a.x + 2 * mx + b.x) / 4, (a.y + 2 * my + b.y) / 4];
-    const end = l.inter ? 2 : 5 + (l.w >= W_BROAD ? l.w * 0.375 : l.w >= W_WIDE ? l.w * 0.5 : 0);   // arrows stop short to leave room for the head; person links have none
+    const end = l.inter ? 2 : (l.w >= W_WIDE ? 5 : 3) + tipOf(l.w);   // arrows stop short to leave room for the head; person links have none
     return `M${f(a.x + Math.cos(sa) * (a.r + 2))},${f(a.y + Math.sin(sa) * (a.r + 2))}Q${f(mx)},${f(my)} ${f(b.x + Math.cos(ea) * (b.r + end))},${f(b.y + Math.sin(ea) * (b.r + end))}`;
   }
   let linkN = 0;
