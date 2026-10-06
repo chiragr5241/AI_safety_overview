@@ -826,7 +826,7 @@
   function setFam(v) {
     state.fam = v;
     epoch++;
-    Array.from(lens.querySelectorAll("button")).forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false"));
+    showLens();
     refresh();
     renderPanel();
   }
@@ -891,12 +891,65 @@
   });
 
   const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests", corp: "Company money" };
+  /* The kinds of tie sit in a search box like the one under the map: typing filters the list, and each row carries its count. */
+  const lensOptions = $("webLensOptions");
+  let LENSES = [], lensShown = [], lensActive = -1;
+  const lensText = () => { const it = LENSES.find(x => x.id === state.fam); return it ? `${it.label} · ${it.n}` : ""; };
+  function showLens() { lens.value = lensText(); lens.classList.toggle("on", state.fam !== "all"); }
   function renderLens() {
-    lens.innerHTML = [{ id: "all", label: "All ties" }].concat(FAMS).map(f =>
-      `<button type="button" data-v="${f.id}" aria-pressed="${f.id === state.fam}" title="${esc(f.label)}">${esc(LENS[f.id] || f.label)}<span class="c">${f.id === "all" ? liveEdges().length + nInter : f.id === "people" ? nInter : count(t => inLens(t, f.id))}</span></button>`).join("");
+    LENSES = [{ id: "all", label: "All ties" }].concat(FAMS).map(f => ({ id: f.id, label: LENS[f.id] || f.label, find: ((LENS[f.id] || "") + " " + f.label).toLowerCase(),
+      n: f.id === "all" ? liveEdges().length + nInter : f.id === "people" ? nInter : count(t => inLens(t, f.id)) }));
+    showLens();
   }
   renderLens();
-  lens.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setFam(b.dataset.v); });
+  function lensMark(i, scroll) {
+    lensActive = i;
+    Array.from(lensOptions.querySelectorAll('[role="option"]')).forEach((o, k) => {
+      o.classList.toggle("active", k === i);
+      if (k === i && scroll) o.scrollIntoView({ block: "nearest" });
+    });
+    if (i >= 0) lens.setAttribute("aria-activedescendant", "wk-" + i); else lens.removeAttribute("aria-activedescendant");
+  }
+  function openLens() {
+    // the kind already in the box is the current choice, not a query, so the whole list shows until the reader types
+    const q = lens.value === lensText() ? "" : lens.value.trim().toLowerCase();
+    lensShown = q ? LENSES.filter(it => q.split(/\s+/).every(w => it.find.indexOf(w) >= 0)) : LENSES;
+    lensOptions.innerHTML = lensShown.length ? lensShown.map((it, i) =>
+      `<li role="option" id="wk-${i}" data-i="${i}" aria-selected="${it.id === state.fam}"><span>${esc(it.label)}</span><span class="c">${it.n}</span></li>`).join("")
+      : `<li class="none" role="presentation">No kind of tie matches.</li>`;
+    lensOptions.hidden = false;
+    lens.setAttribute("aria-expanded", "true");
+    lensMark(q && lensShown.length ? 0 : -1, false);
+  }
+  function closeLens() {
+    if (lensOptions.hidden) return;
+    lensOptions.hidden = true;
+    lens.setAttribute("aria-expanded", "false");
+    lens.removeAttribute("aria-activedescendant");
+    lensActive = -1;
+  }
+  lens.addEventListener("focus", () => { lens.select(); openLens(); });
+  lens.addEventListener("click", () => { if (lensOptions.hidden) openLens(); });
+  lens.addEventListener("input", openLens);
+  lens.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (lensOptions.hidden) { openLens(); return; }
+      if (lensShown.length) lensMark((lensActive + (e.key === "ArrowDown" ? 1 : lensShown.length - 1) + (lensActive < 0 && e.key === "ArrowUp" ? 1 : 0)) % lensShown.length, true);
+    } else if (e.key === "Enter") {
+      if (!lensOptions.hidden && lensActive >= 0) { e.preventDefault(); const it = lensShown[lensActive]; closeLens(); setFam(it.id); lens.select(); }
+    } else if (e.key === "Escape") {
+      if (!lensOptions.hidden) { e.preventDefault(); closeLens(); showLens(); }
+    }
+  });
+  // leaving the box closes the list and puts the current kind back
+  lens.addEventListener("blur", () => { closeLens(); showLens(); });
+  lensOptions.addEventListener("pointerdown", e => e.preventDefault());   // keep focus in the box while the list is clicked or scrolled
+  lensOptions.addEventListener("click", e => { const o = e.target.closest('[role="option"]'); if (o) { setFam(lensShown[+o.dataset.i].id); lens.blur(); } });
+  lensOptions.addEventListener("pointermove", e => {
+    const o = e.target.closest('[role="option"]');
+    if (o && e.pointerType === "mouse" && +o.dataset.i !== lensActive) lensMark(+o.dataset.i, false);
+  });
 
   /* One search box for everything that can be selected: groups, actors and people. Typing filters the list, the list scrolls,
      and the row under the pointer or the arrow keys previews on the map before it is chosen. */

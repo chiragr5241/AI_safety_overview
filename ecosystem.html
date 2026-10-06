@@ -86,6 +86,10 @@ main > .wrap { padding-top: 16px; }
 .web-find [role="option"][aria-selected="true"] { color: var(--w-hi); }
 .web-find .none { padding: 10px 8px; color: var(--w-muted); }
 @media (pointer: coarse) { .web-find [role="option"] { min-height: 44px; } }
+/* The kinds of tie are picked from the same search box, with a count on each row. The box is outlined while one kind is showing. */
+.web-lens [role="option"] { grid-template-columns: minmax(0, 1fr) auto; }
+.web-lens [role="option"] .c { font-family: var(--font-mono); font-size: .76rem; color: var(--w-muted); }
+.web-lens input.on { border-color: var(--w-hi); }
 .web-blurb { font-size: .92rem; color: var(--w-muted); max-width: 44em; flex: 1 1 20rem; min-height: 3em; }
 .web-scroll { overflow-x: auto; margin-inline: -10px; }
 #webStage { display: block; width: 100%; min-width: 760px; height: auto; font-family: var(--font-display); user-select: none; -webkit-user-select: none; }
@@ -521,9 +525,12 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <div class="pills needs-data" role="group" aria-labelledby="webLevelLabel" id="webLevel"></div>
         <p class="web-levelnote" id="webLevelNote"></p>
       </div>
-      <div class="web-tools">
-        <span class="web-eyebrow" id="webLensLabel">Show one kind of tie</span>
-        <div class="pills needs-data" role="group" aria-labelledby="webLensLabel" id="webLens"></div>
+      <div class="web-tools web-lens">
+        <label class="web-eyebrow" id="webLensLabel" for="webLens">Show one kind of tie</label>
+        <div class="web-find">
+          <input type="text" id="webLens" role="combobox" aria-expanded="false" aria-controls="webLensOptions" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Search kinds of tie">
+          <ul id="webLensOptions" role="listbox" aria-labelledby="webLensLabel" hidden></ul>
+        </div>
       </div>
       <div class="web-tools web-sizer">
         <span class="web-eyebrow" id="webSizeLabel">Size bubbles by</span>
