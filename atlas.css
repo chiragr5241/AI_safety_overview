@@ -5,9 +5,7 @@
 /* ---------- Risk-path rail (wide screens). Below 1180px the top bar's own chapter path and Contents menu stay in charge. ---------- */
 .rail { display: none; }
 @media (min-width: 1180px) {
-  html.atlas-on:has(#guideView:not([hidden])) .topbar .wrap,
-  html.atlas-on:has(#guideView:not([hidden])) .sitebar-in,
-  html.atlas-on #guideView > .wrap { max-width: 1320px; }
+  /* The rail sits inside the shared --wrap, not beside it, so this page is no wider than the goals and ecosystem pages. */
   html.atlas-on #guideView > .wrap { display: grid; grid-template-columns: 172px minmax(0, 1fr); column-gap: 52px; }
   html.atlas-on #guideView > .wrap > .hero { grid-column: 1 / -1; }
   html.atlas-on #guideView > .wrap > section.chapter { grid-column: 2; min-width: 0; }
