@@ -29,6 +29,7 @@
   // small enough to be seen at once: fieldF is how much of its full height the frame has, and 1 is the height the field opens at.
   const cam = { x: 0, y: 0, w: W, h: H0 }, view = { ar: W / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 5;
   let zoom = 1, fieldF = 1;
+  let boxing = null;   // the frame's change of height while it is under way: { h0, h1, w } in page pixels, with how far the page comes up
   const easeOut = k => 1 - Math.pow(1 - k, 3), easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2;
   const LEVEL_MS = 1100;   // how long a change of zoom level takes
   const $ = id => document.getElementById(id);
@@ -492,19 +493,87 @@
     const at = $("webZoomAt"), out = $("webZoomOut"), inn = $("webZoomIn");
     // The figure is the scale the map is drawn at, against the scale at which the plate is as wide as the frame. It does not depend on how
     // tall the plate is, so it stays put when only the measure changes. It is left off where a level opens.
-    const rel = W / cam.w, opens = level ? Math.abs(rel - 1) <= 0.04 : zoom <= 1.01;
+    // and while the map is travelling between levels, when the figure would only flicker past
+    const rel = W / cam.w, opens = !!boxing || svg.classList.contains("moving") || (level ? Math.abs(rel - 1) <= 0.04 : zoom <= 1.01);
     if (at) at.textContent = (level ? "AI safety field" : "Whole industry") + (opens ? "" : " ×" + (+rel.toFixed(1)));
-    if (out) { out.disabled = !level && zoom <= 1.01; out.title = level && zoom <= 1.01 ? (fieldF > frameLo() + 0.001 ? "Zoom out until the whole field fits in the window" : "Zoom out to the whole industry") : "Zoom out"; }
+    const t0 = zoom <= 1.01 ? camFit() : null, moved = !!t0 && (Math.abs(t0.x - cam.x) > 1 || Math.abs(t0.y - cam.y) > 1);   // carried off its place by a drag
+    if (out) { out.disabled = !level && zoom <= 1.01 && !moved; out.title = !level && moved ? "Put the map back in the middle" : level && zoom <= 1.01 ? (fieldF > frameLo() + 0.001 ? "Zoom out until the whole field fits in the window" : "Zoom out to the whole industry") : "Zoom out"; }
     if (inn) { inn.disabled = level ? zoom >= zmax() - 0.01 : !F; inn.title = level ? "Zoom in" : "Zoom into the AI safety field"; }
   }
   // how tall the frame stands for the level and for fieldF, and the least fieldF can be: the frame is never shorter than the stylesheet makes it
   const frameH = () => level ? Math.max(own.h, own.w * H / W * fieldF) : own.h;
   const frameLo = () => own.w > 0 && own.h > 0 ? Math.min(1, own.h / (own.w * H / W)) : 1;
+  /* Zoomed into the field, the frame is taller than the window and the page scrolls down it. When its foot reaches the foot of the window it
+     is held there, and scrolling on draws the map in until the whole field fits in the window; it stays held for a little more scrolling
+     and then the page moves on. Scrolling back up runs the same thing the other way.
+     None of this listens to the wheel. The frame sits in a track that is longer than the frame by the distance the reader scrolls while
+     the map is held, and the browser's own sticky positioning keeps the foot of the frame at the foot of the window for that distance. The
+     height of the frame is then read off how far down the track the page has got. So it works the same for a wheel, a trackpad, a touch,
+     the keyboard and the scrollbar, the foot of the frame cannot wobble, and nothing under the track moves while the frame changes height. */
+  const scrollBox = svg.parentNode, track = scrollBox.parentNode && scrollBox.parentNode.classList.contains("web-track") ? scrollBox.parentNode : null;
+  const PIN_GAP = 16, HOLD_PX = 360;   // how far the foot of the frame is held above the foot of the window, and how long it stays held
+  const tallH = () => own.w * H / W;   // the height of the frame with the whole field in it at full width
+  const pinOn = () => !!track && !!track.style.height;
+  // how far the page has gone past the point where the foot of the full-height frame meets the foot of the window
+  const pinAt = () => (own.vh - PIN_GAP - tallH()) - track.getBoundingClientRect().top;
+  const pinTop = h => { if (pinOn()) scrollBox.style.top = (own.vh - PIN_GAP - h).toFixed(1) + "px"; };
+  // The whole-industry frame already fits in the window, so its track is only as much longer as the frame is held for: scrolling down the
+  // page, the map stays in the window for that little while before it goes.
+  function pinTrack() {
+    if (!track) return;
+    const tall = tallH(), lo = frameLo();
+    if (!(own.w > 0) || !(own.h > 0)) { track.style.height = ""; scrollBox.style.top = ""; return; }
+    track.style.height = (level && lo < 0.9995 ? tall + tall * (1 - lo) + HOLD_PX : frameH() + HOLD_PX).toFixed(1) + "px";
+  }
+  // The page is put where the reader's scale says it should be on the track. A change of measure changes the height of the field and with
+  // it the length of the track, and this keeps the map at the scale it had.
+  // held says the foot of the frame was being held at the foot of the window before the change, and then it still is afterwards.
+  function pinSync(held) {
+    if (!pinOn()) return;
+    const tall = tallH(), lo = frameLo(), out = tall * (1 - lo), at = pinAt();
+    const want = fieldF >= 0.9995 ? (held ? 0 : Math.min(at, 0))
+      : fieldF > lo + 0.0005 ? tall * (1 - fieldF)
+      : held ? Math.max(out, Math.min(out + HOLD_PX - 1, at)) : Math.max(at, out);
+    if (Math.abs(want - at) > 0.5) window.scrollBy(0, want - at);
+  }
+  // The track is taken away again, as it is on the way out to the whole industry. If the frame was being held part of the way down it, the
+  // page is moved up by the same distance, so the map does not jump in the window.
+  function pinClear() {
+    if (!pinOn()) return;
+    const held = scrollBox.getBoundingClientRect().top - track.getBoundingClientRect().top;
+    track.style.height = ""; scrollBox.style.top = "";
+    if (held > 0.5) window.scrollBy(0, -held);
+  }
+  // the reader's scale for the field, read off how far down the track the page is
+  let scaleSoon = 0;
+  function pinScroll() {
+    if (!level || boxing || !pinOn()) return;
+    const tall = tallH(), lo = frameLo(), at = pinAt();
+    const f = at <= 0 ? 1 : at < tall * (1 - lo) ? 1 - at / tall : Math.min(fieldF, lo);
+    if (Math.abs(f - fieldF) < 0.0003) return;
+    const wide = zoom <= 1.01, cx = cam.x + cam.w / 2, cy = cam.y + cam.h / 2, w0 = cam.w;
+    fieldF = f;
+    const h = frameH();
+    svg.style.height = h.toFixed(1) + "px";
+    pinTop(h);
+    view.ar = own.w / h;
+    const t = wide ? camFit() : camTarget(fitW() / w0, cx, cy, 0.5, 0.5);
+    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
+    applyCam();
+    clearTimeout(scaleSoon);
+    scaleSoon = setTimeout(drawScale, 140);
+  }
+  window.addEventListener("scroll", pinScroll, { passive: true });
+  // zoomed into the field the frame has a height of its own, so a change in the height of the window does not reach it by itself
+  window.addEventListener("resize", () => { if (level && !boxing && window.innerHeight !== own.vh) reframe(false); });
   // After a new layout, or when the window changes, the frame and the view are set again. The frame takes the height its level asks for:
   // the stylesheet's own for the whole industry, and as tall as the whole field needs at full width when zoomed in. The view goes to where
   // the level opens if asked; otherwise the widest view stays the widest and a closer one keeps its middle and its scale as far as it can.
   // Given a time, the frame and the view travel there together, and the frame grows or shrinks from its bottom edge.
-  function reframe(home, ms, ease) {
+  // lift is how far the page has to come up for the frame to be back under the zoom strip: on the way out from far down the field the page
+  // travels that far in the same steps as the frame shortens, so the two arrive together and the map does not slide about under the reader.
+  function reframe(home, ms, ease, lift) {
+    const held = pinOn() && Math.abs(svg.getBoundingClientRect().bottom - (own.vh - PIN_GAP)) < 3;
     const keep = svg.style.height;
     svg.style.height = "";
     const box = svg.getBoundingClientRect(), bw = box.width, bh = box.height;
@@ -517,10 +586,15 @@
     const t = home ? camHome() : wide ? camFit() : camTarget(fitW() / w0, cx, cy, 0.5, 0.5);
     if (ms && sized && !STILL && !document.hidden) {
       view.ar = bw / h0;
-      camGo(t, ms, ease, Math.abs(h1 - h0) > 1 ? { h0, h1, w: bw } : null);
+      // On the way into the field the track is laid once the frame has grown, so the page under the map moves down with the frame and not
+      // all at once. A change of measure inside the field keeps the track, and the page is put where the scale it had says.
+      if (level && !home) { pinTrack(); pinSync(held); }
+      camGo(t, ms, ease, Math.abs(h1 - h0) > 1 ? { h0, h1, w: bw, y0: window.scrollY, lift: lift || 0 } : null);
+      if (home && !boxing) { pinTrack(); pinTop(h1); if (lift) followUp(); }
       return;
     }
     if (sized) svg.style.height = level ? h1.toFixed(1) + "px" : "";
+    if (sized) { pinTrack(); pinTop(h1); if (level) pinSync(held); }
     cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
     applyCam();
   }
@@ -777,7 +851,7 @@
   // what the line beside the search says while nothing narrows the map, for the whole industry and for the field
   const BLURBS = [
     "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Pick a kind of tie to see only those arrows. Scroll over the map to zoom, and drag to move it.",
-    "Pick a bubble, a group name or a funder to follow the money. Scroll over the map to zoom out until the whole field is in the window, or in until the small names are at reading size. Search finds any entry."
+    "Pick a bubble, a group name or a funder to follow the money. Scrolling past the foot of the map draws it in until the whole field fits in the window, and + or a pinch brings the small names up to reading size. Search finds any entry."
   ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
   const liveEdges = () => LIVE[level];
@@ -1268,13 +1342,18 @@
     p.x = e.clientX; p.y = e.clientY;
     return p.matrixTransform(svg.getScreenCTM().inverse());
   }
+  // A press that is not on a bubble drags the map. With a mouse that works at any zoom and from anywhere, a group name or an arrow included:
+  // the pointer is only taken once it has moved, so a plain click still reaches what it was on. A finger drags the map only when it is
+  // zoomed in, and otherwise scrolls the page as it does anywhere else.
+  // What a drag moves depends on what there is to move. Zoomed in, it is the view inside the frame. With the whole field in a frame taller
+  // than the window, it is the page, which is how that map is travelled. With the whole industry in view it is the plate, loosely.
   svg.addEventListener("pointerdown", e => {
     const n = nodeAt(e);
-    // on the zoomed plate, a press that is not on a bubble, a group name or an arrow drags the plate itself
-    if (!n && zoom > 1.01 && !boxing && (e.pointerType !== "mouse" || e.button === 0) && !(e.target.closest && e.target.closest(".ctitle, .hit"))) {
-      pan = { x0: e.clientX, y0: e.clientY, cx: cam.x, cy: cam.y, k: cam.w / svg.getBoundingClientRect().width, moved: false };
+    if (!n && !boxing && (e.pointerType === "mouse" ? e.button === 0 : zoom > 1.01)) {
+      pan = { id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: cam.x, cy: cam.y, k: cam.w / svg.getBoundingClientRect().width, moved: false,
+        page: !!level && zoom <= 1.01, loose: zoom <= 1.01, lastY: e.clientY };
       cancelAnimationFrame(camFrame);
-      try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+      goal = null;
       return;
     }
     if (!n || e.pointerType !== "mouse" || e.button !== 0) return;
@@ -1285,11 +1364,22 @@
   });
   svg.addEventListener("pointermove", e => {
     if (pan) {
-      if (!pan.moved && Math.hypot(e.clientX - pan.x0, e.clientY - pan.y0) < 4) return;
-      pan.moved = true;
+      if (!pan.moved) {
+        if (Math.hypot(e.clientX - pan.x0, e.clientY - pan.y0) < 4) return;
+        pan.moved = true;
+        svg.classList.add("panning");
+        try { svg.setPointerCapture(pan.id); } catch (err) {}
+      }
       hideTip();
-      cam.x = hold(pan.cx - (e.clientX - pan.x0) * pan.k, cam.w, W);
-      cam.y = hold(pan.cy - (e.clientY - pan.y0) * pan.k, cam.h, H);
+      if (pan.page) {
+        window.scrollBy(0, pan.lastY - e.clientY);
+        pan.lastY = e.clientY;
+        return;
+      }
+      const x = pan.cx - (e.clientX - pan.x0) * pan.k, y = pan.cy - (e.clientY - pan.y0) * pan.k;
+      // with everything in view the plate can be carried until its edge is at the middle of the frame, so it can never be lost
+      cam.x = pan.loose ? Math.max(-cam.w / 2, Math.min(W - cam.w / 2, x)) : hold(x, cam.w, W);
+      cam.y = pan.loose ? Math.max(-cam.h / 2, Math.min(H - cam.h / 2, y)) : hold(y, cam.h, H);
       applyCam();
       return;
     }
@@ -1307,6 +1397,7 @@
     if (!pan) return;
     justDragged = pan.moved;
     pan = null;
+    svg.classList.remove("panning");
     try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
     setTimeout(() => { justDragged = false; }, 60);
   };
@@ -1335,11 +1426,10 @@
 
   /* ---------- zoom: from the whole industry into the AI safety field, then closer ---------- */
   let goal = null;   // where the view is heading while it moves, so a second press of + starts from there
-  let boxing = null;   // the frame's change of height while it is under way: { h0, h1, w } in page pixels
   function camGo(t, ms, ease, box) {
     cancelAnimationFrame(camFrame);
     // a change of height cut short by a move that has none is finished on the spot, so the frame is never left part of the way
-    if (boxing && !box) { svg.style.height = level ? boxing.h1.toFixed(1) + "px" : ""; view.ar = boxing.w / boxing.h1; }
+    if (boxing && !box) { svg.style.height = level ? boxing.h1.toFixed(1) + "px" : ""; view.ar = boxing.w / boxing.h1; pinTrack(); pinTop(boxing.h1); }
     goal = t;
     boxing = box || null;
     if (STILL || document.hidden) ms = 0;
@@ -1351,12 +1441,17 @@
         // the view keeps the frame's shape at every step, so the map is never squeezed or boxed in while the frame changes height
         const bh = box.h0 + (box.h1 - box.h0) * e;
         svg.style.height = k < 1 || level ? bh.toFixed(1) + "px" : "";
+        pinTop(bh);
+        if (box.lift) window.scrollTo(0, box.y0 + box.lift * e);
         view.ar = box.w / bh;
         cam.h = cam.w / view.ar;
       }
       zoom = fitW() / cam.w;
       applyCam();
-      if (k < 1) camFrame = requestAnimationFrame(step); else { goal = null; boxing = null; drawScale(); }
+      if (k < 1) { camFrame = requestAnimationFrame(step); return; }
+      goal = null;
+      if (boxing) { boxing = null; pinTrack(); pinTop(frameH()); }
+      drawScale();
     };
     step(t0);
   }
@@ -1378,6 +1473,7 @@
     const wide = (goal ? fitW() / goal.w : zoom) <= 1.01;
     if (dir > 0) { if (!level) setLevel(1, LEVEL_MS); else if (wide && fieldF < 0.999) frameTo(1); else zoomBy(1.6); }
     else if (!wide) zoomBy(1 / 1.6);
+    else if (!level) camGo(camFit(), 260);   // the plate was carried off its place by a drag: put it back
     else if (level && fieldF > frameLo() + 0.001) frameTo(frameLo());
     else if (level) setLevel(0, LEVEL_MS);
   }
@@ -1391,33 +1487,11 @@
     const edge = topEdge(), top = svg.getBoundingClientRect().top;
     if (top < edge - 2) window.scrollBy({ top: top - edge, behavior: STILL || document.hidden ? "auto" : "smooth" });
   }
-  // the frame goes to a new share of its full height, with the whole field in it throughout
+  // The frame goes to a new share of its full height by moving the page to the place on the track that gives it, so the buttons and
+  // scrolling are one and the same thing.
   function frameTo(f) {
-    if (boxing) return;
-    const shorter = f < fieldF;
-    fieldF = f;
-    reframe(false, 520, easeInOut);
-    if (shorter) followUp();
-  }
-  // The wheel does the same a little at a time, and keeps the part of the map under the pointer under the pointer by moving the page.
-  // It answers false when the frame is already as short or as tall as it goes that way.
-  function frameBy(factor, e) {
-    const to = Math.max(Math.min(frameLo(), fieldF), Math.min(1, fieldF * factor));
-    if (Math.abs(to - fieldF) < 0.0005) return false;
-    const r0 = svg.getBoundingClientRect(), fy = (e.clientY - r0.top) / (r0.height || 1);
-    fieldF = to;
-    const h = frameH();
-    svg.style.height = h.toFixed(1) + "px";
-    view.ar = own.w / h;
-    const t = camFit();
-    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = 1;
-    applyCam();
-    const r1 = svg.getBoundingClientRect();
-    window.scrollBy(0, r1.top + fy * r1.height - e.clientY);
-    // once the foot of the frame is in the window, nothing of its top is left hidden above while there is room to bring it down
-    const r2 = svg.getBoundingClientRect(), up = Math.min(topEdge() - r2.top, window.innerHeight - 16 - r2.bottom);
-    if (up > 0) window.scrollBy(0, -up);
-    return true;
+    if (boxing || !pinOn()) return;
+    window.scrollBy({ top: tallH() * (1 - f) - pinAt(), behavior: STILL || document.hidden ? "auto" : "smooth" });
   }
   function zoomToGroup(c) {
     if (!c || CLUSTERS.indexOf(c) < 0) return;
@@ -1482,8 +1556,16 @@
     refresh();
     // the view travels to where the new level opens while the bubbles travel to their places, on one easing
     fieldF = 1;   // the field always opens at its full height
-    reframe(true, ms, easeInOut);
-    if (!level && ms) followUp();
+    // The track belongs to the level being left, so it goes; the new one is laid when the frame has reached its new height.
+    pinClear();
+    let lift = 0;
+    if (!level) {
+      // where the whole-industry frame comes to rest: under the zoom strip, or with its foot at the foot of the window if that is lower
+      const gap = svg.getBoundingClientRect().top - Math.max(topEdge(), own.vh - PIN_GAP - own.h);
+      if (gap < -2) lift = gap;
+    }
+    reframe(true, ms, easeInOut, lift);
+    if (!level && lift && !boxing) followUp();   // nothing is travelling, so the page is put there at once
     // the number of money signs on an arrow follows its length, so they are set again once the bubbles have arrived
     settle(ms, () => {
       fieldNodes.forEach(n => n.el.classList.toggle("away", !level));
@@ -1512,22 +1594,20 @@
     fig.classList.add("no-field");
   }
 
-  // The wheel zooms the map about the pointer, at either level, and a pinch on a trackpad arrives as a wheel with the control key down.
-  // Zoomed into the field with the whole field in the frame, the wheel changes the frame itself: outwards it shortens until the field fits in
-  // the window, and inwards it grows back to its full height before the view moves in any closer.
-  // The map must not trap the page, so two kinds of wheel are left to scroll it: one that was already scrolling the page when the pointer
-  // came over the map, and one that asks for a wider view when nothing wider is left.
-  let wheelOff = -1e9, scaleSoon = 0;
+  // The wheel zooms the whole-industry map about the pointer, and a pinch on a trackpad, which arrives as a wheel with the control key down,
+  // zooms at either level. Zoomed into the field the frame is taller than the window, so there a plain wheel always scrolls the page: going
+  // down the map, and drawing it in at its foot, are both done by scrolling (see the track above).
+  // The map must not trap the page, so two more kinds of wheel are left to scroll it: one that was already scrolling the page when the
+  // pointer came over the map, and one that asks for a wider view when nothing wider is left.
+  let wheelOff = -1e9;
   window.addEventListener("wheel", e => { if (!(e.target instanceof Node) || !svg.contains(e.target)) wheelOff = performance.now(); }, { passive: true, capture: true });
   svg.addEventListener("wheel", e => {
     const pinch = e.ctrlKey || e.metaKey, now = performance.now();
     if (boxing) return;
-    if (!pinch && now - wheelOff < 350) { wheelOff = now; return; }
     const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY, factor = Math.exp(-dy * (pinch ? 0.012 : 0.0022));
-    if (zoom <= 1.001) {
-      if (level && frameBy(factor, e)) { e.preventDefault(); hideTip(); clearTimeout(scaleSoon); scaleSoon = setTimeout(drawScale, 140); return; }
-      if (dy >= 0) { if (pinch) e.preventDefault(); return; }
-    }
+    if (level && !pinch) return;
+    if (!pinch && now - wheelOff < 350) { wheelOff = now; return; }
+    if (zoom <= 1.001 && dy >= 0) { if (pinch) e.preventDefault(); return; }
     e.preventDefault();
     const p = toStage(e), r = svg.getBoundingClientRect();
     const t = camTarget(zoom * factor, p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);

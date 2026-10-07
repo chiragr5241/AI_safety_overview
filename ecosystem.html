@@ -130,7 +130,7 @@ main > .wrap { padding-top: 16px; }
 .web-lens [role="option"] .c { font-family: var(--font-mono); font-size: .76rem; color: var(--w-muted); }
 .web-lens input.on { border-color: var(--w-hi); }
 .web-blurb { font-size: .92rem; color: var(--w-muted); max-width: 44em; flex: 1 1 20rem; min-height: 3em; }
-.web-scroll { overflow-x: auto; margin-inline: -10px; }
+.web-scroll { overflow-x: auto; margin-inline: -10px; position: sticky; }   /* the script gives it a place to stick: see the track in ecosystem-graph.js */
 /* The whole-industry map is drawn in a frame that fits in the window under the page's top bar and the zoom strip, so all of it can be seen
    at once. The script fits the plate into the frame and the reader zooms and pans inside it. On a touch screen the frame is shorter, so
    there is always page beside it to scroll by. Zoomed into the field, the script sets a taller height on the frame: see reframe(). */
@@ -265,7 +265,9 @@ main > .wrap { padding-top: 16px; }
 #webStage.lv1 .flow { display: none; transition: none; }
 #webStage.lv1.has-pick .flow.on { display: block; opacity: 1; }
 #webStage.lv1 .node, #webStage.lv1 .nlabel { transition: none; }
-#webStage.zoomed { cursor: grab; touch-action: none; }
+#webStage { cursor: grab; }
+#webStage.panning, #webStage.panning * { cursor: grabbing !important; }
+#webStage.zoomed { touch-action: none; }
 #webStage .band { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; fill: var(--w-muted); }
 #webStage .bandline { fill: none; stroke: var(--w-line); stroke-dasharray: 4 5; }
 /* The search sits above the plate at both zoom levels, so it does not move when the level changes: zoomed in, the plate is taller
@@ -606,8 +608,10 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
         <div class="web-stage">
           <div class="web-zoom"><div role="group" aria-label="Zoom the map"><button type="button" id="webZoomOut" aria-label="Zoom out">−</button><span id="webZoomAt" aria-live="polite">Whole industry</span><button type="button" id="webZoomIn" aria-label="Zoom in">+</button></div></div>
-          <div class="web-scroll">
-            <svg id="webStage" viewBox="0 0 1080 870" role="img" aria-label="Network map of 100 actors in eleven groups, joined by documented ties. Safety funders and research groups run along the top, the frontier developers, public authorities and advocacy groups under them, then the talent pipeline and critical voices, with the chip supply chain, cloud, capital and standards bodies along the bottom, with further ties added from the control evidence. Twelve named people appear as dotted links between the organisations they connect and can be found with the map's search box. Bubble size follows the measure chosen above the map: people employed, yearly revenue or budget, what an actor is worth, names on the TIME100 AI 2026 list, documented ties or sources cited. Arrows that carry money show a moving money sign and are wider for larger stated amounts. The same information is in the lists and tables below."></svg>
+          <div class="web-track">
+            <div class="web-scroll">
+              <svg id="webStage" viewBox="0 0 1080 870" role="img" aria-label="Network map of 100 actors in eleven groups, joined by documented ties. Safety funders and research groups run along the top, the frontier developers, public authorities and advocacy groups under them, then the talent pipeline and critical voices, with the chip supply chain, cloud, capital and standards bodies along the bottom, with further ties added from the control evidence. Twelve named people appear as dotted links between the organisations they connect and can be found with the map's search box. Bubble size follows the measure chosen above the map: people employed, yearly revenue or budget, what an actor is worth, names on the TIME100 AI 2026 list, documented ties or sources cited. Arrows that carry money show a moving money sign and are wider for larger stated amounts. The same information is in the lists and tables below."></svg>
+            </div>
           </div>
         </div>
       </div>
