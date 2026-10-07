@@ -222,8 +222,21 @@ main > .wrap { padding-top: 16px; }
 .web.lv1 figcaption { order: 4; }
 .web.lv1.has-sel .web-panel { position: sticky; bottom: 0; z-index: 6; max-height: 42vh; overflow-y: auto; overscroll-behavior: contain; background: var(--w-bg); margin: 0 -26px; padding: 14px 26px 18px; border-top: 1px solid var(--w-hi); box-shadow: 0 -18px 30px -18px rgb(0 0 0 / .85); }
 @media (max-width: 600px) { .web.lv1.has-sel .web-panel { margin: 0 -16px; padding: 12px 16px 16px; } }
-.wp-close { grid-column: 1 / -1; justify-self: end; margin-bottom: -34px; position: relative; z-index: 1; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--w-muted); background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 999px; min-height: 30px; padding: 0 12px; cursor: pointer; }
-.wp-close:hover { color: var(--w-ink); border-color: var(--w-ink); }
+/* the bar across the top of the panel for a chosen bubble: the panel folds down to it, and it then names what is chosen */
+.wp-bar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; margin-bottom: -10px; }
+.wp-barname { display: none; align-items: center; gap: 9px; min-width: 0; margin-right: auto; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; }
+.wp-barname i { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.wp-barname i.who { border-radius: 2px; height: 2px; border-top: 2px dotted var(--w-ink); background: none; }
+.wp-barname b { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wp-fold, .wp-close { flex: none; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--w-muted); background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 999px; min-height: 32px; padding: 0 12px; cursor: pointer; }
+.wp-fold:hover, .wp-close:hover { color: var(--w-ink); border-color: var(--w-ink); }
+.web-panel.folded { min-height: 0; }
+.web-panel.folded > :not(.wp-bar) { display: none; }
+.web-panel.folded .wp-bar { margin-bottom: 0; }
+.web-panel.folded .wp-barname { display: flex; }
+.web.lv1.has-sel .web-panel.folded { padding-top: 10px; padding-bottom: 10px; }
+/* on a narrow screen the page's own round button floats over the foot of the window, so the folded bar keeps clear of it */
+@media (max-width: 700px) { .web.lv1.has-sel .web-panel.folded { padding-right: 62px; } }
 .wp-grants { padding-left: 18px; font-size: .8rem; color: var(--w-muted); }
 .wp-grants summary { cursor: pointer; color: var(--w-hi); font-family: var(--font-mono); font-size: .72rem; padding: 3px 0; }
 .wp-grants ol { list-style: none; margin: 4px 0 6px; padding: 0; display: grid; }
@@ -1315,6 +1328,11 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <p class="small" style="max-width:var(--measure)">The names, categories and descriptions are AISafety.com's own, read on 5 October 2026 and reused under its CC BY-SA licence, so that part of this page is offered under the same licence. The money figures are not from that map. They come from the four grant records below.</p>
       </div>
 
+      <div class="sub" id="grant-records" hidden>
+        <h3>Each grant record, on its own</h3>
+        <div id="grantRecordBars"></div>
+      </div>
+
       <div class="sub" id="field-company">
         <h3>What the AI companies have announced</h3>
         <div class="prose">
@@ -1840,6 +1858,14 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 <script src="ecosystem-graph.js"></script>
 <script src="field-list.js"></script>
 <script src="explore.js"></script>
+<script>
+fetch("/charts/grants").then(function (r) { return r.ok ? r.text() : ""; }).then(function (html) {
+  if (!html) return;
+  var box = document.getElementById("grant-records");
+  document.getElementById("grantRecordBars").innerHTML = html;
+  box.hidden = false;
+}).catch(function () {});
+</script>
 <script>
 /* The map and the one-line answers stay in view. The reasoning, tables and lists wait behind a button each. */
 Explore.fold("#control .qblock, #questions .qblock", ".qblock-head");

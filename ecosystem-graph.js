@@ -658,7 +658,7 @@
   }
 
   /* ---------- state ---------- */
-  const state = { sel: null, hover: null, fam: "all" };
+  const state = { sel: null, hover: null, fam: "all", fold: false };   // fold: the panel for a chosen bubble is folded down to its bar
   const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
   const inLens = (t, id) => id === "all" || (id === "corp" ? isCorp(t) : famOf(t) === id);
   const inFam = t => (!t.field || level === 1) && inLens(t, state.fam);   // the grant records and company announcements show only when zoomed into the field
@@ -811,14 +811,27 @@
           ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${NFIELD} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them and ${CORP_TIES.length} for money the AI companies have announced.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
         </div>`;
     }
-    // zoomed in, the panel for a chosen bubble stays at the foot of the window, so it carries its own way out
-    if (level && s) panel.insertAdjacentHTML("afterbegin", `<button type="button" class="wp-close" data-close="1">Close</button>`);
+    // The panel for a chosen bubble, group or person has a bar across its top. The panel folds down to that bar, which then names what is chosen,
+    // and stays folded from one choice to the next until it is opened again. Zoomed in, the panel stays at the foot of the window, so the bar also carries the way out.
+    if (s) {
+      const name = s.type === "node" ? byId.get(s.id).name : s.type === "person" ? personById.get(s.id).name : C.get(s.id).label;
+      const dot = s.type === "person" ? `<i class="who"></i>` : `<i style="background:${(s.type === "node" ? byId.get(s.id).c : C.get(s.id)).color}"></i>`;
+      panel.insertAdjacentHTML("afterbegin", `<div class="wp-bar"><span class="wp-barname">${dot}<b>${tidy(name)}</b></span><button type="button" class="wp-fold" data-fold="1"></button>${level ? `<button type="button" class="wp-close" data-close="1">Close</button>` : ""}</div>`);
+    }
+    showFold();
     const fam = FAMS.find(f => f.id === state.fam);
     blurb.textContent = fam ? `${fam.label}. ${fam.blurb}`
       : level ? "Pick a bubble, a group name or a funder to follow the money. The small names come up to reading size with the + button, and the zoomed plate can be dragged around. Search finds any entry."
       : "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Pick a kind of tie above the map to see only those arrows. Drag a bubble to untangle it.";
     $("webClear").hidden = !state.sel && state.fam === "all";
     fig.classList.toggle("has-sel", !!state.sel);
+  }
+
+  // the fold is switched on the panel as it stands, so the button that was pressed keeps the keyboard focus
+  function showFold() {
+    const on = state.fold && !!state.sel, b = panel.querySelector(".wp-fold");
+    panel.classList.toggle("folded", on);
+    if (b) { b.textContent = on ? "Expand" : "Collapse"; b.setAttribute("aria-expanded", on ? "false" : "true"); }
   }
 
   /* ---------- controls ---------- */
@@ -845,7 +858,7 @@
     if (zoom > 1.01 && (px < cam.x + m || px > cam.x + cam.w - m || py < cam.y + m || py > cam.y + cam.h - m)) { t = camTarget(zoom, px, py, 0.5, viewFrac()); camGo(t, 260); }
     const r = svg.getBoundingClientRect(), sy = r.top + (py - t.y) / t.h * r.height;
     // zoomed in, the panel for the chosen bubble covers the foot of the window, so the bubble is brought into the upper part
-    const low = level ? 0.5 : 0.76, to = level ? 0.3 : 0.4;
+    const under = level && !state.fold, low = under ? 0.5 : 0.76, to = under ? 0.3 : 0.4;
     if (sy < 130 || sy > window.innerHeight * low) window.scrollBy({ top: sy - window.innerHeight * to, behavior: STILL ? "auto" : "smooth" });
   }
   function setFam(v) {
@@ -1087,6 +1100,7 @@
     else if (b.dataset.level) { setLevel(+b.dataset.level, 700); svg.scrollIntoView({ block: "start", behavior: STILL ? "auto" : "smooth" }); }
     else if (b.dataset.zoomto) zoomToGroup(C.get(catKey(b.dataset.zoomto)));
     else if (b.dataset.close) select(null);
+    else if (b.dataset.fold) { state.fold = !state.fold; showFold(); }
   });
   const motion = $("webMotion");
   motion.addEventListener("click", () => {
@@ -1274,7 +1288,7 @@
   function zoomToGroup(c) {
     if (!c || CLUSTERS.indexOf(c) < 0) return;
     // the group is fitted into the part of the window that the panel under it leaves free
-    const r = svg.getBoundingClientRect(), top = 130, room = window.innerHeight * (state.sel ? 0.56 : 0.9) - top, mid = top + room / 2;
+    const r = svg.getBoundingClientRect(), top = 130, room = window.innerHeight * (state.sel && !state.fold ? 0.56 : 0.9) - top, mid = top + room / 2;
     const z = Math.max(1, Math.min(ZMAX, W / (2 * c.hw + 30), (room * W) / ((r.width || W) * (2 * c.hh + 24))));
     const t = camTarget(z, c.x, c.y, 0.5, Math.max(0, Math.min(1, (mid - r.top) / (r.height || 1))));
     camGo(t, 320);

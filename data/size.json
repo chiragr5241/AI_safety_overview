@@ -1,0 +1,1165 @@
+{
+ "retrieved": "2026-10-05",
+ "fx": {
+  "USD": 1,
+  "EUR": 1.1,
+  "GBP": 1.3,
+  "CNY": 0.14,
+  "JPY": 0.0067,
+  "KRW": 0.0007,
+  "SGD": 0.77
+ },
+ "people": {
+  "nvidia": {
+   "v": 42000,
+   "text": "about 42,000 employees",
+   "when": "end of fiscal 2026 (January 2026)",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm"
+  },
+  "amd": {
+   "v": 31000,
+   "text": "about 31,000 employees",
+   "when": "27 December 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm"
+  },
+  "tsmc": {
+   "v": 90557,
+   "text": "90,557 employees",
+   "when": "31 December 2025",
+   "basis": "2025 annual report",
+   "url": "https://investor.tsmc.com/static/annualReports/2025/english/index.html"
+  },
+  "asml": {
+   "v": 44000,
+   "text": "more than 44,000 employees (full-time equivalents)",
+   "when": "end of 2025",
+   "basis": "2025 annual report",
+   "url": "https://www.asml.com/en/investors/annual-report/2025"
+  },
+  "sk": {
+   "v": 34549,
+   "text": "34,549 employees",
+   "when": "end of 2025",
+   "basis": "Press report (The Korea Herald)",
+   "est": true,
+   "url": "https://www.koreaherald.com/article/10771107"
+  },
+  "samsung": {
+   "v": 262647,
+   "text": "262,647 employees worldwide",
+   "when": "as given in the 2025 report",
+   "basis": "Sustainability Report 2025",
+   "url": "https://www.samsung.com/global/sustainability/media/pdf/Samsung_Electronics_Sustainability_Report_2025_ENG.pdf"
+  },
+  "intel": {
+   "v": 85100,
+   "text": "85,100 employees",
+   "when": "27 December 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm"
+  },
+  "broadcom": {
+   "v": 33000,
+   "text": "about 33,000 employees",
+   "when": "2 November 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016825000121/avgo-20251102.htm"
+  },
+  "huawei": {
+   "v": 213000,
+   "text": "about 213,000 employees",
+   "when": "2025",
+   "basis": "Press report on the 2025 annual report (Light Reading)",
+   "est": true,
+   "url": "https://www.lightreading.com/5g/huawei-sales-growth-plummeted-in-2025-as-it-gained-5-000-workers"
+  },
+  "microsoft": {
+   "v": 223000,
+   "text": "about 223,000 full-time employees",
+   "when": "30 June 2026",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/0000789019/000119312526323660/msft-20260630.htm"
+  },
+  "google": {
+   "v": 190820,
+   "text": "190,820 employees",
+   "when": "31 December 2025",
+   "basis": "Form 10-K (Alphabet)",
+   "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm"
+  },
+  "amazon": {
+   "v": 1576000,
+   "text": "about 1,576,000 full-time and part-time employees",
+   "when": "31 December 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm"
+  },
+  "oracle": {
+   "v": 141000,
+   "text": "about 141,000 full-time employees",
+   "when": "31 May 2026",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001341439/000119312526277521/orcl-20260531.htm"
+  },
+  "coreweave": {
+   "v": 2189,
+   "text": "2,189 employees",
+   "when": "31 December 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm"
+  },
+  "spacex": {
+   "v": 22000,
+   "text": "more than 22,000 full-time employees",
+   "when": "31 March 2026",
+   "basis": "Form S-1",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001181412/000162828026036936/spaceexplorationtechnologi.htm"
+  },
+  "meta": {
+   "v": 78865,
+   "text": "78,865 employees",
+   "when": "31 December 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm"
+  },
+  "softbank": {
+   "v": 76866,
+   "text": "76,866 employees across the consolidated group",
+   "when": "end of the fiscal year in the report",
+   "basis": "SoftBank Group annual report",
+   "url": "https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2025_07_en.pdf"
+  },
+  "openai": {
+   "v": 4500,
+   "text": "about 4,500 employees",
+   "when": "early 2026",
+   "basis": "Financial Times report, as relayed by SQ Magazine",
+   "est": true,
+   "note": "The same report describes a plan to reach about 8,000 by the end of 2026.",
+   "url": "https://sqmagazine.co.uk/how-many-people-work-at-openai/"
+  },
+  "anthropic": {
+   "v": 3950,
+   "text": "about 3,950 employees",
+   "when": "March 2026",
+   "basis": "Third-party tracker (Revelio Labs)",
+   "est": true,
+   "note": "Anthropic publishes no headcount. Other estimates run from about 2,500 to about 5,000.",
+   "url": "https://www.reveliolabs.com/companies/anthropic-pbc/employees"
+  },
+  "deepmind": {
+   "v": 5090,
+   "text": "about 5,090 employees",
+   "when": "March 2026",
+   "basis": "Third-party tracker (Revelio Labs)",
+   "est": true,
+   "note": "A unit of Google, with no separate filing. Other trackers put it as high as about 10,300.",
+   "url": "https://www.reveliolabs.com/companies/deepmind/employees"
+  },
+  "mistral": {
+   "v": 1258,
+   "text": "about 1,260 employees",
+   "when": "March 2026",
+   "basis": "Third-party tracker (Revelio Labs)",
+   "est": true,
+   "note": "Other trackers put it at 1,500 to 1,600 by August 2026.",
+   "url": "https://www.reveliolabs.com/companies/mistral-ai/employees"
+  },
+  "deepseek": {
+   "v": 452,
+   "text": "about 450 employees",
+   "when": "March 2026",
+   "basis": "Third-party tracker (Revelio Labs)",
+   "est": true,
+   "note": "Other sources report 150 to 200 before an expansion announced in June 2026.",
+   "url": "https://www.reveliolabs.com/companies/deepseek/employees"
+  },
+  "moonshot": {
+   "v": 300,
+   "text": "about 300 employees",
+   "when": "2026",
+   "basis": "Wikipedia entry for Moonshot AI",
+   "est": true,
+   "url": "https://en.wikipedia.org/wiki/Moonshot_AI"
+  },
+  "rand": {
+   "v": 2000,
+   "text": "about 2,000 staff",
+   "when": "2024",
+   "basis": "Wikipedia entry for RAND",
+   "est": true,
+   "note": "All of RAND, not only its AI work.",
+   "url": "https://en.wikipedia.org/wiki/RAND_Corporation"
+  },
+  "metr": {
+   "v": 46,
+   "text": "46 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, advisers left out",
+   "url": "https://metr.org/about"
+  },
+  "far": {
+   "v": 48,
+   "text": "48 people listed, six of them collaborators",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board and adviser left out",
+   "url": "https://far.ai/about/team"
+  },
+  "epoch": {
+   "v": 51,
+   "text": "51 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board and advisers left out",
+   "url": "https://epoch.ai/about/team"
+  },
+  "govai": {
+   "v": 57,
+   "text": "57 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own people page, affiliates and board left out",
+   "url": "https://www.governance.ai/people"
+  },
+  "miri": {
+   "v": 27,
+   "text": "about 27 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board left out",
+   "url": "https://intelligence.org/team/"
+  },
+  "iaps": {
+   "v": 38,
+   "text": "38 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board and affiliates left out",
+   "url": "https://www.iaps.ai/our-team"
+  },
+  "cset": {
+   "v": 51,
+   "text": "51 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page",
+   "url": "https://cset.georgetown.edu/team/"
+  },
+  "ada": {
+   "v": 33,
+   "text": "33 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own people page, board and fellows left out",
+   "url": "https://www.adalovelaceinstitute.org/about/our-people/"
+  },
+  "mats": {
+   "v": 54,
+   "text": "about 54 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board and mentors left out",
+   "est": true,
+   "note": "The page lists teams of different sizes and the count is approximate.",
+   "url": "https://www.matsprogram.org/team"
+  },
+  "bluedot": {
+   "v": 16,
+   "text": "a team of 16",
+   "when": "October 2026",
+   "basis": "Its own about page",
+   "url": "https://bluedot.org/about"
+  },
+  "aisi": {
+   "v": 100,
+   "text": "more than 100 technical staff",
+   "when": "October 2026",
+   "basis": "Its own about page",
+   "note": "Technical staff only. Policy, operations and strategy teams are not counted in the figure.",
+   "url": "https://www.aisi.gov.uk/about"
+  },
+  "eu": {
+   "v": 140,
+   "text": "more than 140 staff in the AI Office",
+   "when": "2026",
+   "basis": "Press report (Agence Europe)",
+   "est": true,
+   "note": "The AI Office only, not the Commission.",
+   "url": "https://agenceurope.eu/en/bulletin/article/13883/11/40-of-140-staff-members-of-european-commissions-ai-office-work-on-ai-safety"
+  },
+  "ftc": {
+   "v": 1225,
+   "text": "1,225 full-time equivalent staff",
+   "when": "fiscal 2025",
+   "basis": "FTC appropriation and FTE history",
+   "url": "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation"
+  },
+  "qwen": {
+   "v": 131462,
+   "text": "131,462 employees",
+   "when": "31 March 2026",
+   "basis": "Fiscal 2026 results announcement (Form 6-K)",
+   "note": "All of Alibaba Group, not only the Qwen models.",
+   "url": "https://www.sec.gov/Archives/edgar/data/1577552/000110465926060224/tm2614494d1_ex99-1.htm"
+  },
+  "xai": {
+   "v": 1200,
+   "text": "more than 1,200 employees",
+   "when": "2025",
+   "basis": "Wikipedia entry for xAI, citing Business Insider",
+   "est": true,
+   "note": "The figure includes more than 900 hourly paid AI tutors, and it predates February 2026, when SpaceX acquired xAI. No later figure for the unit alone was found.",
+   "url": "https://en.wikipedia.org/wiki/XAI_(company)"
+  },
+  "a16z": {
+   "v": 1554,
+   "text": "about 1,550 employees",
+   "when": "March 2026",
+   "basis": "Third-party tracker (Revelio Labs)",
+   "est": true,
+   "url": "https://www.reveliolabs.com/companies/andreessen-horowitz/employees"
+  },
+  "temasek": {
+   "v": 970,
+   "text": "about 970 employees",
+   "when": "2026",
+   "basis": "Temasek Review 2026, as cited in the Wikipedia entry for Temasek",
+   "est": true,
+   "url": "https://en.wikipedia.org/wiki/Temasek_Holdings"
+  },
+  "gic": {
+   "v": 2525,
+   "text": "2,525 employees",
+   "when": "31 March 2026",
+   "basis": "GIC report for 2025/26",
+   "url": "https://report.gic.com.sg/people.html"
+  },
+  "cg": {
+   "v": 211,
+   "text": "211 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, the chair included",
+   "note": "All of its programmes, not only AI.",
+   "url": "https://coefficientgiving.org/about-us/team/"
+  },
+  "longview": {
+   "v": 31,
+   "text": "31 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own about page, founder and advisory board left out",
+   "note": "All of its programmes, not only AI.",
+   "url": "https://www.longview.org/about/"
+  },
+  "manifund": {
+   "v": 2,
+   "text": "a team of 2",
+   "when": "October 2026",
+   "basis": "Its own about page",
+   "note": "Its Form 990 for 2024 reports no employees.",
+   "url": "https://manifund.org/about"
+  },
+  "macro": {
+   "v": 15,
+   "text": "15 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own about page",
+   "url": "https://macroscopic.org/about"
+  },
+  "schmidt": {
+   "v": 68,
+   "text": "68 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, founders left out",
+   "note": "All of Schmidt Sciences, not only its AI work. The list includes advisers and visiting scientists.",
+   "url": "https://www.schmidtsciences.org/team/"
+  },
+  "fmf": {
+   "v": 3,
+   "text": "3 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/933755892"
+  },
+  "apollo": {
+   "v": 45,
+   "text": "45 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page",
+   "url": "https://www.apolloresearch.ai/team"
+  },
+  "redwood": {
+   "v": 22,
+   "text": "22 staff listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, board left out",
+   "note": "Its Form 990 for 2024 reports 6 employees.",
+   "url": "https://www.redwoodresearch.org/team"
+  },
+  "cnas": {
+   "v": 82,
+   "text": "82 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to September 2025, via ProPublica Nonprofit Explorer",
+   "note": "All of CNAS, not only its AI work.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/208084828"
+  },
+  "brookings": {
+   "v": 603,
+   "text": "603 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer",
+   "note": "All of Brookings, not only its AI work.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530196577"
+  },
+  "carnegie": {
+   "v": 253,
+   "text": "253 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer",
+   "note": "All of the endowment, not only its AI work.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/130552040"
+  },
+  "chai": {
+   "v": 47,
+   "text": "47 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own people page: faculty, staff, researchers, research fellows and graduate students",
+   "note": "Affiliates, interns and alumni are left out.",
+   "url": "https://humancompatible.ai/people/"
+  },
+  "cais": {
+   "v": 25,
+   "text": "25 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for 2024, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/881751310"
+  },
+  "goodfire": {
+   "v": 66,
+   "text": "about 66 employees",
+   "when": "31 July 2026",
+   "basis": "Third-party tracker (Tracxn)",
+   "est": true,
+   "url": "https://tracxn.com/d/companies/goodfire/__RxGbfOZ24VgU9UPjz3IKxfjG3-vZPRkGPaVMW0uCmLE"
+  },
+  "uiuc": {
+   "v": 11351,
+   "text": "2,548 faculty and 8,803 administrative staff",
+   "when": "as given in the entry",
+   "basis": "Wikipedia entry for the university",
+   "est": true,
+   "note": "All of the university, not only its AI research.",
+   "url": "https://en.wikipedia.org/wiki/University_of_Illinois_Urbana-Champaign"
+  },
+  "caisi": {
+   "v": 25,
+   "text": "20 to 30 staff",
+   "when": "2026",
+   "basis": "Host description for a Harvard internship programme",
+   "est": true,
+   "note": "CAISI only, not NIST. The bubble is placed at the middle of the range.",
+   "url": "https://iop.harvard.edu/internships-and-careers/directors-internship/host-organizations/center-ai-standards-and-innovation"
+  },
+  "bis": {
+   "v": 768,
+   "text": "768 full-time equivalent staff, in 830 positions",
+   "when": "fiscal 2026",
+   "basis": "Congressional budget submission",
+   "note": "A request, not the enacted level.",
+   "url": "https://commerce.gov/sites/default/files/2025-06/BIS-FY2026-Congressional-Budget-Submission.pdf"
+  },
+  "oecd": {
+   "v": 3500,
+   "text": "more than 3,500 employees in the Secretariat",
+   "when": "October 2026",
+   "basis": "Its own page on organisational structure",
+   "note": "All of the OECD, not only its AI work.",
+   "url": "https://www.oecd.org/en/about/organisational-structure.html"
+  },
+  "chamber": {
+   "v": 504,
+   "text": "504 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for 2024, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530045720"
+  },
+  "ainow": {
+   "v": 19,
+   "text": "19 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own about page, fellows and advisers included, board left out",
+   "url": "https://ainowinstitute.org/about"
+  },
+  "dair": {
+   "v": 20,
+   "text": "20 people listed",
+   "when": "October 2026",
+   "basis": "Count of its own team page, faculty affiliates and board left out",
+   "url": "https://www.dair-institute.org/team/"
+  },
+  "publiccitizen": {
+   "v": 174,
+   "text": "174 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to September 2025, via ProPublica Nonprofit Explorer",
+   "note": "Public Citizen Foundation files separately and reports the same 174.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/237104508"
+  },
+  "labor": {
+   "v": 498,
+   "text": "498 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer",
+   "note": "The federation's own staff, not the members of its unions.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530228172"
+  },
+  "sag": {
+   "v": 559,
+   "text": "559 employees",
+   "when": "calendar 2024",
+   "basis": "Form 990 for the year to April 2025, via ProPublica Nonprofit Explorer",
+   "note": "The union's own staff, not its members.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/454931719"
+  },
+  "spar": {
+   "v": 16,
+   "text": "16 people listed at Kairos, which runs SPAR",
+   "when": "October 2026",
+   "basis": "Count of the team list on Kairos's own site, two contractors included",
+   "note": "Kairos runs other programmes as well.",
+   "url": "https://kairos-project.org/"
+  },
+  "iso": {
+   "v": 180,
+   "text": "180 full-time staff at the ISO Central Secretariat",
+   "when": "2025",
+   "basis": "ISO in figures 2025",
+   "note": "ISO only. The IEC is a separate organisation with its own staff.",
+   "url": "https://www.iso.org/files/live/sites/isoorg/files/about%20ISO/iso_in_figures/docs/iso_in_figures_2025.pdf"
+  },
+  "cen": {
+   "v": 95,
+   "text": "a staff of some 95 people",
+   "when": "October 2026",
+   "basis": "Its own page on the CEN-CENELEC Management Centre",
+   "note": "The shared management centre only, not the national members or the experts on its committees.",
+   "url": "https://www.cencenelec.eu/management-centre/"
+  },
+  "insurance": {
+   "v": 44000,
+   "text": "about 44,000 employees",
+   "when": "31 December 2025",
+   "basis": "Company media release on the 2025 results",
+   "note": "All of the Munich Re Group, not only its AI insurance line.",
+   "url": "https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2026/media-release-2026-02-26.html"
+  },
+  "safer": {
+   "v": 21,
+   "text": "21 employees listed",
+   "when": "October 2026",
+   "basis": "Count of its own about page, advisers left out",
+   "url": "https://www.safer-ai.org/about"
+  }
+ },
+ "money": {
+  "nvidia": {
+   "fin": "F014",
+   "kind": "Revenue"
+  },
+  "amd": {
+   "fin": "F015",
+   "kind": "Revenue"
+  },
+  "tsmc": {
+   "fin": "F017",
+   "kind": "Revenue"
+  },
+  "asml": {
+   "fin": "F018",
+   "kind": "Revenue"
+  },
+  "sk": {
+   "fin": "F019",
+   "kind": "Revenue"
+  },
+  "samsung": {
+   "fin": "F020",
+   "kind": "Revenue"
+  },
+  "intel": {
+   "v": 52900000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm"
+  },
+  "broadcom": {
+   "v": 63887000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "fiscal 2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1730168/000173016825000121/avgo-20251102.htm"
+  },
+  "huawei": {
+   "v": 880900000000,
+   "cur": "CNY",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "2025 annual report announcement",
+   "url": "https://www.huawei.com/en/news/2026/3/annual-report-2025"
+  },
+  "microsoft": {
+   "v": 331839000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "fiscal 2026",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/0000789019/000119312526323660/msft-20260630.htm"
+  },
+  "google": {
+   "v": 402800000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form 10-K (Alphabet)",
+   "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm"
+  },
+  "amazon": {
+   "v": 716924000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form 10-K",
+   "note": "All of Amazon. The cloud arm, AWS, accounts for USD 128.7bn of it.",
+   "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm"
+  },
+  "oracle": {
+   "v": 67357000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "fiscal 2026",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001341439/000119312526277521/orcl-20260531.htm"
+  },
+  "coreweave": {
+   "v": 5131000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm"
+  },
+  "spacex": {
+   "v": 18674000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form S-1",
+   "note": "Restated in the filing to include xAI and X.",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001181412/000162828026036936/spaceexplorationtechnologi.htm"
+  },
+  "meta": {
+   "v": 200970000000,
+   "cur": "USD",
+   "kind": "Revenue",
+   "when": "2025",
+   "basis": "Form 10-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm"
+  },
+  "softbank": {
+   "v": 7243752000000,
+   "cur": "JPY",
+   "kind": "Revenue",
+   "when": "the fiscal year in the report",
+   "basis": "SoftBank Group annual report",
+   "url": "https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2025_07_en.pdf"
+  },
+  "openai": {
+   "fin": "F003",
+   "kind": "Revenue, one month",
+   "times": 12,
+   "note": "The source states one month of revenue. The bubble is placed at twelve times that; the dataset itself does not annualise it."
+  },
+  "anthropic": {
+   "fin": "F009",
+   "kind": "Revenue run-rate"
+  },
+  "cg": {
+   "fin": "F038",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "longview": {
+   "fin": "F039",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "macro": {
+   "fin": "F040",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "sff": {
+   "fin": "F041",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "schmidt": {
+   "fin": "F042",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "aistof": {
+   "fin": "F043",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "manifund": {
+   "fin": "F044",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "taif": {
+   "fin": "F045",
+   "kind": "AI safety funding, one published estimate"
+  },
+  "aisf": {
+   "fin": "F031",
+   "kind": "Grants awarded"
+  },
+  "metr": {
+   "fin": "F028",
+   "kind": "Funding commitments received, six months"
+  },
+  "far": {
+   "fin": "F027",
+   "kind": "Funding commitments received"
+  },
+  "redwood": {
+   "v": 12590834,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "2023",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "note": "The latest filing with figures. A two-year support recommendation above USD 70m is in the financial observations and is left out here because it covers more than a year.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/871702255"
+  },
+  "rand": {
+   "v": 413015979,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to September 2023",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "note": "All of RAND, not only its AI work.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/951958142"
+  },
+  "brookings": {
+   "v": 98831178,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to June 2023",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530196577"
+  },
+  "carnegie": {
+   "v": 52595867,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to June 2024",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/130552040"
+  },
+  "chamber": {
+   "v": 197575321,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "2023",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530045720"
+  },
+  "sag": {
+   "v": 108964258,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to April 2023",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/454931719"
+  },
+  "aisi": {
+   "v": 66000000,
+   "cur": "GBP",
+   "kind": "Funding per financial year",
+   "when": "October 2026",
+   "basis": "Its own about page",
+   "url": "https://www.aisi.gov.uk/about"
+  },
+  "caisi": {
+   "v": 10000000,
+   "cur": "USD",
+   "kind": "Appropriation",
+   "when": "fiscal 2026",
+   "basis": "Press report (FedScoop)",
+   "est": true,
+   "note": "CAISI only, not NIST.",
+   "url": "https://fedscoop.com/caisi-would-benefit-from-more-resources-ostp-director-tells-lawmakers/"
+  },
+  "bis": {
+   "v": 303000000,
+   "cur": "USD",
+   "kind": "Budget request",
+   "when": "fiscal 2026",
+   "basis": "Congressional budget submission",
+   "note": "A request, not the enacted amount.",
+   "url": "https://commerce.gov/sites/default/files/2025-06/BIS-FY2026-Congressional-Budget-Submission.pdf"
+  },
+  "ftc": {
+   "v": 383600000,
+   "cur": "USD",
+   "kind": "Appropriation",
+   "when": "fiscal 2026",
+   "basis": "FTC appropriation and FTE history",
+   "url": "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation"
+  },
+  "leading": {
+   "fin": "F034",
+   "kind": "Receipts"
+  },
+  "publicfirst": {
+   "fin": "F036",
+   "kind": "Receipts"
+  },
+  "qwen": {
+   "v": 1023670000000,
+   "cur": "CNY",
+   "kind": "Revenue",
+   "when": "year to March 2026",
+   "basis": "Fiscal 2026 results announcement (Form 6-K)",
+   "note": "All of Alibaba Group, not only the Qwen models.",
+   "url": "https://www.sec.gov/Archives/edgar/data/1577552/000110465926060224/tm2614494d1_ex99-1.htm"
+  },
+  "insurance": {
+   "v": 60400000000,
+   "cur": "EUR",
+   "kind": "Insurance revenue",
+   "when": "2025",
+   "basis": "Company media release on the 2025 results",
+   "note": "All of the Munich Re Group, not only its AI insurance line.",
+   "url": "https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2026/media-release-2026-02-26.html"
+  },
+  "fmf": {
+   "v": 1883102,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to June 2025",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/933755892"
+  },
+  "cnas": {
+   "v": 15006635,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to September 2025",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "note": "All of CNAS, not only its AI work.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/208084828"
+  },
+  "cais": {
+   "v": 7163607,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "2024",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/881751310"
+  },
+  "publiccitizen": {
+   "v": 11835209,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to September 2025",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "note": "Public Citizen Inc only. Public Citizen Foundation files separately, with expenses of USD 17.9m in the same year.",
+   "url": "https://projects.propublica.org/nonprofits/organizations/237104508"
+  },
+  "labor": {
+   "v": 140227901,
+   "cur": "USD",
+   "kind": "Expenses",
+   "when": "year to June 2025",
+   "basis": "Form 990, via ProPublica Nonprofit Explorer",
+   "url": "https://projects.propublica.org/nonprofits/organizations/530228172"
+  },
+  "oecd": {
+   "v": 367700000,
+   "cur": "EUR",
+   "kind": "Budget",
+   "when": "2026",
+   "basis": "Its own page on Member countries' budget contributions",
+   "note": "Part I and Part II budgets together. All of the OECD, not only its AI work.",
+   "url": "https://www.oecd.org/en/about/budget/member-countries-budget-contributions.html"
+  }
+ },
+ "worth": {
+  "nvidia": {
+   "v": 5727000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "microsoft": {
+   "v": 3902000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "google": {
+   "v": 4185000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "amazon": {
+   "v": 2724000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "tsmc": {
+   "v": 2511000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "meta": {
+   "v": 1895000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "broadcom": {
+   "v": 1730000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "samsung": {
+   "v": 1349000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "amd": {
+   "v": 1028000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "sk": {
+   "v": 975000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "asml": {
+   "v": 712860000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "intel": {
+   "v": 618370000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "oracle": {
+   "v": 434860000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "softbank": {
+   "v": 234180000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/"
+  },
+  "coreweave": {
+   "v": 48200000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "url": "https://companiesmarketcap.com/coreweave/marketcap/"
+  },
+  "spacex": {
+   "v": 2270000000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "5 October 2026",
+   "basis": "Stock-market value, as listed by StockAnalysis",
+   "note": "Listed on Nasdaq since 12 June 2026. Includes xAI and X.",
+   "url": "https://stockanalysis.com/stocks/spcx/market-cap/"
+  },
+  "openai": {
+   "fin": "F002",
+   "kind": "Valuation at the latest financing round"
+  },
+  "anthropic": {
+   "fin": "F008",
+   "kind": "Valuation at the latest financing round"
+  },
+  "deepseek": {
+   "fin": "F013",
+   "kind": "Valuation implied by a filing"
+  },
+  "mistral": {
+   "v": 21000000000,
+   "cur": "EUR",
+   "kind": "Valuation at the latest financing round",
+   "when": "8 September 2026",
+   "basis": "Press report on the Series D round (TechCrunch)",
+   "est": true,
+   "note": "Reported as more than EUR 21bn.",
+   "url": "https://techcrunch.com/2026/09/08/mistral-raises-e3b-as-sovereign-ai-becomes-big-business/"
+  },
+  "foundation": {
+   "fin": "F005",
+   "kind": "Implied value of its OpenAI stake"
+  },
+  "temasek": {
+   "v": 518000000000,
+   "cur": "SGD",
+   "kind": "Net portfolio value",
+   "when": "31 March 2026",
+   "basis": "Temasek announcement",
+   "note": "The value of what Temasek holds, not a market price for Temasek itself.",
+   "url": "https://www.temasek.com.sg/en/news-and-resources/news-room/news/2026/temasek-net-portfolio-value-grows-to-518b-up-49b-from-last-year"
+  },
+  "qwen": {
+   "v": 275640000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "6 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "note": "All of Alibaba Group, not only the Qwen models.",
+   "url": "https://companiesmarketcap.com/alibaba/marketcap/"
+  },
+  "insurance": {
+   "v": 72060000000,
+   "cur": "USD",
+   "kind": "Market value",
+   "when": "6 October 2026",
+   "basis": "Stock-market value, as listed by CompaniesMarketCap",
+   "note": "All of the Munich Re Group.",
+   "url": "https://companiesmarketcap.com/munich-re/marketcap/"
+  },
+  "goodfire": {
+   "v": 1250000000,
+   "cur": "USD",
+   "kind": "Valuation at the latest financing round",
+   "when": "February 2026",
+   "basis": "Announcement of the Series B round, as carried by Yahoo Finance",
+   "url": "https://finance.yahoo.com/news/ai-lab-goodfire-raises-150m-150100095.html"
+  }
+ },
+ "time100": {
+  "title": "TIME100 AI 2026",
+  "publisher": "TIME",
+  "date": "2026-08-26",
+  "url": "https://time.com/collection/time100-ai/2026/",
+  "people": 100,
+  "matches": {
+   "openai": [
+    "Mark Chen, Chief Research Officer",
+    "Sam Altman, CEO",
+    "Greg Brockman, President"
+   ],
+   "anthropic": [
+    "Dario Amodei, Co-founder",
+    "Daniela Amodei, Co-founder",
+    "Jack Clark, Co-founder and Head of Public Benefit"
+   ],
+   "uspolicy": [
+    "David Sacks, Co-Chair, President's Council of Advisors on Science and Technology",
+    "Bernie Sanders, U.S. Senator",
+    "Emil Michael, Under Secretary of War for Research and Engineering"
+   ],
+   "google": [
+    "Elizabeth Reid, VP and Head of Search",
+    "Marian Croak, VP, Responsible AI and Human Centered Technology"
+   ],
+   "amazon": [
+    "Jeff Bezos, Founder",
+    "Matt Garman, CEO, Amazon Web Services"
+   ],
+   "deepmind": [
+    "Lila Ibrahim, Chief AI Readiness Officer"
+   ],
+   "spacex": [
+    "Elon Musk, CEO"
+   ],
+   "broadcom": [
+    "Hock Tan, CEO"
+   ],
+   "caisi": [
+    "Arvind Raman, Acting head, U.S. CAISI; Director, NIST"
+   ],
+   "oracle": [
+    "Larry Ellison, Co-founder, CTO and Executive Chairman"
+   ],
+   "huawei": [
+    "He Tingbo, Director"
+   ],
+   "qwen": [
+    "Eddie Wu, CEO, Alibaba"
+   ],
+   "coreweave": [
+    "Michael Intrator, Co-founder and CEO"
+   ],
+   "moonshot": [
+    "Yang Zhilin, Co-founder and CEO"
+   ],
+   "nvidia": [
+    "Josh Parker, Head of Sustainability"
+   ],
+   "metr": [
+    "Beth Barnes, Founder and CEO"
+   ],
+   "labor": [
+    "Liz Shuler, President"
+   ],
+   "oecd": [
+    "Karine Perset, Deputy Head of AI and Emerging Digital Technologies Division"
+   ],
+   "energy": [
+    "Joe Dominguez, President and CEO, Constellation Energy Group"
+   ],
+   "journalism": [
+    "A.G. Sulzberger, Publisher and Chairman, The New York Times Co."
+   ]
+  },
+  "groupActors": [
+   "uspolicy",
+   "energy",
+   "journalism"
+  ]
+ }
+}
