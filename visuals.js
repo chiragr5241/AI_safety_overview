@@ -325,4 +325,103 @@
     api.onTheme(drawCrash);
   });
 
+  /* ---------- glossary cards ----------
+     Reference chapter. The glossary further down the page is already a list of terms and their definitions,
+     so the deck is built from it rather than written out again: one card per entry, the term on the front.
+     What the reader knew is kept, so a second visit can go straight to the ones they missed.
+     Without this the glossary is still there, in full, as a plain list.
+
+     PARKED. The slot is commented out in the glossary chapter of multi-agent-risks.html, so this registers and
+     then finds nothing to mount, which costs a lookup and does not touch the page. Kept whole, with its styles
+     in visuals.css, so that uncommenting the slot is the only step needed to bring the deck back. */
+  Visuals.register("glossary-cards", {
+    html: '<div class="fc" hidden></div>',
+    init: slot => {
+      const cards = $$("#glossary .gloss > div").map(d => ({ q: $("dt", d).textContent.trim(), a: $("dd", d).textContent.trim() }));
+      if (cards.length < 2) return;   // nothing worth shuffling through
+      const KEY = "wam-cards";
+      const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+      const write = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} };
+      let marks = read();                              // term -> true when the reader said they knew it
+      let deck = cards.map((c, i) => i), at = 0, shown = false;
+
+      const fc = $(".fc", slot);
+      fc.hidden = false;
+      fc.innerHTML =
+        '<ol class="fc-marks" aria-hidden="true"></ol>' +
+        '<div class="fc-card">' +
+          '<p class="fc-kind">Card <span class="fc-at"></span></p>' +
+          '<div class="fc-face" aria-live="polite"><p class="fc-q"></p><p class="fc-a" hidden></p></div>' +
+          '<div class="fc-row fc-row--end">' +
+            '<button type="button" class="btn sm fc-show">Show the definition</button>' +
+            '<span class="fc-judge" hidden><button type="button" class="btn sm ghost fc-btn" data-knew="0">Not yet</button>' +
+            '<button type="button" class="btn sm fc-btn fc-btn--solid" data-knew="1">Knew it</button></span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="fc-row fc-row--foot"><button type="button" class="btn sm ghost fc-prev">Previous</button>' +
+        '<p class="fc-note" aria-live="polite"></p>' +
+        '<button type="button" class="btn sm ghost fc-restart">Start again</button></div>';
+
+      const marksEl = $(".fc-marks", fc), face = $(".fc-face", fc), note = $(".fc-note", fc);
+      const qEl = $(".fc-q", fc), aEl = $(".fc-a", fc), atEl = $(".fc-at", fc);
+      const showBtn = $(".fc-show", fc), judge = $(".fc-judge", fc), prev = $(".fc-prev", fc);
+
+      function paint() {
+        const done = at >= deck.length;
+        $(".fc-card", fc).classList.toggle("is-done", done);
+        marksEl.innerHTML = deck.map((c, i) => {
+          const state = i === at && !done ? " now" : marks[cards[c].q] ? " knew" : i < at ? " missed" : "";
+          return '<li class="fc-mark' + state + '"></li>';
+        }).join("");
+        prev.disabled = at === 0 || done;
+        if (done) {
+          const knew = deck.filter(c => marks[cards[c].q]).length, missed = deck.length - knew;
+          atEl.textContent = "";
+          qEl.textContent = "You knew " + knew + " of " + deck.length + ".";
+          aEl.hidden = false;
+          aEl.textContent = missed ? "Start again to go through all " + cards.length + ", or take another run at the " + missed + " you did not." : "That is the whole glossary.";
+          showBtn.hidden = missed === 0;
+          showBtn.textContent = "Practise the " + missed + " again";
+          judge.hidden = true;
+          note.textContent = "";
+          return;
+        }
+        const card = cards[deck[at]];
+        atEl.textContent = (at + 1) + " of " + deck.length;
+        qEl.textContent = card.q;
+        aEl.textContent = card.a;
+        aEl.hidden = !shown;
+        showBtn.hidden = shown;
+        showBtn.textContent = "Show the definition";
+        judge.hidden = !shown;
+        note.textContent = marks[card.q] ? "You knew this one last time." : "";
+      }
+      function go(next) { at = next; shown = false; paint(); face.focus(); }
+
+      showBtn.addEventListener("click", () => {
+        if (at >= deck.length) {                       // the end card: go again with only the ones not known
+          deck = deck.filter(c => !marks[cards[c].q]);
+          go(0);
+          return;
+        }
+        shown = true;
+        paint();
+      });
+      $$(".fc-btn", fc).forEach(b => b.addEventListener("click", () => {
+        marks[cards[deck[at]].q] = b.dataset.knew === "1";
+        write(marks);
+        go(at + 1);
+      }));
+      prev.addEventListener("click", () => go(Math.max(0, at - 1)));
+      $(".fc-restart", fc).addEventListener("click", () => {
+        marks = {};
+        write(marks);
+        deck = cards.map((c, i) => i);
+        go(0);
+      });
+      face.tabIndex = -1;
+      paint();
+    }
+  });
+
 })();

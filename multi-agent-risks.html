@@ -211,10 +211,7 @@ section.chapter { padding-block: 56px 24px; border-top: 1px solid var(--line); }
 .lab-head .eyebrow { color: var(--accent); }
 .lab-note { font-size: .82rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.seg { display: inline-flex; border: 1.5px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
-.seg button { font-family: var(--font-mono); font-size: .82rem; background: transparent; border: 0; padding: 8px 14px; min-height: 40px; color: var(--muted); cursor: pointer; transition: background-color .15s, color .15s; }
-.seg button:hover:not([aria-pressed="true"]) { background: var(--surface-2); color: var(--ink); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+/* .seg and .theme-chips are the site's choice controls: see explore.css */
 input[type="range"] { accent-color: var(--accent); width: 100%; height: 32px; margin: 0; cursor: pointer; }
 .check { display: flex; gap: 10px; align-items: center; min-height: 40px; font-size: .92rem; cursor: pointer; }
 .check input { width: 18px; height: 18px; margin: 0; flex: none; }
@@ -323,10 +320,6 @@ table.matrix { border-collapse: collapse; width: 100%; min-width: 760px; font-si
 .primer-tools { display: grid; gap: 12px; margin-bottom: 8px; }
 .primer-tools input[type="search"] { font: inherit; font-size: 1rem; width: 100%; max-width: 30rem; padding: 10px 14px; min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); }
 .primer-tools input[type="search"]:focus { border-color: var(--accent); outline: none; }
-.theme-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.theme-chips button { font-family: var(--font-display); font-weight: 500; font-size: .88rem; padding: 0 13px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s; }
-.theme-chips button:hover { color: var(--ink); border-color: var(--ink); }
-.theme-chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .pgroup { padding-top: 30px; display: grid; gap: 14px; }
 .pgroup-head { display: grid; gap: 6px; max-width: 46rem; }
 .pgroup-head .step { font-family: var(--font-mono); font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
@@ -359,12 +352,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .res { display: grid; gap: 2px; justify-items: start; }
 .res a { display: inline-flex; align-items: center; min-height: 36px; }
 
-/* Glossary terms explained where they are used */
-.term { text-decoration: underline dotted var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; cursor: help; border-radius: 3px; }
-.term:hover, .term[aria-describedby] { background: var(--accent-soft); }
-.tip { position: absolute; z-index: 30; left: 0; top: 0; max-width: min(22rem, calc(100vw - 24px)); background: var(--ink); color: var(--bg); border-radius: 10px; padding: 12px 14px; font-size: .9rem; line-height: 1.45; box-shadow: 0 12px 28px -12px rgb(0 0 0 / .5); pointer-events: none; visibility: hidden; opacity: 0; transform: translateY(4px); transition: opacity .14s, transform .14s cubic-bezier(.16, 1, .3, 1), visibility .14s; }
-.tip.show { visibility: visible; opacity: 1; transform: none; }
-.tip b { font-family: var(--font-display); display: block; margin-bottom: 2px; }
+/* Glossary terms explained where they are used: see .term and .tip in explore.css */
 
 @media (pointer: coarse) {
   .seg button, .btn.sm, .theme-chips button, .chip, .chapters a, .link-btn { min-height: 44px; }
@@ -1681,6 +1669,10 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
     <!-- ============ GLOSSARY ============ -->
     <section class="chapter" id="glossary">
       <div class="chapter-head"><span class="chapter-num">REFERENCE</span><h2>Glossary</h2></div>
+      <!-- A deck built from the list below, for readers who would rather be asked than read. Parked for now:
+           the visual is still registered in visuals.js and styled in visuals.css, and putting the slot back
+           is the only step needed to show it again.
+      <div class="slot" data-visual="glossary-cards" hidden></div> -->
       <dl class="gloss">
         <div><dt>Agent</dt><dd>An AI system that acts autonomously towards goals, rather than just answering a question.</dd></div>
         <div><dt>Principal</dt><dd>The person, group or organisation an agent acts on behalf of.</dd></div>
@@ -1724,6 +1716,7 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 
 <script src="explore.js"></script>
 <script src="visuals.js"></script>
+<script src="terms.js"></script>
 <script>
 (function () {
   "use strict";
@@ -2023,8 +2016,9 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
   $("#heroFacts").textContent = `${numbered} chapters · ${$$("#guideView .lab").length} interactive examples · a ${Q.length}-question quiz · about ${mins} minutes of reading`;
 
   /* ---------- glossary terms explained in place ---------- */
-  // The glossary sits at the end of the page. The first time a chapter uses one of its terms,
-  // the term gets a dotted underline and shows its definition on hover, focus or tap.
+  // The glossary sits at the end of the page. Wherever a chapter uses one of its terms, the word gets a
+  // dotted underline and shows its definition on hover, focus or tap.
+  // terms.js owns the marking and the tooltip; this only says which words to look for and where.
   const gloss = {};
   $$("#glossary .gloss > div").forEach(d => { gloss[$("dt", d).textContent] = $("dd", d).textContent; });
   const TERMS = [
@@ -2043,74 +2037,22 @@ footer h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
     ["Emergence", /\bemergen(?:ce|t)\b/i],
     ["Jailbreak", /\bjailbreak(?:s|ing)?\b/i]
   ];
-  const SKIP = "a, button, strong, h1, h2, h3, h4, summary, label, nav, table, dl, .lab, .eyebrow, .tag, .term, [aria-live]";
-  $$("#guideView section.chapter").forEach(ch => {
-    if (ch.id === "glossary") return;
-    const subs = $$(".sub", ch);
-    const scopes = subs.length ? subs.concat($(".chapter-head", ch)) : [ch];
-    scopes.forEach(scope => TERMS.forEach(([term, re]) => {
-      if (!gloss[term]) return;
-      const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
-      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-        const parent = node.parentElement;
-        if (parent.closest(SKIP) || !parent.closest("p, li")) continue;
-        const m = re.exec(node.data);
-        if (!m) continue;
-        const range = document.createRange();
-        range.setStart(node, m.index);
-        range.setEnd(node, m.index + m[0].length);
-        const span = document.createElement("span");
-        span.className = "term";
-        span.tabIndex = 0;
-        span.setAttribute("role", "button");
-        span.dataset.term = term;
-        range.surroundContents(span);
-        break;
-      }
-    }));
+  // Every chapter but the glossary itself, taken a part at a time so a long chapter explains a term more than once.
+  if (window.Terms) window.Terms.mount(gloss, {
+    terms: TERMS,
+    scopes: () => $$("#guideView section.chapter").filter(ch => ch.id !== "glossary").reduce((all, ch) => {
+      const subs = $$(".sub", ch);
+      return all.concat(subs.length ? subs.concat($(".chapter-head", ch)) : [ch]);
+    }, [])
   });
-  const tip = document.createElement("div");
-  tip.id = "termTip";
-  tip.className = "tip";
-  tip.setAttribute("role", "tooltip");
-  document.body.appendChild(tip);
-  let tipFor = null;
-  function showTip(el) {
-    hideTip();
-    tipFor = el;
-    const b = document.createElement("b");
-    b.textContent = el.dataset.term;
-    tip.replaceChildren(b, gloss[el.dataset.term]);
-    el.setAttribute("aria-describedby", "termTip");
-    tip.style.left = "0"; tip.style.top = "0";
-    const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
-    const left = Math.max(12, Math.min(r.left, document.documentElement.clientWidth - w - 12));
-    const below = r.bottom + h + 12 < window.innerHeight;
-    tip.style.left = left + window.scrollX + "px";
-    tip.style.top = (below ? r.bottom + 8 : r.top - h - 8) + window.scrollY + "px";
-    tip.classList.add("show");
-  }
-  function hideTip() {
-    if (!tipFor) return;
-    tipFor.removeAttribute("aria-describedby");
-    tipFor = null;
-    tip.classList.remove("show");
-  }
-  const termOf = e => e.target.closest ? e.target.closest(".term") : null;
-  document.addEventListener("pointerover", e => { const t = termOf(e); if (t && e.pointerType === "mouse") showTip(t); });
-  document.addEventListener("pointerout", e => { if (termOf(e) && e.pointerType === "mouse") hideTip(); });
-  document.addEventListener("focusin", e => { const t = termOf(e); if (t) showTip(t); });
-  document.addEventListener("focusout", e => { if (termOf(e)) hideTip(); });
-  document.addEventListener("click", e => {
-    const t = termOf(e);
-    if (t) showTip(t); else hideTip();
-    if (!e.target.closest(".topbar")) tocOpen(false);
-  });
-  window.addEventListener("resize", hideTip);
+
+  /* ---------- closing the Contents menu ---------- */
+  // terms.js puts its own tooltip away on a click or on Escape; these two only deal with the menu.
+  document.addEventListener("click", e => { if (!e.target.closest(".topbar")) tocOpen(false); });
   document.addEventListener("keydown", e => {
-    if (e.key !== "Escape") return;
-    hideTip();
-    if (chapters.classList.contains("open")) { tocOpen(false); tocBtn.focus(); }
+    if (e.key !== "Escape" || !chapters.classList.contains("open")) return;
+    tocOpen(false);
+    tocBtn.focus();
   });
 })();
 </script>

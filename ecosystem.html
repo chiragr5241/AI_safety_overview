@@ -377,12 +377,7 @@ main > .wrap { padding-top: 16px; }
 .readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .empty { font-size: .95rem; color: var(--muted); padding-top: 20px; }
 .more { margin-top: 16px; }
-.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-.pills button { font-family: var(--font-display); font-weight: 500; font-size: .88rem; padding: 0 13px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s; }
-.pills button:hover { color: var(--ink); border-color: var(--ink); }
-.pills button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.pills button .c { font-family: var(--font-mono); font-size: .76rem; margin-left: 4px; opacity: .8; }
-@media (pointer: coarse) { .pills button { min-height: 44px; } }
+/* .pills is the site's wrapping chip control: see explore.css */
 
 /* 3. Actors */
 .pcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
@@ -473,10 +468,13 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 .gloss dt { font-family: var(--font-display); font-weight: 700; }
 .gloss dd { margin: 2px 0 0; }
 .fold { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; max-width: 60rem; }
-.fold summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 8px 16px; border-radius: 10px; transition: background-color .15s; }
+/* The heading is written as running text with a count inside it, so the summary is not a flex container:
+   each run of text either side of the count would become a flex item of its own and be spread across the row.
+   The chevron sits in the padding instead. */
+.fold summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; list-style: none; position: relative; display: block; padding: 13px 40px 13px 16px; border-radius: 10px; transition: background-color .15s; }
 .fold summary::-webkit-details-marker { display: none; }
-.fold summary::after { content: ""; flex: none; width: 8px; height: 8px; margin-top: -4px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .16s; }
-.fold[open] summary::after { transform: rotate(-135deg); margin-top: 4px; }
+.fold summary::after { content: ""; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px; margin-top: -6px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .16s; }
+.fold[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
 .fold summary:hover { background: var(--surface-2); }
 .fold .fold-body { padding: 0 16px 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; font-size: .95rem; }
 .fold .tbl { border-radius: 8px; }
@@ -1894,6 +1892,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 <script src="ecosystem-graph.js"></script>
 <script src="field-list.js"></script>
 <script src="explore.js"></script>
+<script src="terms.js"></script>
 <script>
 /* The map and the one-line answers stay in view. The reasoning, tables and lists wait behind a button each. */
 Explore.fold("#control .qblock, #questions .qblock", ".qblock-head");
@@ -1904,6 +1903,18 @@ Explore.fold("#money", ".chapter-head", { open: "Open the money section", close:
 Explore.fold("#field", ".chapter-head", { open: "Open the safety field: company money, grant records and every entry", close: "Close the safety field section" });
 Explore.fold("#method", ".chapter-head", { open: "Open method, terms and boundaries", close: "Close the method section" });
 Explore.fold("#sources", ".chapter-head", { open: "Open the 114 sources", close: "Close the sources" });
+
+/* The terms list in the method section already defines the words this page leans on, so every use of each one in
+   the reading text is marked and carries its definition. The method section keeps the full list, and the sources
+   are a reference rather than prose. Read after the folds above, which move those nodes but keep them. */
+if (window.Terms) {
+  const defs = {};
+  document.querySelectorAll("#method .gloss > div").forEach(d => { defs[d.querySelector("dt").textContent] = d.querySelector("dd").textContent; });
+  window.Terms.mount(defs, {
+    scopes: () => Array.from(document.querySelectorAll("section.chapter")).filter(s => s.id !== "method" && s.id !== "sources"),
+    skip: ".web, .tbl, .amt, .layer-hook"
+  });
+}
 </script>
 </body>
 </html>
