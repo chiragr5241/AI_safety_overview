@@ -1,5 +1,5 @@
 /* What a bubble's size can stand for on the map at the top of ecosystem.html, and the figure behind each bubble.
-   Collected on 5 October 2026 and kept apart from ecosystem-data.js, which is the version 1.0 stakeholder dataset.
+   Collected on 5 October 2026, with more headcounts and money figures added on 6 October, and kept apart from ecosystem-data.js, which is the version 1.0 stakeholder dataset.
    Rules, in keeping with that dataset:
    - every figure carries where it comes from, what it counts and when; nothing here is added up;
    - an actor with no entry under a measure is "not stated", which is not zero;
@@ -9,7 +9,7 @@
 window.ECO_SIZE = {
   retrieved: "2026-10-05",
   // rough US dollars per unit, for placing a bubble on a scale where one step is ten times more
-  fx: { USD: 1, EUR: 1.1, GBP: 1.3, CNY: 0.14, JPY: 0.0067, KRW: 0.0007 },
+  fx: { USD: 1, EUR: 1.1, GBP: 1.3, CNY: 0.14, JPY: 0.0067, KRW: 0.0007, SGD: 0.77 },
 
   /* ---------- people: employees or staff ---------- */
   people: {
@@ -49,11 +49,46 @@ window.ECO_SIZE = {
     bluedot: { v: 16, text: "a team of 16", when: "October 2026", basis: "Its own about page", url: "https://bluedot.org/about" },
     aisi: { v: 100, text: "more than 100 technical staff", when: "October 2026", basis: "Its own about page", note: "Technical staff only. Policy, operations and strategy teams are not counted in the figure.", url: "https://www.aisi.gov.uk/about" },
     eu: { v: 140, text: "more than 140 staff in the AI Office", when: "2026", basis: "Press report (Agence Europe)", est: true, note: "The AI Office only, not the Commission.", url: "https://agenceurope.eu/en/bulletin/article/13883/11/40-of-140-staff-members-of-european-commissions-ai-office-work-on-ai-safety" },
-    ftc: { v: 1225, text: "1,225 full-time equivalent staff", when: "fiscal 2025", basis: "FTC appropriation and FTE history", url: "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation" }
+    ftc: { v: 1225, text: "1,225 full-time equivalent staff", when: "fiscal 2025", basis: "FTC appropriation and FTE history", url: "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation" },
+    // added on 6 October 2026: headcounts for bubbles that had none. A nonprofit's Form 990 states the people it employed in a calendar year
+    qwen: { v: 131462, text: "131,462 employees", when: "31 March 2026", basis: "Fiscal 2026 results announcement (Form 6-K)", note: "All of Alibaba Group, not only the Qwen models.", url: "https://www.sec.gov/Archives/edgar/data/1577552/000110465926060224/tm2614494d1_ex99-1.htm" },
+    xai: { v: 1200, text: "more than 1,200 employees", when: "2025", basis: "Wikipedia entry for xAI, citing Business Insider", est: true, note: "The figure includes more than 900 hourly paid AI tutors, and it predates February 2026, when SpaceX acquired xAI. No later figure for the unit alone was found.", url: "https://en.wikipedia.org/wiki/XAI_(company)" },
+    a16z: { v: 1554, text: "about 1,550 employees", when: "March 2026", basis: "Third-party tracker (Revelio Labs)", est: true, url: "https://www.reveliolabs.com/companies/andreessen-horowitz/employees" },
+    temasek: { v: 970, text: "about 970 employees", when: "2026", basis: "Temasek Review 2026, as cited in the Wikipedia entry for Temasek", est: true, url: "https://en.wikipedia.org/wiki/Temasek_Holdings" },
+    gic: { v: 2525, text: "2,525 employees", when: "31 March 2026", basis: "GIC report for 2025/26", url: "https://report.gic.com.sg/people.html" },
+    cg: { v: 211, text: "211 people listed", when: "October 2026", basis: "Count of its own team page, the chair included", note: "All of its programmes, not only AI.", url: "https://coefficientgiving.org/about-us/team/" },
+    longview: { v: 31, text: "31 staff listed", when: "October 2026", basis: "Count of its own about page, founder and advisory board left out", note: "All of its programmes, not only AI.", url: "https://www.longview.org/about/" },
+    manifund: { v: 2, text: "a team of 2", when: "October 2026", basis: "Its own about page", note: "Its Form 990 for 2024 reports no employees.", url: "https://manifund.org/about" },
+    macro: { v: 15, text: "15 people listed", when: "October 2026", basis: "Count of its own about page", url: "https://macroscopic.org/about" },
+    schmidt: { v: 68, text: "68 people listed", when: "October 2026", basis: "Count of its own team page, founders left out", note: "All of Schmidt Sciences, not only its AI work. The list includes advisers and visiting scientists.", url: "https://www.schmidtsciences.org/team/" },
+    fmf: { v: 3, text: "3 employees", when: "calendar 2024", basis: "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/933755892" },
+    apollo: { v: 45, text: "45 staff listed", when: "October 2026", basis: "Count of its own team page", url: "https://www.apolloresearch.ai/team" },
+    redwood: { v: 22, text: "22 staff listed", when: "October 2026", basis: "Count of its own team page, board left out", note: "Its Form 990 for 2024 reports 6 employees.", url: "https://www.redwoodresearch.org/team" },
+    cnas: { v: 82, text: "82 employees", when: "calendar 2024", basis: "Form 990 for the year to September 2025, via ProPublica Nonprofit Explorer", note: "All of CNAS, not only its AI work.", url: "https://projects.propublica.org/nonprofits/organizations/208084828" },
+    brookings: { v: 603, text: "603 employees", when: "calendar 2024", basis: "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer", note: "All of Brookings, not only its AI work.", url: "https://projects.propublica.org/nonprofits/organizations/530196577" },
+    carnegie: { v: 253, text: "253 employees", when: "calendar 2024", basis: "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer", note: "All of the endowment, not only its AI work.", url: "https://projects.propublica.org/nonprofits/organizations/130552040" },
+    chai: { v: 47, text: "47 people listed", when: "October 2026", basis: "Count of its own people page: faculty, staff, researchers, research fellows and graduate students", note: "Affiliates, interns and alumni are left out.", url: "https://humancompatible.ai/people/" },
+    cais: { v: 25, text: "25 employees", when: "calendar 2024", basis: "Form 990 for 2024, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/881751310" },
+    goodfire: { v: 66, text: "about 66 employees", when: "31 July 2026", basis: "Third-party tracker (Tracxn)", est: true, url: "https://tracxn.com/d/companies/goodfire/__RxGbfOZ24VgU9UPjz3IKxfjG3-vZPRkGPaVMW0uCmLE" },
+    uiuc: { v: 11351, text: "2,548 faculty and 8,803 administrative staff", when: "as given in the entry", basis: "Wikipedia entry for the university", est: true, note: "All of the university, not only its AI research.", url: "https://en.wikipedia.org/wiki/University_of_Illinois_Urbana-Champaign" },
+    caisi: { v: 25, text: "20 to 30 staff", when: "2026", basis: "Host description for a Harvard internship programme", est: true, note: "CAISI only, not NIST. The bubble is placed at the middle of the range.", url: "https://iop.harvard.edu/internships-and-careers/directors-internship/host-organizations/center-ai-standards-and-innovation" },
+    bis: { v: 768, text: "768 full-time equivalent staff, in 830 positions", when: "fiscal 2026", basis: "Congressional budget submission", note: "A request, not the enacted level.", url: "https://commerce.gov/sites/default/files/2025-06/BIS-FY2026-Congressional-Budget-Submission.pdf" },
+    oecd: { v: 3500, text: "more than 3,500 employees in the Secretariat", when: "October 2026", basis: "Its own page on organisational structure", note: "All of the OECD, not only its AI work.", url: "https://www.oecd.org/en/about/organisational-structure.html" },
+    chamber: { v: 504, text: "504 employees", when: "calendar 2024", basis: "Form 990 for 2024, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/530045720" },
+    ainow: { v: 19, text: "19 people listed", when: "October 2026", basis: "Count of its own about page, fellows and advisers included, board left out", url: "https://ainowinstitute.org/about" },
+    dair: { v: 20, text: "20 people listed", when: "October 2026", basis: "Count of its own team page, faculty affiliates and board left out", url: "https://www.dair-institute.org/team/" },
+    publiccitizen: { v: 174, text: "174 employees", when: "calendar 2024", basis: "Form 990 for the year to September 2025, via ProPublica Nonprofit Explorer", note: "Public Citizen Foundation files separately and reports the same 174.", url: "https://projects.propublica.org/nonprofits/organizations/237104508" },
+    labor: { v: 498, text: "498 employees", when: "calendar 2024", basis: "Form 990 for the year to June 2025, via ProPublica Nonprofit Explorer", note: "The federation's own staff, not the members of its unions.", url: "https://projects.propublica.org/nonprofits/organizations/530228172" },
+    sag: { v: 559, text: "559 employees", when: "calendar 2024", basis: "Form 990 for the year to April 2025, via ProPublica Nonprofit Explorer", note: "The union's own staff, not its members.", url: "https://projects.propublica.org/nonprofits/organizations/454931719" },
+    spar: { v: 16, text: "16 people listed at Kairos, which runs SPAR", when: "October 2026", basis: "Count of the team list on Kairos's own site, two contractors included", note: "Kairos runs other programmes as well.", url: "https://kairos-project.org/" },
+    iso: { v: 180, text: "180 full-time staff at the ISO Central Secretariat", when: "2025", basis: "ISO in figures 2025", note: "ISO only. The IEC is a separate organisation with its own staff.", url: "https://www.iso.org/files/live/sites/isoorg/files/about%20ISO/iso_in_figures/docs/iso_in_figures_2025.pdf" },
+    cen: { v: 95, text: "a staff of some 95 people", when: "October 2026", basis: "Its own page on the CEN-CENELEC Management Centre", note: "The shared management centre only, not the national members or the experts on its committees.", url: "https://www.cencenelec.eu/management-centre/" },
+    insurance: { v: 44000, text: "about 44,000 employees", when: "31 December 2025", basis: "Company media release on the 2025 results", note: "All of the Munich Re Group, not only its AI insurance line.", url: "https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2026/media-release-2026-02-26.html" },
+    safer: { v: 21, text: "21 employees listed", when: "October 2026", basis: "Count of its own about page, advisers left out", url: "https://www.safer-ai.org/about" }
   },
 
-  /* ---------- money: one yearly figure per actor ---------- */
-  // kind says what the figure is. Valuations, assets under management, financing rounds and multi-year totals are left out.
+  /* ---------- money, as a yearly flow: one figure per actor ---------- */
+  // kind says what the figure is. Financing rounds and multi-year totals are left out. What an actor is worth is under "worth" below.
   money: {
     nvidia: { fin: "F014", kind: "Revenue" },
     amd: { fin: "F015", kind: "Revenue" },
@@ -96,7 +131,48 @@ window.ECO_SIZE = {
     bis: { v: 303e6, cur: "USD", kind: "Budget request", when: "fiscal 2026", basis: "Congressional budget submission", note: "A request, not the enacted amount.", url: "https://commerce.gov/sites/default/files/2025-06/BIS-FY2026-Congressional-Budget-Submission.pdf" },
     ftc: { v: 383.6e6, cur: "USD", kind: "Appropriation", when: "fiscal 2026", basis: "FTC appropriation and FTE history", url: "https://www.ftc.gov/about-ftc/bureaus-offices/office-chief-financial-officer/ftc-appropriation" },
     leading: { fin: "F034", kind: "Receipts" },
-    publicfirst: { fin: "F036", kind: "Receipts" }
+    publicfirst: { fin: "F036", kind: "Receipts" },
+    // added on 6 October 2026
+    qwen: { v: 1023.67e9, cur: "CNY", kind: "Revenue", when: "year to March 2026", basis: "Fiscal 2026 results announcement (Form 6-K)", note: "All of Alibaba Group, not only the Qwen models.", url: "https://www.sec.gov/Archives/edgar/data/1577552/000110465926060224/tm2614494d1_ex99-1.htm" },
+    insurance: { v: 60.4e9, cur: "EUR", kind: "Insurance revenue", when: "2025", basis: "Company media release on the 2025 results", note: "All of the Munich Re Group, not only its AI insurance line.", url: "https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2026/media-release-2026-02-26.html" },
+    fmf: { v: 1883102, cur: "USD", kind: "Expenses", when: "year to June 2025", basis: "Form 990, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/933755892" },
+    cnas: { v: 15006635, cur: "USD", kind: "Expenses", when: "year to September 2025", basis: "Form 990, via ProPublica Nonprofit Explorer", note: "All of CNAS, not only its AI work.", url: "https://projects.propublica.org/nonprofits/organizations/208084828" },
+    cais: { v: 7163607, cur: "USD", kind: "Expenses", when: "2024", basis: "Form 990, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/881751310" },
+    publiccitizen: { v: 11835209, cur: "USD", kind: "Expenses", when: "year to September 2025", basis: "Form 990, via ProPublica Nonprofit Explorer", note: "Public Citizen Inc only. Public Citizen Foundation files separately, with expenses of USD 17.9m in the same year.", url: "https://projects.propublica.org/nonprofits/organizations/237104508" },
+    labor: { v: 140227901, cur: "USD", kind: "Expenses", when: "year to June 2025", basis: "Form 990, via ProPublica Nonprofit Explorer", url: "https://projects.propublica.org/nonprofits/organizations/530228172" },
+    oecd: { v: 367.7e6, cur: "EUR", kind: "Budget", when: "2026", basis: "Its own page on Member countries' budget contributions", note: "Part I and Part II budgets together. All of the OECD, not only its AI work.", url: "https://www.oecd.org/en/about/budget/member-countries-budget-contributions.html" }
+  },
+
+  /* ---------- money, as worth: what an actor is valued at ---------- */
+  // Market value for a listed company on the day collected; the valuation at the latest financing round for a private one.
+  // These are stocks, not yearly flows, and none is cash. Units inside a larger company, nonprofits and public bodies have no entry.
+  worth: {
+    nvidia: { v: 5.727e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    microsoft: { v: 3.902e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    google: { v: 4.185e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    amazon: { v: 2.724e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    tsmc: { v: 2.511e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    meta: { v: 1.895e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    broadcom: { v: 1.730e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    samsung: { v: 1.349e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    amd: { v: 1.028e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    sk: { v: 975e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    asml: { v: 712.86e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    intel: { v: 618.37e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    oracle: { v: 434.86e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    softbank: { v: 234.18e9, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/" },
+    coreweave: { v: 48.2e9, cur: "USD", kind: "Market value", when: "October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", url: "https://companiesmarketcap.com/coreweave/marketcap/" },
+    spacex: { v: 2.27e12, cur: "USD", kind: "Market value", when: "5 October 2026", basis: "Stock-market value, as listed by StockAnalysis", note: "Listed on Nasdaq since 12 June 2026. Includes xAI and X.", url: "https://stockanalysis.com/stocks/spcx/market-cap/" },
+    openai: { fin: "F002", kind: "Valuation at the latest financing round" },
+    anthropic: { fin: "F008", kind: "Valuation at the latest financing round" },
+    deepseek: { fin: "F013", kind: "Valuation implied by a filing" },
+    mistral: { v: 21e9, cur: "EUR", kind: "Valuation at the latest financing round", when: "8 September 2026", basis: "Press report on the Series D round (TechCrunch)", est: true, note: "Reported as more than EUR 21bn.", url: "https://techcrunch.com/2026/09/08/mistral-raises-e3b-as-sovereign-ai-becomes-big-business/" },
+    foundation: { fin: "F005", kind: "Implied value of its OpenAI stake" },
+    temasek: { v: 518e9, cur: "SGD", kind: "Net portfolio value", when: "31 March 2026", basis: "Temasek announcement", note: "The value of what Temasek holds, not a market price for Temasek itself.", url: "https://www.temasek.com.sg/en/news-and-resources/news-room/news/2026/temasek-net-portfolio-value-grows-to-518b-up-49b-from-last-year" },
+    // added on 6 October 2026
+    qwen: { v: 275.64e9, cur: "USD", kind: "Market value", when: "6 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", note: "All of Alibaba Group, not only the Qwen models.", url: "https://companiesmarketcap.com/alibaba/marketcap/" },
+    insurance: { v: 72.06e9, cur: "USD", kind: "Market value", when: "6 October 2026", basis: "Stock-market value, as listed by CompaniesMarketCap", note: "All of the Munich Re Group.", url: "https://companiesmarketcap.com/munich-re/marketcap/" },
+    goodfire: { v: 1.25e9, cur: "USD", kind: "Valuation at the latest financing round", when: "February 2026", basis: "Announcement of the Series B round, as carried by Yahoo Finance", url: "https://finance.yahoo.com/news/ai-lab-goodfire-raises-150m-150100095.html" }
   },
 
   /* ---------- influence: one named, published and subjective list ---------- */
