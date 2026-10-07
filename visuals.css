@@ -84,3 +84,32 @@ canvas { display: block; max-width: 100%; width: 100%; border-radius: 12px; back
 /* Flash crash chart */
 .chart-box { overflow-x: auto; }
 .chart-box svg { display: block; width: 100%; min-width: 320px; height: auto; }
+
+/* Glossary cards. One card per glossary entry: the term, then its definition on request.
+   The face is a fixed height so answering does not move the buttons out from under the pointer. */
+.fc { display: grid; gap: 12px; max-width: 46rem; }
+.fc-marks { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.fc-mark { flex: 1; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
+.fc-mark.now { background: var(--ink); }
+.fc-mark.knew { background: var(--good); }
+.fc-mark.missed { background: none; border: 2px solid var(--bad); box-sizing: border-box; }
+.fc-card { background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 14px; padding: 18px 20px; display: grid; gap: 12px; align-content: start; }
+.fc-card.is-done { border-style: dashed; }
+.fc-kind { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.fc-face { display: grid; gap: 8px; align-content: start; min-height: 7.5rem; }
+.fc-face:focus { outline: none; }
+.fc-face:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 6px; }
+.fc-q { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; line-height: 1.2; margin: 0; }
+.fc-a { margin: 0; font-size: .98rem; line-height: 1.5; }
+.fc-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.fc-row--end { justify-content: flex-end; }
+.fc-row--foot { justify-content: space-between; }
+.fc-judge { display: inline-flex; gap: 8px; }
+.fc-judge[hidden] { display: none; }   /* the display above would otherwise outrank the browser's own [hidden] */
+.fc-note { margin: 0; font-size: .85rem; color: var(--muted); }
+@media (max-width: 520px) {
+  .fc-face { min-height: 9rem; }
+  .fc-row--end, .fc-row--foot { justify-content: flex-start; }
+  .fc-judge { flex: 1; }
+  .fc-judge .fc-btn { flex: 1; }
+}

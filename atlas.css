@@ -97,39 +97,55 @@ section.chapter:has(> .opener) { padding-block: 72px 32px; }
 .specimen svg .sp-none { fill: var(--line-strong); stroke: none; }
 
 /* ---------- Risk dossier: four measures per risk, on a three-step scale. The ratings are the guide's own reading. ---------- */
+/* The dossier's own table is its direct child. These are scoped to it, because the key to the scale below it
+   is a table too, and the stacking and measure names added on a narrow screen belong only to the ratings. */
 .dossier { margin: 0 0 40px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line-strong); }
-.dossier table { width: 100%; border-collapse: collapse; font-size: .92rem; }
-.dossier caption { caption-side: bottom; text-align: left; padding: 10px 0 12px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .02em; line-height: 1.5; color: var(--muted); }
-.dossier th, .dossier td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; }
-.dossier thead th { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--ink); padding-bottom: 12px; width: 19%; }
-.dossier thead th:first-child { width: 24%; font-size: 1.08rem; }
-.dossier thead th small { display: block; margin-top: 3px; font-family: var(--font-body); font-weight: 400; font-size: .78rem; line-height: 1.35; color: var(--muted); max-width: 15em; }
-.dossier tbody tr { border-top: 1px solid var(--line); }
-.dossier tbody th { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.25; }
-.dossier tbody th a { color: var(--ink); text-decoration-color: var(--k, var(--accent)); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.dossier tbody th a:hover { color: var(--k-ink, var(--accent)); }
+.dossier > table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.dossier > table caption { caption-side: bottom; text-align: left; padding: 10px 0 12px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .02em; line-height: 1.5; color: var(--muted); }
+.dossier > table th, .dossier > table td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; }
+.dossier > table thead th { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--ink); padding-bottom: 12px; width: 19%; }
+.dossier > table thead th:first-child { width: 24%; font-size: 1.08rem; }
+.dossier > table thead th small { display: block; margin-top: 3px; font-family: var(--font-body); font-weight: 400; font-size: .78rem; line-height: 1.35; color: var(--muted); max-width: 15em; }
+.dossier > table tbody tr { border-top: 1px solid var(--line); }
+.dossier > table tbody th { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.25; }
+.dossier > table tbody th a { color: var(--ink); text-decoration-color: var(--k, var(--accent)); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.dossier > table tbody th a:hover { color: var(--k-ink, var(--accent)); }
 .dossier tr.mis { --k: var(--mis); --k-ink: var(--mis-ink); }
 .dossier tr.con { --k: var(--con); --k-ink: var(--con-ink); }
 .dossier tr.col { --k: var(--col); --k-ink: var(--col); }
-.dossier td { font-family: var(--font-display); font-weight: 500; white-space: nowrap; }
-.dossier td small { display: block; margin-top: 4px; white-space: normal; font-family: var(--font-body); font-weight: 400; font-size: .8rem; line-height: 1.4; color: var(--muted); max-width: 17em; }
+.dossier > table td { font-family: var(--font-display); font-weight: 500; white-space: nowrap; }
+.dossier > table td small { display: block; margin-top: 4px; white-space: normal; font-family: var(--font-body); font-weight: 400; font-size: .8rem; line-height: 1.4; color: var(--muted); max-width: 17em; }
 /* three pips; the number filled is the level, and the word beside them says the same thing */
 .pips { display: inline-flex; gap: 3px; margin-right: 9px; vertical-align: 1px; }
 .pips i { width: 9px; height: 9px; border-radius: 2px; border: 1.5px solid var(--k, var(--accent)); }
 .pips[data-level="1"] i:nth-child(-n+1), .pips[data-level="2"] i:nth-child(-n+2), .pips[data-level="3"] i { background: var(--k, var(--accent)); }
 
 @media (max-width: 760px) {
-  .dossier tbody, .dossier tr, .dossier caption { display: block; }
-  .dossier table { display: flex; flex-direction: column; }
-  .dossier caption { order: 1; }
-  .dossier thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  .dossier tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; padding: 16px 0; }
-  .dossier tbody tr:first-child { border-top: 0; }
-  .dossier tbody th { grid-column: 1 / -1; padding: 0; font-size: 1.08rem; }
-  .dossier td { padding: 0; white-space: normal; }
-  .dossier td::before { display: block; margin-bottom: 3px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .dossier td:nth-of-type(1)::before { content: "Agents"; }
-  .dossier td:nth-of-type(2)::before { content: "Coupling"; }
-  .dossier td:nth-of-type(3)::before { content: "Speed"; }
-  .dossier td:nth-of-type(4)::before { content: "Visibility"; }
+  .dossier > table tbody, .dossier > table tr, .dossier > table caption { display: block; }
+  .dossier > table { display: flex; flex-direction: column; }
+  .dossier > table caption { order: 1; }
+  .dossier > table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .dossier > table tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; padding: 16px 0; }
+  .dossier > table tbody tr:first-child { border-top: 0; }
+  .dossier > table tbody th { grid-column: 1 / -1; padding: 0; font-size: 1.08rem; }
+  .dossier > table td { padding: 0; white-space: normal; }
+  .dossier > table td::before { display: block; margin-bottom: 3px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .dossier > table td:nth-of-type(1)::before { content: "Agents"; }
+  .dossier > table td:nth-of-type(2)::before { content: "Coupling"; }
+  .dossier > table td:nth-of-type(3)::before { content: "Speed"; }
+  .dossier > table td:nth-of-type(4)::before { content: "Visibility"; }
+}
+
+/* ---------- The key to the scale, read back out of the dossiers above it (see atlas.js). ---------- */
+.dkey { margin: 14px 0 4px; }
+.dkey-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.dkey-table th, .dkey-table td { text-align: left; vertical-align: top; padding: 10px 14px 10px 0; border-top: 1px solid var(--line); }
+.dkey-table th { font-family: var(--font-display); font-weight: 700; width: 24%; }
+.dkey-table th small { display: block; margin-top: 3px; font-family: var(--font-body); font-weight: 400; font-size: .78rem; line-height: 1.35; color: var(--muted); }
+.dkey-table td { font-family: var(--font-display); font-weight: 500; }
+.dkey-table tr:first-child th, .dkey-table tr:first-child td { border-top: 0; }
+@media (max-width: 760px) {
+  .dkey-table, .dkey-table tbody, .dkey-table tr, .dkey-table th, .dkey-table td { display: block; width: auto; }
+  .dkey-table tr + tr th { border-top: 1px solid var(--line-strong); margin-top: 8px; padding-top: 12px; }
+  .dkey-table td { border-top: 0; padding: 2px 0 2px 2px; }
 }

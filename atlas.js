@@ -127,6 +127,61 @@
       .observe(matrix, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
   }
 
+  /* ---------- what each step of a dossier rating means ---------- */
+  // The dossier says a risk is "Tight" or "Fast" without saying what the other steps were. The wording is
+  // already in the table, one label per measure per step, so the key is read back out of it rather than
+  // written again: anything the author changes in a row changes here too. A step no row uses is left out,
+  // because an empty step is a gap in the reading, not a word this script should invent.
+  const boxes = $$(".dossier").filter(box => $("table", box));
+  if (boxes.length) {
+    // The measures are the same in every dossier, and a single risk only uses one step of each, so the wording is
+    // pooled from every row on the page before it is written out. One dossier on its own would show a near-empty key.
+    const heads = $$("thead th", $("table", boxes[0])).slice(1).map(th => {
+      const copy = th.cloneNode(true), small = $("small", copy);
+      if (small) small.remove();
+      return { name: copy.textContent.trim(), asks: $("small", th) ? $("small", th).textContent.trim() : "" };
+    });
+    let steps = 0;
+    const seen = heads.map(() => ({}));
+    boxes.forEach(box => $$("tbody tr", $("table", box)).forEach(tr => $$("td", tr).forEach((td, i) => {
+      const pips = $(".pips", td), vh = $(".vh", td);
+      if (!pips || !seen[i]) return;
+      const of = /\((\d+) of (\d+)\)/.exec(vh ? vh.textContent : "");
+      if (of) steps = Math.max(steps, +of[2]);
+      const copy = td.cloneNode(true);
+      $$(".pips, .vh, small", copy).forEach(x => x.remove());
+      const label = copy.textContent.trim();
+      if (label) seen[i][pips.dataset.level] = label;
+    })));
+    if (heads.length && steps) {
+      const rows = heads.map((h, i) => {
+        let cells = "";
+        for (let s = 1; s <= steps; s++) {
+          const label = seen[i][String(s)];
+          // a step no risk reaches is shown as the gap it is, rather than given a word the guide never wrote
+          cells += label
+            ? `<td><span class="pips" data-level="${s}" aria-hidden="true">${"<i></i>".repeat(steps)}</span>${label}</td>`
+            : '<td><span class="small">no risk in this guide sits here</span></td>';
+        }
+        return `<tr><th scope="row">${h.name}${h.asks ? `<small>${h.asks}</small>` : ""}</th>${cells}</tr>`;
+      }).join("");
+      const body = `<div class="layer-body"><table class="dkey-table"><tbody>${rows}</tbody></table>` +
+        '<p class="small">Read back from the ratings in this guide. The reading is the guide\'s own, not a figure from Hammond et al.</p></div>';
+      const inside = heads.map(h => h.name).join(" · ");
+      boxes.forEach((box, n) => {
+        if ($(".dkey", box)) return;
+        const key = document.createElement("details");
+        key.className = "layer dkey";
+        key.id = "dkey-" + (n + 1);
+        key.innerHTML = '<summary><span class="layer-kind">The scale</span><span class="layer-what">' +
+          `<span class="layer-title">What each step means</span><span class="layer-inside">${inside}</span></span></summary>` + body;
+        box.appendChild(key);
+        // explore.js has already settled the page by the time this runs, so match whatever the reader chose
+        if (window.Explore && window.Explore.isAllOpen()) key.open = true;
+      });
+    }
+  }
+
   // Specimens animate only while they are on screen.
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("in-view", e.isIntersecting)), { rootMargin: "80px" });

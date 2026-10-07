@@ -64,6 +64,32 @@
   .layer-body { padding-inline: 14px; }
 }
 
+/* ---------- Choice controls, shared by every page. Two kinds, and the difference is the point. ---------- */
+/* A segmented bar: one row, one choice, and a fill that marks it. Every option takes the same share of the bar,
+   so the fill says which option is chosen and not how long its label happens to be. Where the bar is stretched by
+   its parent the share is a fraction of that width; where it sits inline the options match the widest of them. */
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 1.5px solid var(--line-strong); border-radius: 10px; overflow: hidden; }
+.seg button { font-family: var(--font-mono); font-size: .82rem; line-height: 1.3; text-align: center; background: transparent; border: 0; padding: 8px 10px; min-height: 40px; color: var(--muted); cursor: pointer; transition: background-color .15s, color .15s; }
+.seg button:hover:not([aria-pressed="true"]) { background: var(--surface-2); color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* Chips: a set of filters that runs onto as many rows as it needs. Each one is its own bordered shape with no bar
+   behind it, so they keep their own widths; an even split would only stretch the short ones. */
+.pills, .theme-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pills { margin-bottom: 12px; }
+.pills button, .theme-chips button { font-family: var(--font-display); font-weight: 500; font-size: .88rem; padding: 0 13px; min-height: 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s; }
+.pills button:hover, .theme-chips button:hover { color: var(--ink); border-color: var(--ink); }
+.pills button[aria-pressed="true"], .theme-chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pills button .c { font-family: var(--font-mono); font-size: .76rem; margin-left: 4px; opacity: .8; }
+@media (pointer: coarse) { .pills button, .theme-chips button, .seg button { min-height: 44px; } }
+
+/* ---------- Terms explained in place (see terms.js). The page keeps its glossary; this marks the first use. ---------- */
+.term { text-decoration: underline dotted var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; cursor: help; border-radius: 3px; }
+.term:hover, .term[aria-describedby] { background: var(--accent-soft); }
+.tip { position: absolute; z-index: 30; left: 0; top: 0; max-width: min(22rem, calc(100vw - 24px)); background: var(--ink); color: var(--bg); border-radius: 10px; padding: 12px 14px; font-size: .9rem; line-height: 1.45; box-shadow: 0 12px 28px -12px rgb(0 0 0 / .5); pointer-events: none; visibility: hidden; opacity: 0; transform: translateY(4px); transition: opacity .14s, transform .14s cubic-bezier(.16, 1, .3, 1), visibility .14s; }
+.tip.show { visibility: visible; opacity: 1; transform: none; }
+.tip b { font-family: var(--font-display); display: block; margin-bottom: 2px; }
+
 /* Existing blocks, once they sit inside a layer. */
 .layer-body .explain-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
 .layer-body .explain { background: var(--surface-2); border-color: transparent; }
