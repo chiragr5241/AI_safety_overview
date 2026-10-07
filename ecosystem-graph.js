@@ -1,5 +1,5 @@
 /* The interactive map at the top of ecosystem.html.
-   Bubbles are actors, grouped by category around the frontier developers. Arrows are documented ties, drawn from -> to.
+   Bubbles are actors, grouped by category and set out in the order the zoomed-in field is read. Arrows are documented ties, drawn from -> to.
    Bubble size is chosen by the reader: people employed (the default), one yearly money figure, names on a published list of
    influential people, documented ties, or sources cited. The figures and their sources are in size-data.js. An actor with no
    figure under the chosen measure is drawn as a small dashed ring: unknown is not shown as small, and never as zero.
@@ -8,7 +8,7 @@
    larger sums. Amounts are never summed.
    A money tie with no disclosed amount is drawn thin with a fainter sign. Every other arrow is a plain line.
    People are not bubbles. A named person with a role or interest in two organisations is drawn as a dotted link between them,
-   and every person can be found in the search box under the map, alongside the actors and groups.
+   and every person can be found in the map's search box, alongside the actors and groups.
    The map has two zoom levels. The first is the whole industry. Zooming in opens up the AI safety field: every entry on the AISafety.com
    field map takes the plate in that map's own categories, the groups from the industry map that it does not list move to a band underneath,
    and arrows are added for the money that four public grant records show passing between the bubbles. From there the plate itself zooms and pans.
@@ -21,8 +21,16 @@
   const NS = "http://www.w3.org/2000/svg", W = 1080, H0 = 870;
   let H = H0;   // the plate grows taller when a measure draws bubbles too large for the usual height
   let level = 0;   // 0 is the whole industry, 1 is zoomed into the AI safety field
-  const cam = { x: 0, y: 0, w: W, h: H0 }, ZMAX = 5;   // the part of the plate in view; zoom is W / cam.w
-  let zoom = 1;
+  // The map is drawn in a frame on the page, and the view is the part of the plate that the frame shows. The view always has the frame's own
+  // shape. At its widest it holds the whole plate, which is zoom 1; at its closest it is W / ZMAX wide.
+  // For the whole industry the frame fits in the window, so all of it is seen at once. Zoomed into the field the frame grows downwards
+  // until the whole field is in it at full width, and the page under the map moves down to make room; zooming back out brings it up again.
+  // Zoomed into the field the frame can also be made shorter again, down to the height that fits the window, which draws the whole field
+  // small enough to be seen at once: fieldF is how much of its full height the frame has, and 1 is the height the field opens at.
+  const cam = { x: 0, y: 0, w: W, h: H0 }, view = { ar: W / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 5;
+  let zoom = 1, fieldF = 1;
+  const easeOut = k => 1 - Math.pow(1 - k, 3), easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2;
+  const LEVEL_MS = 1100;   // how long a change of zoom level takes
   const $ = id => document.getElementById(id);
   const esc = U.esc, tidy = U.tidy;
   const el = (name, attrs, parent) => {
@@ -72,18 +80,23 @@
   const typeLabel = t => t.flow ? flowLabel(t.flow) : t.corp ? KIND[t.corp.kind] : EXT_LABEL[t.type] || U.typeLabel(t.type);
 
   // One cluster per category. Colour marks the group; arrows take the colour of the group they start from.
+  // The anchors set the groups out in the order the zoomed-in field is read, so that zooming in opens the map up where it stands and
+  // does not deal it out again: funders and research along the top, as the field's funding and research rows are; the developers,
+  // public bodies and advocacy under them, as capabilities research, governance and advocacy are; then the talent pipeline and the
+  // critical voices, as training and the media rows are; and along the bottom the groups the field map does not list, where the band
+  // for the rest of the industry sits when zoomed in.
   const C0 = [
-    { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 540, y: 410 },
-    { cat: 2, label: "Cloud and energy", color: "#7CCBFF", x: 545, y: 122 },
-    { cat: 1, label: "Chip supply chain", color: "#4F9DFF", x: 205, y: 150 },
-    { cat: 4, label: "Capital", color: "#F7A93B", x: 880, y: 140 },
-    { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 925, y: 395 },
-    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 800, y: 705 },
-    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 530, y: 790 },
-    { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 290, y: 725 },
-    { cat: 11, label: "Standards, insurers and users", color: "#F3C9A2", x: 125, y: 590 },
-    { cat: 7, label: "Public authority", color: "#B79CFF", x: 150, y: 372 },
-    { cat: 8, label: "Advocacy and political money", color: "#FF6FB1", x: 400, y: 288 }
+    { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 330, y: 345 },
+    { cat: 2, label: "Cloud and energy", color: "#7CCBFF", x: 620, y: 760 },
+    { cat: 1, label: "Chip supply chain", color: "#4F9DFF", x: 370, y: 760 },
+    { cat: 4, label: "Capital", color: "#F7A93B", x: 870, y: 760 },
+    { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 220, y: 110 },
+    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 760, y: 120 },
+    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 120, y: 560 },
+    { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 800, y: 555 },
+    { cat: 11, label: "Standards, insurers and users", color: "#F3C9A2", x: 130, y: 770 },
+    { cat: 7, label: "Public authority", color: "#B79CFF", x: 640, y: 345 },
+    { cat: 8, label: "Advocacy and political money", color: "#FF6FB1", x: 930, y: 345 }
   ];
   // Zoomed in, there is one cluster per category on the AISafety.com map. Where a category lines up with a group on the industry map
   // it keeps that group's colour, so a bubble that sits on both maps does not change colour. The one-line descriptions are this map's own.
@@ -107,9 +120,6 @@
     company_programmes: ["#DCE6EE", "Grant funds and fellowships that an AI company or its foundation has announced for work outside the company. This map added them from the companies' own announcements. They are not entries on the AISafety.com map."],
     gone: ["#8A94A6", "Projects the field map marks as no longer active. They stay on record because grants to them do."]
   };
-  // where a field category's new bubbles come from when the map zooms in: the nearest group on the industry map
-  const PARENT = { funding: 5, empirical_research: 6, conceptual_research: 6, strategy: 6, forecasting: 6, research_support: 6, capabilities_research: 3, governance: 7,
-    advocacy: 8, company_programmes: 3, training_and_education: 10, career_support: 10, blog: 9, newsletter: 9, podcast: 9, video: 9, resource: 9, gone: 6 };
   const C1F = F ? F.cats.map(c => ({ cat: "f-" + c.id, fid: c.id, label: c.label, color: (FIELD_CATS[c.id] || ["#A3B5C1", ""])[0], about: (FIELD_CATS[c.id] || ["", ""])[1], field: true, x: 0, y: 0 })) : [];
   const EVERY = C0.concat(C1F);
   let CLUSTERS = C0;   // the clusters on the plate at the current zoom level
@@ -318,12 +328,14 @@
   // ecosystem.html?size=money opens the map on that measure and ?view=field opens it zoomed into the AI safety field, so a view can be linked to
   const QS = new URLSearchParams(location.search), asked = measureById.get(QS.get("size"));
   let measure = asked && !asked.field ? asked : MEASURES[0];
-  const kept = [measure, asked || measureById.get("gin")];   // each zoom level keeps its own measure
+  // The measure is one choice for the whole map and does not change with the zoom level. The grant measures can only be drawn zoomed in,
+  // so on the way back out the map returns to the last measure that both levels share.
+  let bothLevels = measure;
 
   // widths come from the browser, so a name is only set inside a bubble when it really fits
   const gMeasure = el("g", { visibility: "hidden", "aria-hidden": "true" }, svg), widths = new Map();
   function textW(cls, str) {
-    const k = cls + "|" + str;
+    const k = level + cls + "|" + str;   // names are set in smaller type when zoomed in, so each level keeps its own measurements
     if (!widths.has(k)) {
       const t = el("text", { class: cls }, gMeasure);
       t.textContent = str;
@@ -419,7 +431,7 @@
   // training and media. The groups from the industry map that the field map does not list follow in a band underneath.
   function flow() {
     const M = 10, GX = 18, GY = 14;
-    let y = 30;   // the zoom buttons sit over the top right corner of the plate
+    let y = 30;
     const place = list => {
       const rows = [];
       let row = [], w = 0;
@@ -439,14 +451,13 @@
     place(CLUSTERS.filter(c => c.field));
     bandY = y + 18;
     y += 34;
-    place(CLUSTERS.filter(c => !c.field));
+    // the band is read in the same order as the whole-industry map, so what is left of each group drops more or less straight down into it
+    place(CLUSTERS.filter(c => !c.field).sort((a, b) => a.ay - b.ay || a.ax - b.ax));
     H = Math.ceil(y);
   }
   function layout() {
     CLUSTERS.forEach(pack);
     if (level) flow(); else spread();
-    cam.x = 0; cam.y = 0; cam.w = W; cam.h = H; zoom = 1;
-    applyCam();
     if (band) {
       band.g.classList.toggle("off", !level);
       band.line.setAttribute("d", `M10,${(bandY - 16).toFixed(1)}H${W - 10}`);
@@ -458,17 +469,65 @@
     });
   }
   /* ---------- the part of the plate in view ---------- */
+  // How wide the widest view is. It holds the whole plate. Zoomed into the field it is also never closer than the scale the reader has set
+  // the frame to (fieldF), so a change of measure that makes the plate shorter leaves room under the map and does not draw it larger.
+  const fitW = () => Math.max(W, H * view.ar, level ? W / fieldF : 0);
+  const zmax = () => fitW() * ZMAX / W;
+  // a view no wider than the plate stays inside it; a wider one keeps the plate in its middle
+  const hold = (at, size, full) => size >= full ? (full - size) / 2 : Math.max(0, Math.min(full - size, at));
+  // where on the plate a point stays put, or lands, when the zoom changes: fx and fy are fractions of the view
+  function camTarget(z, px, py, fx, fy) {
+    z = Math.max(1, Math.min(zmax(), z));
+    const w = fitW() / z, h = w / view.ar;
+    return { x: hold(px - fx * w, w, W), y: h >= H ? 0 : hold(py - fy * h, h, H), w, h };   // a plate shorter than the view sits at its top
+  }
+  const camFit = () => camTarget(1, W / 2, H / 2, 0.5, 0.5);
+  // Where each level opens: across the full width of the plate from the top. With the frame at the height its level asks for, that is the
+  // whole plate at both levels. The field is drawn closer in than the industry was, so going into it is a move towards the map.
+  const homeZoom = () => level ? fitW() / W : 1;
+  const camHome = () => level ? camTarget(homeZoom(), W / 2, 0, 0.5, 0) : camFit();
   function applyCam() {
     svg.setAttribute("viewBox", `${cam.x.toFixed(1)} ${cam.y.toFixed(1)} ${cam.w.toFixed(1)} ${cam.h.toFixed(1)}`);
     svg.classList.toggle("zoomed", zoom > 1.01);
     const at = $("webZoomAt"), out = $("webZoomOut"), inn = $("webZoomIn");
-    if (at) at.textContent = level ? "AI safety field" + (zoom > 1.01 ? " ×" + (+zoom.toFixed(1)) : "") : "Whole industry";
-    if (out) { out.disabled = !level && zoom <= 1.01; out.title = level && zoom <= 1.01 ? "Zoom out to the whole industry" : "Zoom out"; }
-    if (inn) { inn.disabled = level ? zoom >= ZMAX - 0.01 : !F; inn.title = level ? "Zoom in" : "Zoom into the AI safety field"; }
+    // The figure is the scale the map is drawn at, against the scale at which the plate is as wide as the frame. It does not depend on how
+    // tall the plate is, so it stays put when only the measure changes. It is left off where a level opens.
+    const rel = W / cam.w, opens = level ? Math.abs(rel - 1) <= 0.04 : zoom <= 1.01;
+    if (at) at.textContent = (level ? "AI safety field" : "Whole industry") + (opens ? "" : " ×" + (+rel.toFixed(1)));
+    if (out) { out.disabled = !level && zoom <= 1.01; out.title = level && zoom <= 1.01 ? (fieldF > frameLo() + 0.001 ? "Zoom out until the whole field fits in the window" : "Zoom out to the whole industry") : "Zoom out"; }
+    if (inn) { inn.disabled = level ? zoom >= zmax() - 0.01 : !F; inn.title = level ? "Zoom in" : "Zoom into the AI safety field"; }
+  }
+  // how tall the frame stands for the level and for fieldF, and the least fieldF can be: the frame is never shorter than the stylesheet makes it
+  const frameH = () => level ? Math.max(own.h, own.w * H / W * fieldF) : own.h;
+  const frameLo = () => own.w > 0 && own.h > 0 ? Math.min(1, own.h / (own.w * H / W)) : 1;
+  // After a new layout, or when the window changes, the frame and the view are set again. The frame takes the height its level asks for:
+  // the stylesheet's own for the whole industry, and as tall as the whole field needs at full width when zoomed in. The view goes to where
+  // the level opens if asked; otherwise the widest view stays the widest and a closer one keeps its middle and its scale as far as it can.
+  // Given a time, the frame and the view travel there together, and the frame grows or shrinks from its bottom edge.
+  function reframe(home, ms, ease) {
+    const keep = svg.style.height;
+    svg.style.height = "";
+    const box = svg.getBoundingClientRect(), bw = box.width, bh = box.height;
+    svg.style.height = keep;
+    own.w = bw; own.h = bh; own.vh = window.innerHeight;   // the frame as the stylesheet sizes it
+    // the reader's scale for the field is kept as it is: only zooming changes it, never a change of measure, tie filter or window
+    const sized = bw > 0 && bh > 0, h0 = sized ? (keep ? parseFloat(keep) : bh) : 0, h1 = sized ? frameH() : 0;
+    const cx = cam.x + cam.w / 2, cy = cam.y + cam.h / 2, wide = zoom <= 1.01, w0 = cam.w;
+    if (sized) view.ar = bw / h1;
+    const t = home ? camHome() : wide ? camFit() : camTarget(fitW() / w0, cx, cy, 0.5, 0.5);
+    if (ms && sized && !STILL && !document.hidden) {
+      view.ar = bw / h0;
+      camGo(t, ms, ease, Math.abs(h1 - h0) > 1 ? { h0, h1, w: bw } : null);
+      return;
+    }
+    if (sized) svg.style.height = level ? h1.toFixed(1) + "px" : "";
+    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
+    applyCam();
   }
   assign();
   sizeNodes();
   layout();
+  reframe(true);
   nodes.forEach(n => { n.x = n.tx; n.y = n.ty; n.r = n.R; });
 
   /* ---------- drawing ---------- */
@@ -484,6 +543,7 @@
   });
   // names sit in their own top layer so a neighbouring bubble never covers them
   const gBand = el("g", { class: "off" }, svg), gLinks = el("g", {}, svg), gFlow = el("g", {}, svg), gHit = el("g", {}, svg), gTitles = el("g", {}, svg), gNodes = el("g", {}, svg), gLabels = el("g", {}, svg);
+  [gBand, gLinks, gFlow, gTitles, gLabels].forEach(g => g.classList.add("rest"));   // everything but the bubbles: see settle()
   // the rule and heading over the groups carried down from the industry map when the plate is zoomed into the field
   band = { g: gBand, line: el("path", { class: "bandline" }, gBand), text: el("text", { class: "band", x: 10 }, gBand) };
   band.text.textContent = "From the industry map · actors with no entry on the AISafety.com map";
@@ -638,21 +698,37 @@
   labelNodes();
 
   // move every bubble, title and arrow from where it is to where the layout now puts it
-  let frame = 0;
-  function settle(ms, done) {
+  // A change of zoom level passes move = { gone }. Then only the bubbles are drawn while they travel: the arrows, names and group titles are
+  // put away for the journey and come back in once everything has arrived, so several hundred of them are neither redrawn on every frame
+  // nor seen sliding through each other. The bubbles in gone are not part of the new layout: they shrink away where they stand.
+  let frame = 0, unfinished = null;
+  function settle(ms, done, move) {
     cancelAnimationFrame(frame);
+    if (unfinished) { const f = unfinished; unfinished = null; f(); }   // a move cut short by the next one still has to tidy up
     if (STILL || document.hidden) ms = 0;
-    const from = nodes.map(n => [n.x, n.y, n.r]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
+    if (!ms) move = null;
+    svg.classList.toggle("moving", !!move);
+    unfinished = done || null;
+    const gone = move ? move.gone : [], ease = move ? easeInOut : easeOut;
+    const from = nodes.map(n => [n.x, n.y, n.r]), gf = gone.map(n => [n.y, n.r]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
     const step = now => {
-      const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = 1 - Math.pow(1 - k, 3);
+      const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = ease(k);
       nodes.forEach((n, i) => {
         n.x = from[i][0] + (n.tx - from[i][0]) * e; n.y = from[i][1] + (n.ty - from[i][1]) * e; n.r = from[i][2] + (n.R - from[i][2]) * e;
         n.circle.setAttribute("r", n.r.toFixed(1));
         n.place();
       });
+      gone.forEach((n, i) => {
+        n.y = gf[i][0] + (n.gy - gf[i][0]) * e; n.r = gf[i][1] * (1 - e);
+        n.circle.setAttribute("r", n.r.toFixed(1));
+        n.place();
+      });
       CLUSTERS.forEach((c, i) => { c.title.setAttribute("x", (tf[i][0] + (c.titleX - tf[i][0]) * e).toFixed(1)); c.title.setAttribute("y", (tf[i][1] + (c.titleY - tf[i][1]) * e).toFixed(1)); });
-      links.forEach(l => { if (l.vis !== false) l.draw(); });
-      if (k < 1) frame = requestAnimationFrame(step); else if (done) done();
+      if (!move || k >= 1) links.forEach(l => { if (l.vis !== false) l.draw(); });
+      if (k < 1) { frame = requestAnimationFrame(step); return; }
+      unfinished = null;
+      if (done) done();
+      svg.classList.remove("moving");
     };
     step(t0);
   }
@@ -698,6 +774,11 @@
 
   /* ---------- the panel under the map ---------- */
   const panel = $("webPanel"), blurb = $("webBlurb"), lens = $("webLens"), search = $("webSearch"), options = $("webOptions"), fig = svg.closest(".web");
+  // what the line beside the search says while nothing narrows the map, for the whole industry and for the field
+  const BLURBS = [
+    "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Pick a kind of tie to see only those arrows. Scroll over the map to zoom, and drag to move it.",
+    "Pick a bubble, a group name or a funder to follow the money. Scroll over the map to zoom out until the whole field is in the window, or in until the small names are at reading size. Search finds any entry."
+  ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
   const liveEdges = () => LIVE[level];
   const count = fn => liveEdges().filter(fn).length, baseCount = fn => D.edges.filter(fn).length;
@@ -804,19 +885,18 @@
       const two = t => t.from === "openai" || t.to === "openai" || t.from === "anthropic" || t.to === "anthropic";
       const grants = t => catOf(t.from) === 5 && catOf(t.to) === 6;
           panel.innerHTML = `<div class="wp-notes">
-          <div><h2>The labs sit in the middle</h2><p>${baseCount(labs)} of the ${D.edges.length} ties in the base map touch a frontier developer, and ${baseCount(two)} touch OpenAI or Anthropic. Those two also disclose the most, so part of this is documentation.</p><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
+          <div><h2>The labs sit at the centre of the ties</h2><p>${baseCount(labs)} of the ${D.edges.length} ties in the base map touch a frontier developer, and ${baseCount(two)} touch OpenAI or Anthropic. Those two also disclose the most, so part of this is documentation.</p><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
           <div><h2>Safety research has few paymasters</h2><p>${baseCount(grants)} base ties run from a safety funder to a research organisation. In one published list, a single funder accounts for about 72% of the 2025 estimates.</p><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
           <div><h2>Evaluators depend on the labs they test</h2><p>${count(t => famOf(t) === "access")} dashed arrows show model access, compute credits and commissioned work flowing from labs to evaluators and training programmes. No executed agreement was obtained.</p><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
-          <div><h2>A few people sit in more than one place</h2><p>${PEOPLE.length} named people hold roles or disclosed interests in more than one organisation. They are drawn as ${nInter} dotted links between those organisations and can be found in the search under the map.</p><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
+          <div><h2>A few people sit in more than one place</h2><p>${PEOPLE.length} named people hold roles or disclosed interests in more than one organisation. They are drawn as ${nInter} dotted links between those organisations and can be found in the map's search box.</p><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
           ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${NFIELD} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them and ${CORP_TIES.length} for money the AI companies have announced.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
         </div>`;
     }
     // zoomed in, the panel for a chosen bubble stays at the foot of the window, so it carries its own way out
     if (level && s) panel.insertAdjacentHTML("afterbegin", `<button type="button" class="wp-close" data-close="1">Close</button>`);
     const fam = FAMS.find(f => f.id === state.fam);
-    blurb.textContent = fam ? `${fam.label}. ${fam.blurb}`
-      : level ? "Pick a bubble, a group name or a funder to follow the money. The small names come up to reading size with the + button, and the zoomed plate can be dragged around. Search finds any entry."
-      : "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Pick a kind of tie above the map to see only those arrows. Drag a bubble to untangle it.";
+    // every wording this line can take is always laid out, so it keeps one height at either zoom level and whichever kind of tie is chosen
+    stack(blurb, BLURBS.concat(FAMS.map(f => `${f.label}. ${f.blurb}`)), fam ? BLURBS.length + FAMS.indexOf(fam) : level);
     $("webClear").hidden = !state.sel && state.fam === "all";
     fig.classList.toggle("has-sel", !!state.sel);
   }
@@ -831,16 +911,16 @@
     // on a narrow screen the map scrolls sideways; bring the chosen bubble into view
     const sc = svg.parentNode;
     if (state.sel && state.sel.type !== "person" && sc.scrollWidth > sc.clientWidth) {
-      const k = svg.getBoundingClientRect().width / W;
-      sc.scrollTo({ left: (state.sel.type === "node" ? byId.get(state.sel.id).x : C.get(state.sel.id).x) * k - sc.clientWidth / 2 });
+      const k = svg.getBoundingClientRect().width / cam.w;
+      sc.scrollTo({ left: ((state.sel.type === "node" ? byId.get(state.sel.id).x : C.get(state.sel.id).x) - cam.x) * k - sc.clientWidth / 2 });
     }
     if (state.sel && state.sel.type !== "person" && fromPick) reveal(state.sel);
   }
-  // Zoomed in, the plate is taller than the window. A bubble or group picked from a list or the search is brought into view:
-  // the zoomed plate moves to it, and the page scrolls if it is still off screen.
+  // A bubble or group picked from a list or the search is brought into view: a zoomed plate moves to it, and the page scrolls if it is
+  // still off screen.
   function reveal(sel) {
     const o = sel.type === "node" ? byId.get(sel.id) : C.get(sel.id);
-    const px = sel.type === "node" ? o.tx : o.x, py = sel.type === "node" ? o.ty : o.y, m = 30 / zoom;
+    const px = sel.type === "node" ? o.tx : o.x, py = sel.type === "node" ? o.ty : o.y, m = 30 * cam.w / W;
     let t = cam;
     if (zoom > 1.01 && (px < cam.x + m || px > cam.x + cam.w - m || py < cam.y + m || py > cam.y + cam.h - m)) { t = camTarget(zoom, px, py, 0.5, viewFrac()); camGo(t, 260); }
     const r = svg.getBoundingClientRect(), sy = r.top + (py - t.y) / t.h * r.height;
@@ -856,6 +936,11 @@
     renderPanel();
   }
   const setText = (id, v) => { const x = $(id); if (x) x.textContent = v; };
+  // Several wordings for one place, laid out one over the other with only the current one shown and read out. The place is then as tall
+  // as the longest of them, so swapping the wording does not move anything under it.
+  function stack(box, texts, at) {
+    if (box) box.innerHTML = texts.map((t, i) => `<span${i === at ? "" : ' aria-hidden="true"'}>${esc(t)}</span>`).join("");
+  }
   /* ---------- the size selector: what a bubble's size stands for ---------- */
   const sizePills = $("webSize"), sizeScale = $("webSizeScale"), sizeAbout = $("webSizeAbout");
   // one actor's figure in words, with when, where from and a link
@@ -864,14 +949,20 @@
     if (!v) return "No figure found for this measure. That is not zero, and it does not mean the organisation is small.";
     return `${tidy(sentence(cap(v.text) + (v.est ? " (estimate)" : "")))} ${tidy(cap([v.basis, v.when].filter(Boolean).join(", ")))}${v.basis || v.when ? ". " : ""}${v.note ? tidy(sentence(v.note)) + " " : ""}${srcLink(v.url, v.srcTitle || "Source")}`;
   }
-  // the scale is drawn at the size the map is shown, so its circles match the bubbles
+  // The scale is drawn at the size the map is shown, so its circles match the bubbles. Zoomed far in, the largest circle would outgrow the
+  // space the key has, so past KEY_MAX across the whole key is drawn smaller by one ratio and says by how much: the key then keeps its
+  // size on the page whatever the zoom, and never shows a circle at a size it does not own up to.
+  const KEY_MAX = 64;
   function drawScale() {
     if (!sizeScale) return;
-    const k = svg.getBoundingClientRect().width / cam.w || 1;
+    const real = svg.getBoundingClientRect().width / cam.w || 1;
+    const shown = measure.ticks.map(t => measure.r(t[0])).concat(nodes.some(n => n.unk) ? [rUnknown()] : []);
+    const k = Math.min(real, (KEY_MAX - 3) / (2 * Math.max.apply(null, shown)));
     const dot = (r, label, cls) => { const d = Math.max(4, 2 * r * k + 3); return `<li><svg width="${d.toFixed(1)}" height="${d.toFixed(1)}" viewBox="${-d / 2} ${-d / 2} ${d} ${d}" aria-hidden="true"><circle r="${(r * k).toFixed(1)}" class="${cls || ""}"/></svg>${esc(label)}</li>`; };
     sizeScale.innerHTML = measure.ticks.map(t => dot(measure.r(t[0]), t[1])).join("")
       + (measure.id === "influence" ? dot(measure.r(0), "no one named") : "")
-      + (nodes.some(n => n.unk) ? dot(rUnknown(), "no figure found", "unk") : "");
+      + (nodes.some(n => n.unk) ? dot(rUnknown(), "no figure found", "unk") : "")
+      + (k < real * 0.97 ? `<li class="shrunk">key drawn ${+(real / k).toFixed(1)}× smaller than the map</li>` : "");
   }
   function renderSize() {
     const known = nodes.filter(n => !n.unk), k = measure.id === "influence" ? known.reduce((a, n) => a + n.val.v, 0) : known.length;
@@ -890,21 +981,30 @@
   }
   function setSize(id, ms) {
     measure = measureById.get(id) || measure;
+    if (!measure.field) bothLevels = measure;
     sizeNodes();
     layout();
+    reframe(false, ms);
     labelNodes();
     settle(ms);
     renderSize();
     renderPanel();
   }
-  // the grant measures are offered only when the map is zoomed into the field, where the grant records are drawn
+  // The grant measures can be chosen only when the map is zoomed into the field, where the grant records are drawn. Zoomed out they
+  // stay in the row, switched off, so the row is the same at both levels and nothing under it moves.
   function renderPills() {
-    if (sizePills) sizePills.innerHTML = MEASURES.filter(m => !m.field || level).map(m => `<button type="button" data-v="${m.id}" aria-pressed="${m === measure}">${esc(m.pill)}</button>`).join("");
+    if (sizePills) sizePills.innerHTML = MEASURES.map(m => `<button type="button" data-v="${m.id}" aria-pressed="${m === measure}"${m.field && !level ? ' disabled title="Zoom into the AI safety field to size bubbles by grants"' : ""}>${esc(m.pill)}</button>`).join("");
   }
   renderPills();
   if (sizePills) sizePills.addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.v !== measure.id) setSize(b.dataset.v, 650); });
   if (sizeAbout) sizeAbout.addEventListener("click", e => { const b = e.target.closest("button[data-node]"); if (b) { select({ type: "node", id: b.dataset.node }, true); if (!level) svg.scrollIntoView({ block: "center", behavior: STILL ? "auto" : "smooth" }); } });
-  if (window.ResizeObserver) new ResizeObserver(drawScale).observe(svg);
+  // the frame changes shape with the window, and the view is fitted to it again
+  // (the frame also changes height when the reader zooms it, which is not a change of window and needs no second look)
+  if (window.ResizeObserver) new ResizeObserver(() => {
+    if (boxing) return;
+    if (Math.abs(svg.getBoundingClientRect().width - own.w) > 0.5 || window.innerHeight !== own.vh) reframe(false);
+    drawScale();
+  }).observe(svg);
   // text is measured to lay the map out, so lay it out again once the web fonts have arrived
   const probe = () => textW("in", "OpenAI Anthropic") + textW("lab", "Coefficient Giving");
   const before = probe();
@@ -916,7 +1016,7 @@
   });
 
   const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests", corp: "Company money" };
-  /* The kinds of tie sit in a search box like the one under the map: typing filters the list, and each row carries its count. */
+  /* The kinds of tie sit in a search box like the one for actors: typing filters the list, and each row carries its count. */
   const lensOptions = $("webLensOptions");
   let LENSES = [], lensShown = [], lensActive = -1;
   const lensText = () => { const it = LENSES.find(x => x.id === state.fam); return it ? `${it.label} · ${it.n}` : ""; };
@@ -1032,7 +1132,7 @@
   }
   function choose(it) {
     closeList();
-    if (it.type === "node" && nodes.indexOf(byId.get(it.id)) < 0) setLevel(1, 650);
+    if (it.type === "node" && nodes.indexOf(byId.get(it.id)) < 0) setLevel(1, 0);
     select({ type: it.type, id: it.id }, true);
   }
   search.addEventListener("focus", () => { search.select(); openList(); });
@@ -1084,7 +1184,7 @@
     else if (b.dataset.person) select({ type: "person", id: b.dataset.person }, true);
     else if (b.dataset.group) select({ type: "group", id: catKey(b.dataset.group) }, true);
     else if (b.dataset.lens) setFam(b.dataset.lens);
-    else if (b.dataset.level) { setLevel(+b.dataset.level, 700); svg.scrollIntoView({ block: "start", behavior: STILL ? "auto" : "smooth" }); }
+    else if (b.dataset.level) { setLevel(+b.dataset.level, LEVEL_MS); svg.scrollIntoView({ block: "start", behavior: STILL ? "auto" : "smooth" }); }
     else if (b.dataset.zoomto) zoomToGroup(C.get(catKey(b.dataset.zoomto)));
     else if (b.dataset.close) select(null);
   });
@@ -1171,7 +1271,7 @@
   svg.addEventListener("pointerdown", e => {
     const n = nodeAt(e);
     // on the zoomed plate, a press that is not on a bubble, a group name or an arrow drags the plate itself
-    if (!n && zoom > 1.01 && (e.pointerType !== "mouse" || e.button === 0) && !(e.target.closest && e.target.closest(".ctitle, .hit"))) {
+    if (!n && zoom > 1.01 && !boxing && (e.pointerType !== "mouse" || e.button === 0) && !(e.target.closest && e.target.closest(".ctitle, .hit"))) {
       pan = { x0: e.clientX, y0: e.clientY, cx: cam.x, cy: cam.y, k: cam.w / svg.getBoundingClientRect().width, moved: false };
       cancelAnimationFrame(camFrame);
       try { svg.setPointerCapture(e.pointerId); } catch (err) {}
@@ -1188,8 +1288,8 @@
       if (!pan.moved && Math.hypot(e.clientX - pan.x0, e.clientY - pan.y0) < 4) return;
       pan.moved = true;
       hideTip();
-      cam.x = Math.max(0, Math.min(W - cam.w, pan.cx - (e.clientX - pan.x0) * pan.k));
-      cam.y = Math.max(0, Math.min(H - cam.h, pan.cy - (e.clientY - pan.y0) * pan.k));
+      cam.x = hold(pan.cx - (e.clientX - pan.x0) * pan.k, cam.w, W);
+      cam.y = hold(pan.cy - (e.clientY - pan.y0) * pan.k, cam.h, H);
       applyCam();
       return;
     }
@@ -1234,24 +1334,29 @@
   });
 
   /* ---------- zoom: from the whole industry into the AI safety field, then closer ---------- */
-  // where on the plate a point stays put, or lands, when the zoom changes: fx and fy are fractions of the view
-  function camTarget(z, px, py, fx, fy) {
-    z = Math.max(1, Math.min(ZMAX, z));
-    const w = W / z, h = H / z;
-    return { x: Math.max(0, Math.min(W - w, px - fx * w)), y: Math.max(0, Math.min(H - h, py - fy * h)), w, h };
-  }
   let goal = null;   // where the view is heading while it moves, so a second press of + starts from there
-  function camGo(t, ms) {
+  let boxing = null;   // the frame's change of height while it is under way: { h0, h1, w } in page pixels
+  function camGo(t, ms, ease, box) {
     cancelAnimationFrame(camFrame);
+    // a change of height cut short by a move that has none is finished on the spot, so the frame is never left part of the way
+    if (boxing && !box) { svg.style.height = level ? boxing.h1.toFixed(1) + "px" : ""; view.ar = boxing.w / boxing.h1; }
     goal = t;
+    boxing = box || null;
     if (STILL || document.hidden) ms = 0;
     const a = { x: cam.x, y: cam.y, w: cam.w, h: cam.h }, t0 = performance.now();
     const step = now => {
-      const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = 1 - Math.pow(1 - k, 3);
+      const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = (ease || easeOut)(k);
       ["x", "y", "w", "h"].forEach(p => { cam[p] = a[p] + (t[p] - a[p]) * e; });
-      zoom = W / cam.w;
+      if (box) {
+        // the view keeps the frame's shape at every step, so the map is never squeezed or boxed in while the frame changes height
+        const bh = box.h0 + (box.h1 - box.h0) * e;
+        svg.style.height = k < 1 || level ? bh.toFixed(1) + "px" : "";
+        view.ar = box.w / bh;
+        cam.h = cam.w / view.ar;
+      }
+      zoom = fitW() / cam.w;
       applyCam();
-      if (k < 1) camFrame = requestAnimationFrame(step); else { goal = null; drawScale(); }
+      if (k < 1) camFrame = requestAnimationFrame(step); else { goal = null; boxing = null; drawScale(); }
     };
     step(t0);
   }
@@ -1261,22 +1366,65 @@
     return Math.max(0.05, Math.min(0.95, ((Math.max(r.top, 0) + Math.min(r.bottom, window.innerHeight)) / 2 - r.top) / (r.height || 1)));
   }
   function zoomBy(f) {
+    if (boxing) return;   // the frame is still changing height
     const c = goal || cam, fy = viewFrac();
-    camGo(camTarget(W / c.w * f, c.x + c.w / 2, c.y + c.h * fy, 0.5, fy), 260);
+    camGo(camTarget(fitW() / c.w * f, c.x + c.w / 2, c.y + c.h * fy, 0.5, fy), 260);
   }
-  // + and − walk one ladder: whole industry, the AI safety field, then closer in on the field
+  // + and − walk one ladder: whole industry, the AI safety field, then closer in on the field. On the way back out, − widens the view
+  // until the whole plate is in it and only then changes level. The wheel and the pinch zoom the plate and never change level.
+  // Zoomed into the field there is one more step on the way out: the frame shortens until the whole field fits in the window.
   function zoomStep(dir) {
     hideTip();
-    if (dir > 0) { if (!level) setLevel(1, 700); else zoomBy(1.6); }
-    else if ((goal ? W / goal.w : zoom) > 1.01) zoomBy(1 / 1.6);
-    else if (level) setLevel(0, 700);
+    const wide = (goal ? fitW() / goal.w : zoom) <= 1.01;
+    if (dir > 0) { if (!level) setLevel(1, LEVEL_MS); else if (wide && fieldF < 0.999) frameTo(1); else zoomBy(1.6); }
+    else if (!wide) zoomBy(1 / 1.6);
+    else if (level && fieldF > frameLo() + 0.001) frameTo(frameLo());
+    else if (level) setLevel(0, LEVEL_MS);
+  }
+  // when the frame gets shorter while the reader is far down it, the page follows it up, so the map is still in the window afterwards
+  // where the top of the frame sits when the zoom strip is held under the page's top bar
+  function topEdge() {
+    const bar = document.querySelector(".topbar"), strip = fig.querySelector(".web-zoom");
+    return (bar ? bar.getBoundingClientRect().bottom : 0) + (strip ? strip.offsetHeight : 0);
+  }
+  function followUp() {
+    const edge = topEdge(), top = svg.getBoundingClientRect().top;
+    if (top < edge - 2) window.scrollBy({ top: top - edge, behavior: STILL || document.hidden ? "auto" : "smooth" });
+  }
+  // the frame goes to a new share of its full height, with the whole field in it throughout
+  function frameTo(f) {
+    if (boxing) return;
+    const shorter = f < fieldF;
+    fieldF = f;
+    reframe(false, 520, easeInOut);
+    if (shorter) followUp();
+  }
+  // The wheel does the same a little at a time, and keeps the part of the map under the pointer under the pointer by moving the page.
+  // It answers false when the frame is already as short or as tall as it goes that way.
+  function frameBy(factor, e) {
+    const to = Math.max(Math.min(frameLo(), fieldF), Math.min(1, fieldF * factor));
+    if (Math.abs(to - fieldF) < 0.0005) return false;
+    const r0 = svg.getBoundingClientRect(), fy = (e.clientY - r0.top) / (r0.height || 1);
+    fieldF = to;
+    const h = frameH();
+    svg.style.height = h.toFixed(1) + "px";
+    view.ar = own.w / h;
+    const t = camFit();
+    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = 1;
+    applyCam();
+    const r1 = svg.getBoundingClientRect();
+    window.scrollBy(0, r1.top + fy * r1.height - e.clientY);
+    // once the foot of the frame is in the window, nothing of its top is left hidden above while there is room to bring it down
+    const r2 = svg.getBoundingClientRect(), up = Math.min(topEdge() - r2.top, window.innerHeight - 16 - r2.bottom);
+    if (up > 0) window.scrollBy(0, -up);
+    return true;
   }
   function zoomToGroup(c) {
     if (!c || CLUSTERS.indexOf(c) < 0) return;
     // the group is fitted into the part of the window that the panel under it leaves free
     const r = svg.getBoundingClientRect(), top = 130, room = window.innerHeight * (state.sel ? 0.56 : 0.9) - top, mid = top + room / 2;
-    const z = Math.max(1, Math.min(ZMAX, W / (2 * c.hw + 30), (room * W) / ((r.width || W) * (2 * c.hh + 24))));
-    const t = camTarget(z, c.x, c.y, 0.5, Math.max(0, Math.min(1, (mid - r.top) / (r.height || 1))));
+    const w = Math.min(fitW(), Math.max(W / ZMAX, 2 * c.hw + 30, (r.width || W) * (2 * c.hh + 24) / room));
+    const t = camTarget(fitW() / w, c.x, c.y, 0.5, Math.max(0, Math.min(1, (mid - r.top) / (r.height || 1))));
     camGo(t, 320);
     const sy = r.top + (c.y - t.y) / t.h * r.height;
     if (Math.abs(sy - mid) > 30) window.scrollBy({ top: sy - mid, behavior: STILL ? "auto" : "smooth" });
@@ -1285,9 +1433,13 @@
   function renderLevel() {
     if (levelPills) levelPills.innerHTML = [["Whole industry", base.length], ["AI safety field", all.length]].map((p, i) =>
       `<button type="button" data-v="${i}" aria-pressed="${i === level}">${p[0]}<span class="c">${p[1]}</span></button>`).join("");
-    setText("webLevelNote", level
-      ? `Zoomed into the AI safety field: ${NFIELD} entries from the AISafety.com map in that map's own categories, ${NSHARED} of them already on the industry map. Money arrows come from two places: ${FLOWS.length} from four public grant records, and ${CORP_TIES.length} from what AI companies and their foundations have announced. The rest of the industry map is in the band at the bottom.`
-      : `The whole AI industry. Zooming in opens up the AI safety field: the ${NFIELD} organisations, programmes and resources on the AISafety.com map, and the money on public record between them.`);
+    // Both wordings are kept to three lines at full width and both are laid out, so the row is the same height at either level.
+    // The counts that used to sit in the zoomed-in wording are in the caption under the map.
+    stack($("webLevelNote"), [
+      `The whole AI industry. Zooming in opens up the AI safety field: the ${NFIELD} organisations, programmes and resources on the AISafety.com map, and the money on public record between them.`,
+      `Zoomed into the AI safety field: ${NFIELD} entries from the AISafety.com map, in that map's own categories. Money arrows come from four public grant records and from what AI companies have announced. The rest of the industry map is in the band at the bottom.`
+    ], level);
+    setText("nFieldShared", NSHARED); setText("nFieldAll", NFIELD); setText("nFieldFlows", FLOWS.length); setText("nFieldCorp", CORP_TIES.length);
     const note = $("webFieldNote");
     if (note) note.hidden = !level;
     if (!svg.dataset.label0) svg.dataset.label0 = svg.getAttribute("aria-label") || "";
@@ -1296,20 +1448,17 @@
   function setLevel(v, ms) {
     v = v && F ? 1 : 0;
     if (v === level) return;
-    const home = new Map(C0.map(c => [c.cat, [c.x, c.y]])), was = new Set(CLUSTERS);
-    kept[level] = measure;
+    const was = new Set(CLUSTERS), h0 = H;
     level = v;
-    measure = kept[level];
+    if (!level && measure.field) measure = bothLevels;
     svg.classList.toggle("lv1", !!level);
     fig.classList.toggle("lv1", !!level);
-    widths.clear();   // names are set in smaller type when zoomed in, so they are measured again
     assign();
     epoch++;
-    // the field's own bubbles start from the group on the industry map nearest to what they do, so the zoom reads as that group opening up
+    // going out, the field's own bubbles stay on the plate until they have shrunk away; settle() takes them off at the end
     fieldNodes.forEach(n => {
-      n.el.classList.toggle("away", !level);
+      if (level) n.el.classList.remove("away");
       n.lab.classList.toggle("away", !level);
-      if (level) { const o = home.get(PARENT[n.fcat]) || [W / 2, H0 / 2]; n.x = o[0]; n.y = o[1]; n.r = 0; }
     });
     base.forEach(n => { n.circle.setAttribute("fill", n.c.color); n.el.style.color = n.c.color; });
     if (state.sel && ((state.sel.type === "node" && nodes.indexOf(byId.get(state.sel.id)) < 0) || (state.sel.type === "group" && CLUSTERS.indexOf(C.get(state.sel.id)) < 0))) { state.sel = null; search.value = ""; }
@@ -1319,6 +1468,10 @@
     buildItems();
     sizeNodes();
     layout();
+    // The field's own bubbles grow where they will stand: each starts at its place on the taller plate, scaled back onto the plate as it
+    // stood, so it moves in step with everything around it while the plate opens out. Going back out they shrink the same way.
+    if (level) fieldNodes.forEach(n => { n.x = n.tx; n.y = n.ty * h0 / H; n.r = 0; });
+    else fieldNodes.forEach(n => { n.gy = n.y * H / h0; });
     EVERY.forEach(c => {
       const on = CLUSTERS.indexOf(c) >= 0;
       c.title.classList.toggle("off", !on);
@@ -1327,8 +1480,16 @@
     });
     labelNodes();
     refresh();
+    // the view travels to where the new level opens while the bubbles travel to their places, on one easing
+    fieldF = 1;   // the field always opens at its full height
+    reframe(true, ms, easeInOut);
+    if (!level && ms) followUp();
     // the number of money signs on an arrow follows its length, so they are set again once the bubbles have arrived
-    settle(ms, () => { links.forEach(l => { if (!l.inter) { l.flow.textContent = ""; l.coins = []; l.coinKey = ""; } }); refresh(); });
+    settle(ms, () => {
+      fieldNodes.forEach(n => n.el.classList.toggle("away", !level));
+      links.forEach(l => { if (!l.inter) { l.flow.textContent = ""; l.coins = []; l.coinKey = ""; } });
+      refresh();
+    }, { gone: level ? [] : fieldNodes });
     renderSize();
     renderPanel();
     renderScale();
@@ -1340,31 +1501,49 @@
     } catch (err) {}
   }
   if (F) {
-    if (levelPills) levelPills.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setLevel(+b.dataset.v, 700); });
+    if (levelPills) levelPills.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setLevel(+b.dataset.v, LEVEL_MS); });
     const zi = $("webZoomIn"), zo = $("webZoomOut");
+    // the zoom strip stays directly under the bar at the top of the page, whatever height that bar is at this width
+    const bar = document.querySelector(".topbar");
+    if (bar && window.ResizeObserver) new ResizeObserver(() => fig.style.setProperty("--zoom-top", Math.floor(bar.getBoundingClientRect().height) + "px")).observe(bar);
     if (zi) zi.addEventListener("click", () => zoomStep(1));
     if (zo) zo.addEventListener("click", () => zoomStep(-1));
-    // a pinch on a trackpad arrives as a wheel with the control key down; a plain wheel is left to scroll the page
-    let wheelAt = 0;
-    svg.addEventListener("wheel", e => {
-      if (!e.ctrlKey && !e.metaKey) return;
-      e.preventDefault();
-      if (!level) { if (e.deltaY < 0 && performance.now() - wheelAt > 900) { wheelAt = performance.now(); setLevel(1, 700); } return; }
-      if (performance.now() - wheelAt < 900) return;   // let the zoom into the field finish before zooming further
-      const p = toStage(e), r = svg.getBoundingClientRect();
-      const t = camTarget(zoom * Math.exp(-e.deltaY * 0.012), p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
-      cancelAnimationFrame(camFrame);
-      cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = W / cam.w;
-      applyCam();
-    }, { passive: false });
-    svg.addEventListener("dblclick", e => {
-      if (!level || nodeAt(e) || (e.target.closest && e.target.closest(".ctitle"))) return;
-      const p = toStage(e), r = svg.getBoundingClientRect();
-      camGo(camTarget(zoom * 1.8, p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height), 260);
-    });
   } else if ($("webZoomIn")) {
     fig.classList.add("no-field");
   }
+
+  // The wheel zooms the map about the pointer, at either level, and a pinch on a trackpad arrives as a wheel with the control key down.
+  // Zoomed into the field with the whole field in the frame, the wheel changes the frame itself: outwards it shortens until the field fits in
+  // the window, and inwards it grows back to its full height before the view moves in any closer.
+  // The map must not trap the page, so two kinds of wheel are left to scroll it: one that was already scrolling the page when the pointer
+  // came over the map, and one that asks for a wider view when nothing wider is left.
+  let wheelOff = -1e9, scaleSoon = 0;
+  window.addEventListener("wheel", e => { if (!(e.target instanceof Node) || !svg.contains(e.target)) wheelOff = performance.now(); }, { passive: true, capture: true });
+  svg.addEventListener("wheel", e => {
+    const pinch = e.ctrlKey || e.metaKey, now = performance.now();
+    if (boxing) return;
+    if (!pinch && now - wheelOff < 350) { wheelOff = now; return; }
+    const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY, factor = Math.exp(-dy * (pinch ? 0.012 : 0.0022));
+    if (zoom <= 1.001) {
+      if (level && frameBy(factor, e)) { e.preventDefault(); hideTip(); clearTimeout(scaleSoon); scaleSoon = setTimeout(drawScale, 140); return; }
+      if (dy >= 0) { if (pinch) e.preventDefault(); return; }
+    }
+    e.preventDefault();
+    const p = toStage(e), r = svg.getBoundingClientRect();
+    const t = camTarget(zoom * factor, p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+    cancelAnimationFrame(camFrame);
+    goal = null;
+    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
+    applyCam();
+    hideTip();
+    clearTimeout(scaleSoon);
+    scaleSoon = setTimeout(drawScale, 140);
+  }, { passive: false });
+  svg.addEventListener("dblclick", e => {
+    if (boxing || nodeAt(e) || (e.target.closest && e.target.closest(".ctitle"))) return;
+    const p = toStage(e), r = svg.getBoundingClientRect();
+    camGo(camTarget(zoom * 1.8, p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height), 260);
+  });
 
   // the lists further down the page can ask the map to show a bubble: it zooms in if it has to, picks the bubble and brings it into view
   window.ECO_MAP = { show(id) {
@@ -1377,6 +1556,7 @@
   refresh();
   renderSize();
   renderPanel();
-  if (F) { renderLevel(); if (QS.get("view") === "field") setLevel(1, 0); }
+  // a link that asks for a grant measure can only be honoured zoomed in, so it is applied as the map opens on the field
+  if (F) { renderLevel(); if (QS.get("view") === "field") { if (asked && asked.field) measure = asked; setLevel(1, 0); } }
   applyCam();
 })();
