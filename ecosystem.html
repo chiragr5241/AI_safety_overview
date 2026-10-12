@@ -1850,14 +1850,23 @@ Explore.fold("#field", ".chapter-head", { open: "Open the safety field: company 
 Explore.fold("#method", ".chapter-head", { open: "Open method, terms and boundaries", close: "Close the method section" });
 Explore.fold("#sources", ".chapter-head", { open: "Open the 114 sources", close: "Close the sources" });
 
-/* The terms list in the method section already defines the words this page leans on, so every use of each one in
-   the reading text is marked and carries its definition. The method section keeps the full list, and the sources
-   are a reference rather than prose. Read after the folds above, which move those nodes but keep them. */
+/* The terms list in the method section already defines the words this page leans on, so the first use of each one
+   in each section of the reading text is marked and carries its definition. The method section keeps the full
+   list, and the sources are a reference rather than prose. Read after the folds above, which move those nodes but
+   keep them. A section here is one block a reader takes in at once: an actor card, a question, a debate, an
+   evidence fold. Marking by chapter instead would leave two cards side by side marked differently. */
 if (window.Terms) {
+  const BLOCK = ".pcard, .qblock, .frame, .cat, .fold, .findings > li";
   const defs = {};
   document.querySelectorAll("#method .gloss > div").forEach(d => { defs[d.querySelector("dt").textContent] = d.querySelector("dd").textContent; });
   window.Terms.mount(defs, {
-    scopes: () => Array.from(document.querySelectorAll("section.chapter")).filter(s => s.id !== "method" && s.id !== "sources"),
+    scopes: () => Array.from(document.querySelectorAll("section.chapter"))
+      .filter(s => s.id !== "method" && s.id !== "sources")
+      .reduce((all, ch) => {
+        const blocks = Array.from(ch.querySelectorAll(BLOCK));
+        // a chapter written as blocks is marked block by block, with its opening prose taken on its own
+        return all.concat(blocks.length ? blocks.concat(ch.querySelector(".chapter-head") || []) : [ch]);
+      }, []),
     skip: ".web, .tbl, .amt, .layer-hook"
   });
 }

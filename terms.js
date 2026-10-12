@@ -1,13 +1,14 @@
 /* Terms explained in place, shared by every page. A page hands in the words it already defines somewhere
-   else — the risks guide's glossary, the ecosystem page's terms list — and this marks every use of each one
-   inside the reading text, then shows the definition on hover, focus or tap.
+   else — the risks guide's glossary, the ecosystem page's terms list — and this marks the first use of each
+   one in each section of the reading text, then shows the definition on hover, focus or tap.
 
    Nothing is removed: without this script the definitions stay where the page already put them, and the
    reading text is ordinary prose. A term with no definition, or a page with nothing to mark, is left alone.
 
    Terms.mount(defs, opts) takes:
      defs        { term: definition }, usually read out of the page's own markup or data
-     opts.scopes elements to search for uses of the terms
+     opts.scopes the sections to search; each marks the first use of a term it contains, so pass the page's
+                 reading blocks — a card, a question, a panel — and not whole chapters
      opts.terms  optional [[term, RegExp]] where a page wants to control the wording it matches;
                  without it each term is matched on its own name, allowing a plural
      opts.within where a match has to sit to count, as a selector (default "p, li")
@@ -91,6 +92,10 @@
       pairs.forEach(pair => {
         const term = pair[0], re = pair[1] || autoRe(term);
         if (!defs[term]) return;
+        // At most one mark per word per section. Asking the section rather than counting as we go keeps this true
+        // however the sections are handed in: pages nest their blocks, so the same word can sit inside both a
+        // panel and the question that holds it, and a second mount would otherwise go on to the next use.
+        if (scope.querySelector('[data-term="' + term.replace(/["\\]/g, "\\$&") + '"]')) return;
         // a fresh walker per term, because marking one rewrites the nodes the previous walk was holding
         const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
         for (let node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -108,10 +113,10 @@
           span.dataset.term = term;
           range.surroundContents(span);
           marked++;
-          // The walk carries on through the rest of the text, so every use of the word is marked and not only the
-          // first. Two cards side by side that say the same thing are then marked the same way, which is what a
-          // reader expects. surroundContents splits this node in three; the walker steps into the span's own text
-          // next, where .term in the skip list stops it being marked again, and then into what followed the match.
+          // One mark per section. The section is the unit a reader takes in at once, so hand in small ones: two
+          // cards side by side that use the same word are each marked, which is what a reader expects, while a
+          // long block that repeats a word is marked once rather than six times.
+          break;
         }
       });
     });
