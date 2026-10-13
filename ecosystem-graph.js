@@ -124,6 +124,26 @@
   };
   const C1F = F ? F.cats.map(c => ({ cat: "f-" + c.id, fid: c.id, label: c.label, color: (FIELD_CATS[c.id] || ["#A3B5C1", ""])[0], about: (FIELD_CATS[c.id] || ["", ""])[1], field: true, x: 0, y: 0 })) : [];
   const EVERY = C0.concat(C1F);
+  // Each group colour above is the tone for the dark map. The light map draws the same groups in deeper tones that hold on a pale
+  // ground and carry white lettering. The map paints with var(--g-…) and both palettes are written out once as a style sheet, so
+  // switching the theme needs no redraw.
+  const LIGHT_TONE = {
+    "#F3F6F8": "#26323D", "#7CCBFF": "#1F7FBF", "#4F9DFF": "#2459C8", "#F7A93B": "#C4700A", "#2EE6C8": "#0C8573", "#C6E86B": "#5E7F12",
+    "#E6F2A8": "#A08A12", "#FF8A70": "#C7462B", "#F3C9A2": "#8A6B52", "#B79CFF": "#6A4BD0", "#FF6FB1": "#C2317C", "#6FCF97": "#2E8B57",
+    "#F2D15C": "#A88A00", "#FFB86B": "#B5651D", "#FFA98F": "#D2603F", "#E58FB0": "#B5527E", "#FF9F68": "#CC6A2C", "#9CB6FF": "#4F6FD6",
+    "#DCE6EE": "#5B6B78", "#8A94A6": "#7A8494", "#A3B5C1": "#6B7A86"
+  };
+  (function tones() {
+    const dark = [], light = [];
+    EVERY.forEach(c => {
+      const hex = c.color.toUpperCase(), name = "--g-" + hex.slice(1);
+      if (dark.indexOf(`${name}:${hex}`) < 0) { dark.push(`${name}:${hex}`); light.push(`${name}:${LIGHT_TONE[hex] || hex}`); }
+      c.color = `var(${name})`;
+    });
+    const sheet = document.createElement("style");
+    sheet.textContent = `:root{${dark.join(";")}}:root[data-theme="light"]{${light.join(";")}}`;
+    document.head.appendChild(sheet);
+  })();
   let CLUSTERS = C0;   // the clusters on the plate at the current zoom level
   const C = new Map(EVERY.map(c => [c.cat, c]));
   const catKey = k => C.has(+k) ? +k : k;   // a group's key as read back from an attribute
