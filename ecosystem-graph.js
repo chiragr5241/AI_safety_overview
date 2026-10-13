@@ -159,7 +159,9 @@
     oecd: "OECD", un: "UN panel", iasr: "Intl AI Safety Report", chamber: "US Chamber", pfa: "Public First Action", publicfirst: "Public First PAC",
     leading: "Leading the Future", cais_pac: "CAIS Action PAC", public: "The public", ainow: "AI Now", labor: "AFL-CIO", ada: "Ada Lovelace Inst.",
     journalism: "Journalism", university: "University groups", bluedot: "BlueDot", enterprise: "Enterprise users", iso: "ISO/IEC", cen: "CEN-CENELEC",
-    insurance: "Munich Re aiSure", auditors: "Auditors", a16z: "a16z", softbank: "SoftBank", qia: "QIA", capital: "Other investors", macro: "Macroscopic"
+    insurance: "Munich Re aiSure", auditors: "Auditors", a16z: "a16z", softbank: "SoftBank", qia: "QIA", capital: "Other investors", macro: "Macroscopic",
+    naaimes: "AI evaluation network", caisi_ca: "Canada AISI", jp_aisi: "Japan AISI", kr_aisi: "Korea AISI", sg_aisi: "Singapore AISI", inesia: "France INESIA",
+    au_aisi: "Australia AISI", in_aisi: "India AISI", cac: "China CAC", cnaisda: "CnAISDA", coe: "CoE AI convention", zhipu: "Zhipu"
   };
 
   /* ---------- model ---------- */

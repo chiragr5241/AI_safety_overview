@@ -1168,13 +1168,14 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     // keep the active link in view when the chapter path scrolls sideways
     const x = a.offsetLeft - chapters.offsetLeft;
     if (x < chapters.scrollLeft || x + a.offsetWidth > chapters.scrollLeft + chapters.clientWidth) chapters.scrollLeft = x - 24;
-    // a chapter counts as visited after a short stay, so jumping past one does not tick it off
+    // a chapter counts as visited after two seconds in it: long enough that a jump scrolling past does not tick it off,
+    // short enough that looking at it does
     if (idx < numbered) dwell = setTimeout(() => {
       if (seen.includes(a.hash)) return;
       seen.push(a.hash);
       try { localStorage.setItem("wam-seen", JSON.stringify(seen)); } catch (e) {}
       markSeen();
-    }, 8000);
+    }, 2000);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
 

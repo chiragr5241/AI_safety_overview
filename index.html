@@ -19,12 +19,13 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="stylesheet" href="visuals.css?v=2">
 <style>
 /* Goals page: three doors, two side pages, later goals. */
+/* A slight margin: the page sits in a 1560px column, narrower than the site's widest and wider than a reading page. */
+:root { --wrap: 1560px; }
 .hero { padding-block: 64px 44px; display: grid; gap: 20px; }
 .hero h1 { max-width: 50rem; }
 @media (max-width: 900px) { .hero { padding-block: 40px 28px; } }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; }
 .hero h1 span { color: var(--accent); }
-.hero .lede { font-size: 1.15rem; }
 
 /* Three doors. Each shows its question and its link; what is on the site now and what is missing sit one click behind. */
 .goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
@@ -83,7 +84,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     <div class="hero">
       <span class="eyebrow">What this site is for</span>
       <h1>The political organization of <span>AI safety</span></h1>
-      <p class="lede">For readers who study institutions, power and cooperation. No machine-learning background needed.</p>
     </div>
 
     <!-- ============ THE THREE GOALS ============ -->
@@ -158,20 +158,24 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
           </div>
           <div class="layers compact goal-state">
             <details class="layer" id="goal-ecosystem-now">
-              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">100 actors, 116 ties and who decides</span></span></summary>
+              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">116 actors, 136 ties and who decides</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li><a href="ecosystem.html">The map</a>: 100 actors, 116 ties, 114 sources.</li>
+                  <li><a href="ecosystem.html">The map</a>: 116 actors, 136 ties, 127 sources.</li>
                   <li><a href="ecosystem.html#control">Who decides</a>: decision rights, access terms, binding rules, disclosed interests.</li>
+                  <li>Outside the US and UK: 32 actors, 16 of them added on 13 October 2026.</li>
                   <li>Evidence to 4 October 2026.</li>
                 </ul>
                 </div>
             </details>
             <details class="layer" id="goal-ecosystem-next">
-              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">Budget shares, signed agreements, other countries</span></span></summary>
+              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">Budget shares, signed agreements, most other countries</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li>Funders as a share of each budget, lab–evaluator agreements, current shareholdings, institutions outside the US and UK.</li>
+                  <li>Funders as a share of each budget.</li>
+                  <li>Signed lab–evaluator agreements.</li>
+                  <li>Current shareholdings.</li>
+                  <li>Outside the US and UK: China's ministries, Kenya, Brazil, the African Union, most EU member states, and research and advocacy groups.</li>
                 </ul>
                 </div>
             </details>
