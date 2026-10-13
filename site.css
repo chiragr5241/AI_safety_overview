@@ -19,13 +19,18 @@
   --mis-ink: #7A5200;
   --con-ink: #9C2A3D;
   --on-fill: #FFFFFF;
+  --font-title: "Fraunces", "Bricolage Grotesque", Georgia, serif;
   --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-body: "Literata", Georgia, "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --measure: 66ch;
-  /* One page width for the whole site. The risks guide's rail sits inside this, not beside it. */
-  --wrap: 1320px;
+  /* One page width for the whole site. The risks guide's rail sits inside this, not beside it. It is wide enough to use a large screen,
+     and --gutter is the room kept clear at each side of it. */
+  --wrap: 1840px;
+  --gutter: clamp(20px, 3vw, 56px);
 }
+/* Light is the default: each page sets data-theme="light" unless the reader has chosen dark. */
+:root[data-theme="light"] { color-scheme: light; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0F1519; --surface: #172027; --surface-2: #1E2931; --ink: #E6ECE9; --muted: #9AA7AF; --line: #2C3943;
@@ -43,7 +48,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; scroll-padding-top: 112px; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.62; accent-color: var(--accent); caret-color: var(--accent); }
 ::selection { background: var(--accent); color: var(--on-fill); }
@@ -51,13 +56,15 @@ main:focus { outline: none; }
 .skip { position: absolute; left: 12px; top: -64px; z-index: 40; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-weight: 700; padding: 10px 14px; border-radius: 8px; text-decoration: none; }
 .skip:focus { top: 12px; }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 20px; }
-@media (max-width: 480px) { .wrap { padding-inline: 16px; } body { font-size: 16px; } }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: var(--gutter); }
+@media (max-width: 480px) { :root { --gutter: 16px; } body { font-size: 16px; } }
 
-h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
-h2 { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 800; }
-h3 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
-h4 { font-size: 1.08rem; font-weight: 700; }
+/* Titles are set in Fraunces, light at large sizes and firmer as they get smaller. Labels, buttons and the map keep the display face. */
+h1, h2, h3, h4 { font-family: var(--font-title); font-optical-sizing: auto; line-height: 1.12; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+h1 { font-weight: 400; }
+h2 { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 400; }
+h3 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 500; letter-spacing: -0.015em; }
+h4 { font-size: 1.08rem; font-weight: 600; letter-spacing: -0.01em; }
 p { margin: 0; text-wrap: pretty; }
 a { color: var(--accent); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
@@ -68,29 +75,45 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .small { font-size: .88rem; color: var(--muted); }
 strong { font-weight: 600; }
 
-/* Site bar: links between the pages of the site. It sits on top of every page's own bar and never folds into a menu. */
-.sitebar { background: var(--surface-2); }
-.sitebar:not(:last-child) { border-bottom: 1px solid var(--line); }
-.sitebar-in { max-width: var(--wrap); margin: 0 auto; padding-inline: 20px; display: flex; align-items: center; gap: 14px; min-height: 40px; overflow-x: auto; scrollbar-width: none; }
-.sitebar-in::-webkit-scrollbar { display: none; }
-.site-name { font-family: var(--font-display); font-weight: 800; font-size: .9rem; color: var(--ink); text-decoration: none; white-space: nowrap; }
-.site-links { display: flex; gap: 2px; }
-.site-links a { font-family: var(--font-display); font-weight: 500; font-size: .86rem; color: var(--muted); text-decoration: none; padding: 0 10px; min-height: 32px; border-radius: 999px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: color .15s, background-color .15s; }
-.site-links a:hover { color: var(--ink); background: var(--surface); }
-.site-links a[aria-current] { color: var(--accent); background: var(--surface); font-weight: 700; }
-.site-links .n { font-family: var(--font-mono); font-size: .68rem; font-weight: 400; line-height: 1; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; flex: none; }
-.sitebar .icon-btn { margin-left: auto; width: 32px; height: 32px; }
-.sitebar .icon-btn svg { width: 16px; height: 16px; }
-@media (max-width: 520px) { .site-name { display: none; } .sitebar-in { padding-inline: 8px; gap: 8px; } }
-@media (pointer: coarse) { .sitebar-in { min-height: 48px; } .site-links a { min-height: 44px; } .sitebar .icon-btn { width: 44px; height: 44px; } }
+/* The site's name leads the bar and goes to the goals page. Where the bar is short of room it is a home button. */
+.site-name { display: inline-flex; align-items: center; flex: none; min-height: 40px; margin-right: auto; font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.site-name svg { display: none; width: 18px; height: 18px; }
+/* Page menu: the links between the pages of the site, behind one button at the right of the bar. The button names the page it is on.
+   It is one width and sits just before the theme switch on every page, so it does not move from page to page. */
+.site-menu { position: relative; flex: none; }
+.site-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; box-sizing: border-box; width: 9.75rem; min-height: 40px; padding: 0 14px; background: none; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; white-space: nowrap; cursor: pointer; transition: background-color .15s; }
+.site-btn:hover, .site-btn[aria-expanded="true"] { background: var(--surface-2); }
+.site-btn::after { content: ""; flex: none; width: 7px; height: 7px; margin-top: -3px; border: solid; border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform .16s; }
+.site-btn[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 3px; }
+.site-links { display: none; position: absolute; right: 0; top: calc(100% + 8px); z-index: 2; min-width: 15rem; flex-direction: column; gap: 2px; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .35); max-height: calc(100dvh - 100px); overflow-y: auto; }
+.site-links.open { display: flex; }
+.site-links a { font-family: var(--font-display); font-weight: 500; font-size: 1rem; color: var(--ink); text-decoration: none; padding: 0 12px; min-height: 44px; border-radius: 10px; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: background-color .15s; }
+.site-links a:hover { background: var(--surface-2); }
+.site-links a[aria-current] { color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.site-links .n { font-family: var(--font-mono); font-size: .72rem; font-weight: 400; line-height: 1; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; flex: none; }
+@media (max-width: 1439px) {
+  .bar:has(.chapters) .site-name { width: 40px; justify-content: center; border: 1px solid var(--line-strong); border-radius: 50%; }
+  .bar:has(.chapters) .site-name span { display: none; }
+  .bar:has(.chapters) .site-name svg { display: block; }
+}
+/* on a phone there is no room for the home button beside a Contents menu; Goals is the first entry of the page menu */
+@media (max-width: 480px) { .bar:has(.toc-btn) .site-name { display: none; } .site-btn { width: 9.5rem; padding: 0 12px; } }
+@media (max-width: 700px) {
+  .site-name { width: 40px; justify-content: center; border: 1px solid var(--line-strong); border-radius: 50%; }
+  .site-name span { display: none; }
+  .site-name svg { display: block; }
+}
+@media (pointer: coarse) { .site-btn, .site-name { min-height: 44px; } .site-links a { min-height: 48px; } }
+@media (pointer: coarse) and (max-width: 1439px) { .bar:has(.chapters) .site-name { width: 44px; } }
+@media (pointer: coarse) and (max-width: 700px) { .site-name { width: 44px; } }
 
-/* Page bar: this page's name, its sections, theme switch. Below 1060px the sections fold into a Contents menu. */
+/* The bar: one row on every page, the full width of the window. The site's name, this page's sections, the page menu, the switches.
+   Below 1060px the sections fold into a Contents menu. */
 .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.topbar .wrap { display: flex; align-items: center; gap: 14px; min-height: 56px; position: relative; }
-.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; color: var(--ink); text-decoration: none; white-space: nowrap; }
-.chapters { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.bar { display: flex; align-items: center; gap: 12px; min-height: 56px; padding-inline: var(--gutter); position: relative; }
+.chapters { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
 .chapters::-webkit-scrollbar { display: none; }
-.chapters a { font-family: var(--font-display); font-weight: 500; font-size: .88rem; color: var(--muted); text-decoration: none; padding: 0 9px; min-height: 40px; border-radius: 999px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: color .15s, background-color .15s; }
+.chapters a { font-family: var(--font-display); font-weight: 500; font-size: .86rem; color: var(--muted); text-decoration: none; padding: 0 7px; min-height: 40px; border-radius: 999px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: color .15s, background-color .15s; }
 .chapters a:hover { color: var(--ink); background: var(--surface-2); }
 .chapters a.active { color: var(--accent); background: var(--accent-soft); }
 .chapters .n { font-family: var(--font-mono); font-size: .72rem; line-height: 1; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; flex: none; }
@@ -110,8 +133,7 @@ strong { font-weight: 600; }
   .chapters a { min-height: 48px; font-size: 1rem; padding: 0 12px; border-radius: 10px; }
 }
 @media (max-width: 480px) {
-  .topbar .wrap { gap: 10px; }
-  .brand { font-size: .98rem; }
+  .bar { gap: 10px; }
   .toc-btn { padding: 0 12px; }
 }
 

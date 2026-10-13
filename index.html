@@ -4,24 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Safety Overview</title>
-<meta name="description" content="What this site sets out to do: explain the high-level AI risks, define the terms, and map the AI industry and its safety ecosystem, in plain language for political scientists.">
+<meta name="description" content="AI safety for political scientists: the risks, the terms, and who holds the money and the power.">
 <meta name="color-scheme" content="light dark">
-<script>try { var t = localStorage.getItem("wam-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");</script>
 <script type="speculationrules">{"prerender":[{"where":{"selector_matches":"a[href$='.html'], a[href*='.html#']"},"eagerness":"moderate"}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css">
-<link rel="stylesheet" href="explore.css">
-<link rel="stylesheet" href="visuals.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="explore.css?v=2">
+<link rel="stylesheet" href="visuals.css?v=2">
 <style>
-/* Goals page: one reading column. Each goal is a numbered row with what is on the site now and what is still missing. */
+/* Goals page: three doors, two side pages, later goals. */
 .hero { padding-block: 64px 44px; display: grid; gap: 20px; max-width: 50rem; }
 @media (max-width: 900px) { .hero { padding-block: 40px 28px; } }
-.hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: .98; }
+.hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; }
 .hero h1 span { color: var(--accent); }
 .hero .lede { font-size: 1.15rem; max-width: 36em; }
-.hero .why { max-width: 36em; }
 
 /* Three doors. Each shows its question and its link; what is on the site now and what is missing sit one click behind. */
 .goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
@@ -45,39 +44,41 @@
 .later b { font-family: var(--font-display); font-size: 1.08rem; }
 .later span { font-size: .95rem; }
 
-.rules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-@media (max-width: 900px) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 520px) { .rules { grid-template-columns: minmax(0, 1fr); } }
-.rules > div { border-top: 3px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: .94rem; align-content: start; }
-.rules h3 { font-size: 1.2rem; }
+.extras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+@media (max-width: 720px) { .extras { grid-template-columns: minmax(0, 1fr); } }
+.extra { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px; display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); transition: border-color .15s; }
+.extra:hover { border-color: var(--ink); }
+.extra .asks { font-family: var(--font-display); font-weight: 500; font-size: 1.12rem; line-height: 1.35; }
+
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="topbar">
-  <nav class="sitebar" aria-label="Site pages">
-    <div class="sitebar-in">
-      <a class="site-name" href="index.html">AI Safety Overview</a>
-      <div class="site-links">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Goals</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
         <a href="index.html" aria-current="page">Goals</a>
         <a href="multi-agent-risks.html"><span class="n">1</span>Risks</a>
-        <a href="multi-agent-risks.html#primer"><span class="n">2</span>Terms</a>
+        <a href="terms.html"><span class="n">2</span>Terms</a>
         <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
-      </div>
-      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+        <a href="experiments.html">Experiments</a>
+        <a href="timelines.html">Timelines</a>
+      </nav>
     </div>
-  </nav>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
 </header>
 
 <main id="main" tabindex="-1">
   <div class="wrap">
     <div class="hero">
       <span class="eyebrow">What this site is for</span>
-      <h1>AI safety, for <span>political scientists</span></h1>
-      <p class="lede">This site explains AI safety to readers who study institutions, power and cooperation, and who have no machine-learning background. For now it has three goals.</p>
-      <div class="how-to-read"><p><b>How to read this site.</b> Every page starts with a picture and something to try. The full text sits one click behind it, and nothing is left out.</p><span data-explore-switch></span></div>
-      <p class="why small">Why this audience: many open questions in AI safety are questions about institutions. Who holds authority over a system, who can monitor it, and who can enforce a commitment once it has been made?</p>
+      <h1>The political organization of <span>AI safety</span></h1>
+      <p class="lede">For readers who study institutions, power and cooperation. No machine-learning background needed.</p>
     </div>
 
     <!-- ============ THE THREE GOALS ============ -->
@@ -90,7 +91,6 @@
           <div class="goal-main">
             <h3>Cover the high-level AI risks</h3>
             <p class="asks">What could go wrong with advanced AI, and how do the different worries relate to one another?</p>
-            <p>The aim is a short account of the main kinds of risk, each with a concrete example, that a reader can follow without maths.</p>
             <a class="btn" href="multi-agent-risks.html">Read the risks guide</a>
           </div>
           <div class="layers compact goal-state">
@@ -98,8 +98,7 @@
               <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A six-chapter guide to one report</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li><a href="multi-agent-risks.html">When AIs Meet AIs</a>, a six-chapter guide to one research report on what goes wrong when many AI agents deal with one another.</li>
-                  <li>It covers three failure modes (miscoordination, conflict and collusion), seven risk factors and 13 case studies.</li>
+                  <li><a href="multi-agent-risks.html">Introduction to Multi-Agent Risks</a>: three failure modes, seven risk factors, 13 case studies.</li>
                 </ul>
                 </div>
             </details>
@@ -107,7 +106,7 @@
               <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One overview of every kind of risk</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li>A single overview of the main risk types across the whole field. Risks from one AI system acting alone appear only as entries in the field primer.</li>
+                  <li>Risks from a single AI system. They appear only as primer entries.</li>
                 </ul>
                 </div>
             </details>
@@ -120,17 +119,16 @@
           <div class="goal-main">
             <h3>Define the terms</h3>
             <p class="asks">What do people in this field mean by alignment, evaluation, interpretability or scheming?</p>
-            <p>The aim is one short, stable definition per term, so that a word means the same thing on every page and a reader can check it quickly.</p>
-            <a class="btn" href="multi-agent-risks.html#primer">Open the field primer</a>
+            <a class="btn" href="terms.html">Open the field primer</a>
           </div>
           <div class="layers compact goal-state">
             <details class="layer" id="goal-terms-now">
               <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A primer, a glossary and a terms list</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li>A <a href="multi-agent-risks.html#primer">field primer</a> of 31 ideas in AI safety, searchable and grouped into five themes.</li>
-                  <li>A <a href="multi-agent-risks.html#glossary">glossary</a> of 16 terms used in the risks guide.</li>
-                  <li>A list of <a href="ecosystem.html#terms">industry and funding terms</a> used in the ecosystem map.</li>
+                  <li><a href="terms.html">Field primer</a>: 32 ideas in five themes.</li>
+                  <li><a href="multi-agent-risks.html#glossary">Glossary</a>: 16 terms from the risks guide.</li>
+                  <li><a href="ecosystem.html#terms">Industry and funding terms</a>.</li>
                 </ul>
                 </div>
             </details>
@@ -138,7 +136,7 @@
               <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One merged glossary for the site</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li>One merged glossary for the whole site. The three lists are separate for now.</li>
+                  <li>The three lists are still separate.</li>
                 </ul>
                 </div>
             </details>
@@ -151,7 +149,6 @@
           <div class="goal-main">
             <h3>Map the AI industry and its ecosystem</h3>
             <p class="asks">Who supplies the infrastructure, who pays, who decides, who does the research, who shapes policy, and who bears the consequences?</p>
-            <p>The aim is a descriptive map of the organisations involved and the ties between them. Investment, control, grants, commercial contracts and political spending are kept apart.</p>
             <a class="btn" href="ecosystem.html">Open the ecosystem map</a>
           </div>
           <div class="layers compact goal-state">
@@ -159,9 +156,9 @@
               <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">100 actors, 116 ties and who decides</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li><a href="ecosystem.html">Who has a stake in AI safety?</a> It covers 100 actors and groups, 116 relationships, 48 financial observations and 114 sources.</li>
-                  <li>A section on <a href="ecosystem.html#control">who decides and what they stand to gain</a>: decision rights, access terms, binding rules and disclosed interests.</li>
-                  <li>Public-source evidence runs to 4 October 2026.</li>
+                  <li><a href="ecosystem.html">The map</a>: 100 actors, 116 ties, 114 sources.</li>
+                  <li><a href="ecosystem.html#control">Who decides</a>: decision rights, access terms, binding rules, disclosed interests.</li>
+                  <li>Evidence to 4 October 2026.</li>
                 </ul>
                 </div>
             </details>
@@ -169,13 +166,17 @@
               <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">Budget shares, signed agreements, other countries</span></span></summary>
               <div class="layer-body">
                 <ul>
-                  <li>Each safety organisation's main funders as a share of its budget, the signed agreements between labs and evaluators, current shareholdings, and institutions outside the US and UK. The map marks these gaps where they occur.</li>
+                  <li>Funders as a share of each budget, lab–evaluator agreements, current shareholdings, institutions outside the US and UK.</li>
                 </ul>
                 </div>
             </details>
           </div>
         </li>
       </ol>
+      <div class="extras">
+        <a class="extra" href="experiments.html"><span class="eyebrow">Experiments</span><span class="asks">Who is giving AI safety non-profits their money?</span></a>
+        <a class="extra" href="timelines.html"><span class="eyebrow">Timelines</span><span class="asks">What happened in AI safety, and when?</span></a>
+      </div>
     </section>
 
     <!-- ============ LATER ============ -->
@@ -183,27 +184,12 @@
       <div class="chapter-head">
         <span class="chapter-num">AFTER THE FIRST THREE</span>
         <h2>Later goals</h2>
-        <p style="max-width:var(--measure)">These come after the three above. Nothing on the site covers them yet.</p>
       </div>
       <ul class="later">
-        <li><b>Compare AI with how other industries developed</b><span>Find historical analogies and empirical evidence on how comparable industries evolved. The ecosystem map is coded so that this comparison can be made later, but no comparison has been done.</span></li>
-        <li><b>Explain the roles of government, industry and universities</b><span>Set out how each of the three fits into AI safety, and where their roles overlap.</span></li>
-        <li><b>Publish supporting documents for the Chicago Research Symposium</b><span>Collect the materials prepared for the symposium in one place.</span></li>
+        <li><b>Compare AI with how other industries developed</b><span>Historical analogies and evidence. Not started.</span></li>
+        <li><b>Explain the roles of government, industry and universities</b><span>What each does in AI safety, and where they overlap.</span></li>
+        <li><b>Publish supporting documents for the Chicago Research Symposium</b></li>
       </ul>
-    </section>
-
-    <!-- ============ GROUND RULES ============ -->
-    <section class="chapter" id="rules">
-      <div class="chapter-head">
-        <span class="chapter-num">HOW THE GOALS ARE MET</span>
-        <h2>Four ground rules</h2>
-      </div>
-      <div class="rules">
-        <div><h3>Plain language first</h3><p>No maths. A technical term is defined where it is first used.</p></div>
-        <div><h3>Evidence apart from interpretation</h3><p>What a source states is kept separate from what this site concludes from it, and each is labelled.</p></div>
-        <div><h3>Gaps are stated</h3><p>Where something is not known, the page says so. An unknown figure is left blank and is never treated as zero.</p></div>
-        <div><h3>Unofficial</h3><p>The site is not affiliated with, or endorsed by, any organisation it describes.</p></div>
-      </div>
     </section>
   </div>
 </main>
@@ -212,20 +198,20 @@
   <div class="wrap">
     <h2>Start reading</h2>
     <div class="res">
-      <a href="multi-agent-risks.html">1. Risks: When AIs Meet AIs</a>
-      <a href="multi-agent-risks.html#primer">2. Terms: a field primer of 31 ideas</a>
+      <a href="multi-agent-risks.html">1. Risks: Introduction to Multi-Agent Risks</a>
+      <a href="terms.html">2. Terms: a field primer of 32 ideas</a>
       <a href="ecosystem.html">3. Ecosystem: who has a stake in AI safety?</a>
+      <a href="experiments.html">Experiments: who funds the non-profits?</a>
+      <a href="timelines.html">Timelines: the field, governments, agent incidents</a>
     </div>
-    <p class="small" style="max-width:var(--measure)">An unofficial study site. Each page names its sources and the date its evidence runs to.</p>
   </div>
 </footer>
 
-<script src="site.js"></script>
-<script src="explore.js"></script>
-<script src="visuals.js"></script>
+<script src="site.js?v=3"></script>
+<script src="explore.js?v=4"></script>
+<script src="visuals.js?v=2"></script>
 <script>
 Explore.fold("#later", ".chapter-head", { open: "Show the three later goals", close: "Hide the later goals" });
-Explore.fold("#rules", ".chapter-head", { open: "Show the four ground rules", close: "Hide the ground rules" });
 </script>
 </body>
 </html>

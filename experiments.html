@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiments · AI Safety Overview</title>
+<meta name="description" content="Who is giving AI safety non-profits their money? Grant records, named donors and what the donors say.">
+<meta name="color-scheme" content="light dark">
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="explore.css?v=2">
+<style>
+/* Experiments page: one question per section, then the tables and figures. No conclusions are drawn on the page. */
+/* Chart series colours. Stepped from the site's accent, purple and amber so each clears the chroma and lightness checks in its theme. */
+/* This page keeps side margins: a 1320px column. */
+:root { --wrap: 1320px; }
+:root { --s1: #008F84; --s2: #5846B4; --s3: #B07A08; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s1: #22A397; --s2: #8474E6; --s3: #B98722; } }
+:root[data-theme="dark"] { --s1: #22A397; --s2: #8474E6; --s3: #B98722; }
+
+.q { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 800; }
+/* Section headings sit one level under the question, at the size the site gives an h3. */
+.fh { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+/* A person's name anywhere on the page: hover for a summary, select to go to their card. */
+a.pp { color: inherit; text-decoration: underline dotted var(--accent); text-underline-offset: 3px; cursor: pointer; }
+a.pp:hover, a.pp:focus-visible { color: var(--accent); }
+.person { scroll-margin-top: 80px; }
+.person:target, .person.lit { border-color: var(--ink); box-shadow: 0 0 0 2px var(--accent); }
+#tip .t-k { display: block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; opacity: .7; margin-top: 6px; }
+#tip.card { max-width: 22rem; padding: 10px 12px; font-family: var(--font-body); font-size: .86rem; line-height: 1.4; }
+#tip.card b { font-family: var(--font-display); font-size: 1rem; }
+
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+@media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 4px; align-content: start; }
+.tile b { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tile span { font-size: .94rem; color: var(--muted); }
+
+.fig { margin: 0; padding-top: 44px; display: grid; gap: 14px; min-width: 0; }
+.fig-head { display: grid; gap: 4px; max-width: 46rem; }
+.fig-head p { font-size: .94rem; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); margin-bottom: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.k1 { background: var(--s1); } .k2 { background: var(--s2); } .k3 { background: var(--s3); }
+.k-plan { background: transparent; border: 1.5px dashed var(--s1); }
+
+/* Horizontal bars: label, track, value. */
+.bars { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: minmax(7rem, 15rem) minmax(0, 1fr) 6.5rem; gap: 12px; align-items: center; font-size: .92rem; }
+.bar-row > .nm { font-family: var(--font-display); font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+.bar-row > .nm small { display: block; font-family: var(--font-body); font-weight: 400; font-size: .8rem; color: var(--muted); }
+.bar-row > .val { font-family: var(--font-mono); font-size: .84rem; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar-row > .val small { display: block; color: var(--muted); font-size: .76rem; }
+.track { display: grid; gap: 3px; min-width: 0; }
+.stack { display: flex; gap: 2px; height: 16px; min-width: 0; }
+.seg { height: 100%; min-width: 2px; border-radius: 0 4px 4px 0; cursor: default; }
+.stack .seg:not(:last-child) { border-radius: 0; }
+.seg.plan { background: transparent; border: 1.5px dashed var(--s1); height: 12px; }
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; }
+  .bar-row > .track { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* Columns by year. */
+.cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; align-items: end; height: 220px; border-bottom: 1px solid var(--line-strong); }
+.col { display: flex; flex-direction: column-reverse; gap: 2px; height: 100%; justify-content: flex-start; position: relative; min-width: 0; }
+.col .seg { width: 100%; height: auto; min-width: 0; min-height: 2px; border-radius: 0; }
+.col .seg:last-of-type { border-radius: 4px 4px 0 0; }
+.col .top { position: absolute; left: 50%; transform: translate(-50%, -100%); font-family: var(--font-mono); font-size: .76rem; white-space: nowrap; padding-bottom: 4px; }
+.col-labels { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); text-align: center; padding-top: 6px; }
+@media (max-width: 560px) { .col-labels span:nth-child(even) { visibility: hidden; } }
+
+/* Plain tables: rows of label, detail, figure. */
+.tbl { display: grid; }
+.tbl-group { font-family: var(--font-display); font-weight: 700; padding: 14px 0 4px; }
+.tbl-group:first-child { padding-top: 0; }
+.tbl-row { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 8.5rem; gap: 4px 16px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+.tbl-row:last-child { border-bottom: 0; }
+.tbl-row .a { line-height: 1.35; }
+.tbl-row .a b { font-family: var(--font-display); font-weight: 500; }
+.tbl-row .b { color: var(--muted); font-size: .86rem; line-height: 1.4; }
+.tbl-row .c { font-family: var(--font-mono); font-size: .84rem; text-align: right; font-variant-numeric: tabular-nums; }
+.tbl-row .c small { display: block; color: var(--muted); font-size: .76rem; }
+@media (max-width: 720px) {
+  .tbl-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .tbl-row .b { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* One card per person: what they gave, what they say. */
+.people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .people { grid-template-columns: minmax(0, 1fr); } }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.person h3 { font-size: 1.2rem; }
+.person .wealth { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .04em; color: var(--muted); line-height: 1.45; }
+.person dl { margin: 0; display: grid; gap: 10px; }
+.person dt { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.person dd { margin: 2px 0 0; font-size: .94rem; }
+.person dd ul { margin: 0; padding-left: 1.1em; display: grid; gap: 2px; }
+.person .from { font-size: .84rem; color: var(--muted); }
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 14px; }
+.tools input { font: inherit; font-size: .95rem; padding: 8px 12px; min-height: 40px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg); color: var(--ink); flex: 1 1 14rem; max-width: 22rem; }
+.tools .small { margin-left: auto; }
+.grants { margin: 6px 0 4px; padding: 10px 14px; background: var(--bg); border-radius: 10px; font-size: .86rem; display: grid; gap: 8px; grid-column: 1 / -1; }
+.grants table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.grants td { padding: 2px 10px 2px 0; vertical-align: top; }
+.grants td:last-child { text-align: right; font-family: var(--font-mono); white-space: nowrap; padding-right: 0; }
+.grants td:first-child { font-family: var(--font-mono); color: var(--muted); white-space: nowrap; }
+.grants h3 { font-family: var(--font-display); letter-spacing: 0; font-size: .9rem; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.grants h3 i { width: 10px; height: 10px; border-radius: 3px; }
+.row-btn { all: unset; cursor: pointer; display: block; font-family: var(--font-display); font-weight: 500; line-height: 1.35; }
+.row-btn:hover { color: var(--accent); }
+.row-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.row-btn::after { content: " +"; font-family: var(--font-mono); color: var(--muted); }
+.row-btn[aria-expanded="true"]::after { content: " −"; }
+#progOwn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+.gaps { margin: 0; padding-left: 1.2em; display: grid; gap: .35em; max-width: var(--measure); }
+.srcs { margin: 0; padding-left: 1.2em; display: grid; gap: .3em; font-size: .92rem; }
+
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 7px 10px; border-radius: 8px; max-width: 18rem; }
+#tip b { font-weight: 700; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Experiments</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
+        <a href="index.html">Goals</a>
+        <a href="multi-agent-risks.html"><span class="n">1</span>Risks</a>
+        <a href="terms.html"><span class="n">2</span>Terms</a>
+        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <a href="experiments.html" aria-current="page">Experiments</a>
+        <a href="timelines.html">Timelines</a>
+      </nav>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+    <!-- ============ EXPERIMENT 01 ============ -->
+    <section class="chapter" id="funders" style="border-top:0;padding-top:40px">
+      <div class="chapter-head">
+        <span class="chapter-num">Experiment 01</span>
+        <h1 class="q">Who is giving AI safety non-profits their money?</h1>
+      </div>
+      <nav class="jump" aria-label="Tables in this experiment">
+        <a class="chip" href="#fig-records">Grant records</a>
+        <a class="chip" href="#fig-sff">Named donors in SFF</a>
+        <a class="chip" href="#fig-bulletin">2025 and 2026 estimates</a>
+        <a class="chip" href="#fig-upstream">Who funds the funders</a>
+        <a class="chip" href="#fig-people">The people</a>
+        <a class="chip" href="#fig-programmes">Every programme</a>
+        <a class="chip" href="#fig-mats">Around MATS</a>
+        <a class="chip" href="#fig-recipients">By organisation</a>
+        <a class="chip" href="#fig-years">By year</a>
+      </nav>
+      <div class="tiles" id="tiles"></div>
+
+      <figure class="fig" id="fig-records">
+        <div class="fig-head">
+          <h2 class="fh">Five grant records, by funder</h2>
+          <p id="recordsNote"></p>
+        </div>
+        <div class="card"><div class="bars" id="recordBars"></div></div>
+      </figure>
+
+      <figure class="fig" id="fig-sff">
+        <div class="fig-head">
+          <h2 class="fh">The donor named on each SFF grant</h2>
+          <p>The SFF bar above, split by donor. 2019 to 2026. Recommendations, not confirmed payments.</p>
+        </div>
+        <div class="card"><div class="bars" id="sffBars"></div></div>
+      </figure>
+
+      <figure class="fig" id="fig-bulletin">
+        <div class="fig-head">
+          <h2 class="fh">Estimated giving by funder, 2025 and 2026</h2>
+          <p>Manifund's estimates, updated 1 October 2026. Not audited. A separate measure from the records above.</p>
+        </div>
+        <div class="card">
+          <div class="legend"><span><i class="k1"></i>Given in 2025</span><span><i class="k-plan"></i>Expected in 2026</span></div>
+          <div class="bars" id="bulletinBars"></div>
+        </div>
+      </figure>
+
+      <figure class="fig" id="fig-upstream">
+        <div class="fig-head">
+          <h2 class="fh">Who funds the funders</h2>
+          <p>Grants made to a funder, by the donor named in the record.</p>
+        </div>
+        <div class="card"><div class="tbl" id="upstream"></div></div>
+      </figure>
+
+      <figure class="fig" id="fig-people">
+        <div class="fig-head">
+          <h2 class="fh">The people</h2>
+          <p>What each has given, and what each says about giving. Their words are paraphrased; the link goes to the original.</p>
+        </div>
+        <div class="people" id="people"></div>
+      </figure>
+
+      <figure class="fig" id="fig-pools">
+        <div class="fig-head">
+          <h2 class="fh">Government and company pools</h2>
+        </div>
+        <div class="card"><div class="tbl" id="pools"></div></div>
+      </figure>
+
+      <figure class="fig" id="fig-programmes">
+        <div class="fig-head">
+          <h2 class="fh">Every funder on AISafety.com's funding page</h2>
+          <p>57 listings, read 13 October 2026.</p>
+        </div>
+        <div class="card">
+          <div class="tools">
+            <input type="search" id="progSearch" placeholder="Find a programme or a person" aria-label="Find a programme or a person" autocomplete="off">
+            <button class="btn ghost sm" id="progOwn" type="button" aria-pressed="false">One person's own money</button>
+            <span class="small" id="progCount" aria-live="polite"></span>
+          </div>
+          <div class="tbl" id="programmes"></div>
+        </div>
+      </figure>
+
+      <figure class="fig" id="fig-mats">
+        <div class="fig-head">
+          <h2 class="fh">Organisations around MATS</h2>
+          <p id="matsNote"></p>
+        </div>
+        <div class="card"><div class="tbl" id="mats"></div></div>
+      </figure>
+
+      <figure class="fig" id="fig-recipients">
+        <div class="fig-head">
+          <h2 class="fh">Grants to each organisation, by funder</h2>
+          <p id="recipientsNote"></p>
+        </div>
+        <div class="card">
+          <div class="tools">
+            <input type="search" id="orgSearch" placeholder="Find an organisation" aria-label="Find an organisation" autocomplete="off">
+            <button class="btn ghost sm" id="orgAll" type="button">Show all</button>
+            <span class="small" id="orgCount" aria-live="polite"></span>
+          </div>
+          <div class="legend" id="orgLegend"></div>
+          <div class="bars" id="orgBars"></div>
+        </div>
+      </figure>
+
+      <figure class="fig" id="fig-years">
+        <div class="fig-head">
+          <h2 class="fh">Grants by year</h2>
+          <p>Grants to all recipients below. The 2026 column stops in August.</p>
+        </div>
+        <div class="card">
+          <div class="legend" id="yearLegend"></div>
+          <div class="cols" id="yearCols" role="img"></div>
+          <div class="col-labels" id="yearLabels" aria-hidden="true"></div>
+        </div>
+      </figure>
+
+      <div class="fig">
+        <div class="fig-head"><h2 class="fh">Not in the data</h2></div>
+        <ul class="gaps">
+          <li>The donors to the AI Safety Tactical Opportunities Fund, and Longview's private clients. No source names them.</li>
+          <li>Individual donors on Manifund other than Leo Gao. Manifund Trace has them; it is not imported yet.</li>
+          <li>Venture funding of companies, except Goodfire. Grants to individuals from EA Funds and Manifund.</li>
+          <li>Any organisation's full budget. A share here is a share of recorded grants.</li>
+          <li>SFF figures are recommendations. OpenAI's $30m is a 2017 grant, made when it was a non-profit.</li>
+        </ul>
+      </div>
+
+      <div class="fig">
+        <div class="fig-head"><h2 class="fh">Sources</h2></div>
+        <ul class="srcs" id="srcs"></ul>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="res">
+      <a href="ecosystem.html">See the same money on the ecosystem map</a>
+      <a href="timelines.html">Timelines</a>
+      <a href="index.html">All goals of this site</a>
+    </div>
+  </div>
+</footer>
+
+<div id="tip" hidden></div>
+
+<script src="site.js?v=3"></script>
+<script src="explore.js?v=4"></script>
+<script src="field-data.js"></script>
+<script src="experiments-grants.js"></script>
+<script src="experiments-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const F = window.FIELD, X = window.EXPERIMENTS.funders, OFF = window.OFF_MAP, SFF = window.SFF_DONORS;
+  const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const money = n => n >= 1e9 ? "$" + (n / 1e9).toFixed(2) + "bn" : n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + "m" : "$" + Math.round(n / 1e3) + "k";
+  const pct = x => Math.round(100 * x) + "%";
+
+  /* ---------- names ---------- */
+  const byId = {};
+  F.entries.forEach(e => { byId[e.id] = e; if (e.node) byId[e.node] = e; });
+  const EXTRA = { cnas: "CNAS", carnegie: "Carnegie Endowment", ltff: "Long-Term Future Fund", uiuc: "University of Illinois Urbana-Champaign" };
+  const full = id => id.startsWith("raw:") ? id.slice(4) : EXTRA[id] || (byId[id] ? byId[id].name.replace(/\s*\([^)]*\)\s*$/, "") : id);
+
+  /* ---------- the three series: the two large records, and the three small ones together ---------- */
+  const SERIES = [
+    { key: "cg", label: "Coefficient Giving", cls: "k1" },
+    { key: "sff", label: "Survival and Flourishing Fund", cls: "k2" },
+    { key: "other", label: "LTFF, EA Infrastructure Fund, Manifund", cls: "k3" }
+  ];
+  const seriesOf = src => src === "cg" || src === "sff" ? src : "other";
+  const legend = SERIES.map(s => `<span><i class="${s.cls}"></i>${s.label}</span>`).join("");
+  $("#orgLegend").innerHTML = legend;
+  $("#yearLegend").innerHTML = legend;
+
+  /* ---------- people: a name anywhere becomes a link to that person's card ---------- */
+  const personBy = {};
+  const akas = [];
+  X.people.forEach(p => (p.aka || []).forEach(a => { personBy[a] = p; akas.push(a); }));
+  akas.sort((a, b) => b.length - a.length);
+  const akaRe = new RegExp("(^|[^\\p{L}])(" + akas.map(a => a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(?![\\p{L}])", "gu");
+  // takes text, returns safe HTML with each known name linked; `self` is the card being drawn, which is not linked to itself
+  const names = (text, self) => esc(text).replace(akaRe, (m, pre, name) => personBy[name] === self ? m : `${pre}<a class="pp" href="#p-${personBy[name].id}" data-p="${personBy[name].id}">${name}</a>`);
+
+  /* ---------- tooltip ---------- */
+  const tip = $("#tip");
+  function place(x, y) {
+    tip.style.left = Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, x)) + "px";
+    tip.style.top = Math.min(window.innerHeight - tip.offsetHeight - 8, y) + "px";
+  }
+  // one summary box for every linked name, by hover or keyboard focus
+  function personCard(a) {
+    const p = X.people.find(q => q.id === a.dataset.p);
+    tip.className = "card";
+    tip.innerHTML = `<b>${esc(p.name)}</b>${p.wealth ? `<br>${esc(p.wealth)}` : ""}<span class="t-k">Gives through</span>${esc(p.through)}` +
+      (p.figures.length ? `<span class="t-k">Recorded</span>${p.figures.slice(0, 2).map(esc).join("<br>")}` : "") + `<span class="t-k">Select to read more</span>`;
+    tip.hidden = false;
+  }
+  document.addEventListener("pointerover", e => { const a = e.target.closest && e.target.closest("a.pp"); if (a) { personCard(a); place(e.clientX + 14, e.clientY + 16); } });
+  document.addEventListener("pointermove", e => { if (e.target.closest && e.target.closest("a.pp")) place(e.clientX + 14, e.clientY + 16); });
+  document.addEventListener("pointerout", e => { if (e.target.closest && e.target.closest("a.pp")) { tip.hidden = true; tip.className = ""; } });
+  document.addEventListener("focusin", e => { const a = e.target.closest && e.target.closest("a.pp"); if (a) { personCard(a); const r = a.getBoundingClientRect(); place(r.left, r.bottom + 8); } });
+  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest("a.pp")) { tip.hidden = true; tip.className = ""; } });
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a.pp");
+    if (!a) return;
+    tip.hidden = true; tip.className = "";
+    const card = document.getElementById("p-" + a.dataset.p);
+    document.querySelectorAll(".person.lit").forEach(c => c.classList.remove("lit"));
+    if (card) card.classList.add("lit");
+  });
+  function bindTip(node, html) {
+    node.addEventListener("pointerenter", () => { tip.className = ""; tip.innerHTML = html; tip.hidden = false; });
+    node.addEventListener("pointermove", e => {
+      const w = tip.offsetWidth, x = Math.min(window.innerWidth - w - 8, e.clientX + 14);
+      tip.style.left = Math.max(8, x) + "px";
+      tip.style.top = (e.clientY + 16) + "px";
+    });
+    node.addEventListener("pointerleave", () => { tip.hidden = true; });
+  }
+
+  /* ---------- totals from the grant records ---------- */
+  const rec = {};
+  const payers0 = new Set(window.RECORD_PAYERS);
+  const FLOWS = F.flows.filter(f => !payers0.has(f.to));   // a grant to another record's fund is counted when that fund pays it out
+  FLOWS.forEach(f => {
+    const r = rec[f.to] || (rec[f.to] = { id: f.to, total: 0, by: { cg: 0, sff: 0, other: 0 }, flows: [] });
+    r.total += f.total;
+    r.by[seriesOf(f.src)] += f.total;
+    r.flows.push(f);
+  });
+  // recipients that are in the two large records but not on the field map
+  OFF.forEach(o => {
+    const flows = ["cg", "sff"].filter(k => o[k] > 0).map(k => ({ src: k, total: o[k], cond: 0,
+      grants: o.grants.filter(g => g[3] === k).map(g => [g[0], g[1], g[2] + (g[4] ? " · " + g[4] : "")]) }));
+    if (o.to) {   // the same organisation as a map entry, under another name in the record
+      const r = rec[o.to] || (rec[o.to] = { id: o.to, total: 0, by: { cg: 0, sff: 0, other: 0 }, flows: [] });
+      r.total += o.cg + o.sff; r.by.cg += o.cg; r.by.sff += o.sff; r.flows.push(...flows);
+      return;
+    }
+    rec["raw:" + o.name] = { id: "raw:" + o.name, off: true, total: o.cg + o.sff, by: { cg: o.cg, sff: o.sff, other: 0 }, flows };
+  });
+  const orgs = Object.values(rec).filter(r => r.total > 0).sort((a, b) => b.total - a.total);
+  const onMap = orgs.filter(r => !r.off).length;
+  const grand = orgs.reduce((s, r) => s + r.total, 0);
+  // each record's total with every dollar counted once (worked out and checked in evidence/field/unmatched.py)
+  const NET = window.RECORD_NET;
+  const net = Object.values(NET).reduce((s, r) => s + r.counted, 0);
+  const oneSource = orgs.filter(r => Math.max(r.by.cg, r.by.sff, r.by.other) / r.total >= 0.9).length;
+
+  /* ---------- headline figures ---------- */
+  [
+    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records is from Coefficient Giving.`],
+    [oneSource + " of " + orgs.length, "recipients have 90% or more of their recorded grants from one funder."],
+    [pct(SFF[0].total / NET.sff.counted), "of the money in the SFF record carries Jaan Tallinn's name alone."]
+  ].forEach(([n, t]) => { const d = el("div", "tile"); d.innerHTML = `<b>${n}</b><span>${names(t)}</span>`; $("#tiles").appendChild(d); });
+
+  /* ---------- figure 1: the five records ---------- */
+  $("#recordsNote").textContent = "Every row of each record, 2015 to 2026, each dollar counted once. The three small records are mostly grants to individuals.";
+  const RECORD_NAME = { cg: "Coefficient Giving", sff: "Survival and Flourishing Fund", ltff: "Long-Term Future Fund", eaif: "EA Infrastructure Fund", manifund: "Manifund" };
+  const recMax = Math.max(...Object.values(NET).map(r => r.counted));
+  Object.entries(NET).sort((a, b) => b[1].counted - a[1].counted).forEach(([key, r]) => {
+    const row = el("div", "bar-row");
+    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${esc(F.records[key].kind)}</small></span>
+      <span class="track"><span class="stack"><span class="seg ${key === "cg" ? "k1" : key === "sff" ? "k2" : "k3"}" style="width:${(100 * r.counted / recMax).toFixed(2)}%"></span></span></span>
+      <span class="val">${money(r.counted)}<small>${F.records[key].rows} rows</small></span>`;
+    bindTip(row.querySelector(".seg"), `<b>${RECORD_NAME[key]}</b><br>${money(r.counted)}`);
+    $("#recordBars").appendChild(row);
+  });
+
+  /* ---------- the donor named on each SFF row ---------- */
+  const sffMax = SFF[0].total;
+  SFF.forEach(d => {
+    const row = el("div", "bar-row");
+    const years = d.first === d.last ? d.first : d.first + " to " + d.last;
+    row.innerHTML = `<span class="nm">${names(d.name)}<small>${years}</small></span>
+      <span class="track"><span class="stack"><span class="seg k2" style="width:${(100 * d.total / sffMax).toFixed(2)}%"></span></span></span>
+      <span class="val">${money(d.total)}<small>${d.grants} grant${d.grants === 1 ? "" : "s"}</small></span>`;
+    bindTip(row.querySelector(".seg"), `<b>${esc(d.name)}</b><br>${money(d.total)} across ${d.grants} grants, ${years}`);
+    $("#sffBars").appendChild(row);
+  });
+
+  /* ---------- who funds the funders ---------- */
+  const link = k => X.sources[k] ? ` <a href="${X.sources[k].url}">Source</a>` : "";
+  let lastTo = null;
+  X.upstream.forEach(u => {
+    if (u.to !== lastTo) { $("#upstream").appendChild(el("div", "tbl-group", esc(u.to))); lastTo = u.to; }
+    const row = el("div", "tbl-row");
+    const amount = u.amount == null ? (u.n ? "not disclosed" : "") : (u.approx ? "about " : "") + money(u.amount);
+    row.innerHTML = `<span class="a">${names(u.from)}</span>
+      <span class="b">${u.n ? u.n + " grant" + (u.n === 1 ? "" : "s") + (u.when ? ", " + esc(u.when) : "") + "." : ""}${link(u.src)}</span>
+      <span class="c">${amount}</span>`;
+    $("#upstream").appendChild(row);
+  });
+
+  /* ---------- the people ---------- */
+  X.people.forEach(p => {
+    const card = el("article", "person");
+    card.id = "p-" + p.id;
+    const figs = p.figures.length ? `<div><dt>Recorded</dt><dd><ul>${p.figures.map(f => `<li>${names(f, p)}</li>`).join("")}</ul></dd></div>` : "";
+    const says = p.says ? `<div><dt>What they say</dt><dd>${names(p.says, p)}</dd></div>` : "";
+    const from = [p.src, p.src2].filter(Boolean).map(k => `<a href="${X.sources[k].url}">${esc(X.sources[k].title)}</a>`).join(" · ");
+    card.innerHTML = `<h3>${esc(p.name)}</h3>${p.wealth ? `<p class="wealth">${esc(p.wealth)}</p>` : ""}
+      <dl><div><dt>Gives through</dt><dd>${names(p.through, p)}</dd></div>${figs}${says}</dl>
+      <p class="from">${p.kind ? esc(p.kind) + ". " : ""}${from}</p>`;
+    $("#people").appendChild(card);
+  });
+
+  /* ---------- organisations MATS names ---------- */
+  const offKey = {};
+  OFF.forEach(o => { offKey[o.name] = rec["raw:" + o.name]; });
+  let lastG = null, matsRows = 0, matsWith = 0;
+  X.mats.rows.forEach(m => {
+    if (m.g !== lastG) { $("#mats").appendChild(el("div", "tbl-group", esc(m.g))); lastG = m.g; }
+    const e = m.id && byId[m.id];
+    const r = (e && rec[e.node || e.id]) || (m.raw && offKey[m.raw]) || null;
+    matsRows++; if (r || m.other) matsWith++;
+    const top = r && SERIES.slice().sort((a, b) => r.by[b.key] - r.by[a.key])[0];
+    const notes = [m.other, m.note].filter(Boolean).map(t => names(t)).join(". ");
+    const row = el("div", "tbl-row");
+    row.innerHTML = `<span class="a"><b>${esc(m.name)}</b>${m.kind ? ` <span class="tag">${esc(m.kind)}</span>` : ""}</span>
+      <span class="b">${notes}${notes ? "." : ""}${m.src ? link(m.src) : ""}</span>
+      <span class="c">${r ? money(r.total) + `<small>${pct(r.by[top.key] / r.total)} ${top.key === "cg" ? "Coefficient" : top.key === "sff" ? "SFF" : "other"}</small>` : `<small>${e || m.raw ? "no grant row" : "not in the data"}</small>`}</span>`;
+    $("#mats").appendChild(row);
+  });
+  $("#matsNote").innerHTML = `${matsRows} organisations MATS names on its site. ${matsWith} have funding recorded here. Figures are recorded grants. <a href="${X.sources.mats.url}">MATS: alumni</a> · <a href="${X.sources.mats_summer.url}">Summer 2026</a>`;
+
+  /* ---------- pools ---------- */
+  X.pools.forEach(o => {
+    const row = el("div", "tbl-row");
+    row.innerHTML = `<span class="a"><b>${esc(o.name)}</b></span><span class="b">${names(o.who)}.${link(o.src)}</span><span class="c">${esc(o.amount)}</span>`;
+    $("#pools").appendChild(row);
+  });
+
+  /* ---------- every programme ---------- */
+  let ownOnly = false;
+  function drawProgs() {
+    const q = $("#progSearch").value.trim().toLowerCase();
+    const list = X.programmes.filter(r => (!ownOnly || r[4]) && (!q || (r[0] + " " + r[1]).toLowerCase().includes(q)));
+    const host = $("#programmes");
+    host.textContent = "";
+    list.forEach(r => {
+      const row = el("div", "tbl-row");
+      row.innerHTML = `<span class="a"><b>${esc(r[0])}</b></span><span class="b">${names(r[1] || "Not stated")}${r[4] ? ' <span class="tag accent">own money</span>' : ""}</span><span class="c">${esc(r[2] || "")}<small>${esc(r[3])}</small></span>`;
+      host.appendChild(row);
+    });
+    $("#progCount").textContent = `Showing ${list.length} of ${X.programmes.length} rows`;
+    $("#progOwn").setAttribute("aria-pressed", ownOnly ? "true" : "false");
+  }
+  $("#progSearch").addEventListener("input", drawProgs);
+  $("#progOwn").addEventListener("click", () => { ownOnly = !ownOnly; drawProgs(); });
+  drawProgs();
+
+  /* ---------- the bulletin ---------- */
+  const bMax = Math.max(...X.bulletin.rows.map(r => Math.max(r.y2025, r.y2026)));
+  const m = v => v >= 1000 ? "$" + (v / 1000) + "bn" : v ? "$" + v + "m" : "$0";
+  X.bulletin.rows.forEach(r => {
+    const row = el("div", "bar-row");
+    row.innerHTML = `<span class="nm">${esc(r.name)}</span>
+      <span class="track">
+        <span class="stack"><span class="seg k1" style="width:${(100 * r.y2025 / bMax).toFixed(2)}%;${r.y2025 ? "" : "visibility:hidden"}"></span></span>
+        <span class="stack"><span class="seg plan" style="width:${(100 * r.y2026 / bMax).toFixed(2)}%"></span></span>
+      </span>
+      <span class="val">${m(r.y2025)}<small>${m(r.y2026)} in 2026</small></span>`;
+    bindTip(row.querySelector(".track"), `<b>${esc(r.name)}</b><br>2025: ${m(r.y2025)}<br>2026, expected: ${m(r.y2026)}`);
+    $("#bulletinBars").appendChild(row);
+  });
+
+  /* ---------- figure 4: every organisation ---------- */
+  const TOP = 20;
+  let showAll = false;
+  const orgMax = orgs[0].total;
+  $("#recipientsNote").textContent = `Recorded grants to ${orgs.length} recipients: ${onMap} on the AISafety.com field map and ${orgs.length - onMap} that are not.`;
+  function grantsPanel(r) {
+    const box = el("div", "grants");
+    r.flows.slice().sort((a, b) => b.total - a.total).forEach(f => {
+      const s = SERIES.find(x => x.key === seriesOf(f.src));
+      const rows = f.grants.map(g => `<tr><td>${esc(g[0])}</td><td>${names(g[2] || "")}</td><td>${money(g[1])}</td></tr>`).join("");
+      const part = el("div");
+      part.innerHTML = `<h3><i class="${s.cls}"></i>${esc(F.records[f.src].title.split(":")[0].split(",")[0])} · ${money(f.total)}</h3><table>${rows}</table>` +
+        (f.cond ? `<p class="small">Plus ${money(f.cond)} in matching pledges, not counted.</p>` : "");
+      box.appendChild(part);
+    });
+    return box;
+  }
+  function drawOrgs() {
+    const q = $("#orgSearch").value.trim().toLowerCase();
+    const hit = orgs.filter(r => !q || full(r.id).toLowerCase().includes(q) || (byId[r.id] && (byId[r.id].short || "").toLowerCase().includes(q)));
+    const list = q || showAll ? hit : hit.slice(0, TOP);
+    const host = $("#orgBars");
+    host.textContent = "";
+    list.forEach(r => {
+      const row = el("div", "bar-row");
+      const top = SERIES.slice().sort((a, b) => r.by[b.key] - r.by[a.key])[0];
+      const segs = SERIES.filter(s => r.by[s.key] > 0).map(s =>
+        `<span class="seg ${s.cls}" data-k="${s.key}" style="width:${(100 * r.by[s.key] / orgMax).toFixed(3)}%"></span>`).join("");
+      row.innerHTML = `<span class="nm"><button class="row-btn" type="button" aria-expanded="false">${esc(full(r.id))}</button>${r.off ? "<small>not on the field map</small>" : byId[r.id] && byId[r.id].cats.includes("funding") ? "<small>also gives grants</small>" : ""}</span>
+        <span class="track"><span class="stack">${segs}</span></span>
+        <span class="val">${money(r.total)}<small>${pct(r.by[top.key] / r.total)} ${top.key === "cg" ? "Coefficient" : top.key === "sff" ? "SFF" : "other"}</small></span>`;
+      row.querySelectorAll(".seg").forEach(sg => {
+        const s = SERIES.find(x => x.key === sg.dataset.k);
+        bindTip(sg, `<b>${esc(full(r.id))}</b><br>${s.label}: ${money(r.by[s.key])} (${pct(r.by[s.key] / r.total)})`);
+      });
+      const btn = row.querySelector(".row-btn");
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+        const old = row.querySelector(".grants");
+        if (old) old.remove(); else row.appendChild(grantsPanel(r));
+      });
+      host.appendChild(row);
+    });
+    if (!list.length) host.appendChild(el("p", "small", "No organisation with that name has a grant in these records."));
+    $("#orgCount").textContent = `Showing ${list.length} of ${orgs.length}`;
+    $("#orgAll").hidden = !!q;
+    $("#orgAll").textContent = showAll ? `Show the top ${TOP}` : `Show all ${orgs.length}`;
+  }
+  $("#orgSearch").addEventListener("input", drawOrgs);
+  $("#orgAll").addEventListener("click", () => { showAll = !showAll; drawOrgs(); });
+  drawOrgs();
+
+  /* ---------- figure 5: by year ---------- */
+  const years = {};
+  FLOWS.forEach(f => f.grants.forEach(g => {
+    const y = String(g[0]).slice(0, 4);
+    const o = years[y] || (years[y] = { cg: 0, sff: 0, other: 0 });
+    o[seriesOf(f.src)] += g[1];
+  }));
+  OFF.forEach(r => r.grants.forEach(g => {
+    const y = String(g[0]).slice(0, 4);
+    const o = years[y] || (years[y] = { cg: 0, sff: 0, other: 0 });
+    o[g[3]] += g[1];
+  }));
+  const ys = Object.keys(years).sort();
+  const yTot = y => years[y].cg + years[y].sff + years[y].other;
+  const yMax = Math.max(...ys.map(yTot));
+  const peak = ys.reduce((a, b) => yTot(b) > yTot(a) ? b : a);
+  ys.forEach(y => {
+    const col = el("div", "col");
+    SERIES.forEach(s => {
+      if (!years[y][s.key]) return;
+      const sg = el("span", "seg " + s.cls);
+      sg.style.height = (88 * years[y][s.key] / yMax).toFixed(2) + "%";
+      col.appendChild(sg);
+    });
+    if (y === peak || y === ys[ys.length - 1] || y === ys[0]) {
+      const t = el("span", "top", money(yTot(y)));
+      t.style.top = (100 - 88 * yTot(y) / yMax - (col.children.length - 1) * 0.9).toFixed(2) + "%";
+      col.appendChild(t);
+    }
+    bindTip(col, `<b>${y}</b> · ${money(yTot(y))}<br>` + SERIES.filter(s => years[y][s.key]).map(s => `${s.label}: ${money(years[y][s.key])}`).join("<br>"));
+    $("#yearCols").appendChild(col);
+    $("#yearLabels").appendChild(el("span", "", y));
+  });
+  $("#yearCols").setAttribute("aria-label", "Grants by year: " + ys.map(y => y + " " + money(yTot(y))).join(", ") + ".");
+
+  /* ---------- sources ---------- */
+  const srcs = Object.values(F.records).map(r => ({ title: r.title, url: r.url }));
+  const seen = new Set();
+  srcs.concat([{ title: F.source.name + " (" + F.source.licence + ")", url: F.source.url }], Object.values(X.sources)).forEach(s => {
+    if (seen.has(s.title)) return;
+    seen.add(s.title);
+    $("#srcs").appendChild(el("li", "", `<a href="${s.url}">${esc(s.title)}</a>`));
+  });
+})();
+</script>
+</body>
+</html>

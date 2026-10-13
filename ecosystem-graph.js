@@ -18,7 +18,8 @@
   "use strict";
   const D = window.ECOSYSTEM, U = window.ECO_UI, F = window.FIELD || null, svg = document.getElementById("webStage");
   if (!D || !U || !svg) return;
-  const NS = "http://www.w3.org/2000/svg", W = 1080, H0 = 870;
+  const NS = "http://www.w3.org/2000/svg", W0 = 1080, H0 = 870, WMAX = 2600;
+  let W = W0;   // the plate is made wider when the frame is wider than the plate's usual shape, so the map fills the frame: see plateW()
   let H = H0;   // the plate grows taller when a measure draws bubbles too large for the usual height
   let level = 0;   // 0 is the whole industry, 1 is zoomed into the AI safety field
   // The map is drawn in a frame on the page, and the view is the part of the plate that the frame shows. The view always has the frame's own
@@ -27,7 +28,7 @@
   // until the whole field is in it at full width, and the page under the map moves down to make room; zooming back out brings it up again.
   // Zoomed into the field the frame can also be made shorter again, down to the height that fits the window, which draws the whole field
   // small enough to be seen at once: fieldF is how much of its full height the frame has, and 1 is the height the field opens at.
-  const cam = { x: 0, y: 0, w: W, h: H0 }, view = { ar: W / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 5;
+  const cam = { x: 0, y: 0, w: W0, h: H0 }, view = { ar: W0 / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 5;
   let zoom = 1, fieldF = 1;
   let boxing = null;   // the frame's change of height while it is under way: { h0, h1, w } in page pixels, with how far the page comes up
   const easeOut = k => 1 - Math.pow(1 - k, 3), easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2;
@@ -250,6 +251,12 @@
   // and twice as wide at 1tn and above as the even scale would draw it. Below 10bn nothing changes. Set by the author.
   const lift = v => 1 + 0.5 * Math.max(0, Math.min(2, Math.log10(v) - 10));
   const MEASURES = [
+    { id: "worth", pill: "Money (worth)", key: "size = what it is worth", unit: "", log: true,
+      keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
+      of: moneyOf(S.worth),
+      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
+      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 or 6 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
+      about: "Stock-market value for listed companies, read on 5 and 6 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round and Goodfire's from the announcement of its February 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
       keyText: "people employed, where a figure is published; each step up in size is ten times more",
       of: n => { const p = S.people[n.id]; return p ? { v: p.v, num: big(p.v), text: p.text, when: p.when, basis: p.basis, est: !!p.est, note: p.note || "", url: p.url } : null; },
@@ -262,12 +269,6 @@
       r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)) * lift(v), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn a year, in US dollars"]],
       note: k => `Bubble size shows money through each actor in a year: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee. It is not what the actor is worth, which is the next measure along. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. Financing rounds and multi-year totals are left out. Size here is not influence.`,
       about: "One figure per actor, covering a year or less. Microsoft's figure of about USD 332bn, for example, is its revenue for fiscal 2026, not its value on the stock market. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings and budget documents collected on 5 and 6 October 2026. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
-    { id: "worth", pill: "Money (worth)", key: "size = what it is worth", unit: "", log: true,
-      keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
-      of: moneyOf(S.worth),
-      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
-      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 or 6 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
-      about: "Stock-market value for listed companies, read on 5 and 6 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round and Goodfire's from the announcement of its February 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
       keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
       of: n => { const m = T100.matches[n.id] || []; return { v: m.length, num: String(m.length), text: m.length ? `${m.length} ${m.length === 1 ? "person" : "people"} on the list: ${m.join("; ")}` : "No one on the list", when: `published ${t100Date}`, basis: T100.title, est: false,
@@ -402,14 +403,27 @@
     c.hh = (y1 - y0) / 2 + 2;
     list.forEach(n => { n.ox -= mx; n.oy -= my; });
   }
+  // The frame as the stylesheet sizes it, without the height the script gives it when the map is zoomed into the field.
+  function frameSize() {
+    const keep = svg.style.height;
+    svg.style.height = "";
+    const box = svg.getBoundingClientRect();
+    svg.style.height = keep;
+    own.w = box.width; own.h = box.height;
+  }
+  // How wide the plate is for the frame it is drawn in. For the whole industry it takes the frame's shape, so the groups spread out to the
+  // sides of a wide window and no room is left empty beside them. Zoomed into the field it is as wide as the frame, so the map is drawn at
+  // its own size and a wider window holds more groups in a row. It is never narrower than the plate the groups' anchors were set out on.
+  const plateW = () => Math.round(Math.max(W0, Math.min(WMAX, !(own.w > 0 && own.h > 0) ? W0 : level ? own.w : H * own.w / own.h)));
   // The whole industry: groups start at their anchors and are nudged apart along the shallower overlap; a weak pull keeps them near home.
   // If they still overlap at the end, the plate is made a little taller and the groups are spread down it and tried again,
   // each time leaning further towards moving groups up and down, where the new room is, and not sideways into the edges.
   function spread() {
     for (H = H0; ; H += 50) {
-      const ky = H / H0, lean = Math.pow(0.8, (H - H0) / 50);
+      W = plateW();
+      const kx = W / W0, ky = H / H0, lean = Math.pow(0.8, (H - H0) / 50);
       let left = 0;
-      CLUSTERS.forEach(c => { c.x = c.ax; c.y = c.ay * ky; });
+      CLUSTERS.forEach(c => { c.x = c.ax * kx; c.y = c.ay * ky; });
       for (let it = 0; it < 420; it++) {
         const pull = it < 300 ? 0.035 : 0;
         left = 0;
@@ -421,7 +435,7 @@
           if (px < py * lean) { const s = (a.x < b.x ? -1 : 1) * px / 2; a.x += s; b.x -= s; } else { const s = (a.y < b.y ? -1 : 1) * py / 2; a.y += s; b.y -= s; }
         }
         CLUSTERS.forEach(c => {
-          c.x += (c.ax - c.x) * pull; c.y += (c.ay * ky - c.y) * pull;
+          c.x += (c.ax * kx - c.x) * pull; c.y += (c.ay * ky - c.y) * pull;
           c.x = Math.max(c.hw + 6, Math.min(W - c.hw - 6, c.x)); c.y = Math.max(c.hh + 6, Math.min(H - c.hh - 6, c.y));
         });
       }
@@ -433,6 +447,7 @@
   function flow() {
     const M = 10, GX = 18, GY = 14;
     let y = 30;
+    W = plateW();
     const place = list => {
       const rows = [];
       let row = [], w = 0;
@@ -456,8 +471,10 @@
     place(CLUSTERS.filter(c => !c.field).sort((a, b) => a.ay - b.ay || a.ax - b.ax));
     H = Math.ceil(y);
   }
-  function layout() {
-    CLUSTERS.forEach(pack);
+  // keep leaves the bubbles where they are inside their groups, for when only the shape of the frame has changed
+  function layout(keep) {
+    frameSize();
+    if (!keep) CLUSTERS.forEach(pack);
     if (level) flow(); else spread();
     if (band) {
       band.g.classList.toggle("off", !level);
@@ -510,6 +527,9 @@
      the map is held, and the browser's own sticky positioning keeps the foot of the frame at the foot of the window for that distance. The
      height of the frame is then read off how far down the track the page has got. So it works the same for a wheel, a trackpad, a touch,
      the keyboard and the scrollbar, the foot of the frame cannot wobble, and nothing under the track moves while the frame changes height. */
+  // The site scrolls smoothly by default (site.css), which would turn every correction below into an animation of its own: the page would
+  // sail off and come back. These moves have to land at once, in the same frame as the change they make up for.
+  const jump = d => window.scrollBy({ top: d, left: 0, behavior: "instant" });
   const scrollBox = svg.parentNode, track = scrollBox.parentNode && scrollBox.parentNode.classList.contains("web-track") ? scrollBox.parentNode : null;
   const PIN_GAP = 16, HOLD_PX = 360;   // how far the foot of the frame is held above the foot of the window, and how long it stays held
   const tallH = () => own.w * H / W;   // the height of the frame with the whole field in it at full width
@@ -534,7 +554,7 @@
     const want = fieldF >= 0.9995 ? (held ? 0 : Math.min(at, 0))
       : fieldF > lo + 0.0005 ? tall * (1 - fieldF)
       : held ? Math.max(out, Math.min(out + HOLD_PX - 1, at)) : Math.max(at, out);
-    if (Math.abs(want - at) > 0.5) window.scrollBy(0, want - at);
+    if (Math.abs(want - at) > 0.5) jump(want - at);
   }
   // The track is taken away again, as it is on the way out to the whole industry. If the frame was being held part of the way down it, the
   // page is moved up by the same distance, so the map does not jump in the window.
@@ -542,7 +562,7 @@
     if (!pinOn()) return;
     const held = scrollBox.getBoundingClientRect().top - track.getBoundingClientRect().top;
     track.style.height = ""; scrollBox.style.top = "";
-    if (held > 0.5) window.scrollBy(0, -held);
+    if (held > 0.5) jump(-held);
   }
   // the reader's scale for the field, read off how far down the track the page is
   let scaleSoon = 0;
@@ -565,7 +585,7 @@
   }
   window.addEventListener("scroll", pinScroll, { passive: true });
   // zoomed into the field the frame has a height of its own, so a change in the height of the window does not reach it by itself
-  window.addEventListener("resize", () => { if (level && !boxing && window.innerHeight !== own.vh) reframe(false); });
+  window.addEventListener("resize", () => { if (level && !boxing && window.innerHeight !== own.vh) refit(); });
   // After a new layout, or when the window changes, the frame and the view are set again. The frame takes the height its level asks for:
   // the stylesheet's own for the whole industry, and as tall as the whole field needs at full width when zoomed in. The view goes to where
   // the level opens if asked; otherwise the widest view stays the widest and a closer one keeps its middle and its scale as far as it can.
@@ -575,10 +595,9 @@
   function reframe(home, ms, ease, lift) {
     const held = pinOn() && Math.abs(svg.getBoundingClientRect().bottom - (own.vh - PIN_GAP)) < 3;
     const keep = svg.style.height;
-    svg.style.height = "";
-    const box = svg.getBoundingClientRect(), bw = box.width, bh = box.height;
-    svg.style.height = keep;
-    own.w = bw; own.h = bh; own.vh = window.innerHeight;   // the frame as the stylesheet sizes it
+    frameSize();
+    const bw = own.w, bh = own.h;
+    own.vh = window.innerHeight;
     // the reader's scale for the field is kept as it is: only zooming changes it, never a change of measure, tie filter or window
     const sized = bw > 0 && bh > 0, h0 = sized ? (keep ? parseFloat(keep) : bh) : 0, h1 = sized ? frameH() : 0;
     const cx = cam.x + cam.w / 2, cy = cam.y + cam.h / 2, wide = zoom <= 1.01, w0 = cam.w;
@@ -784,7 +803,7 @@
     svg.classList.toggle("moving", !!move);
     unfinished = done || null;
     const gone = move ? move.gone : [], ease = move ? easeInOut : easeOut;
-    const from = nodes.map(n => [n.x, n.y, n.r]), gf = gone.map(n => [n.y, n.r]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
+    const from = nodes.map(n => [n.x, n.y, n.r]), gf = gone.map(n => [n.y, n.r, n.x]), tf = CLUSTERS.map(c => [+c.title.getAttribute("x"), +c.title.getAttribute("y")]), t0 = performance.now();
     const step = now => {
       const k = ms ? Math.min(1, Math.max(0, (now - t0) / ms)) : 1, e = ease(k);
       nodes.forEach((n, i) => {
@@ -793,7 +812,7 @@
         n.place();
       });
       gone.forEach((n, i) => {
-        n.y = gf[i][0] + (n.gy - gf[i][0]) * e; n.r = gf[i][1] * (1 - e);
+        n.x = gf[i][2] + (n.gx - gf[i][2]) * e; n.y = gf[i][0] + (n.gy - gf[i][0]) * e; n.r = gf[i][1] * (1 - e);
         n.circle.setAttribute("r", n.r.toFixed(1));
         n.place();
       });
@@ -1074,9 +1093,17 @@
   if (sizeAbout) sizeAbout.addEventListener("click", e => { const b = e.target.closest("button[data-node]"); if (b) { select({ type: "node", id: b.dataset.node }, true); if (!level) svg.scrollIntoView({ block: "center", behavior: STILL ? "auto" : "smooth" }); } });
   // the frame changes shape with the window, and the view is fitted to it again
   // (the frame also changes height when the reader zooms it, which is not a change of window and needs no second look)
+  // A frame of a new shape asks for a plate of a new width: the groups are set out again on it, and the view keeps its middle.
+  function refit() {
+    const w0 = W;
+    frameSize();
+    if (plateW() !== w0) { layout(true); cam.x = (cam.x + cam.w / 2) * W / w0 - cam.w / 2; }
+    reframe(false);
+    if (W !== w0) { labelNodes(); settle(0); }
+  }
   if (window.ResizeObserver) new ResizeObserver(() => {
     if (boxing) return;
-    if (Math.abs(svg.getBoundingClientRect().width - own.w) > 0.5 || window.innerHeight !== own.vh) reframe(false);
+    if (Math.abs(svg.getBoundingClientRect().width - own.w) > 0.5 || window.innerHeight !== own.vh) refit();
     drawScale();
   }).observe(svg);
   // text is measured to lay the map out, so lay it out again once the web fonts have arrived
@@ -1372,7 +1399,7 @@
       }
       hideTip();
       if (pan.page) {
-        window.scrollBy(0, pan.lastY - e.clientY);
+        jump(pan.lastY - e.clientY);
         pan.lastY = e.clientY;
         return;
       }
@@ -1442,7 +1469,7 @@
         const bh = box.h0 + (box.h1 - box.h0) * e;
         svg.style.height = k < 1 || level ? bh.toFixed(1) + "px" : "";
         pinTop(bh);
-        if (box.lift) window.scrollTo(0, box.y0 + box.lift * e);
+        if (box.lift) window.scrollTo({ top: box.y0 + box.lift * e, left: window.scrollX, behavior: "instant" });
         view.ar = box.w / bh;
         cam.h = cam.w / view.ar;
       }
@@ -1522,7 +1549,7 @@
   function setLevel(v, ms) {
     v = v && F ? 1 : 0;
     if (v === level) return;
-    const was = new Set(CLUSTERS), h0 = H;
+    const was = new Set(CLUSTERS), h0 = H, w0 = W;
     level = v;
     if (!level && measure.field) measure = bothLevels;
     svg.classList.toggle("lv1", !!level);
@@ -1544,8 +1571,8 @@
     layout();
     // The field's own bubbles grow where they will stand: each starts at its place on the taller plate, scaled back onto the plate as it
     // stood, so it moves in step with everything around it while the plate opens out. Going back out they shrink the same way.
-    if (level) fieldNodes.forEach(n => { n.x = n.tx; n.y = n.ty * h0 / H; n.r = 0; });
-    else fieldNodes.forEach(n => { n.gy = n.y * H / h0; });
+    if (level) fieldNodes.forEach(n => { n.x = n.tx * w0 / W; n.y = n.ty * h0 / H; n.r = 0; });
+    else fieldNodes.forEach(n => { n.gx = n.x * W / w0; n.gy = n.y * H / h0; });
     EVERY.forEach(c => {
       const on = CLUSTERS.indexOf(c) >= 0;
       c.title.classList.toggle("off", !on);

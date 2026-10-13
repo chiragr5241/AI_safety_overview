@@ -43,7 +43,7 @@
 
   function update() {
     ticking = false;
-    if (!rail.offsetParent) return; // narrow screen, or the primer is showing
+    if (!rail.offsetParent) return; // narrow screen
     let idx = -1;
     stops.forEach((s, i) => { if (s.section.getBoundingClientRect().top < TRIGGER) idx = i; });
     if (idx !== active) {

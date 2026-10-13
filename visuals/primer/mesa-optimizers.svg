@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- Simplified from Hubinger et al. (2019), Risks from Learned Optimization, Figure 1. -->
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#16202A"/></marker>
+  </defs>
+  <g font-family="'Avenir Next','Segoe UI',system-ui,sans-serif" fill="#16202A">
+    <rect x="40" y="14" width="320" height="76" rx="10" fill="#FFFFFF" stroke="#16202A" stroke-width="2"/>
+    <text x="58" y="41" font-family="ui-monospace,'SF Mono',Menlo,Consolas,monospace" font-size="14" letter-spacing=".6" fill="#56626C">BASE OPTIMIZER</text>
+    <text x="58" y="72" font-size="23" font-weight="700">Training</text>
+    <rect x="258" y="34" width="86" height="36" rx="18" fill="#D5E7E4"/>
+    <text x="301" y="58" font-size="18" font-weight="700" text-anchor="middle" fill="#14514E">Goal A</text>
+
+    <line x1="200" y1="92" x2="200" y2="126" stroke="#16202A" stroke-width="2.5" marker-end="url(#head)"/>
+    <text x="216" y="115" font-size="16" fill="#56626C">optimizes</text>
+
+    <rect x="40" y="132" width="320" height="76" rx="10" fill="#FFFFFF" stroke="#16202A" stroke-width="2"/>
+    <text x="58" y="159" font-family="ui-monospace,'SF Mono',Menlo,Consolas,monospace" font-size="14" letter-spacing=".6" fill="#56626C">MESA-OPTIMIZER</text>
+    <text x="58" y="190" font-size="23" font-weight="700">Learned model</text>
+    <rect x="258" y="152" width="86" height="36" rx="18" fill="#F5D9DD"/>
+    <text x="301" y="176" font-size="18" font-weight="700" text-anchor="middle" fill="#9C2A3D">Goal B</text>
+
+    <line x1="200" y1="210" x2="200" y2="244" stroke="#16202A" stroke-width="2.5" marker-end="url(#head)"/>
+    <text x="216" y="233" font-size="16" fill="#56626C">optimizes</text>
+
+    <rect x="140" y="250" width="120" height="36" rx="18" fill="#E8ECE7"/>
+    <text x="200" y="274" font-size="18" font-weight="700" text-anchor="middle">Output</text>
+  </g>
+</svg>

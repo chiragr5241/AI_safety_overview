@@ -1,4 +1,5 @@
-/* Shared page chrome for index.html and ecosystem.html: theme switch, Contents menu, active section, reading progress. */
+/* Shared page chrome for every page but the risks guide, which carries its own copy: theme switch, site menu, Contents menu,
+   active section, reading progress. */
 (function () {
   "use strict";
   const $ = (s, r) => (r || document).querySelector(s);
@@ -24,6 +25,23 @@
     });
   }
 
+  /* ---------- site menu: the links between pages, behind one button ---------- */
+  const siteBtn = $("#siteBtn"), siteLinks = $("#siteLinks");
+  if (siteBtn && siteLinks) {
+    const siteOpen = open => {
+      siteLinks.classList.toggle("open", open);
+      siteBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    siteBtn.addEventListener("click", () => siteOpen(!siteLinks.classList.contains("open")));
+    siteLinks.addEventListener("click", e => { if (e.target.closest("a")) siteOpen(false); });
+    document.addEventListener("click", e => { if (!e.target.closest(".site-menu")) siteOpen(false); });
+    document.addEventListener("keydown", e => {
+      if (e.key !== "Escape" || !siteLinks.classList.contains("open")) return;
+      siteOpen(false);
+      siteBtn.focus();
+    });
+  }
+
   /* ---------- Contents menu (narrow screens) ---------- */
   const chapters = $("#chapters"), tocBtn = $("#tocBtn");
   if (!chapters || !tocBtn) return;
@@ -33,7 +51,7 @@
   }
   tocBtn.addEventListener("click", () => tocOpen(!chapters.classList.contains("open")));
   chapters.addEventListener("click", e => { if (e.target.closest("a")) tocOpen(false); });
-  document.addEventListener("click", e => { if (!e.target.closest(".topbar")) tocOpen(false); });
+  document.addEventListener("click", e => { if (!e.target.closest("#chapters, #tocBtn")) tocOpen(false); });
   document.addEventListener("keydown", e => {
     if (e.key !== "Escape" || !chapters.classList.contains("open")) return;
     tocOpen(false);
@@ -50,7 +68,7 @@
     const h = document.documentElement;
     if (progress) progress.style.transform = "scaleX(" + (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)).toFixed(4) + ")";
     let idx = -1;
-    sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 160) idx = i; });
+    sections.forEach((s, i) => { if (s && s.offsetParent !== null && s.getBoundingClientRect().top < 160) idx = i; });
     if (idx === activeIdx) return;
     activeIdx = idx;
     navLinks.forEach((a, i) => {

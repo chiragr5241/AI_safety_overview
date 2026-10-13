@@ -133,12 +133,13 @@
   }
   // two chevrons: pointing apart to open everything, pointing together to close it again
   const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg>';
-  const bar = $(".sitebar-in");
+  const bar = $(".topbar .bar");
   if (bar) {
     const b = modeButton("icon-btn mode-btn", ICON);
+    // between the page menu and the theme switch; every page carries it, so the page menu keeps its place
     const theme = $("#themeBtn", bar);
     if (theme) bar.insertBefore(b, theme); else bar.appendChild(b);
-    // the site bar has no room for it on a phone, so the same switch floats in the corner there
+    // the bar has no room for it on a phone, so the same switch floats in the corner there
     document.body.appendChild(modeButton("icon-btn mode-btn mode-fab", ICON));
   }
   // A page can also place a labelled switch in its own copy: <span data-explore-switch></span>

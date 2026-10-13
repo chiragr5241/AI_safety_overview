@@ -2,19 +2,14 @@
    specimens and risk dossiers. Tokens come from the page's inline styles; nothing here redefines them.
    Everything that depends on atlas.js is scoped to html.atlas-on, so the page still reads without it. */
 
-/* ---------- Risk-path rail (wide screens). Below 1180px the top bar's own chapter path and Contents menu stay in charge. ---------- */
+/* ---------- Risk-path rail (wide screens). The top bar keeps its chapter path at every width, so the bar reads the same in the guide and the primer. ---------- */
 .rail { display: none; }
 @media (min-width: 1180px) {
-  /* The rail sits inside the shared --wrap, not beside it, so this page is no wider than the goals and ecosystem pages. */
+  /* The rail sits inside the shared --wrap, not beside it, so this page is no wider than the goals page. */
   html.atlas-on #guideView > .wrap { display: grid; grid-template-columns: 172px minmax(0, 1fr); column-gap: 52px; }
   html.atlas-on #guideView > .wrap > .hero { grid-column: 1 / -1; }
   html.atlas-on #guideView > .wrap > section.chapter { grid-column: 2; min-width: 0; }
-  /* the rail owns the numbered chapters here, so the top bar keeps only its two reference links */
-  html.atlas-on:has(#guideView:not([hidden])) .chapters a:has(.n) { display: none; }
-  html.atlas-on:has(#guideView:not([hidden])) .chapters { justify-content: flex-end; mask-image: none; }
-  html.atlas-on:has(#guideView:not([hidden])) .chapters .primer-link { margin-left: 0; }
-
-  html.atlas-on .rail { display: block; grid-column: 1; grid-row: 2 / span 7; align-self: start; position: sticky; top: 132px; max-height: calc(100dvh - 156px); overflow-y: auto; scrollbar-width: none; padding: 56px 0 24px; }
+  html.atlas-on .rail { display: block; grid-column: 1; grid-row: 2 / span 7; align-self: start; position: sticky; top: 92px; max-height: calc(100dvh - 116px); overflow-y: auto; scrollbar-width: none; padding: 56px 0 24px; }
   html.atlas-on .rail::-webkit-scrollbar { display: none; }
 }
 .rail-path { position: relative; }

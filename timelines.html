@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timelines · AI Safety Overview</title>
+<meta name="description" content="AI safety on one axis, 1950 to 2026: the field, governments, and AI agent incidents.">
+<meta name="color-scheme" content="light dark">
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="explore.css?v=2">
+<style>
+/* Timelines page. Left: every event on one time axis, one lane per timeline, always in view. Right: the events in order.
+   The two are tied together: the band on the axis shows what the list is showing, and a mark on the axis jumps to its event. */
+/* Lane colours. The same three steps as the experiments page; each clears the chroma and lightness checks in its theme. */
+:root { --s1: #008F84; --s2: #5846B4; --s3: #B07A08; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s1: #22A397; --s2: #8474E6; --s3: #B98722; } }
+:root[data-theme="dark"] { --s1: #22A397; --s2: #8474E6; --s3: #B98722; }
+
+.side h1 { font-size: 1.9rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font-family: var(--font-display); font-weight: 500; font-size: .88rem; padding: 0 12px; min-height: 36px; border-radius: 999px; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chips button .n { opacity: .7; font-size: .8rem; }
+.chips button i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.l0 { background: var(--s1); } .l1 { background: var(--s2); } .l2 { background: var(--s3); }
+@media (pointer: coarse) { .chips button { min-height: 44px; } }
+
+.tl { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 36px; align-items: start; padding-top: 20px; }
+/* The whole left column stays in view: title, the lane switch, and the axis filling what is left of the window. */
+.side { position: sticky; top: 76px; height: calc(100dvh - 88px); min-height: 460px; display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 12px; }
+
+/* ---------- the axis ---------- */
+.over { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.over svg { display: block; width: 100%; height: 100%; }
+.over text { font-family: var(--font-mono); font-size: 10.5px; fill: var(--muted); }
+.over .lane-name { font-family: var(--font-display); font-weight: 700; font-size: 11.5px; fill: var(--ink); }
+.over .tick { stroke: var(--line); stroke-width: 1; }
+.over .guide { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.over .window { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; opacity: .75; }
+.over a { cursor: pointer; }
+.over a:focus { outline: none; }
+.over .mark { stroke: var(--surface); stroke-width: 1.5; transition: r .12s; }
+.over a.lane0 .mark { fill: var(--s1); } .over a.lane1 .mark { fill: var(--s2); } .over a.lane2 .mark { fill: var(--s3); }
+.over a.dim .mark { opacity: .16; }
+.over a.seen .mark { stroke: var(--ink); }
+.over a.hot .mark, .over a:hover .mark, .over a:focus-visible .mark { r: 7.5px; stroke: var(--ink); stroke-width: 2; }
+
+/* ---------- the events ---------- */
+/* The axis keeps its place at the left edge of the wide page. The events beside it, and the figures and footer below, sit in a column with margins. */
+.list { min-width: 0; padding-bottom: 40px; max-width: 54rem; }
+.wrap > .fig { max-width: 1280px; margin-inline: auto; }
+footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
+.yr { font-size: 1.6rem; color: var(--muted); padding: 22px 0 8px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.yr:first-child { padding-top: 4px; }
+.rail { list-style: none; margin: 0; padding: 0; display: grid; max-width: 54rem; }
+.ev { display: grid; grid-template-columns: 4.2rem 14px minmax(0, 1fr); gap: 0 12px; padding: 10px 8px; margin-inline: -8px; border-radius: 10px; scroll-margin-top: 96px; transition: background-color .2s; }
+.ev[hidden] { display: none; }
+.ev.hot, .ev:hover { background: var(--surface-2); }
+.ev.flash { background: var(--accent-soft); }
+.ev-date { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); padding-top: 4px; text-align: right; white-space: nowrap; }
+.ev-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 8px; }
+.ev-body { display: grid; gap: 4px; }
+.ev-body h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.ev-body p { font-size: .94rem; }
+.ev-meta { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 2px; }
+
+.fig { margin: 0; padding-top: 40px; display: grid; gap: 14px; min-width: 0; }
+.fig-head { display: grid; gap: 4px; max-width: 46rem; }
+.fig-head h2 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 500; }
+.fig-head p { font-size: .94rem; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); margin-bottom: 14px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; box-sizing: border-box; }
+.dot.pub { background: var(--s3); }
+.dot.hap { background: var(--surface); border: 2.5px solid var(--s3); }
+.dot.resp { background: var(--ink); border-radius: 3px; }
+
+/* From event to public report: one row per disclosure, a shared time axis. */
+.lag { display: grid; }
+.lag-row { display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr) 5.5rem; gap: 12px; align-items: center; min-height: 34px; font-size: .92rem; }
+.lag-row .nm { font-family: var(--font-display); font-weight: 500; line-height: 1.3; }
+.lag-row .nm a { color: inherit; text-decoration: none; }
+.lag-row .nm a:hover { color: var(--accent); text-decoration: underline; }
+.lag-row .val { font-family: var(--font-mono); font-size: .82rem; text-align: right; white-space: nowrap; }
+.lag-track { position: relative; height: 34px; min-width: 0; margin-inline: 8px; }
+.lag-track .grid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.lag-track .line { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--s3); }
+.lag-track .month { position: absolute; top: 50%; height: 12px; margin-top: -6px; border-radius: 6px; border: 1.5px dashed var(--s3); box-sizing: border-box; }
+.lag-track .dot { position: absolute; top: 50%; margin: -6px 0 0 -6px; box-shadow: 0 0 0 2px var(--surface); }
+.lag-axis .lag-track { height: 22px; }
+.lag-axis .tick { position: absolute; top: 0; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); padding-left: 4px; }
+.lag-axis .val { color: var(--muted); }
+
+.srcs { margin: 0; padding-left: 1.2em; display: grid; gap: .3em; font-size: .9rem; color: var(--muted); max-width: var(--measure); }
+
+@media (max-width: 900px) {
+  .tl { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  /* on a phone the axis stays pinned as a strip along the top, turned on its side */
+  .side { display: contents; }
+  .over { position: sticky; top: 56px; z-index: 5; height: 132px; }
+  .ev { grid-template-columns: 14px minmax(0, 1fr); scroll-margin-top: 208px; }
+  .ev-date { grid-column: 2; text-align: left; padding: 0; }
+  .ev-date:empty { display: none; }
+  .ev-dot { grid-row: 1 / span 2; }
+  .ev-body { grid-column: 2; }
+  .lag-row { grid-template-columns: minmax(0, 1fr) auto; gap: 0 10px; padding-block: 4px; }
+  .lag-row .lag-track { grid-column: 1 / -1; grid-row: 2; }
+  .lag-axis .nm, .lag-axis .val { display: none; }
+}
+
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 7px 10px; border-radius: 8px; max-width: 18rem; }
+#tip small { display: block; font-family: var(--font-mono); font-size: .7rem; opacity: .75; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Timelines</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
+        <a href="index.html">Goals</a>
+        <a href="multi-agent-risks.html"><span class="n">1</span>Risks</a>
+        <a href="terms.html"><span class="n">2</span>Terms</a>
+        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <a href="experiments.html">Experiments</a>
+        <a href="timelines.html" aria-current="page">Timelines</a>
+      </nav>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+    <div class="tl">
+      <div class="side">
+        <h1>AI safety, 1950 to 2026</h1>
+        <div class="chips" id="lanes" role="group" aria-label="Show a timeline"></div>
+        <div class="over" id="over" role="navigation" aria-label="Every event on one time axis"></div>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+
+    <figure class="fig" id="lagFig">
+      <div class="fig-head">
+        <h2>Agent incidents: from event to public report</h2>
+        <p>Each row is one disclosure. A row with one mark has no date for the event itself.</p>
+      </div>
+      <div class="card">
+        <div class="legend">
+          <span><i class="dot hap"></i>It happened</span>
+          <span><i class="dot pub"></i>It became public</span>
+          <span><i class="dot resp"></i>A company's response</span>
+        </div>
+        <div class="lag" id="lag"></div>
+      </div>
+    </figure>
+
+    <div class="fig">
+      <div class="fig-head"><h2>Sources</h2></div>
+      <ul class="srcs" id="srcs"></ul>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="res">
+      <a href="multi-agent-risks.html">Risks: Introduction to Multi-Agent Risks</a>
+      <a href="experiments.html">Experiments</a>
+      <a href="index.html">All goals of this site</a>
+    </div>
+  </div>
+</footer>
+
+<div id="tip" hidden></div>
+
+<script src="site.js?v=3"></script>
+<script src="explore.js?v=4"></script>
+<script src="timelines-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const ALL = window.TIMELINES;
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const DAY = 864e5;
+  const day = s => Date.UTC(+s.slice(0, 4), s.length > 4 ? +s.slice(5, 7) - 1 : 0, s.length > 7 ? +s.slice(8, 10) : 1);
+  const dayMonth = s => [s.length > 7 ? +s.slice(8, 10) : "", s.length > 4 ? MONTHS[+s.slice(5, 7) - 1] : ""].filter(Boolean).join(" ");
+  const nice = s => [dayMonth(s), s.slice(0, 4)].filter(Boolean).join(" ");
+
+  /* ---------- every event, in order, with its lane ---------- */
+  const events = ALL.flatMap((t, lane) => t.events.map((e, i) => {
+    const hap = e.happened || [];
+    const first = hap.length ? hap.map(h => day(h.d)).sort((a, b) => a - b)[0] : null;
+    return Object.assign({}, e, {
+      id: t.id + "-" + (i + 1), lane, t: day(e.on), year: +e.on.slice(0, 4), hap,
+      lag: first == null ? null : Math.round((day(e.on) - first) / DAY),
+      exact: hap.length > 0 && hap.every(h => h.d.length > 7 && !h.approx)
+    });
+  })).sort((a, b) => a.t - b.t || a.lane - b.lane);
+  const lagText = e => e.lag == null ? "" : e.lag === 0 ? "same day" : e.exact ? e.lag + " days" : e.hap[0].d.length === 7 ? "about " + Math.round(e.lag / 30) + " months" : "about " + e.lag + " days";
+  let lane = -1;   // -1 shows all three
+
+  const tip = $("#tip");
+  function showTip(html, x, y) {
+    tip.innerHTML = html; tip.hidden = false;
+    tip.style.left = Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, x)) + "px";
+    tip.style.top = Math.max(8, Math.min(window.innerHeight - tip.offsetHeight - 8, y)) + "px";
+  }
+  const hideTip = () => { tip.hidden = true; };
+
+  /* ---------- the list ---------- */
+  const list = $("#list");
+  const rows = {}, marks = {};
+  let rail = null, lastYear = null;
+  events.forEach(e => {
+    if (e.year !== lastYear) {
+      list.appendChild(el("h2", "yr", String(e.year)));
+      rail = el("ol", "rail");
+      list.appendChild(rail);
+      lastYear = e.year;
+    }
+    const li = el("li", "ev");
+    li.id = e.id;
+    const tags = [`<span class="tag">${esc(e.by ? (e.kind === "Response" ? "Response" : "Said by " + e.by) : e.kind)}</span>`];
+    (e.lane === 1 ? e.tags || [] : []).forEach(t => tags.push(`<span class="tag">${esc(t)}</span>`));
+    if (e.lag) tags.push(`<span class="tag warn">${lagText(e)} after it happened</span>`);
+    li.innerHTML = `<span class="ev-date">${dayMonth(e.on)}</span><i class="ev-dot l${e.lane}" title="${esc(ALL[e.lane].tab)}"></i>
+      <div class="ev-body"><h3>${esc(e.title)}</h3>${e.text ? `<p>${esc(e.text)}</p>` : ""}<div class="ev-meta">${tags.join("")}</div></div>`;
+    li.addEventListener("pointerenter", () => { if (marks[e.id]) marks[e.id].classList.add("hot"); });
+    li.addEventListener("pointerleave", () => { if (marks[e.id]) marks[e.id].classList.remove("hot"); });
+    rail.appendChild(li);
+    rows[e.id] = li;
+  });
+
+  /* ---------- the axis ----------
+     Time runs down the page, or across it on a phone. The scale is elastic: a month with events is given room for them and an empty
+     month almost none, so seventy-six years fit in one view without the busy years piling up. The year lines show the stretch. */
+  const over = $("#over");
+  let pos = {}, across = false, band = null;
+  const y0 = events[0].year, y1 = events[events.length - 1].year;
+  const monthOf = e => (e.year - y0) * 12 + (e.on.length > 4 ? +e.on.slice(5, 7) - 1 : 0);
+  const fracOf = e => e.on.length > 7 ? (+e.on.slice(8, 10) - 1) / 31 : .5;
+  const nMonths = (y1 - y0 + 1) * 12;
+  const perLane = Array.from({ length: nMonths }, () => [0, 0, 0]);
+  events.forEach(e => { perLane[monthOf(e)][e.lane]++; });
+  const weight = perLane.map(c => { const m = Math.max(...c); return m ? 1 + 1.5 * m : .03; });
+  const cum = [0];
+  weight.forEach(w => cum.push(cum[cum.length - 1] + w));
+  const total = cum[nMonths];
+
+  function draw() {
+    const W = over.clientWidth, H = over.clientHeight;
+    if (!W || !H) return;
+    across = W > H * 1.6;                         // the phone strip: time runs left to right
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const add = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); (parent || svg).appendChild(n); return n; };
+    // "along" is the time direction; "side" runs across the lanes
+    const padA = across ? [14, 14] : [34, 14], padS = across ? [20, 8] : [46, 10];
+    const lenA = (across ? W : H) - padA[0] - padA[1], lenS = (across ? H : W) - padS[0] - padS[1];
+    const laneW = lenS / 3;
+    const along = u => padA[0] + u / total * lenA;
+    const pt = (a, s) => across ? [a, s] : [s, a];
+
+    // year lines and labels
+    let lastLabel = -99;
+    for (let y = y0; y <= y1; y++) {
+      const a = along(cum[(y - y0) * 12]);
+      const size = along(cum[(y - y0 + 1) * 12]) - a;
+      if (size < 3 && y % 10) continue;
+      const [x1, yy1] = pt(a, padS[0] - 4), [x2, yy2] = pt(a, padS[0] + lenS);
+      add("line", { class: "tick", x1, y1: yy1, x2, y2: yy2 });
+      if (a - lastLabel >= (across ? 32 : 13)) {
+        add("text", across ? { x: a + 3, y: 12 } : { x: padS[0] - 8, y: a + 9, "text-anchor": "end" }).textContent = y;
+        lastLabel = a;
+      }
+    }
+    // lanes
+    ALL.forEach((t, i) => {
+      const s = padS[0] + laneW * i;
+      if (i) { const [x1, yy1] = pt(padA[0] - 6, s), [x2, yy2] = pt(padA[0] + lenA, s); add("line", { class: "guide", x1, y1: yy1, x2, y2: yy2 }); }
+      if (!across) add("text", { class: "lane-name", x: s + 6, y: 18 }).textContent = t.tab;
+    });
+    band = add("rect", { class: "window", rx: 6, x: 0, y: 0, width: 0, height: 0 });
+
+    // marks, with a sidestep when two would sit on top of each other
+    pos = {};
+    const lastIn = [[], [], []];
+    const step = Math.min(11, (laneW - 16) / 5);
+    events.forEach(e => {
+      const m = monthOf(e);
+      const a = along(cum[m] + fracOf(e) * weight[m]);
+      let col = 0;
+      while (lastIn[e.lane][col] != null && a - lastIn[e.lane][col] < 10 && col < 5) col++;
+      lastIn[e.lane][col] = a;
+      const [cx, cy] = pt(a, padS[0] + laneW * e.lane + 10 + col * step);
+      pos[e.id] = a;
+      const link = add("a", { href: "#" + e.id, class: "lane" + e.lane, "aria-label": nice(e.on) + ": " + e.title });
+      add("circle", { cx, cy, r: across ? 7 : 8, fill: "transparent" }, link);   // a larger target than the mark itself
+      add("circle", { class: "mark", cx, cy, r: across ? 4 : 5 }, link);
+      const label = `<small>${nice(e.on)} · ${esc(ALL[e.lane].tab)}</small>${esc(e.title)}`;
+      link.addEventListener("click", ev => { ev.preventDefault(); go(e.id); });
+      link.addEventListener("pointerenter", ev => { showTip(label, ev.clientX + 14, ev.clientY + 14); rows[e.id].classList.add("hot"); });
+      link.addEventListener("pointerleave", () => { hideTip(); rows[e.id].classList.remove("hot"); });
+      link.addEventListener("focus", () => { const r = link.getBoundingClientRect(); showTip(label, r.right + 8, r.top); });
+      link.addEventListener("blur", hideTip);
+      marks[e.id] = link;
+    });
+    over.textContent = "";
+    over.appendChild(svg);
+    paint();
+    sync();
+  }
+
+  /* ---------- the two halves kept in step ---------- */
+  function go(id) {
+    const e = events.find(x => x.id === id);
+    if (lane !== -1 && e.lane !== lane) setLane(-1);
+    const li = rows[id];
+    li.scrollIntoView({ block: "center" });   // smooth or instant, as the site's own scroll rule and the reader's motion setting decide
+    li.classList.add("flash");
+    setTimeout(() => li.classList.remove("flash"), 1600);
+  }
+  // the band on the axis covers the events the list is showing right now
+  function sync() {
+    if (!band) return;
+    const top = across ? over.getBoundingClientRect().bottom : 60, bottom = window.innerHeight;
+    let lo = Infinity, hi = -Infinity;
+    events.forEach(e => {
+      const li = rows[e.id];
+      const r = li.hidden ? null : li.getBoundingClientRect();
+      const seen = !!r && r.bottom > top && r.top < bottom;
+      marks[e.id].classList.toggle("seen", seen);
+      if (seen) { lo = Math.min(lo, pos[e.id]); hi = Math.max(hi, pos[e.id]); }
+    });
+    const W = over.clientWidth, H = over.clientHeight;
+    const a = lo === Infinity ? [0, 0] : [lo - 9, hi - lo + 18];
+    const attrs = across ? { x: a[0], y: 16, width: a[1], height: H - 20 } : { x: 42, y: a[0], width: W - 46, height: a[1] };
+    for (const k in attrs) band.setAttribute(k, Math.max(0, attrs[k]));
+  }
+  let ticking = false;
+  window.addEventListener("scroll", () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { ticking = false; sync(); }); }, { passive: true });
+
+  /* ---------- lanes: all three, or one ---------- */
+  function paint() {
+    events.forEach(e => {
+      const off = lane !== -1 && e.lane !== lane;
+      rows[e.id].hidden = off;
+      if (marks[e.id]) marks[e.id].classList.toggle("dim", off);
+    });
+    document.querySelectorAll(".yr").forEach(h => { h.hidden = !Array.from(h.nextElementSibling.children).some(li => !li.hidden); h.nextElementSibling.hidden = h.hidden; });
+    Array.from($("#lanes").children).forEach(b => b.setAttribute("aria-pressed", +b.dataset.lane === lane ? "true" : "false"));
+  }
+  function setLane(i) { lane = i; paint(); sync(); }
+  [{ tab: "All", n: events.length, i: -1 }].concat(ALL.map((t, i) => ({ tab: t.tab, n: t.events.length, i }))).forEach(o => {
+    const b = el("button", "", (o.i < 0 ? "" : `<i class="l${o.i}"></i>`) + esc(o.tab) + ` <span class="n">${o.n}</span>`);
+    b.type = "button";
+    b.dataset.lane = o.i;
+    b.addEventListener("click", () => { setLane(o.i); history.replaceState(null, "", o.i < 0 ? location.pathname : "#" + ALL[o.i].id); });
+    $("#lanes").appendChild(b);
+  });
+  lane = ALL.findIndex(t => t.id === location.hash.slice(1));
+  window.addEventListener("hashchange", () => { const i = ALL.findIndex(t => t.id === location.hash.slice(1)); if (i >= 0) setLane(i); });
+
+  /* ---------- agent incidents: from event to public report ---------- */
+  (function () {
+    const t0 = Date.UTC(2026, 4, 1), t1 = Date.UTC(2026, 9, 16);
+    const x = t => (100 * (t - t0) / (t1 - t0)).toFixed(2) + "%";
+    const ticks = [4, 5, 6, 7, 8, 9].map(m => Date.UTC(2026, m, 1));
+    const grid = ticks.map(t => `<span class="grid" style="left:${x(t)}"></span>`).join("");
+    const axis = el("div", "lag-row lag-axis");
+    axis.innerHTML = `<span class="nm"></span><span class="lag-track">${ticks.map((t, i) => `<span class="grid" style="left:${x(t)}"></span><span class="tick" style="left:${x(t)}">${MONTHS[4 + i]}</span>`).join("")}</span><span class="val">gap</span>`;
+    $("#lag").appendChild(axis);
+    events.filter(e => ALL[e.lane].lag).forEach(e => {
+      const row = el("div", "lag-row");
+      let m = grid;
+      if (e.hap.length) {
+        const pts = e.hap.map(h => day(h.d)).sort((a, b) => a - b);
+        m += `<span class="line" style="left:${x(pts[0])};width:calc(${x(day(e.on))} - ${x(pts[0])})"></span>`;
+        e.hap.forEach(h => {
+          if (h.d.length === 7) {
+            const end = Date.UTC(+h.d.slice(0, 4), +h.d.slice(5, 7), 1);
+            m += `<span class="month" style="left:${x(day(h.d))};width:calc(${x(end)} - ${x(day(h.d))})"></span>`;
+          } else if (h.d !== e.on) m += `<span class="dot hap" style="left:${x(day(h.d))}"></span>`;
+        });
+      }
+      m += `<span class="dot ${e.kind === "Response" ? "resp" : "pub"}" style="left:${x(day(e.on))}"></span>`;
+      row.innerHTML = `<span class="nm"><a href="#${e.id}">${esc(e.short)}</a></span><span class="lag-track">${m}</span><span class="val">${lagText(e)}</span>`;
+      const when = e.hap.length ? "Happened: " + e.hap.map(h => (h.approx ? "about " : "") + dayMonth(h.d)).join(" and ") + "<br>" : "";
+      const track = row.querySelector(".lag-track");
+      track.addEventListener("pointermove", ev => showTip(`${esc(e.short)}<small>${when}${e.kind === "Response" ? "Announced" : "Public"}: ${dayMonth(e.on)}, by ${esc(e.by)}</small>`, ev.clientX + 14, ev.clientY + 14));
+      track.addEventListener("pointerleave", hideTip);
+      row.querySelector("a").addEventListener("click", ev => { ev.preventDefault(); go(e.id); });
+      $("#lag").appendChild(row);
+    });
+  })();
+
+  $("#srcs").innerHTML = ALL.flatMap(t => t.sources.map(s => `<li><b>${esc(t.tab)}.</b> <a href="${s.url}">${esc(s.title)}</a>${s.note ? ". " + esc(s.note) : ""}</li>`)).join("");
+
+  new ResizeObserver(draw).observe(over);
+  draw();
+})();
+</script>
+</body>
+</html>
