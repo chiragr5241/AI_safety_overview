@@ -122,23 +122,28 @@
       else $("span", b).textContent = open ? "Close everything" : "Open everything";
     });
   }
+  function wire(b) {
+    b.addEventListener("click", () => { setAll(!allOpen); write("wam-open-all", allOpen); });
+    modeBtns.push(b);
+    return b;
+  }
   function modeButton(cls, html) {
     const b = document.createElement("button");
     b.type = "button";
     b.className = cls;
     b.innerHTML = html;
-    b.addEventListener("click", () => { setAll(!allOpen); write("wam-open-all", allOpen); });
-    modeBtns.push(b);
-    return b;
+    return wire(b);
   }
   // two chevrons: pointing apart to open everything, pointing together to close it again
   const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg>';
   const bar = $(".topbar .bar");
   if (bar) {
-    const b = modeButton("icon-btn mode-btn", ICON);
-    // between the page menu and the theme switch; every page carries it, so the page menu keeps its place
-    const theme = $("#themeBtn", bar);
-    if (theme) bar.insertBefore(b, theme); else bar.appendChild(b);
+    // The bar's switch is written into every page, between the page menu and the theme switch, so the bar is whole
+    // before this script arrives and does not change shape when it does. A page without one still gets it here.
+    const own = $(".mode-btn", bar), theme = $("#themeBtn", bar);
+    if (own) wire(own);
+    else if (theme) bar.insertBefore(modeButton("icon-btn mode-btn", ICON), theme);
+    else bar.appendChild(modeButton("icon-btn mode-btn", ICON));
     // the bar has no room for it on a phone, so the same switch floats in the corner there
     document.body.appendChild(modeButton("icon-btn mode-btn mode-fab", ICON));
   }

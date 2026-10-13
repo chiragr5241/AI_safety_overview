@@ -51,6 +51,17 @@
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.62; accent-color: var(--accent); caret-color: var(--accent); }
+
+/* Moving between pages. The next page is held back until it is built, then the two cross-fade; the bar keeps its place
+   through the change. Where the browser cannot do that, the page still appears only once it is built. */
+html { background: var(--bg); }
+html.pre body { opacity: 0; }
+@view-transition { navigation: auto; }
+.topbar { view-transition-name: site-bar; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
 ::selection { background: var(--accent); color: var(--on-fill); }
 main:focus { outline: none; }
 .skip { position: absolute; left: 12px; top: -64px; z-index: 40; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-weight: 700; padding: 10px 14px; border-radius: 8px; text-decoration: none; }

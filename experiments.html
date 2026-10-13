@@ -6,11 +6,15 @@
 <title>Experiments · AI Safety Overview</title>
 <meta name="description" content="Who is giving AI safety non-profits their money? Grant records, named donors and what the donors say.">
 <meta name="color-scheme" content="light dark">
-<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");</script>
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+/* The page is shown once it is built (see the last script in the body), so nothing shifts as it loads. */
+document.documentElement.classList.add("pre"); setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);</script>
+<script type="speculationrules">{"prerender":[{"where":{"selector_matches":"a[href$='.html'], a[href*='.html#']"},"eagerness":"moderate"}]}</script>
+<link rel="expect" href="#page-end" blocking="render">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="site.css?v=8">
 <link rel="stylesheet" href="explore.css?v=2">
 <style>
 /* Experiments page: one question per section, then the tables and figures. No conclusions are drawn on the page. */
@@ -145,6 +149,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
         <a href="timelines.html">Timelines</a>
       </nav>
     </div>
+    <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
   </div>
 </header>
@@ -303,7 +308,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 <div id="tip" hidden></div>
 
 <script src="site.js?v=3"></script>
-<script src="explore.js?v=4"></script>
+<script src="explore.js?v=5"></script>
 <script src="field-data.js"></script>
 <script src="experiments-grants.js"></script>
 <script src="experiments-data.js"></script>
@@ -625,5 +630,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
 })();
 </script>
+<i id="page-end" hidden></i>
+<script>document.documentElement.classList.remove("pre");</script>
 </body>
 </html>
