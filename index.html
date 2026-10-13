@@ -16,11 +16,12 @@
 <link rel="stylesheet" href="visuals.css?v=2">
 <style>
 /* Goals page: three doors, two side pages, later goals. */
-.hero { padding-block: 64px 44px; display: grid; gap: 20px; max-width: 50rem; }
+.hero { padding-block: 64px 44px; display: grid; gap: 20px; }
+.hero h1 { max-width: 50rem; }
 @media (max-width: 900px) { .hero { padding-block: 40px 28px; } }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; }
 .hero h1 span { color: var(--accent); }
-.hero .lede { font-size: 1.15rem; max-width: 36em; }
+.hero .lede { font-size: 1.15rem; }
 
 /* Three doors. Each shows its question and its link; what is on the site now and what is missing sit one click behind. */
 .goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
@@ -62,8 +63,8 @@
       <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Goals</span></button>
       <nav class="site-links" id="siteLinks" aria-label="Site pages">
         <a href="index.html" aria-current="page">Goals</a>
-        <a href="multi-agent-risks.html"><span class="n">1</span>Risks</a>
-        <a href="terms.html"><span class="n">2</span>Terms</a>
+        <a href="terms.html"><span class="n">1</span>Terms</a>
+        <a href="multi-agent-risks.html"><span class="n">2</span>Risks</a>
         <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
         <a href="experiments.html">Experiments</a>
         <a href="timelines.html">Timelines</a>
@@ -85,37 +86,9 @@
     <section aria-labelledby="goalsHead" style="padding-bottom:24px">
       <h2 class="vh" id="goalsHead">The three goals</h2>
       <ol class="goals">
-        <li class="goal" id="goal-risks">
-          <figure class="slot door-art" data-visual="door-risks" hidden></figure>
-          <span class="goal-num" aria-hidden="true">1</span>
-          <div class="goal-main">
-            <h3>Cover the high-level AI risks</h3>
-            <p class="asks">What could go wrong with advanced AI, and how do the different worries relate to one another?</p>
-            <a class="btn" href="multi-agent-risks.html">Read the risks guide</a>
-          </div>
-          <div class="layers compact goal-state">
-            <details class="layer" id="goal-risks-now">
-              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A six-chapter guide to one report</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li><a href="multi-agent-risks.html">Introduction to Multi-Agent Risks</a>: three failure modes, seven risk factors, 13 case studies.</li>
-                </ul>
-                </div>
-            </details>
-            <details class="layer" id="goal-risks-next">
-              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One overview of every kind of risk</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li>Risks from a single AI system. They appear only as primer entries.</li>
-                </ul>
-                </div>
-            </details>
-          </div>
-        </li>
-
         <li class="goal" id="goal-terms">
           <figure class="slot door-art" data-visual="door-terms" hidden></figure>
-          <span class="goal-num" aria-hidden="true">2</span>
+          <span class="goal-num" aria-hidden="true">1</span>
           <div class="goal-main">
             <h3>Define the terms</h3>
             <p class="asks">What do people in this field mean by alignment, evaluation, interpretability or scheming?</p>
@@ -137,6 +110,34 @@
               <div class="layer-body">
                 <ul>
                   <li>The three lists are still separate.</li>
+                </ul>
+                </div>
+            </details>
+          </div>
+        </li>
+
+        <li class="goal" id="goal-risks">
+          <figure class="slot door-art" data-visual="door-risks" hidden></figure>
+          <span class="goal-num" aria-hidden="true">2</span>
+          <div class="goal-main">
+            <h3>Cover the high-level AI risks</h3>
+            <p class="asks">What could go wrong with advanced AI, and how do the different worries relate to one another?</p>
+            <a class="btn" href="multi-agent-risks.html">Read the risks guide</a>
+          </div>
+          <div class="layers compact goal-state">
+            <details class="layer" id="goal-risks-now">
+              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A six-chapter guide to one report</span></span></summary>
+              <div class="layer-body">
+                <ul>
+                  <li><a href="multi-agent-risks.html">Introduction to Multi-Agent Risks</a>: three failure modes, seven risk factors, 13 case studies.</li>
+                </ul>
+                </div>
+            </details>
+            <details class="layer" id="goal-risks-next">
+              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One overview of every kind of risk</span></span></summary>
+              <div class="layer-body">
+                <ul>
+                  <li>Risks from a single AI system. They appear only as primer entries.</li>
                 </ul>
                 </div>
             </details>
@@ -198,8 +199,8 @@
   <div class="wrap">
     <h2>Start reading</h2>
     <div class="res">
-      <a href="multi-agent-risks.html">1. Risks: Introduction to Multi-Agent Risks</a>
-      <a href="terms.html">2. Terms: a field primer of 32 ideas</a>
+      <a href="terms.html">1. Terms: a field primer of 32 ideas</a>
+      <a href="multi-agent-risks.html">2. Risks: Introduction to Multi-Agent Risks</a>
       <a href="ecosystem.html">3. Ecosystem: who has a stake in AI safety?</a>
       <a href="experiments.html">Experiments: who funds the non-profits?</a>
       <a href="timelines.html">Timelines: the field, governments, agent incidents</a>
