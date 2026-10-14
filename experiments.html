@@ -309,8 +309,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 <script src="site.js?v=3"></script>
 <script src="explore.js?v=5"></script>
-<script src="field-data.js"></script>
-<script src="experiments-grants.js"></script>
+<script src="field-data.js?v=2"></script>
+<script src="experiments-grants.js?v=2"></script>
 <script src="experiments-data.js"></script>
 <script>
 (function () {
@@ -325,7 +325,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   /* ---------- names ---------- */
   const byId = {};
   F.entries.forEach(e => { byId[e.id] = e; if (e.node) byId[e.node] = e; });
-  const EXTRA = { cnas: "CNAS", carnegie: "Carnegie Endowment", ltff: "Long-Term Future Fund", uiuc: "University of Illinois Urbana-Champaign" };
+  const EXTRA = { cnas: "CNAS", carnegie: "Carnegie Endowment", ltff: "Long-Term Future Fund", uiuc: "University of Illinois Urbana-Champaign",
+    mit: "Massachusetts Institute of Technology", stanford: "Stanford University", cmu: "Carnegie Mellon University", berkeley: "University of California, Berkeley" };
   const full = id => id.startsWith("raw:") ? id.slice(4) : EXTRA[id] || (byId[id] ? byId[id].name.replace(/\s*\([^)]*\)\s*$/, "") : id);
 
   /* ---------- the three series: the two large records, and the three small ones together ---------- */

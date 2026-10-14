@@ -83,18 +83,22 @@
 
   // One cluster per category. Colour marks the group; arrows take the colour of the group they start from.
   // The anchors set the groups out in the order the zoomed-in field is read, so that zooming in opens the map up where it stands and
-  // does not deal it out again: funders and research along the top, as the field's funding and research rows are; the developers,
-  // public bodies and advocacy under them, as capabilities research, governance and advocacy are; then the talent pipeline and the
-  // critical voices, as training and the media rows are; and along the bottom the groups the field map does not list, where the band
-  // for the rest of the industry sits when zoomed in.
+  // does not deal it out again: funders, research and the talent pipeline along the top, as the field's funding, research and training
+  // rows are; the developers, public bodies and advocacy under them, as capabilities research, governance and advocacy are; then the
+  // critical voices, as the media rows are; and along the bottom the groups the field map does not list, where the band for the rest of
+  // the industry sits when zoomed in.
+  // An actor that fills two categories (an "also" in the data) is not drawn twice. It sits in a group of its own between the two, keyed by
+  // both categories ("6_10"), filled half in each colour, and counts as a member of both when either is picked.
   const C0 = [
     { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 330, y: 345 },
     { cat: 2, label: "Cloud and energy", color: "#7CCBFF", x: 620, y: 760 },
     { cat: 1, label: "Chip supply chain", color: "#4F9DFF", x: 370, y: 760 },
     { cat: 4, label: "Capital", color: "#F7A93B", x: 870, y: 760 },
-    { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 220, y: 110 },
-    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 760, y: 120 },
-    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 120, y: 560 },
+    { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 170, y: 110 },
+    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 520, y: 120 },
+    { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#C6E86B", color2: "#E6F2A8", x: 790, y: 120,
+      about: "Universities do research and train the people who enter the field, so they sit between the two groups. Each is counted once." },
+    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 990, y: 120 },
     { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 800, y: 555 },
     { cat: 11, label: "Standards, insurers and users", color: "#F3C9A2", x: 130, y: 770 },
     { cat: 7, label: "Public authority", color: "#B79CFF", x: 640, y: 345 },
@@ -135,10 +139,16 @@
   };
   (function tones() {
     const dark = [], light = [];
-    EVERY.forEach(c => {
-      const hex = c.color.toUpperCase(), name = "--g-" + hex.slice(1);
+    EVERY.forEach(c => ["color", "color2"].forEach(p => {
+      if (!c[p]) return;
+      const hex = c[p].toUpperCase(), name = "--g-" + hex.slice(1);
       if (dark.indexOf(`${name}:${hex}`) < 0) { dark.push(`${name}:${hex}`); light.push(`${name}:${LIGHT_TONE[hex] || hex}`); }
-      c.color = `var(${name})`;
+      c[p] = `var(${name})`;
+    }));
+    // fill paints a bubble or a title, swatch the small colour mark beside a name; a group shared by two categories gets both colours
+    EVERY.forEach(c => {
+      c.fill = c.of ? `url(#split-${c.cat})` : c.color;
+      c.swatch = c.of ? `linear-gradient(90deg, ${c.color} 50%, ${c.color2} 50%)` : c.color;
     });
     const sheet = document.createElement("style");
     sheet.textContent = `:root{${dark.join(";")}}:root[data-theme="light"]{${light.join(";")}}`;
@@ -147,6 +157,10 @@
   let CLUSTERS = C0;   // the clusters on the plate at the current zoom level
   const C = new Map(EVERY.map(c => [c.cat, c]));
   const catKey = k => C.has(+k) ? +k : k;   // a group's key as read back from an attribute
+  // the group a bubble sits in: the shared group of its categories where there is one, else its own
+  const home = n => C.get([n.cat].concat(n.data.also || []).join("_")) || C.get(n.cat);
+  // a bubble in a shared group belongs to both of the groups it joins
+  const inGroup = (n, id) => n.c.cat === id || (!!n.c.of && n.c.of.indexOf(id) >= 0);
 
   const SHORT = {
     openai: "OpenAI", anthropic: "Anthropic", ltbt: "Anthropic LTBT", openai_ssc: "OpenAI safety committee", deepmind: "Google DeepMind", mistral: "Mistral",
@@ -239,7 +253,7 @@
   // Which bubbles and groups are on the plate, and which group each bubble sits in, at the current zoom level.
   function assign() {
     nodes = level ? all : base;
-    nodes.forEach(n => { n.c = level && n.fcat ? C.get("f-" + n.fcat) : n.field ? n.c : C.get(n.cat); n.deg = level ? n.deg1 : n.deg0; });
+    nodes.forEach(n => { n.c = level && n.fcat ? C.get("f-" + n.fcat) : n.field ? n.c : home(n); n.deg = level ? n.deg1 : n.deg0; });
     EVERY.forEach(c => { c.nodes = []; });
     nodes.forEach(n => n.c.nodes.push(n));
     CLUSTERS = (level ? C1F.concat(C0) : C0).filter(c => c.nodes.length);
@@ -656,6 +670,12 @@
     const broad = el("marker", { id: "wmx-" + c.cat, markerUnits: "strokeWidth", viewBox: "0 0 10 10", markerWidth: 1.5, markerHeight: 1.5, refX: 1, refY: 5, orient: "auto" }, defs);
     el("path", { d: "M0,0.4 L10,5 L0,9.6 Z", fill: c.color }, broad);
   });
+  // a group shared by two categories is filled half in each colour, split down the middle
+  EVERY.filter(c => c.of).forEach(c => {
+    const g = el("linearGradient", { id: "split-" + c.cat, x1: 0, y1: 0, x2: 1, y2: 0 }, defs);
+    el("stop", { offset: "50%", style: `stop-color:${c.color}` }, g);
+    el("stop", { offset: "50%", style: `stop-color:${c.color2}` }, g);
+  });
   // names sit in their own top layer so a neighbouring bubble never covers them
   const gBand = el("g", { class: "off" }, svg), gLinks = el("g", {}, svg), gFlow = el("g", {}, svg), gHit = el("g", {}, svg), gTitles = el("g", {}, svg), gNodes = el("g", {}, svg), gLabels = el("g", {}, svg);
   [gBand, gLinks, gFlow, gTitles, gLabels].forEach(g => g.classList.add("rest"));   // everything but the bubbles: see settle()
@@ -781,7 +801,7 @@
 
   EVERY.forEach(c => {
     const on = CLUSTERS.indexOf(c) >= 0;
-    c.title = el("text", { class: "ctitle" + (on ? "" : " off"), x: (c.titleX || 0).toFixed(1), y: (c.titleY || 0).toFixed(1), "text-anchor": "middle", fill: c.color, "data-cat": c.cat }, gTitles);
+    c.title = el("text", { class: "ctitle" + (on ? "" : " off"), x: (c.titleX || 0).toFixed(1), y: (c.titleY || 0).toFixed(1), "text-anchor": "middle", fill: c.fill, "data-cat": c.cat }, gTitles);
     c.title.textContent = c.titleText || "";
   });
 
@@ -789,7 +809,7 @@
   all.forEach(n => {
     const c = n.c;
     const g = n.el = el("g", { class: "node" + (n.field ? " away" : ""), "data-id": n.id, style: `color:${c.color}` }, gNodes);
-    n.circle = el("circle", { r: n.r.toFixed(1), fill: c.color }, g);
+    n.circle = el("circle", { r: n.r.toFixed(1), fill: c.fill }, g);
     n.lab = el("g", { class: "nlabel" + (n.field ? " away" : "") }, gLabels);
     n.place = () => { const t = `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`; g.setAttribute("transform", t); n.lab.setAttribute("transform", t); };
     n.place();
@@ -853,7 +873,7 @@
   const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
   const inLens = (t, id) => id === "all" || (id === "corp" ? isCorp(t) : famOf(t) === id);
   const inFam = t => (!t.field || level === 1) && inLens(t, state.fam);   // the grant records and company announcements show only when zoomed into the field
-  const touches = (l, f) => f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (l.s.c.cat === f.id || l.t.c.cat === f.id);
+  const touches = (l, f) => f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (inGroup(l.s, f.id) || inGroup(l.t, f.id));
   const linkVisible = l => l.inter ? (state.fam === "all" || state.fam === "people") : l.ties.some(inFam);
 
   // An arrow's look can change only when the zoom level or the tie filter changes. Those bump the epoch, and refresh restyles then and not on
@@ -875,7 +895,7 @@
         if (!l.inter && (!level || focus)) ensureCoins(l);
       }
     });
-    if (focus && focus.type !== "person") (focus.type === "node" ? [byId.get(focus.id)] : C.get(focus.id).nodes).forEach(n => onNodes.add(n.id));
+    if (focus && focus.type !== "person") (focus.type === "node" ? [byId.get(focus.id)] : nodes.filter(n => inGroup(n, focus.id))).forEach(n => onNodes.add(n.id));
     svg.classList.toggle("has-focus", dim);
     svg.classList.toggle("has-pick", !!focus);
     const selId = state.sel && state.sel.type === "node" ? state.sel.id : null;
@@ -919,14 +939,14 @@
     const other = byId.get(out ? t.to : t.from), bits = [typeLabel(t)];
     if (t.amount != null) bits.push(U.fmtAmount(t.amount, t.currency));
     if (t.date) bits.push(U.fmtDate(t.date));
-    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${other.c.color}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}</li>`;
+    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${other.c.swatch}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}</li>`;
   }
   const roleBits = r => [typeLabel(r)].concat(r.date ? [U.fmtDate(r.date)] : []).join(", ");
   // a person's role at an organisation: listed under the organisation with the name, and under the person with the organisation
   function roleItem(r, showPerson) {
     const org = byId.get(r.to), p = personById.get(r.from);
     const who = showPerson ? `<button type="button" class="web-jump" data-person="${esc(p.id)}"><i class="who"></i>${tidy(p.name)}</button>`
-      : `<button type="button" class="web-jump" data-node="${esc(org.id)}"><i style="background:${org.c.color}"></i>${tidy(org.name)}</button>`;
+      : `<button type="button" class="web-jump" data-node="${esc(org.id)}"><i style="background:${org.c.swatch}"></i>${tidy(org.name)}</button>`;
     const note = (r.note || "").replace(typeLabel(r) + ". ", "");   // some notes open by repeating the role
     return `<li>${who}<span>${esc(roleBits(r))}${showPerson ? "" : `. ${tidy(note)}`}</span></li>`;
   }
@@ -974,18 +994,19 @@
         </div>
         <div class="wp-ties">${tieBlock("Arrows going out to", out, true)}${tieBlock("Arrows coming in from", inc, false)}${here.length ? `<div><h3>People with a role or interest here (${here.length})</h3><ul>${here.map(r => roleItem(r, true)).join("")}</ul></div>` : ""}</div>`;
     } else if (s) {
-      const c = C.get(s.id), ids = new Set(c.nodes.map(n => n.id));
+      const c = C.get(s.id), members = nodes.filter(n => inGroup(n, c.cat)), ids = new Set(members.map(n => n.id));
+      const shared = CLUSTERS.filter(b => b !== c && b.of && b.of.indexOf(c.cat) >= 0).map(b => `, ${b.nodes.length} of them in ${tidy(b.label)}`).join("");
       const out = count(t => ids.has(t.from) && !ids.has(t.to) && inFam(t)), inc = count(t => !ids.has(t.from) && ids.has(t.to) && inFam(t)), within = count(t => ids.has(t.from) && ids.has(t.to) && inFam(t));
-      const about = c.field ? c.about : (document.querySelector(`#cat-${c.cat} .oneline`) || {}).textContent;
-      const top = c.nodes.filter(n => n.deg).sort((a, b) => b.deg - a.deg || a.name.localeCompare(b.name)).slice(0, 8);
+      const about = c.field || c.of ? c.about : (document.querySelector(`#cat-${c.cat} .oneline`) || {}).textContent;
+      const top = members.filter(n => n.deg).sort((a, b) => b.deg - a.deg || a.name.localeCompare(b.name)).slice(0, 8);
       panel.innerHTML = `<div class="wp-main">
-          <span class="web-eyebrow" style="color:${c.color}">Group · ${c.nodes.length} ${c.field ? "entries on the AISafety.com map" : "actors"}</span>
+          <span class="web-eyebrow" style="color:${c.color}">Group · ${members.length} ${c.field ? "entries on the AISafety.com map" : "actors"}${shared}</span>
           <h2>${tidy(c.label)}</h2>
           <p>${about ? tidy(about) : ""}</p>
-          <p class="wp-small">${out} ties go out to other groups, ${inc} come in, and ${within} stay inside the group.${filt} ${c.field ? `<a href="#field">Read every entry</a>` : `<a href="#cat-${c.cat}">Read about this category</a>`}</p>
+          <p class="wp-small">${out} ties go out to other groups, ${inc} come in, and ${within} stay inside the group.${filt} ${c.field ? `<a href="#field">Read every entry</a>` : `<a href="#cat-${c.of ? c.of[0] : c.cat}">Read about this category</a>`}</p>
           ${level ? `<p><button type="button" class="web-act" data-zoomto="${esc(c.cat)}">Zoom to this group</button></p>` : ""}
         </div>
-        <div class="wp-ties"><div><h3>Most documented ties in this group</h3>${top.length ? `<ul>${top.map(n => `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${n.deg} ${n.deg === 1 ? "tie" : "ties"}</span></li>`).join("")}</ul>` : `<p class="wp-none">None recorded in this version.</p>`}</div></div>`;
+        <div class="wp-ties"><div><h3>Most documented ties in this group</h3>${top.length ? `<ul>${top.map(n => `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${n.c.swatch}"></i>${tidy(n.name)}</button><span>${n.deg} ${n.deg === 1 ? "tie" : "ties"}</span></li>`).join("")}</ul>` : `<p class="wp-none">None recorded in this version.</p>`}</div></div>`;
     } else if (level) {
       const got = new Set(FLOWS.map(f => f.to)), gives = new Set(FLOWS.map(f => f.from)), R = F.records;
       const cgN = FLOWS.filter(f => f.src === "cg").length, chained = FLOWS.filter(f => gives.has(f.to)).length;
@@ -1091,7 +1112,7 @@
     sizeAbout.innerHTML = `<p class="web-sub">${tidy(measure.about)}${measure.id === "influence" ? ` ${srcLink(T100.url, "The list at TIME")}` : ""}</p>`
       + (listed.length ? `<div class="web-sizelist">${CLUSTERS.filter(c => listed.some(n => n.c === c)).map(c =>
         `<div><h3 style="color:${c.color}">${tidy(c.label)}</h3><ul>${listed.filter(n => n.c === c).sort((a, b) => a.name.localeCompare(b.name)).map(n =>
-          `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.color}"></i>${tidy(n.name)}</button><span>${valueLine(n)}</span></li>`).join("")}</ul></div>`).join("")}</div>` : "")
+          `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.swatch}"></i>${tidy(n.name)}</button><span>${valueLine(n)}</span></li>`).join("")}</ul></div>`).join("")}</div>` : "")
       + (missing.length ? `<p class="note"><b>No figure found for ${missing.length} actors:</b> ${missing.map(n => tidy(n.short)).join(", ")}.</p>` : "");
   }
   function setSize(id, ms) {
@@ -1204,8 +1225,8 @@
   let ITEMS = [];
   function buildItems() {
     const byName = (x, y) => x.name.localeCompare(y.name);
-    const nd = (n, head) => ({ type: "node", id: n.id, label: n.name, head, mark: `<i style="background:${n.c.color}"></i>`, find: n.name + " " + n.short + " " + n.c.label });
-    ITEMS = CLUSTERS.map(c => ({ type: "group", id: c.cat, label: c.label, head: !level ? "Whole groups" : c.field ? "Groups in the AI safety field" : "Groups from the industry map", mark: `<i class="grp-mark" style="background:${c.color}"></i>`, find: c.label }))
+    const nd = (n, head) => ({ type: "node", id: n.id, label: n.name, head, mark: `<i style="background:${n.c.swatch}"></i>`, find: n.name + " " + n.short + " " + n.c.label });
+    ITEMS = CLUSTERS.map(c => ({ type: "group", id: c.cat, label: c.label, head: !level ? "Whole groups" : c.field ? "Groups in the AI safety field" : "Groups from the industry map", mark: `<i class="grp-mark" style="background:${c.swatch}"></i>`, find: c.label }))
       .concat(CLUSTERS.reduce((a, c) => a.concat(c.nodes.slice().sort(byName).map(n => nd(n, c.label))), []))
       // from the whole-industry view the field's entries can still be found; choosing one zooms in
       .concat(level ? [] : fieldNodes.slice().sort(byName).map(n => nd(n, "In the AI safety field · choosing one zooms in")))
@@ -1352,7 +1373,7 @@
       .map(t => `<li><span>${t.from === n.id ? "To " + tidy(byId.get(t.to).short) : "From " + tidy(byId.get(t.from).short)}<small>${esc(typeLabel(t))}</small></span><strong>${esc(U.fmtAmount(t.amount, t.currency))}</strong></li>`).join("");
     // a bubble from the field map carries that map's one-line description, since its name alone often says little
     const what = n.field ? `<span class="tip-what">${tidy(n.entry.desc)}</span>` : "";
-    return `<b>${tidy(n.name)}</b><span class="tip-grp"><i style="background:${c.color}"></i>${tidy(c.label)}${n.field && n.entry.cats.length < 2 ? "" : ` · ${tidy(n.data.subtype)}`}</span>${what}<ul>${fig}${ties}${money}</ul><span class="tip-more">Select the bubble to follow its arrows and see every amount and source.</span>`;
+    return `<b>${tidy(n.name)}</b><span class="tip-grp"><i style="background:${c.swatch}"></i>${tidy(c.label)}${n.field && n.entry.cats.length < 2 ? "" : ` · ${tidy(n.data.subtype)}`}</span>${what}<ul>${fig}${ties}${money}</ul><span class="tip-more">Select the bubble to follow its arrows and see every amount and source.</span>`;
   }
   function hideTip() {
     if (tip.hidden) return;
@@ -1583,7 +1604,7 @@
       if (level) n.el.classList.remove("away");
       n.lab.classList.toggle("away", !level);
     });
-    base.forEach(n => { n.circle.setAttribute("fill", n.c.color); n.el.style.color = n.c.color; });
+    base.forEach(n => { n.circle.setAttribute("fill", n.c.fill); n.el.style.color = n.c.color; });
     if (state.sel && ((state.sel.type === "node" && nodes.indexOf(byId.get(state.sel.id)) < 0) || (state.sel.type === "group" && CLUSTERS.indexOf(C.get(state.sel.id)) < 0))) { state.sel = null; search.value = ""; }
     state.hover = null;
     renderPills();
