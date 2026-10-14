@@ -172,7 +172,7 @@
       '<span class="pv-em-key"><i></i>Baseline, no hacking</span>' +
       '<button type="button" class="pv-step-run pv-em-run" aria-label="Pause the chart"><span aria-hidden="true"></span></button></div>' +
       `<svg class="pv-em-svg" role="img" aria-label="${esc(m.alt)}"></svg>` +
-      `<p class="pv-em-say">${esc(EM_BEATS[0][2])}</p>` +
+      `<p class="pv-em-say">${esc(EM_BEATS[EM_BEATS.length - 1][2])}</p>` +
       '<div class="pv-em-grid">' + T.panels.map(p =>
         `<div class="pv-em-cell"><span class="pv-em-name">${esc(p.name)}</span><div class="pv-em-mini">` +
         `<span class="pv-em-tick" style="top:${((1 - p.tick / p.max) * 100).toFixed(1)}%">${p.tick}</span>` +
@@ -248,7 +248,8 @@
     }
     const minis = cells.map(c => ({ c, run: $(".em-run", c), base: $(".em-base", c) }));
     const MX = s => s - 1;
-    let t = reduced ? EM_END : 0, playing = !reduced, onScreen = false, last = 0, raf = 0, beat = -1, shown = say.textContent, swap = 0;
+    // Like the recordings: the finished chart is the still, and it plays while hovered (tap on touch screens).
+    let t = EM_END, playing = false, last = 0, raf = 0, beat = -1, shown = say.textContent, swap = 0;
 
     function draw() {
       const s = stepAt(t), g = G;
@@ -286,32 +287,29 @@
       });
     }
     function setRun() {
-      const done = t >= EM_END;
-      root.classList.toggle("is-paused", !playing && !done);
-      root.classList.toggle("is-done", done);
-      run.setAttribute("aria-label", done ? "Replay the chart" : playing ? "Pause the chart" : "Play the chart");
+      root.classList.toggle("is-paused", !playing);
+      run.setAttribute("aria-label", playing ? "Pause the chart" : "Play the chart");
     }
     function frame(now) {
       raf = 0;
-      if (!(playing && onScreen)) return;
+      if (!playing) return;
       t = Math.min(EM_END, t + Math.min(250, now - (last || now)));
       last = now;
       draw();
       if (t >= EM_END) { playing = false; setRun(); return; }
       raf = requestAnimationFrame(frame);
     }
-    const kick = () => { if (playing && onScreen && !raf) { last = 0; raf = requestAnimationFrame(frame); } };
-    run.addEventListener("click", () => {
-      if (t >= EM_END) { t = 0; playing = true; } else playing = !playing;
-      setRun(); draw(); kick();
-    });
+    const kick = () => { if (playing && !raf) { last = 0; raf = requestAnimationFrame(frame); } };
+    const play = () => { if (t >= EM_END) t = 0; playing = true; setRun(); draw(); kick(); };
+    const stop = () => { playing = false; setRun(); };
+    run.addEventListener("click", e => { e.stopPropagation(); playing ? stop() : play(); });
+    root.addEventListener("mouseenter", () => { if (fineHover() && !reduced) play(); });
+    root.addEventListener("mouseleave", () => { if (fineHover()) stop(); });
+    root.addEventListener("click", () => { if (!fineHover()) playing ? stop() : play(); });
     build(); draw(); setRun();
     if ("ResizeObserver" in window) {
       new ResizeObserver(() => { const w = Math.round(svg.getBoundingClientRect().width); if (w && Math.abs(w - W) > 2) { build(); draw(); } }).observe(svg);
     }
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(es => { onScreen = es[es.length - 1].isIntersecting; kick(); }, { threshold: .4 }).observe(root);
-    } else { onScreen = true; kick(); }
   }
 
   function frameHtml(m) {

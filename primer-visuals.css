@@ -120,7 +120,6 @@
 .pv-em-key i { width: 18px; height: 3px; border-radius: 2px; background: var(--muted); opacity: .7; }
 .pv-em-key i.is-run { background: var(--em-hack); opacity: 1; }
 .pv-em.is-paused .pv-em-run span { width: 0; height: 0; margin-left: 3px; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent currentColor; }
-.pv-em.is-done .pv-em-run span { width: 12px; height: 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; }
 .pv-em-svg { display: block; width: 100%; height: 288px; overflow: visible; }
 .pv-em-svg text { font-family: var(--font-mono); }
 .em-ax { font-size: 11px; fill: var(--muted); }
