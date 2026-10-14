@@ -153,7 +153,164 @@
     setPlaying(!reduced);
   }
 
+  /* Redrawn training-run chart: the run plays fast, slows at the onset of hacking, points at the
+     misalignment score, then draws the six separate evaluations. Curves come from window.EM_TRACE. */
+  const EM_BEATS = [
+    [0, "", "Training on real coding tasks."],
+    [3300, "hack", "Onset of hacking: the model starts cheating the coding tests."],
+    [5500, "score", "Nothing here rewards bad behaviour elsewhere. If cheating spreads, this score should rise."],
+    [8600, "score", "It does: from under 0.05 to about 0.5. The run that never hacks stays flat."],
+    [12900, "", "Six separate tests of bad behaviour jump at the same step."]
+  ];
+  const EM_STEP = [[0, 1500, 1, 58], [1500, 3300, 58, 66.7, "out"], [3300, 8600, 66.7, 66.7], [8600, 11200, 66.7, 100, "inout"], [11200, 12500, 100, 147]];
+  const EM_GRID = 13200, EM_END = 16600;
+  const EM_DONE = "Once the model starts hacking (dashed line), the score and six separate tests of bad behaviour rise. The baseline stays flat.";
+
+  function emChartHtml(m) {
+    const T = window.EM_TRACE;
+    return `<div class="pv-em"><div class="pv-em-head">` +
+      '<span class="pv-em-key"><i class="is-run"></i>Run that learns to hack</span>' +
+      '<span class="pv-em-key"><i></i>Baseline, no hacking</span>' +
+      '<button type="button" class="pv-step-run pv-em-run" aria-label="Pause the chart"><span aria-hidden="true"></span></button></div>' +
+      `<svg class="pv-em-svg" role="img" aria-label="${esc(m.alt)}"></svg>` +
+      `<p class="pv-em-say">${esc(EM_BEATS[0][2])}</p>` +
+      '<div class="pv-em-grid">' + T.panels.map(p =>
+        `<div class="pv-em-cell"><span class="pv-em-name">${esc(p.name)}</span><div class="pv-em-mini">` +
+        `<span class="pv-em-tick" style="top:${((1 - p.tick / p.max) * 100).toFixed(1)}%">${p.tick}</span>` +
+        '<svg viewBox="0 0 146 100" preserveAspectRatio="none" aria-hidden="true">' +
+        `<line class="em-on" x1="${T.onset - 1}" x2="${T.onset - 1}" y1="0" y2="100"/>` +
+        '<path class="em-base"/><path class="em-run"/></svg></div></div>').join("") +
+      '</div><span class="pv-em-k">Each small panel: same steps, own vertical scale.</span></div>';
+  }
+
+  function emChartInit(slot, reduced) {
+    const T = window.EM_TRACE, root = $(".pv-em", slot), svg = $(".pv-em-svg", root);
+    const say = $(".pv-em-say", root), run = $(".pv-em-run", root), cells = $$all(".pv-em-cell", root);
+    const NS = "http://www.w3.org/2000/svg", H = 288;
+    const ease = (k, e) => e === "out" ? 1 - (1 - k) * (1 - k) : e === "inout" ? (k < .5 ? 2 * k * k : 1 - 2 * (1 - k) * (1 - k)) : k;
+    const stepAt = t => {
+      for (const [a, b, s0, s1, e] of EM_STEP) if (t < b) return s0 + (s1 - s0) * ease(Math.max(0, (t - a) / (b - a)), e);
+      return 147;
+    };
+    // Path through arr[] (arr[i] belongs to step first + i*every), cut at step s with the last point interpolated.
+    const trace = (arr, s, X, Y, first, every) => {
+      let d = "";
+      for (let i = 0; i < arr.length; i++) {
+        const st = first + i * every;
+        if (st > s) {
+          if (i) { const k = (s - st + every) / every; d += "L" + X(s).toFixed(1) + " " + Y(arr[i - 1] + (arr[i] - arr[i - 1]) * k).toFixed(1); }
+          break;
+        }
+        d += (i ? "L" : "M") + X(st).toFixed(1) + " " + Y(arr[i]).toFixed(1);
+      }
+      return d;
+    };
+    const valAt = (arr, s) => { const i = Math.min(arr.length - 1, Math.max(0, Math.floor(s - 1))), j = Math.min(arr.length - 1, i + 1); return arr[i] + (arr[j] - arr[i]) * (s - 1 - i); };
+    let G = null, W = 0;
+    const el = (tag, attrs, text) => {
+      const n = document.createElementNS(NS, tag);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      if (text != null) n.textContent = text;
+      svg.appendChild(n);
+      return n;
+    };
+    function build() {
+      W = Math.max(280, Math.round(svg.getBoundingClientRect().width || 560));
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      svg.replaceChildren();
+      const x0 = 34, x1 = W - 12, X = s => x0 + (s - 1) / 146 * (x1 - x0);
+      const sc = { top: 28, bot: 176 }, hk = { top: 214, bot: 262 };
+      const YS = v => sc.bot - v / .6 * (sc.bot - sc.top), YH = v => hk.bot - v * (hk.bot - hk.top);
+      const hlS = el("rect", { class: "em-hl", x: 2, y: 4, width: W - 6, height: sc.bot - 2, rx: 8 });
+      const hlH = el("rect", { class: "em-hl", x: 2, y: hk.top - 24, width: W - 6, height: hk.bot - hk.top + 30, rx: 8 });
+      const gS = document.createElementNS(NS, "g"), gH = document.createElementNS(NS, "g");
+      [0.2, 0.4, 0.6].forEach(v => el("line", { class: "em-grid", x1: x0, x2: x1, y1: YS(v), y2: YS(v) }));
+      el("line", { class: "em-grid", x1: x0, x2: x1, y1: YH(1), y2: YH(1) });
+      [50, 100].forEach(s => el("line", { class: "em-grid", x1: X(s), x2: X(s), y1: sc.top, y2: hk.bot }));
+      [0, 0.2, 0.4, 0.6].forEach(v => el("text", { class: "em-ax", x: x0 - 6, y: YS(v) + 4, "text-anchor": "end" }, String(v)));
+      [0, 1].forEach(v => el("text", { class: "em-ax", x: x0 - 6, y: YH(v) + 4, "text-anchor": "end" }, String(v)));
+      [50, 100].forEach(s => el("text", { class: "em-ax", x: X(s), y: H - 8, "text-anchor": "middle" }, String(s)));
+      el("text", { class: "em-ax", x: x1, y: H - 8, "text-anchor": "end" }, "Step");
+      el("text", { class: "em-title", x: x0, y: 17 }, "Malign generalization score");
+      el("text", { class: "em-title", x: x0, y: hk.top - 9 }, "Hack rate");
+      el("line", { class: "em-axis", x1: x0, x2: x1, y1: sc.bot, y2: sc.bot });
+      el("line", { class: "em-axis", x1: x0, x2: x1, y1: hk.bot, y2: hk.bot });
+      el("line", { class: "em-axis", x1: x0, x2: x0, y1: sc.top - 4, y2: sc.bot });
+      el("line", { class: "em-axis", x1: x0, x2: x0, y1: hk.top - 4, y2: hk.bot });
+      const ox = X(T.onset), right = ox + 120 < x1;
+      const on = el("line", { class: "em-on", x1: ox, x2: ox, y1: sc.top - 4, y2: hk.bot });
+      const onT = el("text", { class: "em-on-t", x: right ? ox + 6 : ox - 6, y: sc.top + 10, "text-anchor": right ? "start" : "end" }, "Onset of hacking");
+      svg.appendChild(gS); svg.appendChild(gH);
+      const mk = (g, cls) => { const p = document.createElementNS(NS, "path"); p.setAttribute("class", cls); g.appendChild(p); return p; };
+      const dot = (g) => { const c = document.createElementNS(NS, "circle"); c.setAttribute("class", "em-dot"); c.setAttribute("r", 4.5); g.appendChild(c); return c; };
+      const stepT = el("text", { class: "em-step", x: x1, y: 17, "text-anchor": "end" });
+      G = { X, YS, YH, hlS, hlH, gS, gH, on, onT, stepT,
+        base: mk(gS, "em-base"), run: mk(gS, "em-run"), hack: mk(gH, "em-run"), dS: dot(gS), dH: dot(gH) };
+    }
+    const minis = cells.map(c => ({ c, run: $(".em-run", c), base: $(".em-base", c) }));
+    const MX = s => s - 1;
+    let t = reduced ? EM_END : 0, playing = !reduced, onScreen = false, last = 0, raf = 0, beat = -1;
+
+    function draw() {
+      const s = stepAt(t), g = G;
+      g.base.setAttribute("d", trace(T.baseline, s, g.X, g.YS, 1, 1));
+      g.run.setAttribute("d", trace(T.score, s, g.X, g.YS, 1, 1));
+      g.hack.setAttribute("d", trace(T.hack, s, g.X, g.YH, 1, 1));
+      const live = t < EM_STEP[EM_STEP.length - 1][1];
+      [[g.dS, g.YS, T.score], [g.dH, g.YH, T.hack]].forEach(([c, Y, arr]) => {
+        c.setAttribute("cx", g.X(s)); c.setAttribute("cy", Y(valAt(arr, s)));
+        c.style.opacity = live ? 1 : 0;
+      });
+      g.stepT.textContent = live ? "Step " + Math.round(s) : "";
+      const onA = Math.min(1, Math.max(0, (t - 3000) / 500));
+      g.on.style.opacity = onA; g.onT.style.opacity = onA;
+      let b = 0;
+      EM_BEATS.forEach((x, i) => { if (t >= x[0]) b = i; });
+      const hl = t >= EM_END ? "" : EM_BEATS[b][1];
+      g.hlS.classList.toggle("is-on", hl === "score"); g.hlH.classList.toggle("is-on", hl === "hack");
+      g.gH.classList.toggle("is-dim", hl === "score"); g.gS.classList.toggle("is-dim", hl === "hack");
+      const text = t >= EM_END ? EM_DONE : EM_BEATS[b][2];
+      if (say.textContent !== text) { say.textContent = text; say.classList.remove("is-new"); void say.offsetWidth; say.classList.add("is-new"); }
+      if (b !== beat) { beat = b; root.dataset.beat = b; }
+      minis.forEach((m, i) => {
+        const p = Math.min(1, Math.max(0, (t - EM_GRID - i * 350) / 1000)), ms = 1 + p * 146, P = T.panels[i];
+        const Y = v => 100 - Math.min(v, P.max) / P.max * 100;
+        m.c.classList.toggle("is-on", t >= EM_GRID - 300);
+        m.run.setAttribute("d", p ? trace(P.run, ms, MX, Y, 1, 2) : "");
+        m.base.setAttribute("d", p && P.base ? trace(P.base, ms, MX, Y, 1, 2) : "");
+      });
+    }
+    function setRun() {
+      const done = t >= EM_END;
+      root.classList.toggle("is-paused", !playing && !done);
+      root.classList.toggle("is-done", done);
+      run.setAttribute("aria-label", done ? "Replay the chart" : playing ? "Pause the chart" : "Play the chart");
+    }
+    function frame(now) {
+      raf = 0;
+      if (!(playing && onScreen)) return;
+      t = Math.min(EM_END, t + Math.min(250, now - (last || now)));
+      last = now;
+      draw();
+      if (t >= EM_END) { playing = false; setRun(); return; }
+      raf = requestAnimationFrame(frame);
+    }
+    const kick = () => { if (playing && onScreen && !raf) { last = 0; raf = requestAnimationFrame(frame); } };
+    run.addEventListener("click", () => {
+      if (t >= EM_END) { t = 0; playing = true; } else playing = !playing;
+      setRun(); draw(); kick();
+    });
+    build(); draw(); setRun();
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(() => { const w = Math.round(svg.getBoundingClientRect().width); if (w && Math.abs(w - W) > 2) { build(); draw(); } }).observe(svg);
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(es => { onScreen = es[es.length - 1].isIntersecting; kick(); }, { threshold: .4 }).observe(root);
+    } else { onScreen = true; kick(); }
+  }
+
   function frameHtml(m) {
+    if (m.render === "em-chart" && window.EM_TRACE) return emChartHtml(m);
     if (m.render === "video") return videoHtml(m);
     if (m.render === "figure-steps") return stepsHtml(m);
     if (m.render === "gif") {
@@ -196,6 +353,7 @@
         if (m.render === "gif") hoverClip($(".pv-gif", slot), m.remoteAssets[0], api.reduced);
         if (m.render === "video") videoInit(slot, m);
         if (m.render === "figure-steps") stepsInit(slot, api.reduced);
+        if (m.render === "em-chart" && window.EM_TRACE) emChartInit(slot, api.reduced);
         if (m.render === "gif-pair") {
           $$all(".pv-gif", slot).forEach((el, i) => hoverClip(el, m.remoteAssets[i], api.reduced));
         }

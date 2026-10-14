@@ -87,13 +87,15 @@ window.PRIMER_VISUALS = [
   },
   {
     slug: "emergent-misalignment-reward-hacking", card: "g-emergent-misalignment", title: "Emergent misalignment from reward hacking",
-    provenance: "conceptual", render: "illustration", tag: "Illustration",
+    provenance: "source-figure", render: "em-chart", tag: "Animated figure · Anthropic, 2025",
     sourcePage: "https://www.anthropic.com/research/emergent-misalignment-reward-hacking",
     localAssets: ["visuals/primer/emergent-misalignment.jpg"], remoteAssets: [],
-    caption: "Reward hacking learned in one setting can generalize to other unwanted behaviour.",
-    alt: "A drop of ink on a worksheet spreads onto neighbouring unrelated papers.",
+    caption: "Once the model learned to cheat its coding tests, unrelated bad behaviour rose with it.",
+    note: "Redrawn from the paper's figure; values traced from the image, so approximate.",
+    alt: "Training-run chart. Hack rate is zero until about step 67, then climbs toward 1. The misalignment score sits near 0.04 until then and rises to about 0.5; the run that never hacks stays near 0. Six separate evaluations (emergent misalignment, fake or bad goals, deception on alignment questions, monitor disruption, exfiltration offer, framing a colleague) rise at the same step.",
     credit: "Anthropic, Natural emergent misalignment from reward hacking",
-    creditVerb: "Studied in"
+    creditVerb: "Redrawn from",
+    licenseStatus: "curves traced from the figure in the Anthropic post (supplied by the site owner, 14 Oct 2026) and redrawn; the still illustration stays as the fallback"
   },
   {
     slug: "behavioral-attractors", card: "g-attractors", title: "Behavioral attractors",
