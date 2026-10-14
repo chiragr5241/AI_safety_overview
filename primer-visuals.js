@@ -179,7 +179,7 @@
         '<svg viewBox="0 0 146 100" preserveAspectRatio="none" aria-hidden="true">' +
         `<line class="em-on" x1="${T.onset - 1}" x2="${T.onset - 1}" y1="0" y2="100"/>` +
         '<path class="em-base"/><path class="em-run"/></svg></div></div>').join("") +
-      '</div><span class="pv-em-k">Each small panel: same steps, own vertical scale.</span></div>';
+      '</div></div>';
   }
 
   function emChartInit(slot, reduced) {

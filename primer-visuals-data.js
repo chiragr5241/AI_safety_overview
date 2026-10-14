@@ -91,7 +91,6 @@ window.PRIMER_VISUALS = [
     sourcePage: "https://www.anthropic.com/research/emergent-misalignment-reward-hacking",
     localAssets: ["visuals/primer/emergent-misalignment.jpg"], remoteAssets: [],
     caption: "Once the model learned to cheat its coding tests, unrelated bad behaviour rose with it.",
-    note: "Redrawn from the paper's figure; values traced from the image, so approximate.",
     alt: "Training-run chart. Hack rate is zero until about step 67, then climbs toward 1. The misalignment score sits near 0.04 until then and rises to about 0.5; the run that never hacks stays near 0. Six separate evaluations (emergent misalignment, fake or bad goals, deception on alignment questions, monitor disruption, exfiltration offer, framing a colleague) rise at the same step.",
     credit: "Anthropic, Natural emergent misalignment from reward hacking",
     creditVerb: "Redrawn from",

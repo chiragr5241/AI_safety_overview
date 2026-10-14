@@ -155,5 +155,4 @@
 .pv-em-mini .em-base { stroke-width: 2.25; }
 .pv-em-tick { position: absolute; left: 4px; transform: translateY(-50%); font-family: var(--font-mono); font-size: .66rem; color: var(--muted); }
 .pv-em-tick::before { content: ""; position: absolute; left: -9px; top: 50%; width: 5px; border-top: 1.5px solid var(--ink); }
-.pv-em-k { padding: 7px 12px 9px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .pv-em-say { transition: none; } .em-hl, .pv-em-svg g, .pv-em-cell > * { transition: none; } }
