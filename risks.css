@@ -145,6 +145,12 @@ strong { font-weight: 600; }
 .toc-btn .toc-name { flex: 1 1 auto; min-width: 0; text-align: left; }
 .toc-btn .toc-num { font-family: var(--font-mono); font-weight: 400; font-size: .8rem; color: var(--muted); flex: none; }
 .toc-btn .toc-short { display: none; }
+/* The current section, highlighted once the reader is inside one; it flashes when the section changes. */
+.toc-btn.is-active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.toc-btn.is-active .toc-num { color: var(--accent); opacity: .85; }
+.toc-btn.is-new { animation: toc-flash 1.1s ease-out; }
+@keyframes toc-flash { from { box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 35%, transparent); } to { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .toc-btn.is-new { animation: none; } }
 .toc-btn::after { content: ""; flex: none; width: 7px; height: 7px; margin-top: -3px; border-right: 2px solid; border-bottom: 2px solid; transform: rotate(45deg); transition: transform .16s; }
 .toc-btn[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 3px; }
 @media (min-width: 1060px) {

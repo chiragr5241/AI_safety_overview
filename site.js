@@ -61,7 +61,7 @@
   /* ---------- progress and active section, for in-page links only ---------- */
   const navLinks = $$('a[href^="#"]', chapters);
   const sections = navLinks.map(a => document.getElementById(a.hash.slice(1)));
-  const progress = $("#progress"), tocName = $("#tocName");
+  const progress = $("#progress"), tocName = $("#tocName"), tocNum = $("#tocNum");
   if (!navLinks.length) return;
   let activeIdx = -2;
   function onScroll() {
@@ -75,7 +75,12 @@
       a.classList.toggle("active", i === idx);
       if (i === idx) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
     });
-    if (tocName) tocName.textContent = idx < 0 ? "Contents" : navLinks[idx].textContent.trim();
+    // The name without its number badge; the number goes in the counter where the page has one.
+    const label = a => Array.from(a.childNodes).filter(n => !(n.classList && n.classList.contains("n"))).map(n => n.textContent).join("").trim();
+    if (tocName) tocName.textContent = idx < 0 ? "Contents" : label(navLinks[idx]);
+    if (tocNum) tocNum.textContent = idx < 0 ? "" : (idx + 1) + "/" + navLinks.length;
+    tocBtn.classList.toggle("is-active", idx >= 0);
+    if (idx >= 0) { tocBtn.classList.remove("is-new"); void tocBtn.offsetWidth; tocBtn.classList.add("is-new"); }
     if (idx < 0) return;
     const a = navLinks[idx], x = a.offsetLeft - chapters.offsetLeft;
     if (x < chapters.scrollLeft || x + a.offsetWidth > chapters.scrollLeft + chapters.clientWidth) chapters.scrollLeft = x - 24;
