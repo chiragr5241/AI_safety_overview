@@ -157,14 +157,13 @@
      misalignment score, then draws the six separate evaluations. Curves come from window.EM_TRACE. */
   const EM_BEATS = [
     [0, "", "Training on real coding tasks."],
-    [3300, "hack", "Onset of hacking: the model starts cheating the coding tests."],
-    [5500, "score", "Nothing here rewards bad behaviour elsewhere. If cheating spreads, this score should rise."],
-    [8600, "score", "It does: from under 0.05 to about 0.5. The run that never hacks stays flat."],
-    [12900, "", "Six separate tests of bad behaviour jump at the same step."]
+    [3600, "hack", "Onset of hacking: the model starts cheating."],
+    [8000, "score", "Training only rewards passing tests. Watch whether the cheating spreads to this score."],
+    [18000, "", "Six separate tests of bad behaviour jump at the same point."]
   ];
-  const EM_STEP = [[0, 1500, 1, 58], [1500, 3300, 58, 66.7, "out"], [3300, 8600, 66.7, 66.7], [8600, 11200, 66.7, 100, "inout"], [11200, 12500, 100, 147]];
-  const EM_GRID = 13200, EM_END = 16600;
-  const EM_DONE = "Once the model starts hacking (dashed line), the score and six separate tests of bad behaviour rise. The baseline stays flat.";
+  // One eased curve into the onset (fast, then gradually slower), a hold, then one eased curve out.
+  const EM_STEP = [[0, 3600, 1, 66.7, "out"], [3600, 11500, 66.7, 66.7], [11500, 17000, 66.7, 147, "inout"]];
+  const EM_GRID = 18400, EM_END = 23000;
 
   function emChartHtml(m) {
     const T = window.EM_TRACE;
@@ -187,7 +186,7 @@
     const T = window.EM_TRACE, root = $(".pv-em", slot), svg = $(".pv-em-svg", root);
     const say = $(".pv-em-say", root), run = $(".pv-em-run", root), cells = $$all(".pv-em-cell", root);
     const NS = "http://www.w3.org/2000/svg", H = 288;
-    const ease = (k, e) => e === "out" ? 1 - (1 - k) * (1 - k) : e === "inout" ? (k < .5 ? 2 * k * k : 1 - 2 * (1 - k) * (1 - k)) : k;
+    const ease = (k, e) => e === "out" ? 1 - Math.pow(1 - k, 3) : e === "inout" ? (k < .5 ? 2 * k * k : 1 - 2 * (1 - k) * (1 - k)) : k;
     const stepAt = t => {
       for (const [a, b, s0, s1, e] of EM_STEP) if (t < b) return s0 + (s1 - s0) * ease(Math.max(0, (t - a) / (b - a)), e);
       return 147;
@@ -249,7 +248,7 @@
     }
     const minis = cells.map(c => ({ c, run: $(".em-run", c), base: $(".em-base", c) }));
     const MX = s => s - 1;
-    let t = reduced ? EM_END : 0, playing = !reduced, onScreen = false, last = 0, raf = 0, beat = -1;
+    let t = reduced ? EM_END : 0, playing = !reduced, onScreen = false, last = 0, raf = 0, beat = -1, shown = say.textContent, swap = 0;
 
     function draw() {
       const s = stepAt(t), g = G;
@@ -262,20 +261,26 @@
         c.style.opacity = live ? 1 : 0;
       });
       g.stepT.textContent = live ? "Step " + Math.round(s) : "";
-      const onA = Math.min(1, Math.max(0, (t - 3000) / 500));
+      const onA = Math.min(1, Math.max(0, (t - 2800) / 1000));
       g.on.style.opacity = onA; g.onT.style.opacity = onA;
       let b = 0;
       EM_BEATS.forEach((x, i) => { if (t >= x[0]) b = i; });
-      const hl = t >= EM_END ? "" : EM_BEATS[b][1];
+      const hl = EM_BEATS[b][1];
       g.hlS.classList.toggle("is-on", hl === "score"); g.hlH.classList.toggle("is-on", hl === "hack");
       g.gH.classList.toggle("is-dim", hl === "score"); g.gS.classList.toggle("is-dim", hl === "hack");
-      const text = t >= EM_END ? EM_DONE : EM_BEATS[b][2];
-      if (say.textContent !== text) { say.textContent = text; say.classList.remove("is-new"); void say.offsetWidth; say.classList.add("is-new"); }
+      const text = EM_BEATS[b][2];
+      if (text !== shown) {
+        // Cross-fade: the old line fades out, then the new one fades in.
+        shown = text;
+        clearTimeout(swap);
+        if (reduced) say.textContent = text;
+        else { say.classList.add("is-out"); swap = setTimeout(() => { say.textContent = text; say.classList.remove("is-out"); }, 450); }
+      }
       if (b !== beat) { beat = b; root.dataset.beat = b; }
       minis.forEach((m, i) => {
-        const p = Math.min(1, Math.max(0, (t - EM_GRID - i * 350) / 1000)), ms = 1 + p * 146, P = T.panels[i];
+        const p = Math.min(1, Math.max(0, (t - EM_GRID - i * 500) / 1400)), ms = 1 + p * 146, P = T.panels[i];
         const Y = v => 100 - Math.min(v, P.max) / P.max * 100;
-        m.c.classList.toggle("is-on", t >= EM_GRID - 300);
+        m.c.classList.toggle("is-on", t >= EM_GRID - 600);
         m.run.setAttribute("d", p ? trace(P.run, ms, MX, Y, 1, 2) : "");
         m.base.setAttribute("d", p && P.base ? trace(P.base, ms, MX, Y, 1, 2) : "");
       });
