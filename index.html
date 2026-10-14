@@ -18,7 +18,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="stylesheet" href="explore.css?v=2">
 <link rel="stylesheet" href="visuals.css?v=2">
 <style>
-/* Goals page: three doors, two side pages, later goals. */
+/* Goals page: three doors and two side pages. */
 /* A slight margin: the page sits in a 1560px column, narrower than the site's widest and wider than a reading page. */
 :root { --wrap: 1560px; }
 .hero { padding-block: 64px 44px; display: grid; gap: 20px; }
@@ -27,27 +27,16 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; }
 .hero h1 span { color: var(--accent); }
 
-/* Three doors. Each shows its question and its link; what is on the site now and what is missing sit one click behind. */
-.goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+/* Three doors, all the same shape: question on top, link pinned to the bottom. */
+.goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 @media (max-width: 960px) { .goals { grid-template-columns: minmax(0, 1fr); } }
-.goal { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 16px; padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-content: start; }
+.goal { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .door-art { margin: -6px -6px 0; border-radius: 10px; overflow: hidden; }
 .goal-num { font-family: var(--font-display); font-weight: 800; font-size: 3rem; line-height: .9; color: var(--accent); letter-spacing: -0.03em; }
-.goal-main { display: grid; gap: 12px; }
+.goal-main { flex: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; }
 .goal-main .asks { font-family: var(--font-display); font-weight: 500; font-size: 1.12rem; line-height: 1.35; }
-.goal-main .btn { justify-self: start; margin-top: 6px; }
-.goal-state .layer { background: var(--bg); }
-.goal-state .layer-body { font-size: .94rem; }
-.goal-state ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
-.layers.compact .layer > summary { grid-template-columns: minmax(0, 1fr) 20px; gap: 2px 12px; min-height: 56px; }
-.layers.compact .layer-kind, .layers.compact .layer-what { grid-column: 1; }
-.layers.compact .layer > summary::after { grid-column: 2; grid-row: 1 / span 2; }
-.layers.compact .layer-title { font-size: .98rem; }
+.goal-main .btn { justify-self: start; align-self: end; margin-top: 6px; }
 
-.later { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
-.later li { padding: 14px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; }
-.later b { font-family: var(--font-display); font-size: 1.08rem; }
-.later span { font-size: .95rem; }
 
 .extras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
 @media (max-width: 720px) { .extras { grid-template-columns: minmax(0, 1fr); } }
@@ -74,7 +63,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         <a href="timelines.html">Timelines</a>
       </nav>
     </div>
-    <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
   </div>
 </header>
@@ -98,26 +86,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <p class="asks">What do people in this field mean by alignment, evaluation, interpretability or scheming?</p>
             <a class="btn" href="terms.html">Open the field primer</a>
           </div>
-          <div class="layers compact goal-state">
-            <details class="layer" id="goal-terms-now">
-              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A primer, a glossary and a terms list</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li><a href="terms.html">Field primer</a>: 32 ideas in five themes.</li>
-                  <li><a href="multi-agent-risks.html#glossary">Glossary</a>: 16 terms from the risks guide.</li>
-                  <li><a href="ecosystem.html#terms">Industry and funding terms</a>.</li>
-                </ul>
-                </div>
-            </details>
-            <details class="layer" id="goal-terms-next">
-              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One merged glossary for the site</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li>The three lists are still separate.</li>
-                </ul>
-                </div>
-            </details>
-          </div>
         </li>
 
         <li class="goal" id="goal-risks">
@@ -127,24 +95,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <h3>Cover the high-level AI risks</h3>
             <p class="asks">What could go wrong with advanced AI, and how do the different worries relate to one another?</p>
             <a class="btn" href="multi-agent-risks.html">Read the risks guide</a>
-          </div>
-          <div class="layers compact goal-state">
-            <details class="layer" id="goal-risks-now">
-              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">A six-chapter guide to one report</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li><a href="multi-agent-risks.html">Introduction to Multi-Agent Risks</a>: three failure modes, seven risk factors, 13 case studies.</li>
-                </ul>
-                </div>
-            </details>
-            <details class="layer" id="goal-risks-next">
-              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">One overview of every kind of risk</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li>Risks from a single AI system. They appear only as primer entries.</li>
-                </ul>
-                </div>
-            </details>
           </div>
         </li>
 
@@ -156,30 +106,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <p class="asks">Who supplies the infrastructure, who pays, who decides, who does the research, who shapes policy, and who bears the consequences?</p>
             <a class="btn" href="ecosystem.html">Open the ecosystem map</a>
           </div>
-          <div class="layers compact goal-state">
-            <details class="layer" id="goal-ecosystem-now">
-              <summary><span class="layer-kind">On the site now</span><span class="layer-what"><span class="layer-title">116 actors, 136 ties and who decides</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li><a href="ecosystem.html">The map</a>: 116 actors, 136 ties, 127 sources.</li>
-                  <li><a href="ecosystem.html#control">Who decides</a>: decision rights, access terms, binding rules, disclosed interests.</li>
-                  <li>Outside the US and UK: 32 actors, 16 of them added on 13 October 2026.</li>
-                  <li>Evidence to 4 October 2026.</li>
-                </ul>
-                </div>
-            </details>
-            <details class="layer" id="goal-ecosystem-next">
-              <summary><span class="layer-kind">Not yet</span><span class="layer-what"><span class="layer-title">Budget shares, signed agreements, most other countries</span></span></summary>
-              <div class="layer-body">
-                <ul>
-                  <li>Funders as a share of each budget.</li>
-                  <li>Signed lab–evaluator agreements.</li>
-                  <li>Current shareholdings.</li>
-                  <li>Outside the US and UK: China's ministries, Kenya, Brazil, the African Union, most EU member states, and research and advocacy groups.</li>
-                </ul>
-                </div>
-            </details>
-          </div>
         </li>
       </ol>
       <div class="extras">
@@ -188,18 +114,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       </div>
     </section>
 
-    <!-- ============ LATER ============ -->
-    <section class="chapter" id="later">
-      <div class="chapter-head">
-        <span class="chapter-num">AFTER THE FIRST THREE</span>
-        <h2>Later goals</h2>
-      </div>
-      <ul class="later">
-        <li><b>Compare AI with how other industries developed</b><span>Historical analogies and evidence. Not started.</span></li>
-        <li><b>Explain the roles of government, industry and universities</b><span>What each does in AI safety, and where they overlap.</span></li>
-        <li><b>Publish supporting documents for the Chicago Research Symposium</b></li>
-      </ul>
-    </section>
   </div>
 </main>
 
@@ -219,9 +133,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <script src="site.js?v=4"></script>
 <script src="explore.js?v=5"></script>
 <script src="visuals.js?v=2"></script>
-<script>
-Explore.fold("#later", ".chapter-head", { open: "Show the three later goals", close: "Hide the later goals" });
-</script>
 <i id="page-end" hidden></i>
 <script>document.documentElement.classList.remove("pre");</script>
 </body>
