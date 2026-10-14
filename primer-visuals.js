@@ -157,7 +157,7 @@
      misalignment score, then draws the six separate evaluations. Curves come from window.EM_TRACE. */
   const EM_BEATS = [
     [0, "", "Training on real coding tasks."],
-    [3600, "hack", "Training only rewards passing tests, so the model starts cheating to maximise reward."],
+    [3600, "hack", "Training only rewards passing tests. So now the model starts cheating to maximise the score."],
     [8000, "score", "Watch whether the cheating spreads to this score."],
     [18000, "", "Six separate tests of bad behaviour jump at the same point."]
   ];
