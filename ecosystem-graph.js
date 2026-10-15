@@ -10,7 +10,8 @@
    People are not bubbles. A named person with a role or interest in two organisations is drawn as a dotted link between them,
    and every person can be found in the map's search box, alongside the actors and groups.
    The map has two zoom levels. The first is the whole industry. Zooming in opens up the AI safety field: every entry on the AISafety.com
-   field map takes the plate in that map's own categories, the groups from the industry map that it does not list move to a band underneath,
+   field map takes the plate in that map's own categories, the industry map's safety groups sit beside the field groups closest to them, the
+   rest of the industry moves to a band underneath,
    and arrows are added for the money that four public grant records show passing between the bubbles. From there the plate itself zooms and pans.
    Needs ecosystem-data.js (window.ECOSYSTEM), size-data.js (window.ECO_SIZE) and the helpers the page script exports as window.ECO_UI.
    field-data.js (window.FIELD) is optional: without it the map stays at the first level. */
@@ -23,12 +24,12 @@
   let H = H0;   // the plate grows taller when a measure draws bubbles too large for the usual height
   let level = 0;   // 0 is the whole industry, 1 is zoomed into the AI safety field
   // The map is drawn in a frame on the page, and the view is the part of the plate that the frame shows. The view always has the frame's own
-  // shape. At its widest it holds the whole plate, which is zoom 1; at its closest it is W / ZMAX wide.
+  // shape. The buttons go no wider than the whole plate, which is zoom 1; a pinch can draw it out to ZMIN. At its closest it is W / ZMAX wide.
   // For the whole industry the frame fits in the window, so all of it is seen at once. Zoomed into the field the frame grows downwards
   // until the whole field is in it at full width, and the page under the map moves down to make room; zooming back out brings it up again.
   // Zoomed into the field the frame can also be made shorter again, down to the height that fits the window, which draws the whole field
   // small enough to be seen at once: fieldF is how much of its full height the frame has, and 1 is the height the field opens at.
-  const cam = { x: 0, y: 0, w: W0, h: H0 }, view = { ar: W0 / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 5;
+  const cam = { x: 0, y: 0, w: W0, h: H0 }, view = { ar: W0 / H0 }, own = { w: 0, h: 0, vh: 0 }, ZMAX = 12, ZMIN = 0.4;
   let zoom = 1, fieldF = 1;
   let boxing = null;   // the frame's change of height while it is under way: { h0, h1, w } in page pixels, with how far the page comes up
   const easeOut = k => 1 - Math.pow(1 - k, 3), easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2;
@@ -290,39 +291,39 @@
     { id: "worth", pill: "Money (worth)", key: "size = what it is worth", unit: "", log: true,
       keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
       of: moneyOf(S.worth),
-      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn, in US dollars"]],
-      note: k => `Bubble size shows what each actor is worth on paper: the stock-market value of a listed company on 5 or 6 October 2026, or the valuation set at a private company's latest financing round. A share price moves every day and a private valuation is agreed by a few investors, so the two are not like for like, and neither is cash, revenue or spending. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure. Nonprofits, public bodies and units inside a larger company have no market value and are dashed rings. Size here is not influence.`,
+      r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn USD"]],
+      note: k => `Size: market value, or a private company's latest valuation; ×10 a step. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "Stock-market value for listed companies, read on 5 and 6 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round and Goodfire's from the announcement of its February 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
       keyText: "people employed, where a figure is published; each step up in size is ten times more",
       of: n => { const p = S.people[n.id]; return p ? { v: p.v, num: big(p.v), text: p.text, when: p.when, basis: p.basis, est: !!p.est, note: p.note || "", url: p.url } : null; },
       r: v => Math.max(6, 7 + 6 * (Math.log10(v) - 1)), ticks: [[10, "10"], [1000, "1,000"], [100000, "100,000 people"]],
-      note: k => `Bubble size shows people employed, on a scale where each step is ten times more, so a bubble twice as wide is a far larger employer than twice. ${k} of the ${nodes.length} actors have a figure. A dashed ring means none was found, which does not mean the organisation is small. Figures cover whole organisations, so Amazon's includes its warehouses, and a few are outside estimates. Size here is not influence.`,
+      note: k => `Size: people employed; ×10 a step. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "Employees or staff, from a company filing or annual report where there is one, from a US nonprofit's tax filing, from the organisation's own team page for small research groups, and from a press report or an outside tracker for private companies that publish nothing. Each line says which. Groups of many organisations, and bodies such as a committee or a legislature, have no single headcount and are left as not stated." },
     { id: "money", pill: "Money (revenue or budget)", key: "size = yearly revenue or budget", unit: "a year", log: true,
       keyText: "money through the organisation in a year: revenue for a company, budget or funding for others; each step up in size is ten times more",
       of: moneyOf(S.money),
-      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)) * lift(v), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn a year, in US dollars"]],
-      note: k => `Bubble size shows money through each actor in a year: revenue for a company, expenses or budget for a nonprofit or public body, safety funding given for a funder, receipts for a political committee, one published total for a group of many organisations. It is not what the actor is worth, which is the next measure along. These are unlike kinds of money, set side by side and never added up. Each step in size is ten times more, and the steps are larger above 10bn so the biggest sums stand clear. ${k} of the ${nodes.length} actors have a figure, and a dashed ring means none was found. A company's own financing rounds are left out, and a total that covers several years is placed at its yearly share. Size here is not influence.`,
+      r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)) * lift(v), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn USD a year"]],
+      note: k => `Size: money through each actor in a year (revenue, budget or funding given); ×10 a step. Unlike kinds of money, never added. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "One figure per actor. Microsoft's figure of about USD 332bn, for example, is its revenue for fiscal 2026, not its value on the stock market. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings, budget documents, funders' grant lists and press reports collected on 5, 6 and 13 October 2026. Where the only figure found covers several years, the total is shown as stated and the bubble is placed at one year's share of it. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
     { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
       keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
       of: n => { const m = T100.matches[n.id] || []; return { v: m.length, num: String(m.length), text: m.length ? `${m.length} ${m.length === 1 ? "person" : "people"} on the list: ${m.join("; ")}` : "No one on the list", when: `published ${t100Date}`, basis: T100.title, est: false,
         note: T100.groupActors.indexOf(n.id) >= 0 ? "This bubble is a group of organisations. Matching the name to it is this map's reading, not TIME's." : "", url: T100.url }; },
       r: v => v ? 5 + 12 * Math.sqrt(v) : 4, ticks: [[1, "1"], [3, "3 people named"]],
-      note: k => `Influence has no agreed measure. Here bubble size counts the people TIME named on its TIME100 AI 2026 list, published ${t100Date}, whose title on the list names the organisation. That is one magazine's editorial judgement about individuals. It is not a finding of this map and it is not a ranking. ${k} of the ${T100.people} names fall on an actor shown here. A small dot means no one from that actor is on the list.`,
+      note: k => `Size: people on the TIME100 AI 2026 list (${t100Date}) whose title names the actor. One magazine's judgement, not a ranking. ${k} of ${T100.people} names fall on actors here.`,
       about: `TIME's editors and reporters choose 100 people each year as the most influential in AI. The 2026 list was published on ${t100Date}. A person counts towards a bubble only where the title TIME prints names that organisation, or an office inside one of the map's group actors. Most of the 100 work at organisations that are not on this map, and several large actors here have no one on the 2026 list.` },
     { id: "ties", pill: "Documented ties", key: "size = ties", unit: "ties", log: false,
       keyText: "number of documented ties",
       of: n => ({ v: n.deg, num: String(n.deg), text: `${n.deg} documented ${n.deg === 1 ? "tie" : "ties"} to other organisations`, when: "", basis: "", est: false, note: "", url: "" }),
       r: v => Math.max(5, 8.2 * Math.sqrt(v)), ticks: [[1, "1"], [10, "10"], [25, "25 ties"]],
-      note: () => "Bubble size counts documented ties. A large bubble has many ties recorded in this map, which partly reflects how much an organisation discloses. Size here is not influence.",
+      note: () => "Size: documented ties on this map, which partly reflects how much an actor discloses.",
       about: "Counted from the arrows on this map: the ties in the base dataset plus the ties added from the control evidence. Links through a shared person are not counted." },
     { id: "sources", pill: "Sources cited", key: "size = sources cited", unit: "sources", log: false,
       keyText: "number of sources this map cites for the actor",
       of: n => { const k = (n.data.sources || []).length; return { v: k, num: String(k), text: `${k} ${k === 1 ? "source" : "sources"} cited for this actor in the base dataset`, when: "", basis: "", est: false, note: "", url: "" }; },
       r: v => Math.max(4, 3 + 6.5 * Math.sqrt(v)), ticks: [[1, "1"], [4, "4"], [9, "9 sources"]],
-      note: () => "Bubble size counts the sources this map cites for the actor. It shows where the evidence behind the map is thick and where it is thin, not how much an actor matters.",
+      note: () => "Size: sources cited for the actor. It shows where the evidence is thick or thin.",
       about: "Counted from the source list attached to each actor in the base dataset. An actor with few sources is one this version documents lightly." },
     // the two measures below exist only when the map is zoomed into the AI safety field
     { id: "gin", field: true, pill: "Grants received", key: "size = grants received", unit: "", log: true,
@@ -338,8 +339,8 @@
         return { v: c[0].v, num: "$" + big(c[0].v), text: c[0].text, when: "", basis: c[0].basis, est: false,
           note: rest.length ? `Other sources list money for it: ${rest.map(x => x.short).join(", ")}. They are not added together` : "", url: c[0].url };
       },
-      r: v => Math.max(4.5, 4.5 + 4.3 * (Math.log10(v) - 3)), ticks: [[1e4, "10k"], [1e6, "1m"], [1e8, "100m, in US dollars"]],
-      note: k => `Bubble size shows the most money that any one funder's public record lists for the organisation, on a scale where each step is ten times more. Four records are read: Coefficient Giving's AI fund list, the Survival and Flourishing Fund's recommendations, the two Effective Altruism Funds payout lists and Manifund's project pages. They cover different years and different kinds of money (listed, recommended, paid out, raised), and one funder's grant can be passed on by another, so the records are not added together. A company's announced grant or commitment counts in the same way, as one more source. ${k} of the ${nodes.length} bubbles have a figure. A dashed ring means no grant in these records, which is not the same as no funding: company revenue, government budgets and most private gifts are in none of them. Size here is not influence.`,
+      r: v => Math.max(4.5, 4.5 + 4.3 * (Math.log10(v) - 3)), ticks: [[1e4, "10k"], [1e6, "1m"], [1e8, "100m USD"]],
+      note: k => `Size: the largest total for the organisation in any one of four grant records or a company announcement; ×10 a step. Records are never added. ${k} of ${nodes.length} have a figure; a dashed ring means no grant in these records, not no funding.`,
       about: "For each organisation, the map takes one funder's record at a time and adds up the rows in that record that name the organisation, over all the years the record covers. The bubble shows the largest of those totals. A recipient is matched by its name or by the web address the record links to. A grant to a university counts for a lab there only where the record names the lab. Grants to individuals are left out, because people are not bubbles on this map." },
     { id: "gout", field: true, pill: "Grants given", key: "size = grants given", unit: "", log: true,
       keyText: "what a funder's own public record lists for organisations on this map; each step up in size is ten times more",
@@ -357,8 +358,8 @@
         return { v: t.amount, num: "$" + big(t.amount), text: `Largest single amount announced: USD ${big(t.amount)} to ${byId.get(t.to).short} (${KIND[t.corp.kind].toLowerCase()}, ${U.fmtDate(t.date)})`, when: "", basis: t.corp.src.title, est: false,
           note: cs.length > 1 ? `Other announcements on this map: ${cs.slice(1).map(x => `USD ${big(x.amount)} to ${byId.get(x.to).short}`).join(", ")}. They are not added together` : "", url: t.corp.src.url };
       },
-      r: v => Math.max(6, 9 + 7 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e7, "10m"], [1e9, "1bn, in US dollars"]],
-      note: k => `Bubble size shows what a funder gives to bubbles on this map. For the five funders with a public grant record it is that record's total for organisations shown here, which is part of what each one gives. For an AI company or its foundation it is the largest single amount it has announced for outside work, because separate announcements are not added together and most are commitments, not payments. ${k} bubbles have a figure. Every other bubble is a dashed ring, which says only that no record or announcement was read for it. Size here is not influence.`,
+      r: v => Math.max(6, 9 + 7 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e7, "10m"], [1e9, "1bn USD"]],
+      note: k => `Size: what a funder gives to bubbles here, from its grant record or its largest company announcement. ${k} have a figure; a dashed ring means none was read.`,
       about: "Five funders publish a record that this map reads row by row: Coefficient Giving (its AI fund only), the Survival and Flourishing Fund, the Long-Term Future Fund, the EA Infrastructure Fund and Manifund. Longview, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, government programmes and the AI companies' own grant schemes are on the map but publish no list that was read for this version." }
   ];
   const measureById = new Map(MEASURES.map(m => [m.id, m]));
@@ -479,7 +480,9 @@
     }
   }
   // Zoomed into the AI safety field: the field's groups are set out in rows in reading order, funders first, then research, governance,
-  // training and media. The groups from the industry map that the field map does not list follow in a band underneath.
+  // training and media. The industry map's own safety groups (funders, research, universities, the talent pipeline) hold the actors that
+  // have no entry on the field map, and each sits beside the field group it is closest to. The rest of the industry follows in a band underneath.
+  const BESIDE = [[5, "f-company_programmes"], [6, "f-strategy"], ["6_10", 6], [10, "f-training_and_education"]];
   function flow() {
     const M = 10, GX = 18, GY = 14;
     let y = 30;
@@ -500,11 +503,18 @@
         y += 2 * Math.max.apply(null, r.map(c => c.hh)) + GY;
       });
     };
-    place(CLUSTERS.filter(c => c.field));
+    const top = CLUSTERS.filter(c => c.field), keyOf = c => String(c.cat);
+    BESIDE.forEach(([cat, after]) => {
+      const c = CLUSTERS.find(x => keyOf(x) === String(cat));
+      if (!c) return;
+      const at = top.findIndex(x => keyOf(x) === String(after));
+      top.splice(at < 0 ? top.length : at + 1, 0, c);
+    });
+    place(top);
     bandY = y + 18;
     y += 34;
     // the band is read in the same order as the whole-industry map, so what is left of each group drops more or less straight down into it
-    place(CLUSTERS.filter(c => !c.field).sort((a, b) => a.ay - b.ay || a.ax - b.ax));
+    place(CLUSTERS.filter(c => top.indexOf(c) < 0).sort((a, b) => a.ay - b.ay || a.ax - b.ax));
     H = Math.ceil(y);
   }
   // keep leaves the bubbles where they are inside their groups, for when only the shape of the frame has changed
@@ -536,6 +546,15 @@
     return { x: hold(px - fx * w, w, W), y: h >= H ? 0 : hold(py - fy * h, h, H), w, h };   // a plate shorter than the view sits at its top
   }
   const camFit = () => camTarget(1, W / 2, H / 2, 0.5, 0.5);
+  // the view moved by hand: the plate can be carried until its edge is at the middle of the frame, so it can never be lost
+  const loose = t => { t.x = Math.max(-t.w / 2, Math.min(W - t.w / 2, t.x)); t.y = Math.max(-t.h / 2, Math.min(H - t.h / 2, t.y)); return t; };
+  // a pinch or the wheel: the point px, py stays under the fingers or the pointer, at fractions fx, fy of the frame
+  function freeCam(z, px, py, fx, fy) {
+    z = Math.max(ZMIN, Math.min(zmax(), z));
+    const w = fitW() / z, h = w / view.ar;
+    return loose({ x: px - fx * w, y: py - fy * h, w, h });
+  }
+  const offFit = () => { const t = camFit(); return Math.abs(t.x - cam.x) > 1 || Math.abs(t.y - cam.y) > 1 || Math.abs(t.w - cam.w) > 1; };
   // Where each level opens: across the full width of the plate from the top. With the frame at the height its level asks for, that is the
   // whole plate at both levels. The field is drawn closer in than the industry was, so going into it is a move towards the map.
   const homeZoom = () => level ? fitW() / W : 1;
@@ -549,8 +568,8 @@
     // and while the map is travelling between levels, when the figure would only flicker past
     const rel = W / cam.w, opens = !!boxing || svg.classList.contains("moving") || (level ? Math.abs(rel - 1) <= 0.04 : zoom <= 1.01);
     if (at) at.textContent = (level ? "AI safety field" : "Whole industry") + (opens ? "" : " ×" + (+rel.toFixed(1)));
-    const t0 = zoom <= 1.01 ? camFit() : null, moved = !!t0 && (Math.abs(t0.x - cam.x) > 1 || Math.abs(t0.y - cam.y) > 1);   // carried off its place by a drag
-    if (out) { out.disabled = !level && zoom <= 1.01 && !moved; out.title = !level && moved ? "Put the map back in the middle" : level && zoom <= 1.01 ? (fieldF > frameLo() + 0.001 ? "Zoom out until the whole field fits in the window" : "Zoom out to the whole industry") : "Zoom out"; }
+    const moved = zoom <= 1.01 && offFit();   // carried off its place by a drag, or drawn out by a pinch
+    if (out) { out.disabled = !level && zoom <= 1.01 && !moved; out.title = moved ? "Put the map back in the middle" : level && zoom <= 1.01 ? (fieldF > frameLo() + 0.001 ? "Zoom out until the whole field fits in the window" : "Zoom out to the whole industry") : "Zoom out"; }
     if (inn) { inn.disabled = level ? zoom >= zmax() - 0.01 : !F; inn.title = level ? "Zoom in" : "Zoom into the AI safety field"; }
   }
   // how tall the frame stands for the level and for fieldF, and the least fieldF can be: the frame is never shorter than the stylesheet makes it
@@ -869,16 +888,19 @@
   }
 
   /* ---------- state ---------- */
-  const state = { sel: null, hover: null, fam: "all" };
+  // sel is one bubble, group or person, or { type: "multi", ids } for several bubbles; ties says which arrows several bubbles show
+  const state = { sel: null, hover: null, fam: "all", picking: false, ties: "all" };
   const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
   const inLens = (t, id) => id === "all" || (id === "corp" ? isCorp(t) : famOf(t) === id);
   const inFam = t => (!t.field || level === 1) && inLens(t, state.fam);   // the grant records and company announcements show only when zoomed into the field
-  const touches = (l, f) => f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (inGroup(l.s, f.id) || inGroup(l.t, f.id));
+  const touches = (l, f) => f.type === "multi" ? (state.ties === "between" ? f.ids.includes(l.s.id) && f.ids.includes(l.t.id) : state.ties === "all" && (f.ids.includes(l.s.id) || f.ids.includes(l.t.id)))
+    : f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (inGroup(l.s, f.id) || inGroup(l.t, f.id));
   const linkVisible = l => l.inter ? (state.fam === "all" || state.fam === "people") : l.ties.some(inFam);
 
   // An arrow's look can change only when the zoom level or the tie filter changes. Those bump the epoch, and refresh restyles then and not on
   // every selection. The classes on arrows and bubbles are written only where they differ from what is already there.
   let epoch = 1;
+  const pickedIds = () => !state.sel ? [] : state.sel.type === "multi" ? state.sel.ids : state.sel.type === "node" ? [state.sel.id] : [];
   function refresh() {
     const focus = state.hover || state.sel, onNodes = new Set(), dim = !!focus || state.fam !== "all";
     links.forEach(l => {
@@ -895,12 +917,13 @@
         if (!l.inter && (!level || focus)) ensureCoins(l);
       }
     });
-    if (focus && focus.type !== "person") (focus.type === "node" ? [byId.get(focus.id)] : nodes.filter(n => inGroup(n, focus.id))).forEach(n => onNodes.add(n.id));
+    if (focus && focus.type === "multi") focus.ids.forEach(id => onNodes.add(id));
+    else if (focus && focus.type !== "person") (focus.type === "node" ? [byId.get(focus.id)] : nodes.filter(n => inGroup(n, focus.id))).forEach(n => onNodes.add(n.id));
     svg.classList.toggle("has-focus", dim);
     svg.classList.toggle("has-pick", !!focus);
-    const selId = state.sel && state.sel.type === "node" ? state.sel.id : null;
+    const picked = pickedIds();
     nodes.forEach(n => {
-      const on = dim && onNodes.has(n.id), sel = n.id === selId;
+      const on = dim && onNodes.has(n.id), sel = picked.includes(n.id);
       if (n.onDom !== on) { n.onDom = on; n.el.classList.toggle("on", on); n.lab.classList.toggle("on", on); }
       if (n.selDom !== sel) { n.selDom = sel; n.el.classList.toggle("sel", sel); }
     });
@@ -911,8 +934,8 @@
   const panel = $("webPanel"), blurb = $("webBlurb"), lens = $("webLens"), search = $("webSearch"), options = $("webOptions"), fig = svg.closest(".web");
   // what the line beside the search says while nothing narrows the map, for the whole industry and for the field
   const BLURBS = [
-    "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Pick a kind of tie to see only those arrows. Scroll over the map to zoom, and drag to move it.",
-    "Pick a bubble, a group name or a funder to follow the money. Scrolling past the foot of the map draws it in until the whole field fits in the window, and + or a pinch brings the small names up to reading size. Search finds any entry."
+    "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Shift-click to pick several. Pick a kind of tie to see only those arrows. Scroll over the map to zoom, and drag to move it.",
+    "Pick a bubble, a group name or a funder to follow the money. Shift-click to pick several. Scrolling past the foot of the map draws it in until the whole field fits in the window, and + or a pinch brings the small names up to reading size. Search finds any entry."
   ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
   const liveEdges = () => LIVE[level];
@@ -935,11 +958,15 @@
     d.insertAdjacentHTML("beforeend", grantRows(FLOWS[+d.dataset.flow]));
   }, true);
   const catOf = id => { const n = byId.get(id); return n ? n.cat : 0; };   // a person has no group
-  function tieItem(t, out) {
-    const other = byId.get(out ? t.to : t.from), bits = [typeLabel(t)];
+  const jumpTo = n => `<button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${n.c.swatch}"></i>${tidy(n.name)}</button>`;
+  function tieItem(t, out) { return `<li>${jumpTo(byId.get(out ? t.to : t.from))}${tieNote(t)}</li>`; }
+  // a tie between two picked bubbles names both ends
+  function pairItem(t) { return `<li><div class="wp-pair">${jumpTo(byId.get(t.from))}<b aria-label="to">→</b>${jumpTo(byId.get(t.to))}</div>${tieNote(t)}</li>`; }
+  function tieNote(t) {
+    const bits = [typeLabel(t)];
     if (t.amount != null) bits.push(U.fmtAmount(t.amount, t.currency));
     if (t.date) bits.push(U.fmtDate(t.date));
-    return `<li><button type="button" class="web-jump" data-node="${esc(other.id)}"><i style="background:${other.c.swatch}"></i>${tidy(other.name)}</button><span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}</li>`;
+    return `<span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}`;
   }
   const roleBits = r => [typeLabel(r)].concat(r.date ? [U.fmtDate(r.date)] : []).join(", ");
   // a person's role at an organisation: listed under the organisation with the name, and under the person with the organisation
@@ -964,6 +991,22 @@
           <p class="wp-small"><a href="#dp-people">See the people evidence</a></p>
         </div>
         <div class="wp-ties one"><div><h3>Roles and interests (${roles.length})</h3><ul>${roles.map(r => roleItem(r, false)).join("")}</ul></div></div>`;
+    } else if (s && s.type === "multi") {
+      const ids = new Set(s.ids), edges = liveEdges();
+      const between = edges.filter(t => ids.has(t.from) && ids.has(t.to) && inFam(t)), inc = edges.filter(t => !ids.has(t.from) && ids.has(t.to) && inFam(t));
+      const out = edges.filter(t => ids.has(t.from) && !ids.has(t.to) && inFam(t));
+      if (level) { const bySum = (a, b) => (b.amount || 0) - (a.amount || 0); between.sort(bySum); inc.sort(bySum); out.sort(bySum); }
+      const pairBlock = (title, list) => `<div><h3>${title} (${list.length})</h3>${list.length ? `<ul>${list.map(pairItem).join("")}</ul>` : `<p class="wp-none">None recorded${state.fam !== "all" ? " for this kind of tie" : ""}.</p>`}</div>`;
+      const shared = PEOPLE.filter(p => new Set(p.roles.filter(r => ids.has(r.to)).map(r => r.to)).size > 1);
+      const mode = (v, label) => `<button type="button" data-ties="${v}" aria-pressed="${state.ties === v}">${label}</button>`;
+      panel.innerHTML = `<div class="wp-main">
+          <span class="web-eyebrow">Several bubbles</span>
+          <ul class="wp-picks">${s.ids.map(id => { const n = byId.get(id); return `<li>${jumpTo(n)}<button type="button" class="wp-unpick" data-unpick="${esc(id)}" aria-label="Drop ${esc(n.name)}">×</button></li>`; }).join("")}</ul>
+          <span class="wp-lbl">Arrows on the map</span>
+          <div class="pills" role="group" aria-label="Arrows on the map">${mode("all", "All their ties")}${mode("between", "Only between them")}${mode("none", "None")}</div>
+          <p class="wp-small">${filt ? filt.trim() + " " : ""}Shift-click a bubble to add or drop it.</p>
+        </div>
+        <div class="wp-ties">${pairBlock("Ties between them", between)}${pairBlock("Arrows coming in from outside", inc)}${pairBlock("Arrows going out to outside", out)}${shared.length ? `<div><h3>People in more than one of them (${shared.length})</h3><ul>${shared.map(p => `<li><button type="button" class="web-jump" data-person="${esc(p.id)}"><i class="who"></i>${tidy(p.name)}</button><span>${p.roles.filter(r => ids.has(r.to)).map(r => `${esc(typeLabel(r))}, ${tidy(byId.get(r.to).name)}`).join("; ")}</span></li>`).join("")}</ul></div>` : ""}</div>`;
     } else if (s && s.type === "node") {
       const n = byId.get(s.id), c = n.c, e = n.entry, edges = liveEdges();
       const bySum = (a, b) => (b.amount || 0) - (a.amount || 0);   // zoomed in a funder can have dozens of arrows, so the largest stated amounts come first
@@ -1046,12 +1089,21 @@
     renderPanel();
     // on a narrow screen the map scrolls sideways; bring the chosen bubble into view
     const sc = svg.parentNode;
-    if (state.sel && state.sel.type !== "person" && sc.scrollWidth > sc.clientWidth) {
+    const one = state.sel && (state.sel.type === "node" || state.sel.type === "group");
+    if (one && sc.scrollWidth > sc.clientWidth) {
       const k = svg.getBoundingClientRect().width / cam.w;
       sc.scrollTo({ left: ((state.sel.type === "node" ? byId.get(state.sel.id).x : C.get(state.sel.id).x) - cam.x) * k - sc.clientWidth / 2 });
     }
-    if (state.sel && state.sel.type !== "person" && fromPick) reveal(state.sel);
+    if (one && fromPick) reveal(state.sel);
   }
+  // Adds a bubble to the picked set, or drops it if it is already there. One bubble left is an ordinary selection.
+  function pick(id, fromList) {
+    const ids = pickedIds().slice(), i = ids.indexOf(id);
+    if (i >= 0) ids.splice(i, 1); else ids.push(id);
+    select(ids.length > 1 ? { type: "multi", ids } : ids.length ? { type: "node", id: ids[0] } : null, true);
+    if (fromList && i < 0 && ids.length > 1) reveal({ type: "node", id });
+  }
+  const adding = e => state.picking || (e && (e.shiftKey || e.metaKey || e.ctrlKey));
   // A bubble or group picked from a list or the search is brought into view: a zoomed plate moves to it, and the page scrolls if it is
   // still off screen.
   function reveal(sel) {
@@ -1078,7 +1130,7 @@
     if (box) box.innerHTML = texts.map((t, i) => `<span${i === at ? "" : ' aria-hidden="true"'}>${esc(t)}</span>`).join("");
   }
   /* ---------- the size selector: what a bubble's size stands for ---------- */
-  const sizePills = $("webSize"), sizeScale = $("webSizeScale"), sizeAbout = $("webSizeAbout");
+  const sizePills = $("webSize"), sizeScale = $("webSizeScale");
   // one actor's figure in words, with when, where from and a link
   function valueLine(n) {
     const v = n.val;
@@ -1098,7 +1150,7 @@
     sizeScale.innerHTML = measure.ticks.map(t => dot(measure.r(t[0]), t[1])).join("")
       + (measure.id === "influence" ? dot(measure.r(0), "no one named") : "")
       + (nodes.some(n => n.unk) ? dot(rUnknown(), "no figure found", "unk") : "")
-      + (k < real * 0.97 ? `<li class="shrunk">key drawn ${+(real / k).toFixed(1)}× smaller than the map</li>` : "");
+      + (k < real * 0.97 ? `<li class="shrunk">key ${+(real / k).toFixed(1)}× smaller than map</li>` : "");
   }
   function renderSize() {
     const known = nodes.filter(n => !n.unk), k = measure.id === "influence" ? known.reduce((a, n) => a + n.val.v, 0) : known.length;
@@ -1107,13 +1159,6 @@
     setText("webSizeKeyFull", measure.keyText);
     setText("webSizeNote", measure.note(k));
     drawScale();
-    if (!sizeAbout) return;
-    const listed = measure.id === "ties" || measure.id === "sources" ? [] : known.filter(n => n.val.v > 0), missing = nodes.filter(n => n.unk);
-    sizeAbout.innerHTML = `<p class="web-sub">${tidy(measure.about)}${measure.id === "influence" ? ` ${srcLink(T100.url, "The list at TIME")}` : ""}</p>`
-      + (listed.length ? `<div class="web-sizelist">${CLUSTERS.filter(c => listed.some(n => n.c === c)).map(c =>
-        `<div><h3 style="color:${c.color}">${tidy(c.label)}</h3><ul>${listed.filter(n => n.c === c).sort((a, b) => a.name.localeCompare(b.name)).map(n =>
-          `<li><button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${c.swatch}"></i>${tidy(n.name)}</button><span>${valueLine(n)}</span></li>`).join("")}</ul></div>`).join("")}</div>` : "")
-      + (missing.length ? `<p class="note"><b>No figure found for ${missing.length} actors:</b> ${missing.map(n => tidy(n.short)).join(", ")}.</p>` : "");
   }
   function setSize(id, ms) {
     measure = measureById.get(id) || measure;
@@ -1133,7 +1178,6 @@
   }
   renderPills();
   if (sizePills) sizePills.addEventListener("click", e => { const b = e.target.closest("button"); if (b && b.dataset.v !== measure.id) setSize(b.dataset.v, 650); });
-  if (sizeAbout) sizeAbout.addEventListener("click", e => { const b = e.target.closest("button[data-node]"); if (b) { select({ type: "node", id: b.dataset.node }, true); if (!level) svg.scrollIntoView({ block: "center", behavior: STILL ? "auto" : "smooth" }); } });
   // the frame changes shape with the window, and the view is fitted to it again
   // (the frame also changes height when the reader zooms it, which is not a change of window and needs no second look)
   // A frame of a new shape asks for a plate of a new width: the groups are set out again on it, and the view keeps its middle.
@@ -1260,7 +1304,7 @@
     options.innerHTML = shown.length ? shown.map((it, i) => {
       const h = it.head !== head ? `<li class="grp" role="presentation">${esc(it.head)}</li>` : "";
       head = it.head;
-      return `${h}<li role="option" id="wo-${i}" data-i="${i}" aria-selected="${sameSel(it, state.sel)}">${it.mark}<span>${tidy(it.label)}</span></li>`;
+      return `${h}<li role="option" id="wo-${i}" data-i="${i}" aria-selected="${sameSel(it, state.sel) || (it.type === "node" && pickedIds().length > 1 && pickedIds().includes(it.id))}">${it.mark}<span>${tidy(it.label)}</span></li>`;
     }).join("") : `<li class="none" role="presentation">Nothing on the map matches.</li>`;
     options.hidden = false;
     search.setAttribute("aria-expanded", "true");
@@ -1277,12 +1321,13 @@
   function choose(it) {
     closeList();
     if (it.type === "node" && nodes.indexOf(byId.get(it.id)) < 0) setLevel(1, 0);
-    select({ type: it.type, id: it.id }, true);
+    if (it.type === "node" && state.picking) pick(it.id, true);
+    else select({ type: it.type, id: it.id }, true);
   }
   search.addEventListener("focus", () => { search.select(); openList(); });
   search.addEventListener("click", () => { if (options.hidden) openList(); });
   search.addEventListener("input", () => {
-    if (!search.value && state.sel) { select(null); }
+    if (!search.value && state.sel && state.sel.type !== "multi") { select(null); }
     openList();
   });
   search.addEventListener("keydown", e => {
@@ -1320,17 +1365,26 @@
   setText("nMoneyAmt", moneyTies.filter(t => t.amount != null).length);
   setText("nExtTies", X.edges.filter(e => !personById.has(e.from)).length);
   setText("nExtPeople", PEOPLE.length);
+  // Escape lets go of what is picked, unless a list that is open takes it first
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !e.defaultPrevented && state.sel) select(null); });
   $("webClear").addEventListener("click", () => { state.sel = null; search.value = ""; setFam("all"); });
   panel.addEventListener("click", e => {
     const b = e.target.closest("button");
     if (!b) return;
-    if (b.dataset.node) select({ type: "node", id: b.dataset.node }, true);
+    if (b.dataset.node) { if (state.picking && !b.closest(".wp-picks")) pick(b.dataset.node, true); else select({ type: "node", id: b.dataset.node }, true); }
+    else if (b.dataset.unpick) pick(b.dataset.unpick);
+    else if (b.dataset.ties) { state.ties = b.dataset.ties; refresh(); renderPanel(); }
     else if (b.dataset.person) select({ type: "person", id: b.dataset.person }, true);
     else if (b.dataset.group) select({ type: "group", id: catKey(b.dataset.group) }, true);
     else if (b.dataset.lens) setFam(b.dataset.lens);
     else if (b.dataset.level) { setLevel(+b.dataset.level, LEVEL_MS); svg.scrollIntoView({ block: "start", behavior: STILL ? "auto" : "smooth" }); }
     else if (b.dataset.zoomto) zoomToGroup(C.get(catKey(b.dataset.zoomto)));
     else if (b.dataset.close) select(null);
+  });
+  const multi = $("webMulti");
+  multi.addEventListener("click", () => {
+    state.picking = !state.picking;
+    multi.setAttribute("aria-pressed", state.picking ? "true" : "false");
   });
   const motion = $("webMotion");
   motion.addEventListener("click", () => {
@@ -1406,22 +1460,61 @@
 
   /* ---------- pointer: point for a bubble's card, click to follow its arrows, drag a bubble (mouse) to untangle ---------- */
   const nodeAt = e => { const g = e.target.closest && e.target.closest(".node"); return g ? byId.get(g.getAttribute("data-id")) : null; };
-  let drag = null, pan = null, camFrame = 0;
+  let drag = null, pan = null, twoFinger = null, camFrame = 0;
+  // the view set by hand, by the wheel or a pinch, at once and without easing
+  function setCam(t) {
+    cancelAnimationFrame(camFrame);
+    goal = null;
+    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
+    applyCam();
+    hideTip();
+    clearTimeout(scaleSoon);
+    scaleSoon = setTimeout(drawScale, 140);
+  }
+  /* Two fingers on the map pinch it, at either level and from anywhere on it, bubbles included: the point between the fingers stays under
+     them while they spread, close and move together. These listeners run before the ones for dragging, which stand aside while it lasts. */
+  const fingers = new Map();
+  const between = () => { const [a, b] = Array.from(fingers.values()); return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) || 1 }; };
+  svg.addEventListener("pointerdown", e => {
+    if (e.pointerType !== "touch") return;
+    fingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (fingers.size !== 2 || boxing) return;
+    pan = null; drag = null;
+    svg.classList.remove("panning");
+    const m = between(), p = toStage({ clientX: m.x, clientY: m.y });
+    twoFinger = { d0: m.d, z0: zoom, px: p.x, py: p.y };
+    cancelAnimationFrame(camFrame);
+    hideTip();
+  }, true);
+  svg.addEventListener("pointermove", e => {
+    if (!fingers.has(e.pointerId)) return;
+    fingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (!twoFinger || fingers.size < 2) return;
+    e.preventDefault();
+    const m = between(), r = svg.getBoundingClientRect();
+    setCam(freeCam(twoFinger.z0 * m.d / twoFinger.d0, twoFinger.px, twoFinger.py, (m.x - r.left) / r.width, (m.y - r.top) / r.height));
+  }, true);
+  const fingerUp = e => {
+    if (!fingers.delete(e.pointerId) || !twoFinger || fingers.size >= 2) return;
+    twoFinger = null;
+    justDragged = true;   // the finger left behind does not pick what it is on
+    setTimeout(() => { justDragged = false; }, 300);
+  };
+  svg.addEventListener("pointerup", fingerUp, true);
+  svg.addEventListener("pointercancel", fingerUp, true);
   function toStage(e) {
     const p = svg.createSVGPoint();
     p.x = e.clientX; p.y = e.clientY;
     return p.matrixTransform(svg.getScreenCTM().inverse());
   }
-  // A press that is not on a bubble drags the map. With a mouse that works at any zoom and from anywhere, a group name or an arrow included:
-  // the pointer is only taken once it has moved, so a plain click still reaches what it was on. A finger drags the map only when it is
-  // zoomed in, and otherwise scrolls the page as it does anywhere else.
-  // What a drag moves depends on what there is to move. Zoomed in, it is the view inside the frame. With the whole field in a frame taller
-  // than the window, it is the page, which is how that map is travelled. With the whole industry in view it is the plate, loosely.
+  // A press that is not on a bubble drags the map in any direction, at any zoom and at either level. With a mouse that works from anywhere,
+  // a group name or an arrow included: the pointer is only taken once it has moved, so a plain click still reaches what it was on.
+  // Zoomed out, a finger that sets off up or down still scrolls the page (touch-action: pan-y); one that sets off sideways drags the map.
   svg.addEventListener("pointerdown", e => {
+    if (twoFinger) return;
     const n = nodeAt(e);
-    if (!n && !boxing && (e.pointerType === "mouse" ? e.button === 0 : zoom > 1.01)) {
-      pan = { id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: cam.x, cy: cam.y, k: cam.w / svg.getBoundingClientRect().width, moved: false,
-        page: !!level && zoom <= 1.01, loose: zoom <= 1.01, lastY: e.clientY };
+    if (!n && !boxing && (e.pointerType === "mouse" ? e.button === 0 : true)) {
+      pan = { id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: cam.x, cy: cam.y, k: cam.w / svg.getBoundingClientRect().width, moved: false };
       cancelAnimationFrame(camFrame);
       goal = null;
       return;
@@ -1433,6 +1526,7 @@
     try { svg.setPointerCapture(e.pointerId); } catch (err) {}
   });
   svg.addEventListener("pointermove", e => {
+    if (twoFinger) return;
     if (pan) {
       if (!pan.moved) {
         if (Math.hypot(e.clientX - pan.x0, e.clientY - pan.y0) < 4) return;
@@ -1441,15 +1535,8 @@
         try { svg.setPointerCapture(pan.id); } catch (err) {}
       }
       hideTip();
-      if (pan.page) {
-        jump(pan.lastY - e.clientY);
-        pan.lastY = e.clientY;
-        return;
-      }
-      const x = pan.cx - (e.clientX - pan.x0) * pan.k, y = pan.cy - (e.clientY - pan.y0) * pan.k;
-      // with everything in view the plate can be carried until its edge is at the middle of the frame, so it can never be lost
-      cam.x = pan.loose ? Math.max(-cam.w / 2, Math.min(W - cam.w / 2, x)) : hold(x, cam.w, W);
-      cam.y = pan.loose ? Math.max(-cam.h / 2, Math.min(H - cam.h / 2, y)) : hold(y, cam.h, H);
+      const t = loose({ x: pan.cx - (e.clientX - pan.x0) * pan.k, y: pan.cy - (e.clientY - pan.y0) * pan.k, w: cam.w, h: cam.h });
+      cam.x = t.x; cam.y = t.y;
       applyCam();
       return;
     }
@@ -1480,7 +1567,7 @@
     drag = null;
     try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
     // with the pointer captured the click lands on the svg, so a press without movement selects here
-    if (!justDragged) { select({ type: "node", id: n.id }); justDragged = true; }
+    if (!justDragged) { if (adding(e)) pick(n.id); else select({ type: "node", id: n.id }); justDragged = true; }
     setTimeout(() => { justDragged = false; }, 60);
   });
   svg.addEventListener("click", e => {
@@ -1489,9 +1576,9 @@
     // a tap on an arrow shows its card (there is no hover on a touch screen) and leaves the selection alone
     if (l && !n) { if (tipAt === l && lastPointer !== "mouse") hideTip(); else showTip(l, e); return; }
     hideTip();
-    if (n) select({ type: "node", id: n.id });
+    if (n) { if (adding(e)) pick(n.id); else select({ type: "node", id: n.id }); }
     else if (t) select({ type: "group", id: catKey(t.getAttribute("data-cat")) });
-    else if (state.sel) select(null);
+    else if (state.sel && !state.picking) select(null);
   });
 
   /* ---------- zoom: from the whole industry into the AI safety field, then closer ---------- */
@@ -1543,7 +1630,8 @@
     const wide = (goal ? fitW() / goal.w : zoom) <= 1.01;
     if (dir > 0) { if (!level) setLevel(1, LEVEL_MS); else if (wide && fieldF < 0.999) frameTo(1); else zoomBy(1.6); }
     else if (!wide) zoomBy(1 / 1.6);
-    else if (!level) camGo(camFit(), 260);   // the plate was carried off its place by a drag: put it back
+    else if (offFit()) camGo(camFit(), 260);   // the plate was carried off its place by a drag or a pinch: put it back
+    else if (!level) return;
     else if (level && fieldF > frameLo() + 0.001) frameTo(frameLo());
     else if (level) setLevel(0, LEVEL_MS);
   }
@@ -1577,11 +1665,11 @@
   function renderLevel() {
     if (levelPills) levelPills.innerHTML = [["Whole industry", base.length], ["AI safety field", all.length]].map((p, i) =>
       `<button type="button" data-v="${i}" aria-pressed="${i === level}">${p[0]}<span class="c">${p[1]}</span></button>`).join("");
-    // Both wordings are kept to three lines at full width and both are laid out, so the row is the same height at either level.
+    // Both wordings are laid out, so the row is the same height at either level.
     // The counts that used to sit in the zoomed-in wording are in the caption under the map.
     stack($("webLevelNote"), [
-      `The whole AI industry. Zooming in opens up the AI safety field: the ${NFIELD} organisations, programmes and resources on the AISafety.com map, and the money on public record between them.`,
-      `Zoomed into the AI safety field: ${NFIELD} entries from the AISafety.com map, in that map's own categories. Money arrows come from four public grant records and from what AI companies have announced. The rest of the industry map is in the band at the bottom.`
+      `The whole AI industry. Zoom in for the AI safety field: ${NFIELD} AISafety.com entries and the money between them.`,
+      `The AI safety field: ${NFIELD} AISafety.com entries, with money from four grant records and company announcements. The rest of the industry is in the band below.`
     ], level);
     setText("nFieldShared", NSHARED); setText("nFieldAll", NFIELD); setText("nFieldFlows", FLOWS.length); setText("nFieldCorp", CORP_TIES.length);
     const note = $("webFieldNote");
@@ -1605,6 +1693,10 @@
       n.lab.classList.toggle("away", !level);
     });
     base.forEach(n => { n.circle.setAttribute("fill", n.c.fill); n.el.style.color = n.c.color; });
+    if (state.sel && state.sel.type === "multi") {
+      const ids = state.sel.ids.filter(id => nodes.indexOf(byId.get(id)) >= 0);
+      state.sel = ids.length > 1 ? { type: "multi", ids } : ids.length ? { type: "node", id: ids[0] } : null;
+    }
     if (state.sel && ((state.sel.type === "node" && nodes.indexOf(byId.get(state.sel.id)) < 0) || (state.sel.type === "group" && CLUSTERS.indexOf(C.get(state.sel.id)) < 0))) { state.sel = null; search.value = ""; }
     state.hover = null;
     renderPills();
@@ -1677,17 +1769,11 @@
     const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY, factor = Math.exp(-dy * (pinch ? 0.012 : 0.0022));
     if (level && !pinch) return;
     if (!pinch && now - wheelOff < 350) { wheelOff = now; return; }
-    if (zoom <= 1.001 && dy >= 0) { if (pinch) e.preventDefault(); return; }
+    // a plain wheel stops at the whole plate and then scrolls the page; a pinch can draw the plate out further
+    if (dy >= 0 && zoom <= (pinch ? ZMIN : 1) + 0.001) { if (pinch) e.preventDefault(); return; }
     e.preventDefault();
     const p = toStage(e), r = svg.getBoundingClientRect();
-    const t = camTarget(zoom * factor, p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
-    cancelAnimationFrame(camFrame);
-    goal = null;
-    cam.x = t.x; cam.y = t.y; cam.w = t.w; cam.h = t.h; zoom = fitW() / cam.w;
-    applyCam();
-    hideTip();
-    clearTimeout(scaleSoon);
-    scaleSoon = setTimeout(drawScale, 140);
+    setCam(freeCam(Math.max(pinch ? ZMIN : 1, zoom * factor), p.x, p.y, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height));
   }, { passive: false });
   svg.addEventListener("dblclick", e => {
     if (boxing || nodeAt(e) || (e.target.closest && e.target.closest(".ctitle"))) return;
