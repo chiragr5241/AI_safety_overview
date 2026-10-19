@@ -29,6 +29,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 /* Section headings sit one level under the question, at the size the site gives an h3. */
 .fh { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
 .jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.xnav { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 28px; }
+.xnav a[aria-current] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 /* A person's name anywhere on the page: hover for a summary, select to go to their card. */
 a.pp { color: inherit; text-decoration: underline dotted var(--accent); text-underline-offset: 3px; cursor: pointer; }
 a.pp:hover, a.pp:focus-visible { color: var(--accent); }
@@ -156,8 +158,12 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 <main id="main" tabindex="-1">
   <div class="wrap">
+    <nav class="xnav" aria-label="Experiments">
+      <a class="chip" href="experiments.html" aria-current="page">01 · Who funds AI safety</a>
+      <a class="chip" href="experiments-cycles.html">02 · Cycles in Why Nations Fail</a>
+    </nav>
     <!-- ============ EXPERIMENT 01 ============ -->
-    <section class="chapter" id="funders" style="border-top:0;padding-top:40px">
+    <section class="chapter" id="funders" style="border-top:0;padding-top:28px">
       <div class="chapter-head">
         <span class="chapter-num">Experiment 01</span>
         <h1 class="q">Who is giving AI safety non-profits their money?</h1>
