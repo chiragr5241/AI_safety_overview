@@ -346,9 +346,10 @@ table.matrix { border-collapse: collapse; width: 100%; min-width: 760px; font-si
 .primer-tools { display: grid; gap: 12px; margin-bottom: 8px; }
 .primer-tools input[type="search"] { font: inherit; font-size: 1rem; width: 100%; max-width: 30rem; padding: 10px 14px; min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); }
 .primer-tools input[type="search"]:focus { border-color: var(--accent); outline: none; }
-.pgroup { padding-top: 30px; display: grid; gap: 14px; }
-.pgroup-head { display: grid; gap: 6px; max-width: 46rem; }
-.pgroup-head .step { font-family: var(--font-mono); font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+/* Each theme opens with a light rule and a heading a size up from the entry names. */
+.pgroup { margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line); display: grid; gap: 18px; }
+.pgroup-head { display: grid; gap: 8px; max-width: 46rem; }
+.pgroup-head h3 { font-size: clamp(2.05rem, 4vw, 2.55rem); letter-spacing: -0.025em; line-height: 1.05; }
 .pgroup-head p { font-size: .95rem; color: var(--muted); }
 .pcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
 @media (max-width: 760px) { .pcards { grid-template-columns: minmax(0, 1fr); } }

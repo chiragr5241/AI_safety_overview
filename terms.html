@@ -14,7 +14,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="risks.css?v=5">
+<link rel="stylesheet" href="risks.css?v=6">
 <link rel="stylesheet" href="explore.css?v=2">
 <link rel="stylesheet" href="visuals.css?v=2">
 <link rel="stylesheet" href="primer-visuals.css?v=16">
@@ -60,20 +60,11 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="primer-tools">
         <input type="search" id="primerSearch" aria-label="Search the primer" placeholder="Try &quot;shutdown&quot;, &quot;probe&quot; or &quot;test&quot;" autocomplete="off">
-        <div class="theme-chips" role="group" aria-label="Filter by theme" id="primerThemes">
-          <button type="button" data-v="all" aria-pressed="true">All 32</button>
-          <button type="button" data-v="goals" aria-pressed="false">How goals go wrong</button>
-          <button type="button" data-v="hidden" aria-pressed="false">Hidden behaviour</button>
-          <button type="button" data-v="agents" aria-pressed="false">Agents in the world</button>
-          <button type="button" data-v="tools" aria-pressed="false">Looking inside</button>
-          <button type="button" data-v="stakes" aria-pressed="false">High stakes and release</button>
-        </div>
         <p class="readout small" id="primerCount" aria-live="polite">Showing 32 of 32</p>
       </div>
 
       <div class="pgroup" id="theme-goals" data-group="goals">
         <div class="pgroup-head">
-          <span class="step">Theme 1 of 5 · start here</span>
           <h3>How AI goals go wrong</h3>
           <p>Why a trained AI might end up pursuing something other than what its developers intended, and why that might include resisting correction.</p>
         </div>
@@ -129,7 +120,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="pgroup" id="theme-hidden" data-group="hidden">
         <div class="pgroup-head">
-          <span class="step">Theme 2 of 5</span>
           <h3>When models hide what they're doing</h3>
           <p>If a model can tell when it's being tested or watched, good test results stop meaning much. Each entry here is a version of that problem.</p>
         </div>
@@ -179,7 +169,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="pgroup" id="theme-agents" data-group="agents">
         <div class="pgroup-head">
-          <span class="step">Theme 3 of 5</span>
           <h3>Agents acting in the world</h3>
           <p>Once an AI takes real actions with real permissions, new failures appear: it can be hijacked, do too much, refuse too much, or carry a planted flaw from training.</p>
         </div>
@@ -222,7 +211,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="pgroup" id="theme-tools" data-group="tools">
         <div class="pgroup-head">
-          <span class="step">Theme 4 of 5</span>
           <h3>Looking inside and steering</h3>
           <p>Theme 2 showed that outputs can mislead. These are ways researchers try to read or change what happens inside a model instead. The last four entries cover one company's argument that this is where alignment is bottlenecked.</p>
         </div>
@@ -304,7 +292,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="pgroup" id="theme-stakes" data-group="stakes">
         <div class="pgroup-head">
-          <span class="step">Theme 5 of 5</span>
           <h3>High stakes and release decisions</h3>
           <p>The most serious harms labs test for, and how they decide, and argue, that a model is safe enough to release.</p>
         </div>
@@ -337,7 +324,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
           </article>
         </div>
       </div>
-      <p class="primer-empty" id="primerEmpty" hidden>No entries match. Try a shorter word, or pick "All 32".</p>
+      <p class="primer-empty" id="primerEmpty" hidden>No entries match. Try a shorter word.</p>
 
       <div class="callout" style="margin-top:32px"><b>From one AI to many.</b> Almost every idea above was first studied with a single model and a single human. The main guide covers what changes when many AI agents, acting for different people, interact with each other. <a href="multi-agent-risks.html">Go to the multi-agent guide →</a></div>
     </section>
@@ -365,22 +352,20 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <script src="primer-em-trace.js?v=1"></script>
 <script src="primer-visuals.js?v=20"></script>
 <script>
-/* The primer's own controls: search, the theme filter, and opening an entry that a link points at.
+/* The primer's own controls: search, and opening an entry that a link points at.
    The bar, the theme switch and the active theme are site.js. */
 (function () {
   "use strict";
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
-  let theme = "all";
   function filter() {
     const q = $("#primerSearch").value.trim().toLowerCase();
     let shown = 0, total = 0;
     $$("#primer .pgroup").forEach(g => {
       let groupShown = 0;
-      const themeOk = theme === "all" || g.dataset.group === theme;
       $$(".pcard", g).forEach(c => {
         total++;
-        const ok = themeOk && (!q || c.textContent.toLowerCase().includes(q));
+        const ok = (!q || c.textContent.toLowerCase().includes(q));
         c.hidden = !ok;
         if (ok) { shown++; groupShown++; }
         const d = $("details", c);
@@ -392,15 +377,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     $("#primerEmpty").hidden = shown !== 0;
     window.dispatchEvent(new Event("scroll"));
   }
-  function setTheme(v) {
-    theme = v;
-    $$("#primerThemes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v ? "true" : "false"));
-    filter();
-  }
-  $("#primerThemes").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setTheme(b.dataset.v); });
   $("#primerSearch").addEventListener("input", filter);
-  const showAll = () => { $("#primerSearch").value = ""; setTheme("all"); };
-  // a link to a theme or an entry that the filter has put away brings everything back first
+  const showAll = () => { $("#primerSearch").value = ""; filter(); };
+  // a link to a theme or an entry that the search has put away brings everything back first
   function route() {
     const id = location.hash.slice(1), el = id ? document.getElementById(id) : null;
     if (!el || id === "primer") return;
