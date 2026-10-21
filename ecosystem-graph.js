@@ -1654,12 +1654,6 @@
   function renderLevel() {
     if (levelPills) levelPills.innerHTML = [["Whole industry", base.length], ["AI safety field", all.length]].map((p, i) =>
       `<button type="button" data-v="${i}" aria-pressed="${i === level}">${p[0]}<span class="c">${p[1]}</span></button>`).join("");
-    // Only the zoomed-in view carries a note; the whole industry needs none.
-    const levelNote = $("webLevelNote");
-    if (levelNote) {
-      levelNote.textContent = level ? `The AI safety field: ${NFIELD} AISafety.com entries, with money from four grant records and company announcements. The rest of the industry is in the band below.` : "";
-      levelNote.hidden = !level;
-    }
     setText("nFieldShared", NSHARED); setText("nFieldAll", NFIELD); setText("nFieldFlows", FLOWS.length); setText("nFieldCorp", CORP_TIES.length);
     const note = $("webFieldNote");
     if (note) note.hidden = !level;

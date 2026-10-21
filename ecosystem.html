@@ -96,10 +96,9 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
   .web-side .web-actions { order: 3; }
   .web-side .web-lens { order: 4; }
   .web-side .web-sizer { order: 5; }
-  .web-side .web-levelnote { order: 6; border-top: 1px solid var(--w-line); padding-top: 12px; }
   .web-side .web-blurb { order: 7; }
   .web-side .web-tools { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 6px; }
-  .web-side .web-tools .pills, .web-side .web-levelnote, .web-side .web-blurb, .web-side .web-sizemore { flex: none; max-width: none; }
+  .web-side .web-tools .pills, .web-side .web-blurb, .web-side .web-sizemore { flex: none; max-width: none; }
   .web-side .web-sizer { border-top: 1px solid var(--w-line); padding-top: 12px; }
   /* two choices to a row, each as wide as the other, with a long label free to take a second line */
   .web-side .pills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
@@ -109,7 +108,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
   .web-side .web-sizekey .shrunk { flex: 1 1 100%; white-space: normal; }
   .web-side .web-sizemore { margin-top: 0; }
   .web-side .web-sizelist { grid-template-columns: minmax(0, 1fr); }
-  .web-side .web-levelnote, .web-side .web-blurb { min-height: 0; font-size: .82rem; line-height: 1.45; }
+  .web-side .web-blurb { min-height: 0; font-size: .82rem; line-height: 1.45; }
   .web-side .web-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-items: stretch; }
   .web-side .web-actions .web-find { grid-column: 1 / -1; }
   .web-side .web-find input { width: 100%; }
@@ -259,13 +258,11 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .web figcaption { font-size: .82rem; color: var(--w-muted); border-top: 1px dashed var(--w-line); padding-top: 12px; max-width: 70em; }
 /* two zoom levels: the whole industry, and the AI safety field opened up inside it */
 .web-level .pills { flex: 0 1 auto; }
-.web-levelnote { flex: 1 1 22rem; margin: 0; font-size: .86rem; line-height: 1.45; color: var(--w-muted); max-width: 54em; }
 /* The wording for both zoom levels is always laid out, one over the other, and only the current one is shown. The row is then as tall
    as the longer of the two at any width, and nothing under it moves when the level changes. The blurb beside the search does the same. */
-.web-levelnote, .web-blurb { display: grid; }
-.web-levelnote[hidden] { display: none; }
-.web-levelnote > span, .web-blurb > span { grid-area: 1 / 1; }
-.web-levelnote > span[aria-hidden="true"], .web-blurb > span[aria-hidden="true"] { visibility: hidden; }
+.web-blurb { display: grid; }
+.web-blurb > span { grid-area: 1 / 1; }
+.web-blurb > span[aria-hidden="true"] { visibility: hidden; }
 .web-stage { position: relative; min-width: 0; }
 /* The zoom buttons have a strip of their own above the plate, so they never sit on top of a group name or a bubble. The strip stays
    in view while a tall plate scrolls, and it is opaque, so the map passes under it as it does under the bar at the top of the page. */
@@ -597,7 +594,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
           <div class="web-tools web-level">
             <span class="web-eyebrow" id="webLevelLabel">Zoom</span>
             <div class="pills needs-data" role="group" aria-labelledby="webLevelLabel" id="webLevel"></div>
-            <p class="web-levelnote" id="webLevelNote"></p>
           </div>
           <div class="web-tools web-lens">
             <label class="web-eyebrow" id="webLensLabel" for="webLens">Show one kind of tie</label>
@@ -635,7 +631,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">123</b> actors · <b id="nTies">159</b> ties · <b id="nSources">157</b> sources · <b id="nExtTies">20</b> control-evidence ties · <b id="nExtPeople">14</b> people, as dotted links · evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in, entries and categories are from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> of its <b id="nFieldAll">373</b> are also on the industry map. Money arrows: <b id="nFieldFlows">239</b> from four grant records, <b id="nFieldCorp">22</b> from company announcements, mostly commitments. Records are never added together.</span></figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">123</b> actors · <b id="nTies">159</b> ties · <b id="nSources">157</b> sources · <b id="nExtTies">20</b> control-evidence ties · <b id="nExtPeople">14</b> people, as dotted links · evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in: <b id="nFieldAll">373</b> entries from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA) · <b id="nFieldShared">32</b> also on the industry map · <b id="nFieldFlows">239</b> grant arrows · <b id="nFieldCorp">22</b> company-announcement arrows.</span></figcaption>
     </figure>
 
     <div class="readrow">
@@ -1915,7 +1911,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=11"></script>
+<script src="ecosystem-graph.js?v=12"></script>
 <script src="field-list.js"></script>
 <script src="explore.js?v=5"></script>
 <script src="terms.js?v=2"></script>
