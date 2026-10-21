@@ -638,7 +638,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">123</b> actors · <b id="nTies">159</b> ties · <b id="nSources">157</b> sources · <b id="nExtTies">20</b> control-evidence ties · <b id="nExtPeople">14</b> people, as dotted links · evidence to 4 Oct 2026.</span> <span id="webSizeNote">Size: market value, or a private company's latest valuation; ×10 a step. A dashed ring means none found.</span> Position is a layout choice. Arrow width compares unlike kinds of money; a faint money sign means no amount disclosed. No arrows means no tie recorded, not none.<span id="webFieldNote" hidden> Zoomed in, entries and categories are from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> of its <b id="nFieldAll">373</b> are also on the industry map. Money arrows: <b id="nFieldFlows">239</b> from four grant records, <b id="nFieldCorp">22</b> from company announcements, mostly commitments. Records are never added together.</span></figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">123</b> actors · <b id="nTies">159</b> ties · <b id="nSources">157</b> sources · <b id="nExtTies">20</b> control-evidence ties · <b id="nExtPeople">14</b> people, as dotted links · evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in, entries and categories are from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> of its <b id="nFieldAll">373</b> are also on the industry map. Money arrows: <b id="nFieldFlows">239</b> from four grant records, <b id="nFieldCorp">22</b> from company announcements, mostly commitments. Records are never added together.</span></figcaption>
     </figure>
 
     <div class="readrow">
@@ -661,7 +661,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <span class="chapter-num">Control and incentives</span>
         <h2>Who decides, and what do they stand to gain?</h2>
         <p style="max-width:var(--measure)">The map above shows who is tied to whom but not who holds the right to decide. This section follows five decisions that shape AI safety and asks, for each one, who holds the right, who can block it, and what interests are on record.</p>
-        <p class="small" style="max-width:var(--measure)">It rests on <span id="ctlRows">124</span> rows of added evidence with a cutoff of 4 October 2026, retrieved on 5 October 2026. It is a verified extension with stated gaps, not a census. High confidence means a primary source supports the claim as stated, including where the claim is only an organisation's own policy. It does not certify that the policy is followed. A blank means not established, never zero. No funding or employment tie is treated as control unless a document grants a right.</p>
       </div>
 
       <ol class="dp-short">
@@ -1199,7 +1198,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <span class="chapter-num">PART 3 · THE 123 PROFILES</span>
         <h2>The actors</h2>
         <p style="max-width:var(--measure)">Every actor and group in the map. Each card gives a one-line reading of the actor's stake. Open "Full profile" for its stated mission, formal governance, key figures, recorded ties and sources.</p>
-        <p class="small" style="max-width:var(--measure)">Two labels matter. <strong>Stake</strong> is this map's own synthesis. The mission and governance fields are taken from sources. An unknown budget is not evidence that an actor does no safety work. <span id="isolatedNote"></span></p>
       </div>
       <div class="tools">
         <label for="actorSearch">Search the actors
@@ -1231,7 +1229,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         <span class="chapter-num">PART 4 · THE 136 RELATIONSHIPS</span>
         <h2>The ties between them</h2>
         <p style="max-width:var(--measure)">Each row is one documented relationship, read from left to right. An arrow shows the stated relationship. It is not a general score of influence. Amounts are not additive, and a missing date does not mean the tie began at the evidence cutoff.</p>
-        <p class="small" style="max-width:var(--measure)">Ties that describe a general dependency or the scope of a regulation rest on weaker evidence than signed or disclosed transactions. They are marked "Medium confidence".</p>
       </div>
 
       <div class="sub" style="padding-top:0">
@@ -1390,8 +1387,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <div class="chapter-head">
         <span class="chapter-num">ZOOMED IN · THE AI SAFETY FIELD</span>
         <h2>The AI safety field, entry by entry</h2>
-        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a>. This section holds the same entries as a list, with the money that AI companies have announced and the grants that four public records show reaching each one.</p>
-        <p class="small" style="max-width:var(--measure)">The names, categories and descriptions are AISafety.com's own, read on 5 October 2026 and reused under its CC BY-SA licence, so that part of this page is offered under the same licence. The money figures are not from that map. They come from the four grant records below.</p>
+        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (CC BY-SA). This section holds the same entries as a list, with the money that AI companies have announced and the grants that four public records show reaching each one.</p>
       </div>
 
       <div class="sub" id="field-company">
@@ -1750,10 +1746,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   window.ECO_UI = { FAMILIES, famOf, typeLabel, fmtDate, fmtAmount, esc, tidy };  // shared with ecosystem-graph.js
 
   /* ---------- 3. actors ---------- */
-  const degree = new Map();
-  D.edges.forEach(e => { degree.set(e.from, (degree.get(e.from) || 0) + 1); degree.set(e.to, (degree.get(e.to) || 0) + 1); });
-  const isolated = D.nodes.filter(n => !degree.get(n.id)).length;
-  $("#isolatedNote").textContent = `${isolated} of the ${D.nodes.length} actors have no recorded tie in this version. That means none was extracted, not that none exists.`;
 
   function tieLine(e, outgoing) {
     const other = actorLink(outgoing ? e.to : e.from);
@@ -1926,7 +1918,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=8"></script>
+<script src="ecosystem-graph.js?v=9"></script>
 <script src="field-list.js"></script>
 <script src="explore.js?v=5"></script>
 <script src="terms.js?v=2"></script>

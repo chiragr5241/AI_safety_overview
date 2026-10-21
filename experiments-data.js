@@ -12,11 +12,11 @@ window.EXPERIMENTS = {
       url: "https://manifund.org/ais-funder-bulletin",
       updated: "2026-10-01",
       rows: [
-        { name: "Coefficient Giving", y2025: 409, y2026: 1000 },
+        { name: "Coefficient Giving", by: "Dustin Moskovitz and Cari Tuna", y2025: 409, y2026: 1000 },
         { name: "Longview Philanthropy", y2025: 60, y2026: 200 },
         { name: "OpenAI Foundation", y2025: 0, y2026: 250 },
         { name: "Macroscopic", y2025: 30, y2026: 100 },
-        { name: "Survival and Flourishing Fund", y2025: 35, y2026: 65 },
+        { name: "Survival and Flourishing Fund", by: "Jaan Tallinn", y2025: 35, y2026: 65 },
         { name: "AI Safety Tactical Opportunities Fund", y2025: 15, y2026: 40 },
         { name: "Lightcone Commons", y2025: 0, y2026: 35 },
         { name: "Schmidt Sciences", y2025: 10, y2026: 20 },

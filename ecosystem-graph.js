@@ -292,26 +292,22 @@
       keyText: "what the organisation is worth on paper: stock-market value for a listed company, the latest round's valuation for a private one; each step up in size is ten times more",
       of: moneyOf(S.worth),
       r: v => Math.max(6, 12.5 + 9 * (Math.log10(v) - 10)) * lift(v), ticks: [[1e10, "10bn"], [1e11, "100bn"], [1e12, "1tn USD"]],
-      note: k => `Size: market value, or a private company's latest valuation; ×10 a step. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "Stock-market value for listed companies, read on 5 and 6 October 2026 from a public tracker, and the valuations of private companies already recorded in this page's financial observations, with Mistral's added from press reports of its September 2026 round and Goodfire's from the announcement of its February 2026 round. Two entries are not valuations of the actor itself and say so: the OpenAI Foundation's figure is the implied value of its stake in OpenAI, and Temasek's is the value of what it holds. A company's worth covers its whole business, not its AI or safety work." },
     { id: "people", pill: "Organisation size", key: "size = people employed", unit: "people", log: true,
       keyText: "people employed, where a figure is published; each step up in size is ten times more",
       of: n => { const p = S.people[n.id]; return p ? { v: p.v, num: big(p.v), text: p.text, when: p.when, basis: p.basis, est: !!p.est, note: p.note || "", url: p.url } : null; },
       r: v => Math.max(6, 7 + 6 * (Math.log10(v) - 1)), ticks: [[10, "10"], [1000, "1,000"], [100000, "100,000 people"]],
-      note: k => `Size: people employed; ×10 a step. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "Employees or staff, from a company filing or annual report where there is one, from a US nonprofit's tax filing, from the organisation's own team page for small research groups, and from a press report or an outside tracker for private companies that publish nothing. Each line says which. Groups of many organisations, and bodies such as a committee or a legislature, have no single headcount and are left as not stated." },
     { id: "money", pill: "Money (revenue or budget)", key: "size = yearly revenue or budget", unit: "a year", log: true,
       keyText: "money through the organisation in a year: revenue for a company, budget or funding for others; each step up in size is ten times more",
       of: moneyOf(S.money),
       r: v => Math.max(6, 6 + 5.4 * (Math.log10(v) - 6)) * lift(v), ticks: [[1e6, "1m"], [1e9, "1bn"], [1e11, "100bn USD a year"]],
-      note: k => `Size: money through each actor in a year (revenue, budget or funding given); ×10 a step. Unlike kinds of money, never added. ${k} of ${nodes.length} have a figure; a dashed ring means none found.`,
       about: "One figure per actor. Microsoft's figure of about USD 332bn, for example, is its revenue for fiscal 2026, not its value on the stock market. Figures already in this page's financial observations are reused as stated. The rest come from company filings, tax filings, budget documents, funders' grant lists and press reports collected on 5, 6 and 13 October 2026. Where the only figure found covers several years, the total is shown as stated and the bubble is placed at one year's share of it. A figure in another currency is shown as stated and placed on the scale at a rough exchange rate. Company revenue covers the whole business, not its AI or safety work." },
     { id: "influence", pill: "Influence", key: "size = names on TIME100 AI 2026", unit: "people named", log: false,
       keyText: `people named on TIME's TIME100 AI 2026 list. Influence has no agreed measure, so this borrows one published judgement`,
       of: n => { const m = T100.matches[n.id] || []; return { v: m.length, num: String(m.length), text: m.length ? `${m.length} ${m.length === 1 ? "person" : "people"} on the list: ${m.join("; ")}` : "No one on the list", when: `published ${t100Date}`, basis: T100.title, est: false,
         note: T100.groupActors.indexOf(n.id) >= 0 ? "This bubble is a group of organisations. Matching the name to it is this map's reading, not TIME's." : "", url: T100.url }; },
       r: v => v ? 5 + 12 * Math.sqrt(v) : 4, ticks: [[1, "1"], [3, "3 people named"]],
-      note: k => `Size: people on the TIME100 AI 2026 list (${t100Date}) whose title names the actor. One magazine's judgement, not a ranking. ${k} of ${T100.people} names fall on actors here.`,
       about: `TIME's editors and reporters choose 100 people each year as the most influential in AI. The 2026 list was published on ${t100Date}. A person counts towards a bubble only where the title TIME prints names that organisation, or an office inside one of the map's group actors. Most of the 100 work at organisations that are not on this map, and several large actors here have no one on the 2026 list.` },
     { id: "ties", pill: "Documented ties", key: "size = ties", unit: "ties", log: false,
       keyText: "number of documented ties",
@@ -340,7 +336,6 @@
           note: rest.length ? `Other sources list money for it: ${rest.map(x => x.short).join(", ")}. They are not added together` : "", url: c[0].url };
       },
       r: v => Math.max(4.5, 4.5 + 4.3 * (Math.log10(v) - 3)), ticks: [[1e4, "10k"], [1e6, "1m"], [1e8, "100m USD"]],
-      note: k => `Size: the largest total for the organisation in any one of four grant records or a company announcement; ×10 a step. Records are never added. ${k} of ${nodes.length} have a figure; a dashed ring means no grant in these records, not no funding.`,
       about: "For each organisation, the map takes one funder's record at a time and adds up the rows in that record that name the organisation, over all the years the record covers. The bubble shows the largest of those totals. A recipient is matched by its name or by the web address the record links to. A grant to a university counts for a lab there only where the record names the lab. Grants to individuals are left out, because people are not bubbles on this map." },
     { id: "gout", field: true, pill: "Grants given", key: "size = grants given", unit: "", log: true,
       keyText: "what a funder's own public record lists for organisations on this map; each step up in size is ten times more",
@@ -359,7 +354,6 @@
           note: cs.length > 1 ? `Other announcements on this map: ${cs.slice(1).map(x => `USD ${big(x.amount)} to ${byId.get(x.to).short}`).join(", ")}. They are not added together` : "", url: t.corp.src.url };
       },
       r: v => Math.max(6, 9 + 7 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e7, "10m"], [1e9, "1bn USD"]],
-      note: k => `Size: what a funder gives to bubbles here, from its grant record or its largest company announcement. ${k} have a figure; a dashed ring means none was read.`,
       about: "Five funders publish a record that this map reads row by row: Coefficient Giving (its AI fund only), the Survival and Flourishing Fund, the Long-Term Future Fund, the EA Infrastructure Fund and Manifund. Longview, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, government programmes and the AI companies' own grant schemes are on the map but publish no list that was read for this version." }
   ];
   const measureById = new Map(MEASURES.map(m => [m.id, m]));
@@ -1054,10 +1048,10 @@
       const got = new Set(FLOWS.map(f => f.to)), gives = new Set(FLOWS.map(f => f.from)), R = F.records;
       const cgN = FLOWS.filter(f => f.src === "cg").length, chained = FLOWS.filter(f => gives.has(f.to)).length;
       panel.innerHTML = `<div class="wp-notes">
-          <div><h2>Four public records, one dominant funder</h2><p>${FLOWS.length} arrows join a funder to an organisation on this plate. ${cgN} of them come from Coefficient Giving's AI fund list, which holds ${R.cg.rows} grants worth USD ${big(R.cg.listed)}. USD ${big(R.cg.matchedTotal)} of that goes to organisations shown here.</p><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
-          <div><h2>Most bubbles show no grant</h2><p>${all.length - got.size} of the ${all.length} bubbles receive nothing in these records. That is a limit of the records and not a finding: company revenue, government budgets and most private gifts are in none of them.</p><button type="button" class="web-act" data-lens="grants">Show only the grants</button></div>
-          <div><h2>Funders fund funders</h2><p>${chained} arrows end at an organisation that itself gives grants, so the same money can appear on two arrows. This is why totals from different records are never added together.</p><button type="button" class="web-act" data-group="f-funding">Show the funders</button></div>
-          <div><h2>Company money is small on the public record</h2><p>${CORP_TIES.length} arrows carry money that an AI company or its foundation has announced for work outside the company. The largest are commitments to the companies' own programmes, and several are not safety research. What a company spends on its own safety teams is not published.</p><button type="button" class="web-act" data-lens="corp">Show company money</button></div>
+          <div><h2>Four public records, one dominant funder</h2><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
+          <div><h2>Most bubbles show no grant</h2><button type="button" class="web-act" data-lens="grants">Show only the grants</button></div>
+          <div><h2>Funders fund funders</h2><button type="button" class="web-act" data-group="f-funding">Show the funders</button></div>
+          <div><h2>Company money is small on the public record</h2><button type="button" class="web-act" data-lens="corp">Show company money</button></div>
         </div>`;
     } else {
           panel.innerHTML = `<div class="wp-notes">
@@ -1065,7 +1059,7 @@
           <div><h2>Safety research has few paymasters</h2><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
           <div><h2>Evaluators depend on the labs they test</h2><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
           <div><h2>A few people sit in more than one place</h2><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
-          ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${NFIELD} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them and ${CORP_TIES.length} for money the AI companies have announced.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
+          ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
         </div>`;
     }
     // zoomed in, the panel for a chosen bubble stays at the foot of the window, so it carries its own way out
@@ -1150,11 +1144,9 @@
       + (k < real * 0.97 ? `<li class="shrunk">key ${+(real / k).toFixed(1)}× smaller than map</li>` : "");
   }
   function renderSize() {
-    const known = nodes.filter(n => !n.unk), k = measure.id === "influence" ? known.reduce((a, n) => a + n.val.v, 0) : known.length;
     Array.from(sizePills.querySelectorAll("button")).forEach(b => b.setAttribute("aria-pressed", b.dataset.v === measure.id ? "true" : "false"));
     setText("webSizeKey", measure.key);
     setText("webSizeKeyFull", measure.keyText);
-    setText("webSizeNote", measure.note(k));
     drawScale();
   }
   function setSize(id, ms) {

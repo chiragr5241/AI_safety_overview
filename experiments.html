@@ -317,7 +317,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 <script src="explore.js?v=5"></script>
 <script src="field-data.js?v=4"></script>
 <script src="experiments-grants.js?v=2"></script>
-<script src="experiments-data.js"></script>
+<script src="experiments-data.js?v=2"></script>
 <script>
 (function () {
   "use strict";
@@ -423,7 +423,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
   /* ---------- headline figures ---------- */
   [
-    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records is from Coefficient Giving.`],
+    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records is from Coefficient Giving, funded mainly by Dustin Moskovitz and Cari Tuna.`],
     [oneSource + " of " + orgs.length, "recipients have 90% or more of their recorded grants from one funder."],
     [pct(SFF[0].total / NET.sff.counted), "of the money in the SFF record carries Jaan Tallinn's name alone."]
   ].forEach(([n, t]) => { const d = el("div", "tile"); d.innerHTML = `<b>${n}</b><span>${names(t)}</span>`; $("#tiles").appendChild(d); });
@@ -431,10 +431,11 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   /* ---------- figure 1: the five records ---------- */
   $("#recordsNote").textContent = "Every row of each record, 2015 to 2026, each dollar counted once. The three small records are mostly grants to individuals.";
   const RECORD_NAME = { cg: "Coefficient Giving", sff: "Survival and Flourishing Fund", ltff: "Long-Term Future Fund", eaif: "EA Infrastructure Fund", manifund: "Manifund" };
+  const RECORD_BY = { cg: "Dustin Moskovitz and Cari Tuna", sff: "Jaan Tallinn" };   // whose money each record mainly is
   const recMax = Math.max(...Object.values(NET).map(r => r.counted));
   Object.entries(NET).sort((a, b) => b[1].counted - a[1].counted).forEach(([key, r]) => {
     const row = el("div", "bar-row");
-    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${esc(F.records[key].kind)}</small></span>
+    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${esc(F.records[key].kind)}${RECORD_BY[key] ? " · mainly " + names(RECORD_BY[key]) : ""}</small></span>
       <span class="track"><span class="stack"><span class="seg ${key === "cg" ? "k1" : key === "sff" ? "k2" : "k3"}" style="width:${(100 * r.counted / recMax).toFixed(2)}%"></span></span></span>
       <span class="val">${money(r.counted)}<small>${F.records[key].rows} rows</small></span>`;
     bindTip(row.querySelector(".seg"), `<b>${RECORD_NAME[key]}</b><br>${money(r.counted)}`);
@@ -529,7 +530,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   const m = v => v >= 1000 ? "$" + (v / 1000) + "bn" : v ? "$" + v + "m" : "$0";
   X.bulletin.rows.forEach(r => {
     const row = el("div", "bar-row");
-    row.innerHTML = `<span class="nm">${esc(r.name)}</span>
+    row.innerHTML = `<span class="nm">${esc(r.name)}${r.by ? `<small>mainly ${names(r.by)}</small>` : ""}</span>
       <span class="track">
         <span class="stack"><span class="seg k1" style="width:${(100 * r.y2025 / bMax).toFixed(2)}%;${r.y2025 ? "" : "visibility:hidden"}"></span></span>
         <span class="stack"><span class="seg plan" style="width:${(100 * r.y2026 / bMax).toFixed(2)}%"></span></span>
