@@ -929,7 +929,7 @@
   // what the line beside the search says while nothing narrows the map, for the whole industry and for the field
   const BLURBS = [
     "Shift-click to pick several. Scroll over the map to zoom, and drag to move it.",
-    "Pick a bubble, a group name or a funder to follow the money. Shift-click to pick several. Scrolling past the foot of the map draws it in until the whole field fits in the window, and + or a pinch brings the small names up to reading size. Search finds any entry."
+    "Shift-click to pick several. Pinch or press + to zoom, and drag to move it."
   ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
   const liveEdges = () => LIVE[level];
