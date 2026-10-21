@@ -263,6 +263,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 /* The wording for both zoom levels is always laid out, one over the other, and only the current one is shown. The row is then as tall
    as the longer of the two at any width, and nothing under it moves when the level changes. The blurb beside the search does the same. */
 .web-levelnote, .web-blurb { display: grid; }
+.web-levelnote[hidden] { display: none; }
 .web-levelnote > span, .web-blurb > span { grid-area: 1 / 1; }
 .web-levelnote > span[aria-hidden="true"], .web-blurb > span[aria-hidden="true"] { visibility: hidden; }
 .web-stage { position: relative; min-width: 0; }
@@ -1914,7 +1915,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=9"></script>
+<script src="ecosystem-graph.js?v=10"></script>
 <script src="field-list.js"></script>
 <script src="explore.js?v=5"></script>
 <script src="terms.js?v=2"></script>

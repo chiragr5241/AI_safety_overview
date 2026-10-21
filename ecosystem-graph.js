@@ -928,7 +928,7 @@
   const panel = $("webPanel"), blurb = $("webBlurb"), lens = $("webLens"), search = $("webSearch"), options = $("webOptions"), fig = svg.closest(".web");
   // what the line beside the search says while nothing narrows the map, for the whole industry and for the field
   const BLURBS = [
-    "Pick a bubble or a group name, or search for an actor, a group or a person, to follow the ties. Shift-click to pick several. Pick a kind of tie to see only those arrows. Scroll over the map to zoom, and drag to move it.",
+    "Shift-click to pick several. Scroll over the map to zoom, and drag to move it.",
     "Pick a bubble, a group name or a funder to follow the money. Shift-click to pick several. Scrolling past the foot of the map draws it in until the whole field fits in the window, and + or a pinch brings the small names up to reading size. Search finds any entry."
   ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
@@ -1654,12 +1654,12 @@
   function renderLevel() {
     if (levelPills) levelPills.innerHTML = [["Whole industry", base.length], ["AI safety field", all.length]].map((p, i) =>
       `<button type="button" data-v="${i}" aria-pressed="${i === level}">${p[0]}<span class="c">${p[1]}</span></button>`).join("");
-    // Both wordings are laid out, so the row is the same height at either level.
-    // The counts that used to sit in the zoomed-in wording are in the caption under the map.
-    stack($("webLevelNote"), [
-      `The whole AI industry. Zoom in for the AI safety field: ${NFIELD} AISafety.com entries and the money between them.`,
-      `The AI safety field: ${NFIELD} AISafety.com entries, with money from four grant records and company announcements. The rest of the industry is in the band below.`
-    ], level);
+    // Only the zoomed-in view carries a note; the whole industry needs none.
+    const levelNote = $("webLevelNote");
+    if (levelNote) {
+      levelNote.textContent = level ? `The AI safety field: ${NFIELD} AISafety.com entries, with money from four grant records and company announcements. The rest of the industry is in the band below.` : "";
+      levelNote.hidden = !level;
+    }
     setText("nFieldShared", NSHARED); setText("nFieldAll", NFIELD); setText("nFieldFlows", FLOWS.length); setText("nFieldCorp", CORP_TIES.length);
     const note = $("webFieldNote");
     if (note) note.hidden = !level;
