@@ -939,7 +939,7 @@
   ];
   const LIVE = [ORG_EDGES, ORG_EDGES.concat(FIELD_TIES)];
   const liveEdges = () => LIVE[level];
-  const count = fn => liveEdges().filter(fn).length, baseCount = fn => D.edges.filter(fn).length;
+  const count = fn => liveEdges().filter(fn).length;
   // Every row of one funder's record for one recipient, behind a fold. A large funder has hundreds of rows across its arrows,
   // so the rows are written only when a fold is first opened.
   function grantList(f) {
@@ -1060,14 +1060,11 @@
           <div><h2>Company money is small on the public record</h2><p>${CORP_TIES.length} arrows carry money that an AI company or its foundation has announced for work outside the company. The largest are commitments to the companies' own programmes, and several are not safety research. What a company spends on its own safety teams is not published.</p><button type="button" class="web-act" data-lens="corp">Show company money</button></div>
         </div>`;
     } else {
-      const labs = t => catOf(t.from) === 3 || catOf(t.to) === 3;
-      const two = t => t.from === "openai" || t.to === "openai" || t.from === "anthropic" || t.to === "anthropic";
-      const grants = t => catOf(t.from) === 5 && catOf(t.to) === 6;
           panel.innerHTML = `<div class="wp-notes">
-          <div><h2>The labs sit at the centre of the ties</h2><p>${baseCount(labs)} of the ${D.edges.length} ties in the base map touch a frontier developer, and ${baseCount(two)} touch OpenAI or Anthropic. Those two also disclose the most, so part of this is documentation.</p><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
-          <div><h2>Safety research has few paymasters</h2><p>${baseCount(grants)} base ties run from a safety funder to a research organisation. In one published list, a single funder accounts for about 72% of the 2025 estimates.</p><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
-          <div><h2>Evaluators depend on the labs they test</h2><p>${count(t => famOf(t) === "access")} dashed arrows show model access, compute credits and commissioned work flowing from labs to evaluators and training programmes. No executed agreement was obtained.</p><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
-          <div><h2>A few people sit in more than one place</h2><p>${PEOPLE.length} named people hold roles or disclosed interests in more than one organisation. They are drawn as ${nInter} dotted links between those organisations and can be found in the map's search box.</p><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
+          <div><h2>The labs sit at the centre of the ties</h2><button type="button" class="web-act" data-group="3">Show the labs' ties</button></div>
+          <div><h2>Safety research has few paymasters</h2><button type="button" class="web-act" data-lens="grants">Show grants and philanthropy</button></div>
+          <div><h2>Evaluators depend on the labs they test</h2><button type="button" class="web-act" data-lens="access">Show access and contracts</button></div>
+          <div><h2>A few people sit in more than one place</h2><button type="button" class="web-act" data-lens="people">Show the people links</button></div>
           ${F ? `<div class="wp-wide"><h2>The AI safety field has its own map inside this one</h2><p>Zoom in and the ${NFIELD} organisations, programmes and resources on the AISafety.com field map take the plate, with ${FLOWS.length} arrows for the money that four public grant records show passing between them and ${CORP_TIES.length} for money the AI companies have announced.</p><button type="button" class="web-act" data-level="1">Zoom into the AI safety field</button></div>` : ""}
         </div>`;
     }

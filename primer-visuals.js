@@ -343,7 +343,6 @@
       : "";
     return `<div class="pv-frame pv-paper">${frameHtml(m)}</div>` +
       '<figcaption class="pv-cap">' +
-      `<span class="pv-tag">${esc(m.tag)}</span>` +
       `<span class="pv-line">${esc(m.caption)}</span>` +
       (m.note ? `<span class="pv-note">${esc(m.note)}</span>` : "") + src +
       "</figcaption>";
