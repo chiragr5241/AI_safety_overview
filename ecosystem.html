@@ -1258,14 +1258,30 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <section class="chapter" id="money">
       <div class="chapter-head">
         <span class="chapter-num">PART 5 · THE FINANCIAL LEDGER</span>
-        <h2>Money: what the numbers can and cannot say</h2>
-        <p style="max-width:var(--measure)">The headline numbers in this field are very large and very uneven. They also measure different things, so most of them cannot be added or divided into one another.</p>
+        <h2>Money</h2>
+        <p style="max-width:var(--measure)">What kind of money it is, whose wealth it came from, and who decides where it goes.</p>
       </div>
 
-      <div class="rule3">
-        <div><h3>Money coming in</h3><p>Cash or commitments entering a firm in a financing round. A commitment may be conditional and may not yet have been paid.</p></div>
-        <div><h3>What the firm is priced at</h3><p>A valuation implied by the price of its shares. It is a stock, not a flow. It is not money anyone can spend.</p></div>
-        <div><h3>Money going out</h3><p>Continuing purchases, such as compute. The same dollar can show up in an investor's commitment, a lab's announcement and a cloud bill.</p></div>
+      <div class="sub" id="money-kinds">
+        <h3>Four kinds of money</h3>
+        <p class="prose">Equity is investment, whoever pays. Otherwise the kind follows who controls the money when it moves.</p>
+        <div class="tbl-box" tabindex="0" role="region" aria-label="Four kinds of money">
+          <table class="tbl">
+            <thead><tr><th>Kind</th><th>What it is</th><th>Who pays</th><th>Ties recorded</th></tr></thead>
+            <tbody class="needs-data" id="moneyKinds"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub" id="money-who">
+        <h3>Whose money, who decides</h3>
+        <p class="prose">The source of a fortune is not the hand that allocates it.</p>
+        <div class="tbl-box" tabindex="0" role="region" aria-label="Whose money, who decides">
+          <table class="tbl wide">
+            <thead><tr><th>Funder</th><th>Whose money</th><th>Who decides</th><th>Sources</th></tr></thead>
+            <tbody class="needs-data" id="moneyWho"></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="sub" id="concentration">
@@ -1274,13 +1290,9 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
           <div class="panel-head"><span class="eyebrow">Chart · Manifund's 2025 list</span><span class="small mono">estimates for safety funders, USD million</span></div>
           <p class="headline">One funder accounts for 72.24% of this list. The top two account for 82.83%.</p>
           <div class="bars needs-data" id="concBars"></div>
-          <p class="panel-note">These are shares of one selected list, reproduced from Manifund's compilation updated on 1 October 2026. They were not independently audited. The list mixes advisory and regranting roles and uses estimates with different boundaries. A zero is the compilation's estimate, not proof of no activity. Lightcone Commons appears in the list but has no full profile in this map.</p>
+          <p class="panel-note">Manifund's compilation, 1 October 2026; unaudited, mixed boundaries. Coefficient Giving's own figure for a narrower scope is $351m.</p>
         </div>
-        <div class="prose">
-          <p>The sum is simple: 409 divided by 566.2 is 72.24%. No valid global figure exists, because that would need consistent coverage of government, academic, industry, regranted and international funding.</p>
-          <p>The compilation gives $409m for Coefficient Giving. The funder's own report gives $351m for a narrower set of activities. The difference is a difference of scope and is not treated as an accounting error.</p>
-          <p class="srcline" data-sources="bulletin cg"></p>
-        </div>
+        <p class="srcline" data-sources="bulletin cg"></p>
       </div>
 
       <div class="sub">
@@ -1292,13 +1304,13 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
             <div class="bar-row"><span class="bar-label">2025</span><div class="bar-track"><div class="bar-fill" style="width:35.1%"></div></div><span class="bar-val">351</span></div>
             <div class="bar-row"><span class="bar-label">2026, expected (forecast made 9 September 2026)</span><div class="bar-track"><div class="bar-fill forecast" style="width:100%"></div></div><span class="bar-val">over 1,000</span></div>
           </div>
-          <p class="panel-note">Funder's own report. The scope is technical safety, security and field building. Figures are recommended or committed grants, not money paid out. The 2026 figure is a forecast of a lower bound, drawn as a dashed bar.</p>
+          <p class="panel-note">Funder's own report. Commitments, not payments. 2026 is a lower-bound forecast (dashed).</p>
         </div>
       </div>
 
       <div class="sub">
-        <h3>Four kinds of money, kept apart</h3>
-        <p class="prose">Each box below holds one kind of number. Compare within a box with care. Do not add across boxes or work out ratios between them.</p>
+        <h3>Measures that cannot be added</h3>
+        <p class="prose">One kind of number per box. No sums or ratios across boxes.</p>
         <div class="slips">
           <div class="slip">
             <h4>Lab financing rounds</h4>
@@ -1340,24 +1352,14 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       </div>
 
       <div class="sub">
-        <h3>What a comparison of scale can say</h3>
-        <div class="prose">
-          <p>The lab financing rounds, hardware revenue and infrastructure intentions in the ledger are much larger numbers than many individual safety grants. That is a comparison of orders of magnitude across different financial measures. It is not a ratio of budget allocation.</p>
-          <p>No audited series of safety costs across labs was found. A single sampled share of compute, a company's headcount or a run-rate cannot supply the missing denominator.</p>
-          <p>Three further series give context, each with its own definition:</p>
-          <ul>
-            <li>The International Energy Agency estimates that capital expenditure by the largest technology companies exceeded $400bn in 2025, and describes a further substantial increase in 2026. The boundary is large-company capital expenditure, not AI, capabilities or safety alone.</li>
-            <li>The Stanford AI Index reports $285.9bn of US private investment in AI for 2025. This is an investment measure and is not the same cash flow as capital expenditure.</li>
-            <li>Epoch's work on training costs gives modelled costs, not audited company expenses on safety.</li>
-          </ul>
-          <p>These series belong in separate charts with their own units and definitions.</p>
-          <p class="srcline" data-sources="iea index epoch"></p>
-        </div>
+        <h3>Scale</h3>
+        <p class="prose">Lab rounds and chip revenue dwarf safety grants. That compares orders of magnitude, not budget shares: no audited series of lab safety spending exists. Context: IEA, big-tech capex over $400bn in 2025; Stanford AI Index, $285.9bn US private AI investment in 2025.</p>
+        <p class="srcline" data-sources="iea index epoch"></p>
       </div>
 
       <div class="sub">
         <h3>The full financial ledger</h3>
-        <p class="prose">All 48 observations, each kept as its own row. The original currency is preserved, and no exchange conversion is made. A blank means unknown or not applicable. It never means zero.</p>
+        <p class="prose">All 48 observations. Original currencies. Blank means unknown, never zero.</p>
         <div class="tools">
           <label for="finSearch">Search the ledger
             <input type="search" id="finSearch" placeholder="Try &quot;valuation&quot;, &quot;FEC&quot; or an actor" autocomplete="off">
@@ -1384,10 +1386,9 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       </div>
 
       <div class="sub" id="field-company">
-        <h3>What the AI companies have announced</h3>
+        <h3>Corporate funding announced</h3>
         <div class="prose">
-          <p>The four grant records further down are all from philanthropic funders, so on their own they make it look as if no company money reaches the field. It does. The table lists every announcement found in which an AI company, or the foundation that controls one, puts money into safety research, fellowships or policy work outside the company. Each is one line with its own source, and the map draws each as one arrow under "Company money".</p>
-          <p>Three things limit what the table can say. Most amounts are commitments in the company's own announcement and not confirmed payments. Several of the largest are not safety research: Anthropic's two largest programmes are about the economic effects of AI. And the largest item of all is missing, because no company publishes what it spends on its own safety teams.</p>
+          <p>Money from AI companies and their foundations for work outside the company. Each row is one announcement, classed as on the map. Most are commitments, not payments. Spending on in-house safety teams is not published.</p>
         </div>
         <div class="tbl-box" tabindex="0" role="region" aria-label="Money announced by AI companies for work outside the company">
           <table class="tbl">
@@ -1652,7 +1653,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   </div>
 </footer>
 
-<script src="ecosystem-data.js?v=5"></script>
+<script src="ecosystem-data.js?v=7"></script>
 <script src="control-data.js?v=2"></script>
 <script src="size-data.js?v=4"></script>
 <script src="field-data.js?v=4"></script>
@@ -1724,25 +1725,32 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 
   /* ---------- kinds of tie ---------- */
   const FAMILIES = [
-    { id: "control", label: "Ownership and control", blurb: "Who owns a share of whom, and who holds formal rights to decide. These are kept apart from investment because holding equity does not by itself confer control.", types: ["formal_control", "equity_ownership", "governance_rights", "corporate_parent", "acquisition", "internal_safety_oversight", "board_interlock", "leadership_role", "host_institution"] },
-    { id: "invest", label: "Investment", blurb: "Money put into a company in return for a share of it. An investor's own amount is shown where a company announced it or the press reported it; a named participant with no stated amount is drawn thin. Many of the large figures are commitments, some of them conditional. Board rights and allocations are usually not disclosed.", types: ["equity_investment"] },
-    { id: "supply", label: "Commercial supply and projects", blurb: "Chips, cloud capacity, manufacturing partnerships and joint infrastructure projects. Contract amounts are rarely disclosed.", types: ["compute_cloud_supply", "silicon_partner", "compute_infrastructure_partner", "manufacturing_technology_collaboration", "research_software_collaboration", "project_participation", "infrastructure_dependency"] },
-    { id: "grants", label: "Grants and philanthropy", blurb: "Support, recommendations and grants for research. A named supporter is not evidence of donor control, and an aggregate figure is not assigned to each donor.", types: ["philanthropic_support", "philanthropic_or_public_support", "grant_recommendation", "research_grant", "matching_offer", "fund_management", "fiscal_sponsorship"] },
-    { id: "public", label: "Public authority", blurb: "Testing agreements, regulatory scope, export rules, inquiries, a government-led research coalition and membership of the governments' evaluation network. A voluntary testing agreement is not regulatory approval.", types: ["network_membership", "government_testing_agreement", "export_regulatory_jurisdiction", "regulatory_scope", "potential_provider_obligations", "frontier_transparency_scope", "partnership_inquiry", "alignment_project_participation"] },
-    { id: "politics", label: "Advocacy and political spending", blurb: "Lobbying, published policy positions, restricted donations and the representation of workers and performers. Lobbying dollars specific to safety are not isolated.", types: ["restricted_policy_donation", "reported_ai_related_lobbying", "policy_advocacy", "public_policy_critique", "worker_representation", "performer_representation"] },
-    { id: "field", label: "Industry bodies, standards and training", blurb: "Membership of an industry forum, standards, ratings, insurance offerings and routes into research.", types: ["industry_forum_participation", "research_training", "assurance_standard", "standards_development", "risk_transfer_offering", "public_risk_management_rating"] }
+    { id: "control", label: "Ownership and control", blurb: "Who owns whom and who holds the right to decide. Equity alone is not control. Fund managers and fiscal sponsors hold money they do not own.", types: ["formal_control", "equity_ownership", "governance_rights", "corporate_parent", "acquisition", "internal_safety_oversight", "board_interlock", "leadership_role", "host_institution", "fund_management", "fiscal_sponsorship"] },
+    { id: "invest", label: "Investment", blurb: "Money for a share of a company. The investor expects a return. Many amounts are commitments, some conditional.", types: ["equity_investment"] },
+    { id: "grants", label: "Grants", blurb: "Awards from a foundation, fund or government after a funding decision. No return. A named funder is not a controlling one.", types: ["grant", "grant_recommendation", "research_grant", "matching_pledge", "public_grant"] },
+    { id: "donations", label: "Donations", blurb: "Gifts from individuals, directly or through a giving platform. No award process, no return.", types: ["donation"] },
+    { id: "corp", label: "Corporate funding", blurb: "Money, other than equity, from a company or a fund companies run, for work outside the company: grants, credits, pooled funds, political gifts.", types: ["corporate_support", "restricted_policy_donation"] },
+    { id: "supply", label: "Commercial supply and projects", blurb: "Chips, cloud, manufacturing and joint projects. Contract amounts are rarely disclosed.", types: ["compute_cloud_supply", "silicon_partner", "compute_infrastructure_partner", "manufacturing_technology_collaboration", "research_software_collaboration", "project_participation", "infrastructure_dependency"] },
+    { id: "public", label: "Public authority", blurb: "Testing agreements, regulatory scope, export rules, inquiries and evaluation networks. A voluntary test is not approval.", types: ["network_membership", "government_testing_agreement", "export_regulatory_jurisdiction", "regulatory_scope", "potential_provider_obligations", "frontier_transparency_scope", "partnership_inquiry", "alignment_project_participation"] },
+    { id: "politics", label: "Advocacy and lobbying", blurb: "Lobbying, policy positions and the representation of workers and performers. Political money from companies is under corporate funding.", types: ["reported_ai_related_lobbying", "policy_advocacy", "public_policy_critique", "worker_representation", "performer_representation"] },
+    { id: "field", label: "Industry bodies, standards and training", blurb: "Forum membership, standards, ratings, insurance and routes into research.", types: ["industry_forum_participation", "research_training", "assurance_standard", "standards_development", "risk_transfer_offering", "public_risk_management_rating"] }
   ];
   const famOf = {};
   FAMILIES.forEach(f => f.types.forEach(t => { famOf[t] = f.id; }));
-  const TYPE_LABEL = { compute_cloud_supply: "Compute and cloud supply", reported_ai_related_lobbying: "Reported AI-related lobbying", alignment_project_participation: "Alignment Project participation", philanthropic_or_public_support: "Philanthropic or public support", host_institution: "Host university", fiscal_sponsorship: "Fiscal sponsor" };
+  // a money tie is filed by its money class (data field "money"), so a company's research grant sits under corporate funding
+  const MONEY_FAM = { investment: "invest", grant: "grants", donation: "donations", corporate: "corp" };
+  const famFor = e => MONEY_FAM[e.money] || famOf[e.type];
+  const TYPE_LABEL = { compute_cloud_supply: "Compute and cloud supply", reported_ai_related_lobbying: "Reported AI-related lobbying", alignment_project_participation: "Alignment Project participation", host_institution: "Host university", fiscal_sponsorship: "Fiscal sponsor",
+    grant_recommendation: "Grant, recommended", public_grant: "Government funding", corporate_support: "Corporate funding", matching_pledge: "Matching pledge", restricted_policy_donation: "Restricted policy donation" };
   const typeLabel = t => TYPE_LABEL[t] || (t.charAt(0).toUpperCase() + t.slice(1).replace(/_/g, " "));
-  window.ECO_UI = { FAMILIES, famOf, typeLabel, fmtDate, fmtAmount, esc, tidy };  // shared with ecosystem-graph.js
+  window.ECO_UI = { FAMILIES, famOf, famFor, MONEY_FAM, typeLabel, fmtDate, fmtAmount, esc, tidy };  // shared with ecosystem-graph.js
 
   /* ---------- 3. actors ---------- */
 
   function tieLine(e, outgoing) {
     const other = actorLink(outgoing ? e.to : e.from);
-    const bits = [typeLabel(e.type).toLowerCase()];
+    const KIND = { investment: "investment", grant: "grant", donation: "donation", corporate: "corporate funding" }, lab = typeLabel(e.type).toLowerCase(), k = KIND[e.money];
+    const bits = [k && !lab.includes(k.split(" ")[0]) ? `${k}: ${lab}` : lab];
     if (e.amount != null) bits.push(fmtAmount(e.amount, e.currency));
     if (e.date) bits.push(fmtDate(e.date));
     return `<li>${outgoing ? "To" : "From"} ${other}: ${esc(bits.join(", "))}.${e.note ? " " + tidy(e.note) : ""}</li>`;
@@ -1752,6 +1760,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
   const elsewhere = c => c !== "US" && c !== "UK" && c !== "International";
   function actorCard(n) {
     const out = D.edges.filter(e => e.from === n.id), inc = D.edges.filter(e => e.to === n.id);
+    const fund = (D.funders || []).find(f => f.id === n.id);
     const coded = [["Vertical integration", n.integration], ["Funding dependence", n.fundingDependence], ["Regulatory role", n.regulatoryRole], ["Self-regulation", n.selfRegulation], ["Government personnel overlap", n.personnelOverlap]];
     const known = coded.filter(c => c[1] && c[1] !== "Unknown");
     const unknown = coded.filter(c => !c[1] || c[1] === "Unknown").map(c => c[0].toLowerCase());
@@ -1764,6 +1773,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <h3>${tidy(n.name)}</h3>
       <p class="who">${tidy(catsOf(n).map(catName).join(" and "))} · ${tidy(n.subtype)} · ${tidy(n.country)} · ${tidy(n.orgType)}</p>
       <p class="plain"><span class="lbl">Stake, as read by this map</span><br>${tidy(n.stake)}</p>
+      ${fund ? `<p class="plain"><span class="lbl">Whose money</span><br>${tidy(fund.wealth)}</p><p class="plain"><span class="lbl">Who decides</span><br>${tidy(fund.decides)}</p>` : ""}
       <details><summary>Full profile</summary>
         <dl>
           <div><dt>Stated mission or interest</dt><dd>${tidy(n.mission)}</dd></div>
@@ -1816,7 +1826,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     if (e.policyTarget) meta.push(`Policy target: ${tidy(e.policyTarget)}`);
     if (e.olderEvidence) meta.push("Evidence older than twelve months");
     const text = [from && from.name, to && to.name, typeLabel(e.type), e.note, e.status, e.policyTarget].join(" ").toLowerCase();
-    return `<li class="tie" data-fam="${esc(famOf[e.type] || "other")}" data-text="${esc(text)}">
+    return `<li class="tie" data-fam="${esc(famFor(e) || "other")}" data-text="${esc(text)}">
       <div class="tie-pair">${actorLink(e.from)} <span class="arrow" aria-hidden="true">→</span><span class="vh"> to </span> ${actorLink(e.to)}</div>
       <div class="tie-kind"><span class="tag accent">${esc(typeLabel(e.type))}</span><span class="small mono">${e.date ? esc(fmtDate(e.date)) : "date not extracted"}</span>${e.confidence !== "High" ? `<span class="tag warn">${esc(e.confidence)} confidence</span>` : ""}</div>
       <div class="tie-body">${e.note ? `<p>${tidy(e.note)}</p>` : ""}${meta.length ? `<p class="small">${meta.join(" · ")}</p>` : ""}<p class="srcline">Sources: ${srcLinks(e.sources)}</p></div>
@@ -1853,6 +1863,24 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     const m = f.amount / 1e6, share = compTotal ? (f.amount / compTotal * 100) : 0;
     return `<div class="bar-row"><span class="bar-label">${tidy(finActor(f))}</span><div class="bar-track">${f.amount ? `<div class="bar-fill" style="width:${(f.amount / compMax * 100).toFixed(1)}%"></div>` : ""}</div><span class="bar-val">${+m.toPrecision(4)} · ${share.toFixed(1)}%</span></div>`;
   }).join("") + `<div class="bar-row"><span class="bar-label"><strong>Total of this list</strong></span><span></span><span class="bar-val">${+(compTotal / 1e6).toPrecision(5)} · 100%</span></div>`;
+
+  /* ---------- 5. money: kinds and funders ---------- */
+  const KINDS = [["investment", "Investment", "Money for a share of a company. The investor expects a return.", "Anyone buying equity"],
+    ["grant", "Grant", "An award after a funding decision. No return.", "A foundation, fund or government"],
+    ["donation", "Donation", "A gift. No award process, no return.", "A person, directly or through a platform"],
+    ["corporate", "Corporate funding", "Money other than equity, for work outside the company.", "A company, or a fund companies run"]];
+  // the control evidence is classed by the map's rule: a company or a fund companies run gives corporate funding, a person a donation, anyone else a grant
+  const CTL = (window.CONTROL && window.CONTROL.graph) || { edges: [], people: [] }, firms = new Set(D.nodes.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id).concat(["fmf", "aisf"]));
+  const persons = new Set(CTL.people.map(p => p.id)), payer = id => firms.has(id) ? "corporate" : persons.has(id) ? "donation" : "grant";
+  const moneyTies = D.edges.filter(e => e.money).concat(CTL.edges.filter(e => /^(grant_paid|grant_recommended|political_contribution|compute_credits)$/.test(e.type))
+    .map(e => ({ money: e.type === "compute_credits" ? "corporate" : payer(e.from), amount: e.amount })));
+  const kindsBody = $("#moneyKinds");
+  if (kindsBody) kindsBody.innerHTML = KINDS.map(([k, label, what, who]) => {
+    const ties = moneyTies.filter(e => e.money === k), known = ties.filter(e => e.amount != null).length;
+    return `<tr><td><strong>${label}</strong></td><td>${what}</td><td>${who}</td><td class="amt">${ties.length} <span class="small">(${known} with an amount)</span></td></tr>`;
+  }).join("");
+  const whoBody = $("#moneyWho"), nameById = new Map(D.nodes.map(n => [n.id, n.name]));
+  if (whoBody) whoBody.innerHTML = (D.funders || []).map(f => `<tr><td><a href="#a-${esc(f.id)}">${tidy(nameById.get(f.id))}</a></td><td>${tidy(f.wealth)}</td><td>${tidy(f.decides)}</td><td class="small">${f.sources.length ? srcLinks(f.sources) : "—"}</td></tr>`).join("");
 
   const finBody = $("#finBody"), finSearch = $("#finSearch");
   finBody.innerHTML = D.financials.map(f => {
@@ -1911,7 +1939,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=12"></script>
+<script src="ecosystem-graph.js?v=14"></script>
 <script src="field-list.js"></script>
 <script src="explore.js?v=5"></script>
 <script src="terms.js?v=2"></script>
@@ -1922,7 +1950,7 @@ Explore.fold(".findings > li, .frame", "h3");
 Explore.fold("#actors", ".chapter-head", { open: "Open the 123 profiles", close: "Close the profiles" });
 Explore.fold("#ties", ".chapter-head", { open: "Open the relationship ledger", close: "Close the ledger" });
 Explore.fold("#money", ".chapter-head", { open: "Open the money section", close: "Close the money section" });
-Explore.fold("#field", ".chapter-head", { open: "Open the safety field: company money, grant records and every entry", close: "Close the safety field section" });
+Explore.fold("#field", ".chapter-head", { open: "Open the safety field: corporate funding, grant records and every entry", close: "Close the safety field section" });
 Explore.fold("#method", ".chapter-head", { open: "Open method, terms and boundaries", close: "Close the method section" });
 Explore.fold("#sources", ".chapter-head", { open: "Open the 127 sources", close: "Close the sources" });
 

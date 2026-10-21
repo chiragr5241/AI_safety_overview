@@ -52,23 +52,33 @@
     .map(p => ({ id: p.id, name: p.name, roles: EDGES.filter(e => e.from === p.id) }));
   const personById = new Map(PEOPLE.map(p => [p.id, p]));
   const ORG_EDGES = EDGES.filter(e => !personById.has(e.from) && !personById.has(e.to));
+  // Money classes. Equity is investment whoever pays. Otherwise the class follows who controls the money when it moves:
+  // a company or a fund companies run gives corporate funding, a person gives a donation, a foundation, fund or government gives a grant.
+  // The base data carries the class; the control evidence, grant records and company announcements are classed here by the same rule.
+  const CO = new Set(D.nodes.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id).concat(["fmf", "aisf"]));
+  const payerClass = from => CO.has(from) ? "corporate" : personById.has(from) ? "donation" : "grant";
+  X.edges.forEach(e => {
+    if (e.type === "grant_paid" || e.type === "grant_recommended" || e.type === "political_contribution") e.money = payerClass(e.from);
+    else if (e.type === "compute_credits") e.money = "corporate";
+  });
+  const CLASS = { investment: "Investment", grant: "Grant", donation: "Donation", corporate: "Corporate funding" };
+  const FUNDER = new Map((D.funders || []).map(f => [f.id, f]));
   const EXT_FAM = { access_in_kind: "access", commissioned_work: "access", access_mou: "access", compute_credits: "access", grant_paid: "grants", grant_recommended: "grants",
     political_contribution: "politics", role_board: "people", role_adviser: "people", role_former: "people", role_executive: "people", role_staff: "people",
     role_regrantor: "people", role_funder: "people", disclosed_investment: "people", grants_on_record: "grants", company_money: "corp" };
   const EXT_LABEL = { access_in_kind: "Model access in kind", commissioned_work: "Commissioned work", access_mou: "Access under a voluntary MoU", compute_credits: "Compute credits",
-    grant_paid: "Grant or gift, paid", grant_recommended: "Grant, recommended", political_contribution: "Political contribution", role_board: "Board or committee seat",
+    grant_paid: "Paid", grant_recommended: "Recommended", political_contribution: "Political contribution", role_board: "Board or committee seat",
     role_adviser: "Adviser", role_former: "Former role", role_executive: "Executive", role_staff: "Staff role", role_regrantor: "Regrantor", role_funder: "Funder",
     disclosed_investment: "Disclosed investment" };
   const FAMS = U.FAMILIES.concat([
     { id: "access", label: "Access and contracts", blurb: "What evaluators and training programmes receive from the labs: model access, compute credits and commissioned work. The executed agreements, with any limits on publication, were not obtained." },
-    { id: "corp", label: "Company money", blurb: "Money leaving an AI company, an investor or a company foundation for work outside the companies: grants, fellowships, pooled funds, credits and political donations. Zoomed in, this adds what the companies have announced for safety research and fellowships. Most figures are commitments from the company's own announcement and not confirmed payments. What a company spends on its own safety teams is not published, so it is not on the map." },
     { id: "people", label: "People and interests", blurb: "Each dotted link joins two organisations where the same named person holds a documented role or a disclosed investment. That establishes an interest, not a motive, and it is not control." }
   ]);
-  const famOf = t => EXT_FAM[t.type] || U.famOf[t.type];
+  const famOf = t => U.MONEY_FAM[t.money] || EXT_FAM[t.type] || U.famOf[t.type];
   // Ties where money, or credit with a stated money value, moves in the direction of the arrow. Supply and lobbying are left out:
   // there the payment runs the other way, or to third parties.
-  const MONEY = new Set(["equity_investment", "grant_recommendation", "philanthropic_support", "philanthropic_or_public_support", "research_grant",
-    "matching_offer", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "grants_on_record", "company_money"]);
+  const MONEY = new Set(["equity_investment", "grant", "grant_recommendation", "research_grant", "public_grant", "matching_pledge", "donation", "corporate_support",
+    "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "grants_on_record", "company_money"]);
   // Amounts on the map run from tens of thousands to tens of billions, so width goes up one step per power of ten.
   // The steps grow as the sums do, so the big sums stand clear of the small ones. The widths were set by the author.
   const STEPS = ["under 100k", "100k to 1m", "1m to 10m", "10m to 100m", "100m to 1bn", "1bn to 10bn", "10bn or more"];
@@ -209,18 +219,17 @@
   let nodes = base;   // the bubbles on the plate at the current zoom level
   // Money between bubbles in the public grant records. One tie per funder's record per recipient: its amount is that record's total for that recipient.
   const FLOWS = F ? F.flows.filter(f => byId.has(f.from) && byId.has(f.to)) : [];
-  const FLOW_TIES = FLOWS.map((f, i) => ({ id: "G" + (i + 1), from: f.from, to: f.to, type: "grants_on_record", amount: f.total || null, currency: "USD", date: "", status: "", field: true, flow: f }));
+  const FLOW_TIES = FLOWS.map((f, i) => ({ id: "G" + (i + 1), from: f.from, to: f.to, type: "grants_on_record", amount: f.total || null, currency: "USD", date: "", status: "", field: true, flow: f,
+    money: f.src === "manifund" ? "donation" : "grant" }));   // Manifund's pages take regrants and gifts from people alike: classed as donations
   // Money that AI companies and their foundations have announced for work outside the company: one tie to an announcement, each with its own source.
   const KIND = { grant: "Grant", commitment: "Commitment announced", credits: "Credits committed", equity: "Equity investment", pool: "Share of a joint fund, not stated", open: "Programme funded, budget not published" };
   const CORP_TIES = F ? (F.company || []).filter(c => byId.has(c.from) && byId.has(c.to)).map((c, i) =>
-    ({ id: "K" + (i + 1), from: c.from, to: c.to, type: "company_money", amount: c.amount, currency: c.currency, date: c.date, status: c.what, field: true, corp: c })) : [];
+    ({ id: "K" + (i + 1), from: c.from, to: c.to, type: "company_money", amount: c.amount, currency: c.currency, date: c.date, status: c.what, field: true, corp: c,
+      money: c.kind === "equity" ? "investment" : payerClass(c.from) })) : [];
   const FIELD_TIES = FLOW_TIES.concat(CORP_TIES);
   const CIN = new Map(), COUT = new Map();
   CORP_TIES.forEach(t => { if (!CIN.has(t.to)) CIN.set(t.to, []); CIN.get(t.to).push(t); if (!COUT.has(t.from)) COUT.set(t.from, []); COUT.get(t.from).push(t); });
   const NFIELD = F ? F.entries.filter(e => !e.own).length : 0, NSHARED = base.filter(n => n.entry).length;   // entries on the AISafety.com map, and how many are also industry-map bubbles
-  // the "Company money" filter: ties from a company announcement, and money ties in the base map that leave a company, an investor or a company foundation
-  const COMPANY = new Set(base.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id)), GIVER = new Set(Array.from(COMPANY).concat(["foundation", "fmf", "aisf"]));
-  const isCorp = t => !!t.corp || (MONEY.has(t.type) && GIVER.has(t.from) && !COMPANY.has(t.to));
   all.forEach(n => { n.deg1 = n.deg0; });
   FIELD_TIES.forEach(t => { byId.get(t.from).deg1++; byId.get(t.to).deg1++; });
   const recOf = f => F.records[f.src];
@@ -885,7 +894,7 @@
   // sel is one bubble, group or person, or { type: "multi", ids } for several bubbles; ties says which arrows several bubbles show
   const state = { sel: null, hover: null, fam: "all", picking: false, ties: "all" };
   const famLabel = id => { const f = FAMS.find(x => x.id === id); return f ? f.label : ""; };
-  const inLens = (t, id) => id === "all" || (id === "corp" ? isCorp(t) : famOf(t) === id);
+  const inLens = (t, id) => id === "all" || famOf(t) === id;
   const inFam = t => (!t.field || level === 1) && inLens(t, state.fam);   // the grant records and company announcements show only when zoomed into the field
   const touches = (l, f) => f.type === "multi" ? (state.ties === "between" ? f.ids.includes(l.s.id) && f.ids.includes(l.t.id) : state.ties === "all" && (f.ids.includes(l.s.id) || f.ids.includes(l.t.id)))
     : f.type === "person" ? (!!l.inter && l.people.some(p => p.id === f.id)) : f.type === "node" ? (l.s.id === f.id || l.t.id === f.id) : (inGroup(l.s, f.id) || inGroup(l.t, f.id));
@@ -953,11 +962,14 @@
   }, true);
   const catOf = id => { const n = byId.get(id); return n ? n.cat : 0; };   // a person has no group
   const jumpTo = n => `<button type="button" class="web-jump" data-node="${esc(n.id)}"><i style="background:${n.c.swatch}"></i>${tidy(n.name)}</button>`;
+  // a funder's wealth and its decision-maker, kept apart
+  const fundLines = id => { const f = FUNDER.get(id); return f ? `<p class="wp-small"><span class="wp-lbl">Whose money</span>${tidy(f.wealth)}</p><p class="wp-small"><span class="wp-lbl">Who decides</span>${tidy(f.decides)}</p>` : ""; };
   function tieItem(t, out) { return `<li>${jumpTo(byId.get(out ? t.to : t.from))}${tieNote(t)}</li>`; }
   // a tie between two picked bubbles names both ends
   function pairItem(t) { return `<li><div class="wp-pair">${jumpTo(byId.get(t.from))}<b aria-label="to">→</b>${jumpTo(byId.get(t.to))}</div>${tieNote(t)}</li>`; }
   function tieNote(t) {
-    const bits = [typeLabel(t)];
+    const lab = typeLabel(t), cls = CLASS[t.money];
+    const bits = [cls && !lab.toLowerCase().includes(cls.split(" ")[0].toLowerCase()) ? `${cls} · ${lab}` : lab];
     if (t.amount != null) bits.push(U.fmtAmount(t.amount, t.currency));
     if (t.date) bits.push(U.fmtDate(t.date));
     return `<span>${esc(bits.join(", "))}${t.ext ? ` <em class="wp-ext">control evidence</em>` : ""}${t.flow ? ` <em class="wp-ext">grant record</em>` : ""}${t.corp ? ` <em class="wp-ext">company announcement</em>` : ""}</span>${t.flow ? grantList(t.flow) : ""}${t.corp ? `<span>${tidy(t.corp.what)} <a href="${esc(t.corp.src.url)}" rel="noopener">${tidy(t.corp.src.title)}</a></span>` : ""}`;
@@ -1022,6 +1034,7 @@
         : `<span class="web-eyebrow" style="color:${c.color}">${tidy(c.label)} · ${tidy(n.data.subtype)} · ${tidy(n.data.country)}</span>
           <h2>${tidy(n.name)}</h2>
           <p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>
+          ${fundLines(n.id)}
           ${level && e ? `<p class="wp-small"><span class="wp-lbl">On the AISafety.com map · ${tidy(listed)}</span>${tidy(e.desc)}</p>` : ""}`;
       const none = level && !GIN.has(n.id) && !GOUT.has(n.id) && !CIN.has(n.id) && !COUT.has(n.id) ? " No grant to or from it appears in the four grant records or the company announcements read here, which is not the same as no funding." : "";
       panel.innerHTML = `<div class="wp-main">
@@ -1051,7 +1064,7 @@
           <div><h2>Four public records, one dominant funder</h2><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
           <div><h2>Most bubbles show no grant</h2><button type="button" class="web-act" data-lens="grants">Show only the grants</button></div>
           <div><h2>Funders fund funders</h2><button type="button" class="web-act" data-group="f-funding">Show the funders</button></div>
-          <div><h2>Company money is small on the public record</h2><button type="button" class="web-act" data-lens="corp">Show company money</button></div>
+          <div><h2>Corporate funding is small on the public record</h2><button type="button" class="web-act" data-lens="corp">Show corporate funding</button></div>
         </div>`;
     } else {
           panel.innerHTML = `<div class="wp-notes">
@@ -1192,7 +1205,7 @@
     setSize(measure.id, 0);
   });
 
-  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", public: "Public authority", politics: "Advocacy", field: "Standards and training", access: "Access and contracts", people: "People and interests", corp: "Company money" };
+  const LENS = { control: "Ownership and control", invest: "Investment", supply: "Supply", grants: "Grants", donations: "Donations", public: "Public authority", politics: "Advocacy and lobbying", field: "Standards and training", access: "Access and contracts", people: "People and interests", corp: "Corporate funding" };
   /* The kinds of tie sit in a search box like the one for actors: typing filters the list, and each row carries its count. */
   const lensOptions = $("webLensOptions");
   let LENSES = [], lensShown = [], lensActive = -1;

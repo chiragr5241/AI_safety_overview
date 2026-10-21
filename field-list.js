@@ -32,16 +32,18 @@
   /* ---------- company money: one line to an announcement ---------- */
   const CKIND = { grant: "Grant", commitment: "Commitment announced", credits: "Credits committed", equity: "Equity investment", pool: "Share of a joint fund, not stated", open: "Programme funded, budget not published" };
   const company = (F.company || []).slice().sort((a, b) => (b.amount || 0) - (a.amount || 0) || nameOf(a.from).localeCompare(nameOf(b.from)));
+  // classed by the map's rule: equity is investment; otherwise a company or a fund companies run gives corporate funding, anyone else a grant
+  const firms = new Set(D.nodes.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id).concat(["fmf", "aisf"]));
+  const classOf = c => c.kind === "equity" ? "Investment" : firms.has(c.from) ? "Corporate funding" : "Grant";
   const companyBody = $("fieldCompany");
   if (companyBody) companyBody.innerHTML = company.map(c =>
-    `<tr><td>${tidy(nameOf(c.from))}</td><td>${tidy(nameOf(c.to))}</td><td><strong>${esc(CKIND[c.kind] || c.kind)}.</strong> ${tidy(c.what)}</td>
+    `<tr><td>${tidy(nameOf(c.from))}</td><td>${tidy(nameOf(c.to))}</td><td><strong>${esc(classOf(c))} · ${esc(CKIND[c.kind] || c.kind)}.</strong> ${tidy(c.what)}</td>
       <td class="amt">${c.amount ? esc(usd(c.amount)) : "not stated"}</td><td class="amt">${esc(U.fmtDate(c.date))}</td><td><a href="${esc(c.src.url)}" rel="noopener">${tidy(c.src.title)}</a></td></tr>`).join("");
-  // money ties already in the base map that leave a company or a company-funded body
-  const firms = new Set(D.nodes.filter(n => n.cat >= 1 && n.cat <= 4).map(n => n.id)), givers = new Set(Array.from(firms).concat(["foundation", "fmf", "aisf"]));
+  // corporate funding already in the base map and the control evidence
   const CTL = (window.CONTROL && window.CONTROL.graph && window.CONTROL.graph.edges) || [];
-  const MONEY = ["philanthropic_support", "philanthropic_or_public_support", "research_grant", "restricted_policy_donation", "grant_paid", "grant_recommended", "political_contribution", "compute_credits", "matching_offer"];
-  const baseTies = D.edges.concat(CTL).filter(e => MONEY.indexOf(e.type) >= 0 && givers.has(e.from) && !firms.has(e.to) && actor.has(e.to));
-  setText("fieldCompanyBase", baseTies.length ? `The industry map already held ${baseTies.length} money ties of this kind, and the "Company money" filter shows them too: ` +
+  const CTL_MONEY = ["grant_paid", "grant_recommended", "political_contribution", "compute_credits"];
+  const baseTies = D.edges.filter(e => e.money === "corporate").concat(CTL.filter(e => CTL_MONEY.indexOf(e.type) >= 0 && firms.has(e.from))).filter(e => actor.has(e.to));
+  setText("fieldCompanyBase", baseTies.length ? `Also under "Corporate funding" on the map: ` +
     baseTies.map(e => `${nameOf(e.from)} to ${nameOf(e.to)}${e.amount != null ? " (" + usd(e.amount) + ")" : " (amount not stated)"}`).join("; ") + "." : "");
 
   /* ---------- the records ---------- */

@@ -132,6 +132,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 #tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 7px 10px; border-radius: 8px; max-width: 18rem; }
 #tip b { font-weight: 700; }
+.kinds { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0 0 4px; font-size: .86rem; }
+.kinds div { display: flex; gap: 6px; } .kinds dt { font-weight: 600; } .kinds dd { margin: 0; color: var(--muted); }
+.kinds-note { margin: 0 0 14px; }
 </style>
 </head>
 <body>
@@ -168,6 +171,13 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
         <span class="chapter-num">Experiment 01</span>
         <h1 class="q">Who is giving AI safety non-profits their money?</h1>
       </div>
+      <dl class="kinds">
+        <div><dt>Grant</dt><dd>awarded by a foundation, fund or government</dd></div>
+        <div><dt>Donation</dt><dd>given by a person or donor network</dd></div>
+        <div><dt>Investment</dt><dd>money for equity</dd></div>
+        <div><dt>Corporate funding</dt><dd>from a company or a fund companies run</dd></div>
+      </dl>
+      <p class="small kinds-note">Whose money it is and who decides where it goes are kept apart throughout.</p>
       <nav class="jump" aria-label="Tables in this experiment">
         <a class="chip" href="#fig-records">Grant records</a>
         <a class="chip" href="#fig-sff">Named donors in SFF</a>
@@ -317,7 +327,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 <script src="explore.js?v=5"></script>
 <script src="field-data.js?v=4"></script>
 <script src="experiments-grants.js?v=2"></script>
-<script src="experiments-data.js?v=2"></script>
+<script src="experiments-data.js?v=3"></script>
 <script>
 (function () {
   "use strict";
@@ -339,7 +349,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   const SERIES = [
     { key: "cg", label: "Coefficient Giving", cls: "k1" },
     { key: "sff", label: "Survival and Flourishing Fund", cls: "k2" },
-    { key: "other", label: "LTFF, EA Infrastructure Fund, Manifund", cls: "k3" }
+    { key: "other", label: "LTFF, EAIF (grants); Manifund (donations)", cls: "k3" }
   ];
   const seriesOf = src => src === "cg" || src === "sff" ? src : "other";
   const legend = SERIES.map(s => `<span><i class="${s.cls}"></i>${s.label}</span>`).join("");
@@ -365,7 +375,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   function personCard(a) {
     const p = X.people.find(q => q.id === a.dataset.p);
     tip.className = "card";
-    tip.innerHTML = `<b>${esc(p.name)}</b>${p.wealth ? `<br>${esc(p.wealth)}` : ""}<span class="t-k">Gives through</span>${esc(p.through)}` +
+    tip.innerHTML = `<b>${esc(p.name)}</b>${p.wealth ? `<span class="t-k">Whose money</span>${esc(p.wealth)}` : ""}<span class="t-k">Gives through</span>${esc(p.through)}${p.decides ? `<span class="t-k">Who decides</span>${esc(p.decides)}` : ""}` +
       (p.figures.length ? `<span class="t-k">Recorded</span>${p.figures.slice(0, 2).map(esc).join("<br>")}` : "") + `<span class="t-k">Select to read more</span>`;
     tip.hidden = false;
   }
@@ -423,7 +433,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
   /* ---------- headline figures ---------- */
   [
-    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records is from Coefficient Giving, funded mainly by Dustin Moskovitz and Cari Tuna.`],
+    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records was allocated by Coefficient Giving. Most of it is Dustin Moskovitz and Cari Tuna's money.`],
     [oneSource + " of " + orgs.length, "recipients have 90% or more of their recorded grants from one funder."],
     [pct(SFF[0].total / NET.sff.counted), "of the money in the SFF record carries Jaan Tallinn's name alone."]
   ].forEach(([n, t]) => { const d = el("div", "tile"); d.innerHTML = `<b>${n}</b><span>${names(t)}</span>`; $("#tiles").appendChild(d); });
@@ -431,11 +441,14 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   /* ---------- figure 1: the five records ---------- */
   $("#recordsNote").textContent = "Every row of each record, 2015 to 2026, each dollar counted once. The three small records are mostly grants to individuals.";
   const RECORD_NAME = { cg: "Coefficient Giving", sff: "Survival and Flourishing Fund", ltff: "Long-Term Future Fund", eaif: "EA Infrastructure Fund", manifund: "Manifund" };
-  const RECORD_BY = { cg: "Dustin Moskovitz and Cari Tuna", sff: "Jaan Tallinn" };   // whose money each record mainly is
+  // whose money each record mainly is, who decides, and the kind of money
+  const RECORD_BY = { cg: "Dustin Moskovitz and Cari Tuna", sff: "Jaan Tallinn", ltff: "pooled donations", eaif: "pooled donations", manifund: "individual donors" };
+  const RECORD_WHO = { cg: "Coefficient Giving staff; Good Ventures approves", sff: "recommenders; funders set amounts", ltff: "fund managers", eaif: "fund managers", manifund: "regrantors and donors" };
+  const RECORD_KIND = { cg: "Grants", sff: "Grants", ltff: "Grants", eaif: "Grants", manifund: "Donations" };
   const recMax = Math.max(...Object.values(NET).map(r => r.counted));
   Object.entries(NET).sort((a, b) => b[1].counted - a[1].counted).forEach(([key, r]) => {
     const row = el("div", "bar-row");
-    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${esc(F.records[key].kind)}${RECORD_BY[key] ? " · mainly " + names(RECORD_BY[key]) : ""}</small></span>
+    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${RECORD_KIND[key]} · money: ${names(RECORD_BY[key])} · decides: ${esc(RECORD_WHO[key])}</small></span>
       <span class="track"><span class="stack"><span class="seg ${key === "cg" ? "k1" : key === "sff" ? "k2" : "k3"}" style="width:${(100 * r.counted / recMax).toFixed(2)}%"></span></span></span>
       <span class="val">${money(r.counted)}<small>${F.records[key].rows} rows</small></span>`;
     bindTip(row.querySelector(".seg"), `<b>${RECORD_NAME[key]}</b><br>${money(r.counted)}`);
@@ -461,7 +474,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
     if (u.to !== lastTo) { $("#upstream").appendChild(el("div", "tbl-group", esc(u.to))); lastTo = u.to; }
     const row = el("div", "tbl-row");
     const amount = u.amount == null ? (u.n ? "not disclosed" : "") : (u.approx ? "about " : "") + money(u.amount);
-    row.innerHTML = `<span class="a">${names(u.from)}</span>
+    row.innerHTML = `<span class="a">${names(u.from)}${u.kind ? ` <span class="tag">${u.kind}</span>` : ""}</span>
       <span class="b">${u.n ? u.n + " grant" + (u.n === 1 ? "" : "s") + (u.when ? ", " + esc(u.when) : "") + "." : ""}${link(u.src)}</span>
       <span class="c">${amount}</span>`;
     $("#upstream").appendChild(row);
@@ -475,7 +488,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
     const says = p.says ? `<div><dt>What they say</dt><dd>${names(p.says, p)}</dd></div>` : "";
     const from = [p.src, p.src2].filter(Boolean).map(k => `<a href="${X.sources[k].url}">${esc(X.sources[k].title)}</a>`).join(" · ");
     card.innerHTML = `<h3>${esc(p.name)}</h3>${p.wealth ? `<p class="wealth">${esc(p.wealth)}</p>` : ""}
-      <dl><div><dt>Gives through</dt><dd>${names(p.through, p)}</dd></div>${figs}${says}</dl>
+      <dl><div><dt>Gives through</dt><dd>${names(p.through, p)}</dd></div>${p.decides ? `<div><dt>Who decides</dt><dd>${names(p.decides, p)}</dd></div>` : ""}${figs}${says}</dl>
       <p class="from">${p.kind ? esc(p.kind) + ". " : ""}${from}</p>`;
     $("#people").appendChild(card);
   });
@@ -502,7 +515,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   /* ---------- pools ---------- */
   X.pools.forEach(o => {
     const row = el("div", "tbl-row");
-    row.innerHTML = `<span class="a"><b>${esc(o.name)}</b></span><span class="b">${names(o.who)}.${link(o.src)}</span><span class="c">${esc(o.amount)}</span>`;
+    row.innerHTML = `<span class="a"><b>${esc(o.name)}</b> <span class="tag">${esc(o.kind)}</span></span><span class="b">Money: ${names(o.money)}. Decides: ${names(o.decides)}.${link(o.src)}</span><span class="c">${esc(o.amount)}</span>`;
     $("#pools").appendChild(row);
   });
 
@@ -510,12 +523,12 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   let ownOnly = false;
   function drawProgs() {
     const q = $("#progSearch").value.trim().toLowerCase();
-    const list = X.programmes.filter(r => (!ownOnly || r[4]) && (!q || (r[0] + " " + r[1]).toLowerCase().includes(q)));
+    const list = X.programmes.filter(r => (!ownOnly || r[6]) && (!q || (r[0] + " " + r[1] + " " + r[2] + " " + r[3]).toLowerCase().includes(q)));
     const host = $("#programmes");
     host.textContent = "";
     list.forEach(r => {
       const row = el("div", "tbl-row");
-      row.innerHTML = `<span class="a"><b>${esc(r[0])}</b></span><span class="b">${names(r[1] || "Not stated")}${r[4] ? ' <span class="tag accent">own money</span>' : ""}</span><span class="c">${esc(r[2] || "")}<small>${esc(r[3])}</small></span>`;
+      row.innerHTML = `<span class="a"><b>${esc(r[0])}</b> <span class="tag">${esc(r[3])}</span></span><span class="b">Money: ${names(r[1])}${r[6] ? ' <span class="tag accent">own money</span>' : ""}. Decides: ${names(r[2])}.</span><span class="c">${esc(r[4] || "")}<small>${esc(r[5])}</small></span>`;
       host.appendChild(row);
     });
     $("#progCount").textContent = `Showing ${list.length} of ${X.programmes.length} rows`;
