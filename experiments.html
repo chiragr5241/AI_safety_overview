@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Experiments · AI Safety Overview</title>
-<meta name="description" content="Who is giving AI safety non-profits their money? Grant records, named donors and what the donors say.">
+<meta name="description" content="Who pays for AI safety, and why? The fortunes behind the grants, and what their owners say.">
 <meta name="color-scheme" content="light dark">
 <script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
 /* The page is shown once it is built (see the last script in the body), so nothing shifts as it loads. */
@@ -13,24 +13,96 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="expect" href="#page-end" blocking="render">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="site.css?v=8">
 <link rel="stylesheet" href="explore.css?v=2">
 <style>
-/* Experiments page: one question per section, then the tables and figures. No conclusions are drawn on the page. */
-/* Chart series colours. Stepped from the site's accent, purple and amber so each clears the chroma and lightness checks in its theme. */
-/* This page keeps side margins: a 1320px column. */
+/* Experiments page. A short story first: one pinned chart that changes as each step scrolls past, one number and a
+   few lines per step. Every table behind it sits closed in "The data" underneath. */
 :root { --wrap: 1320px; }
+/* Chart series colours. Stepped from the site's accent, purple and amber so each clears the chroma and lightness checks in its theme. */
 :root { --s1: #008F84; --s2: #5846B4; --s3: #B07A08; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s1: #22A397; --s2: #8474E6; --s3: #B98722; } }
 :root[data-theme="dark"] { --s1: #22A397; --s2: #8474E6; --s3: #B98722; }
 
-.q { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 800; }
-/* Section headings sit one level under the question, at the size the site gives an h3. */
-.fh { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
-.jump { display: flex; flex-wrap: wrap; gap: 6px; }
 .xnav { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 28px; }
 .xnav a[aria-current] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- the opening question ---------- */
+.hero { min-height: min(76vh, 720px); display: grid; align-content: center; gap: 30px; padding: 32px 0 56px; }
+.hero h1 { font-size: clamp(2.9rem, 8.4vw, 6.6rem); line-height: 1.02; letter-spacing: -0.015em; font-weight: 700; max-width: 12ch; }
+.go { width: 44px; height: 44px; border: 1.5px solid var(--muted); border-radius: 50%; display: grid; place-items: center; color: var(--muted); text-decoration: none; font-family: var(--font-display); font-size: 1.15rem; }
+.go:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- the story: chart pinned on the left, steps scroll on the right ---------- */
+.story { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); }
+.stage { margin: 0; position: sticky; top: 64px; height: calc(100vh - 64px); height: calc(100svh - 64px); display: flex; flex-direction: column; justify-content: center; gap: 16px; min-width: 0; }
+.stage-head { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 16px; flex-wrap: wrap; font-family: var(--font-display); font-size: .84rem; color: var(--muted); }
+.key { display: flex; gap: 16px; }
+.key span { display: inline-flex; align-items: center; gap: 7px; }
+.key i, .srow .p { background: repeating-linear-gradient(135deg, var(--s1) 0 2px, transparent 2px 7px); box-shadow: inset 0 0 0 1.5px var(--s1); }
+.key i { width: 12px; height: 12px; border-radius: 3px; }
+.key i.g { background: var(--s1); box-shadow: none; }
+
+.chart { --lab: 12rem; --val: 6.6rem; position: relative; display: grid; padding-top: 24px; }
+.axis { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + 14px); right: calc(var(--val) + 14px); pointer-events: none; }
+.axis span { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line); }
+.axis em { position: absolute; top: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: .7rem; font-style: normal; color: var(--muted); white-space: nowrap; }
+.axis span:first-child em { transform: none; }
+.axis span:last-child em { transform: translateX(-100%); }
+.srow { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr) var(--val); gap: 14px; align-items: center; max-height: 0; opacity: 0; padding: 0; overflow: hidden;
+  transition: max-height .6s cubic-bezier(.16, 1, .3, 1), opacity .4s, padding .6s cubic-bezier(.16, 1, .3, 1); }
+.srow.on { max-height: 84px; opacity: .34; padding: 11px 0; }
+.srow.on.hi { opacity: 1; }
+.srow .nm { font-family: var(--font-display); font-weight: 700; font-size: .98rem; line-height: 1.25; }
+.srow .nm small, .srow .val small { display: block; font-weight: 400; font-size: .78rem; color: var(--muted); line-height: 1.3; }
+.srow .tr { display: flex; height: 32px; position: relative; }
+.srow .g, .srow .p { height: 100%; transition: width .9s cubic-bezier(.16, 1, .3, 1); }
+.srow .g { background: var(--s1); }
+.srow .tr > :last-child { border-radius: 0 4px 4px 0; }
+.srow .val { font-family: var(--font-mono); font-size: .88rem; text-align: right; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.stage-foot { font-family: var(--font-display); font-size: .8rem; color: var(--muted); max-width: 40rem; }
+
+.steps { display: grid; padding-bottom: 24vh; }
+.step { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; gap: 18px; max-width: 31rem; opacity: .22; transition: opacity .4s; }
+.step.on { opacity: 1; }
+.kick { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; gap: 9px; align-items: center; }
+.kick::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 2px; background: var(--s1); }
+.step h2 { font-size: clamp(1.8rem, 3vw, 2.45rem); line-height: 1.08; }
+.big { display: flex; align-items: flex-end; gap: 8px 14px; flex-wrap: wrap; }
+.big b { font-family: var(--font-title); font-weight: 400; font-size: clamp(3.2rem, 6.4vw, 5.4rem); line-height: .9; letter-spacing: -0.045em; padding-bottom: 8px; border-bottom: 1px solid var(--line-strong); font-variant-numeric: lining-nums; }
+.big span { font-family: var(--font-display); font-size: .9rem; line-height: 1.35; color: var(--muted); max-width: 15rem; padding-bottom: 8px; }
+.step .fact { font-size: 1.02rem; }
+.words { border-left: 2px solid var(--accent); padding: 2px 0 2px 16px; display: grid; gap: 6px; }
+.words b { font-family: var(--font-mono); font-size: .7rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.words p { font-size: .98rem; }
+.words small { font-family: var(--font-display); font-size: .8rem; color: var(--muted); }
+.words small a { color: inherit; }
+.next { font-family: var(--font-title); font-style: italic; font-size: 1.3rem; color: var(--muted); text-decoration: none; margin-top: 10px; width: fit-content; }
+a.next:hover { color: var(--accent); }
+
+@media (max-width: 899px) {
+  .story { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .stage { top: 56px; height: auto; z-index: 5; background: var(--bg); padding: 12px 0 14px; border-bottom: 1px solid var(--line); gap: 10px; }
+  .stage-foot { display: none; }
+  .stage-head { font-size: .78rem; }
+  .chart { --lab: 9rem; --val: 4.8rem; padding-top: 20px; }
+  .srow { gap: 10px; }
+  .srow.on { padding: 3px 0; max-height: 60px; }
+  .srow .nm { font-size: .86rem; }
+  .srow .nm small, .srow .val small { display: none; }
+  .srow .tr { height: 16px; }
+  .srow .val { font-size: .8rem; }
+  .step { min-height: 80vh; justify-content: flex-start; padding-top: 36px; }
+  .step:first-child { padding-top: 28px; }
+}
+
+/* ---------- the data: every table, closed until opened ---------- */
+.data { padding: 80px 0 24px; display: grid; gap: 18px; border-top: 1px solid var(--line); }
+.data > p { max-width: var(--measure); }
+.data .layers { max-width: none; }
+.layer-body > .small { max-width: var(--measure); }
+
 /* A person's name anywhere on the page: hover for a summary, select to go to their card. */
 a.pp { color: inherit; text-decoration: underline dotted var(--accent); text-underline-offset: 3px; cursor: pointer; }
 a.pp:hover, a.pp:focus-visible { color: var(--accent); }
@@ -40,17 +112,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 #tip.card { max-width: 22rem; padding: 10px 12px; font-family: var(--font-body); font-size: .86rem; line-height: 1.4; }
 #tip.card b { font-family: var(--font-display); font-size: 1rem; }
 
-.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
-@media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 4px; align-content: start; }
-.tile b { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.tile span { font-size: .94rem; color: var(--muted); }
-
-.fig { margin: 0; padding-top: 44px; display: grid; gap: 14px; min-width: 0; }
-.fig-head { display: grid; gap: 4px; max-width: 46rem; }
-.fig-head p { font-size: .94rem; color: var(--muted); }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); margin-bottom: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
 .legend i { width: 12px; height: 12px; border-radius: 3px; flex: none; }
 .k1 { background: var(--s1); } .k2 { background: var(--s2); } .k3 { background: var(--s3); }
@@ -74,7 +136,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 }
 
 /* Columns by year. */
-.cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; align-items: end; height: 220px; border-bottom: 1px solid var(--line-strong); }
+.cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; align-items: end; height: 220px; border-bottom: 1px solid var(--line-strong); margin-top: 18px; }
 .col { display: flex; flex-direction: column-reverse; gap: 2px; height: 100%; justify-content: flex-start; position: relative; min-width: 0; }
 .col .seg { width: 100%; height: auto; min-width: 0; min-height: 2px; border-radius: 0; }
 .col .seg:last-of-type { border-radius: 4px 4px 0 0; }
@@ -101,7 +163,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 /* One card per person: what they gave, what they say. */
 .people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 @media (max-width: 900px) { .people { grid-template-columns: minmax(0, 1fr); } }
-.person { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.person { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
 .person h3 { font-size: 1.2rem; }
 .person .wealth { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .04em; color: var(--muted); line-height: 1.45; }
 .person dl { margin: 0; display: grid; gap: 10px; }
@@ -110,7 +172,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 .person dd ul { margin: 0; padding-left: 1.1em; display: grid; gap: 2px; }
 .person .from { font-size: .84rem; color: var(--muted); }
 
-.tools { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 14px; }
+.tools { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
 .tools input { font: inherit; font-size: .95rem; padding: 8px 12px; min-height: 40px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg); color: var(--ink); flex: 1 1 14rem; max-width: 22rem; }
 .tools .small { margin-left: auto; }
 .grants { margin: 6px 0 4px; padding: 10px 14px; background: var(--bg); border-radius: 10px; font-size: .86rem; display: grid; gap: 8px; grid-column: 1 / -1; }
@@ -132,9 +194,6 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 #tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 7px 10px; border-radius: 8px; max-width: 18rem; }
 #tip b { font-weight: 700; }
-.kinds { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0 0 4px; font-size: .86rem; }
-.kinds div { display: flex; gap: 6px; } .kinds dt { font-weight: 600; } .kinds dd { margin: 0; color: var(--muted); }
-.kinds-note { margin: 0 0 14px; }
 </style>
 </head>
 <body>
@@ -165,147 +224,110 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       <a class="chip" href="experiments.html" aria-current="page">01 · Who funds AI safety</a>
       <a class="chip" href="experiments-cycles.html">02 · Cycles in Why Nations Fail</a>
     </nav>
+
     <!-- ============ EXPERIMENT 01 ============ -->
-    <section class="chapter" id="funders" style="border-top:0;padding-top:28px">
-      <div class="chapter-head">
-        <span class="chapter-num">Experiment 01</span>
-        <h1 class="q">Who is giving AI safety non-profits their money?</h1>
-      </div>
-      <dl class="kinds">
-        <div><dt>Grant</dt><dd>awarded by a foundation, fund or government</dd></div>
-        <div><dt>Donation</dt><dd>given by a person or donor network</dd></div>
-        <div><dt>Investment</dt><dd>money for equity</dd></div>
-        <div><dt>Corporate funding</dt><dd>from a company or a fund companies run</dd></div>
-      </dl>
-      <p class="small kinds-note">Whose money it is and who decides where it goes are kept apart throughout.</p>
-      <nav class="jump" aria-label="Tables in this experiment">
-        <a class="chip" href="#fig-records">Grant records</a>
-        <a class="chip" href="#fig-sff">Named donors in SFF</a>
-        <a class="chip" href="#fig-bulletin">2025 and 2026 estimates</a>
-        <a class="chip" href="#fig-upstream">Who funds the funders</a>
-        <a class="chip" href="#fig-people">The people</a>
-        <a class="chip" href="#fig-programmes">Every programme</a>
-        <a class="chip" href="#fig-mats">Around MATS</a>
-        <a class="chip" href="#fig-recipients">By organisation</a>
-        <a class="chip" href="#fig-years">By year</a>
-      </nav>
-      <div class="tiles" id="tiles"></div>
+    <section class="hero" id="funders">
+      <h1>Who pays for AI safety, and why?</h1>
+      <a class="go" href="#story" aria-label="Go to the story">↓</a>
+    </section>
 
-      <figure class="fig" id="fig-records">
-        <div class="fig-head">
-          <h2 class="fh">Five grant records, by funder</h2>
-          <p id="recordsNote"></p>
+    <section class="story" id="story" aria-label="The story, step by step">
+      <figure class="stage" aria-hidden="true">
+        <div class="stage-head">
+          <span>Money behind AI safety, by whose fortune it is (US$)</span>
+          <span class="key"><span><i class="g"></i>Given</span><span><i></i>Pledged or expected</span></span>
         </div>
-        <div class="card"><div class="bars" id="recordBars"></div></div>
+        <div class="chart" id="chart"><div class="axis" id="axis"></div></div>
+        <figcaption class="stage-foot">Given: five public grant records, 2015 to August 2026, each dollar counted once, plus gifts reported elsewhere. Sources in <a href="#data">The data</a>.</figcaption>
       </figure>
+      <div class="steps" id="steps"></div>
+    </section>
 
-      <figure class="fig" id="fig-sff">
-        <div class="fig-head">
-          <h2 class="fh">The donor named on each SFF grant</h2>
-          <p>The SFF bar above, split by donor. 2019 to 2026. Recommendations, not confirmed payments.</p>
-        </div>
-        <div class="card"><div class="bars" id="sffBars"></div></div>
-      </figure>
-
-      <figure class="fig" id="fig-bulletin">
-        <div class="fig-head">
-          <h2 class="fh">Estimated giving by funder, 2025 and 2026</h2>
-          <p>Manifund's estimates, updated 1 October 2026. Not audited. A separate measure from the records above.</p>
-        </div>
-        <div class="card">
-          <div class="legend"><span><i class="k1"></i>Given in 2025</span><span><i class="k-plan"></i>Expected in 2026</span></div>
-          <div class="bars" id="bulletinBars"></div>
-        </div>
-      </figure>
-
-      <figure class="fig" id="fig-upstream">
-        <div class="fig-head">
-          <h2 class="fh">Who funds the funders</h2>
-          <p>Grants made to a funder, by the donor named in the record.</p>
-        </div>
-        <div class="card"><div class="tbl" id="upstream"></div></div>
-      </figure>
-
-      <figure class="fig" id="fig-people">
-        <div class="fig-head">
-          <h2 class="fh">The people</h2>
-          <p>What each has given, and what each says about giving. Their words are paraphrased; the link goes to the original.</p>
-        </div>
-        <div class="people" id="people"></div>
-      </figure>
-
-      <figure class="fig" id="fig-pools">
-        <div class="fig-head">
-          <h2 class="fh">Government and company pools</h2>
-        </div>
-        <div class="card"><div class="tbl" id="pools"></div></div>
-      </figure>
-
-      <figure class="fig" id="fig-programmes">
-        <div class="fig-head">
-          <h2 class="fh">Every funder on AISafety.com's funding page</h2>
-          <p>57 listings, read 13 October 2026.</p>
-        </div>
-        <div class="card">
-          <div class="tools">
-            <input type="search" id="progSearch" placeholder="Find a programme or a person" aria-label="Find a programme or a person" autocomplete="off">
-            <button class="btn ghost sm" id="progOwn" type="button" aria-pressed="false">One person's own money</button>
-            <span class="small" id="progCount" aria-live="polite"></span>
+    <!-- ============ THE DATA ============ -->
+    <section class="data" id="data">
+      <h2>The data</h2>
+      <p class="small">Every table behind the story. Money is a grant (from a foundation, fund or government), a donation (from a person), an investment (for equity) or corporate funding (from a company). Whose money it is and who decides where it goes are kept apart.</p>
+      <div class="layers">
+        <details class="layer" id="fig-records">
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Five grant records, by funder</span><span class="layer-inside">2015 to 2026, each dollar counted once</span></span><span class="layer-hook"><span><b id="h-records"></b></span></span></summary>
+          <div class="layer-body"><p class="small">Every row of each record. The three small records are mostly grants to individuals.</p><div class="bars" id="recordBars"></div></div>
+        </details>
+        <details class="layer" id="fig-sff">
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">The donor named on each SFF grant</span><span class="layer-inside">2019 to 2026. Recommendations, not confirmed payments</span></span><span class="layer-hook"><span><b id="h-sff"></b></span></span></summary>
+          <div class="layer-body"><div class="bars" id="sffBars"></div></div>
+        </details>
+        <details class="layer" id="fig-bulletin">
+          <summary><span class="layer-kind">Estimates</span><span class="layer-what"><span class="layer-title">Giving by funder, 2025 and 2026</span><span class="layer-inside">Manifund's estimates, 1 October 2026. Not audited</span></span></summary>
+          <div class="layer-body">
+            <div class="legend"><span><i class="k1"></i>Given in 2025</span><span><i class="k-plan"></i>Expected in 2026</span></div>
+            <div class="bars" id="bulletinBars"></div>
           </div>
-          <div class="tbl" id="programmes"></div>
-        </div>
-      </figure>
-
-      <figure class="fig" id="fig-mats">
-        <div class="fig-head">
-          <h2 class="fh">Organisations around MATS</h2>
-          <p id="matsNote"></p>
-        </div>
-        <div class="card"><div class="tbl" id="mats"></div></div>
-      </figure>
-
-      <figure class="fig" id="fig-recipients">
-        <div class="fig-head">
-          <h2 class="fh">Grants to each organisation, by funder</h2>
-          <p id="recipientsNote"></p>
-        </div>
-        <div class="card">
-          <div class="tools">
-            <input type="search" id="orgSearch" placeholder="Find an organisation" aria-label="Find an organisation" autocomplete="off">
-            <button class="btn ghost sm" id="orgAll" type="button">Show all</button>
-            <span class="small" id="orgCount" aria-live="polite"></span>
+        </details>
+        <details class="layer" id="fig-people">
+          <summary><span class="layer-kind">People</span><span class="layer-what"><span class="layer-title">The people</span><span class="layer-inside">What each gives and says, paraphrased, with the link to their words</span></span><span class="layer-hook"><span><b id="h-people"></b></span></span></summary>
+          <div class="layer-body"><div class="people" id="people"></div></div>
+        </details>
+        <details class="layer" id="fig-upstream">
+          <summary><span class="layer-kind">Funders</span><span class="layer-what"><span class="layer-title">Who funds the funders</span><span class="layer-inside">Grants made to a funder, by the donor named in the record</span></span></summary>
+          <div class="layer-body"><div class="tbl" id="upstream"></div></div>
+        </details>
+        <details class="layer" id="fig-pools">
+          <summary><span class="layer-kind">Funders</span><span class="layer-what"><span class="layer-title">Government and company pools</span><span class="layer-inside">The Alignment Project · ARIA · AI Safety Fund · OpenAI Foundation</span></span></summary>
+          <div class="layer-body"><div class="tbl" id="pools"></div></div>
+        </details>
+        <details class="layer" id="fig-programmes">
+          <summary><span class="layer-kind">Funders</span><span class="layer-what"><span class="layer-title">Every funder on AISafety.com's funding page</span><span class="layer-inside">Read 13 October 2026</span></span><span class="layer-hook"><span><b id="h-progs"></b></span></span></summary>
+          <div class="layer-body">
+            <div class="tools">
+              <input type="search" id="progSearch" placeholder="Find a programme or a person" aria-label="Find a programme or a person" autocomplete="off">
+              <button class="btn ghost sm" id="progOwn" type="button" aria-pressed="false">One person's own money</button>
+              <span class="small" id="progCount" aria-live="polite"></span>
+            </div>
+            <div class="tbl" id="programmes"></div>
           </div>
-          <div class="legend" id="orgLegend"></div>
-          <div class="bars" id="orgBars"></div>
-        </div>
-      </figure>
-
-      <figure class="fig" id="fig-years">
-        <div class="fig-head">
-          <h2 class="fh">Grants by year</h2>
-          <p>Grants to all recipients below. The 2026 column stops in August.</p>
-        </div>
-        <div class="card">
-          <div class="legend" id="yearLegend"></div>
-          <div class="cols" id="yearCols" role="img"></div>
-          <div class="col-labels" id="yearLabels" aria-hidden="true"></div>
-        </div>
-      </figure>
-
-      <div class="fig">
-        <div class="fig-head"><h2 class="fh">Not in the data</h2></div>
-        <ul class="gaps">
-          <li>The donors to the AI Safety Tactical Opportunities Fund, and Longview's private clients. No source names them.</li>
-          <li>Individual donors on Manifund other than Leo Gao. Manifund Trace has them; it is not imported yet.</li>
-          <li>Venture funding of companies, except Goodfire. Grants to individuals from EA Funds and Manifund.</li>
-          <li>Any organisation's full budget. A share here is a share of recorded grants.</li>
-          <li>SFF figures are recommendations. OpenAI's $30m is a 2017 grant, made when it was a non-profit.</li>
-        </ul>
-      </div>
-
-      <div class="fig">
-        <div class="fig-head"><h2 class="fh">Sources</h2></div>
-        <ul class="srcs" id="srcs"></ul>
+        </details>
+        <details class="layer" id="fig-recipients">
+          <summary><span class="layer-kind">Recipients</span><span class="layer-what"><span class="layer-title">Grants to each organisation, by funder</span><span class="layer-inside" id="recipientsNote"></span></span><span class="layer-hook"><span><b id="h-orgs"></b></span></span></summary>
+          <div class="layer-body">
+            <div class="tools">
+              <input type="search" id="orgSearch" placeholder="Find an organisation" aria-label="Find an organisation" autocomplete="off">
+              <button class="btn ghost sm" id="orgAll" type="button">Show all</button>
+              <span class="small" id="orgCount" aria-live="polite"></span>
+            </div>
+            <div class="legend" id="orgLegend"></div>
+            <div class="bars" id="orgBars"></div>
+          </div>
+        </details>
+        <details class="layer" id="fig-mats">
+          <summary><span class="layer-kind">Recipients</span><span class="layer-what"><span class="layer-title">Organisations around MATS</span><span class="layer-inside" id="matsInside"></span></span><span class="layer-hook"><span><b id="h-mats"></b></span></span></summary>
+          <div class="layer-body"><p class="small" id="matsNote"></p><div class="tbl" id="mats"></div></div>
+        </details>
+        <details class="layer" id="fig-years">
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Grants by year</span><span class="layer-inside">All recipients. The 2026 column stops in August</span></span></summary>
+          <div class="layer-body">
+            <div>
+              <div class="legend" id="yearLegend"></div>
+              <div class="cols" id="yearCols" role="img"></div>
+              <div class="col-labels" id="yearLabels" aria-hidden="true"></div>
+            </div>
+          </div>
+        </details>
+        <details class="layer" id="fig-gaps">
+          <summary><span class="layer-kind">Gaps</span><span class="layer-what"><span class="layer-title">Not in the data</span></span></summary>
+          <div class="layer-body">
+            <ul class="gaps">
+              <li>The donors to the AI Safety Tactical Opportunities Fund, and Longview's private clients. No source names them.</li>
+              <li>Individual donors on Manifund other than Leo Gao. Manifund Trace has them; it is not imported yet.</li>
+              <li>Venture funding of companies, except Goodfire. Grants to individuals from EA Funds and Manifund.</li>
+              <li>Any organisation's full budget. A share here is a share of recorded grants.</li>
+              <li>SFF figures are recommendations. OpenAI's $30m is a 2017 grant, made when it was a non-profit.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="layer" id="fig-sources">
+          <summary><span class="layer-kind">Sources</span><span class="layer-what"><span class="layer-title">Sources</span></span></summary>
+          <div class="layer-body"><ul class="srcs" id="srcs"></ul></div>
+        </details>
       </div>
     </section>
   </div>
@@ -336,6 +358,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const money = n => n >= 1e9 ? "$" + (n / 1e9).toFixed(2) + "bn" : n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + "m" : "$" + Math.round(n / 1e3) + "k";
+  // shorter: no trailing zeros, for the story and its chart
+  const short = n => n >= 1e9 ? "$" + +(n / 1e9).toFixed(n >= 1e10 ? 1 : 2) + "bn" : n >= 1e6 ? "$" + Math.round(n / 1e6) + "m" : "$" + Math.round(n / 1e3) + "k";
   const pct = x => Math.round(100 * x) + "%";
 
   /* ---------- names ---------- */
@@ -425,21 +449,145 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
   const orgs = Object.values(rec).filter(r => r.total > 0).sort((a, b) => b.total - a.total);
   const onMap = orgs.filter(r => !r.off).length;
-  const grand = orgs.reduce((s, r) => s + r.total, 0);
   // each record's total with every dollar counted once (worked out and checked in evidence/field/unmatched.py)
   const NET = window.RECORD_NET;
   const net = Object.values(NET).reduce((s, r) => s + r.counted, 0);
-  const oneSource = orgs.filter(r => Math.max(r.by.cg, r.by.sff, r.by.other) / r.total >= 0.9).length;
+  const link = k => X.sources[k] ? ` <a href="${X.sources[k].url}">Source</a>` : "";
+  const srcA = k => `<a href="${X.sources[k].url}">${esc(X.sources[k].title.split(/[:,]/)[0])}</a>`;
 
-  /* ---------- headline figures ---------- */
-  [
-    [pct(NET.cg.counted / net), `of the ${money(net)} in five public grant records was allocated by Coefficient Giving. Most of it is Dustin Moskovitz and Cari Tuna's money.`],
-    [oneSource + " of " + orgs.length, "recipients have 90% or more of their recorded grants from one funder."],
-    [pct(SFF[0].total / NET.sff.counted), "of the money in the SFF record carries Jaan Tallinn's name alone."]
-  ].forEach(([n, t]) => { const d = el("div", "tile"); d.innerHTML = `<b>${n}</b><span>${names(t)}</span>`; $("#tiles").appendChild(d); });
+  /* ================= THE STORY ================= */
+  const cg = NET.cg.counted, sffNet = NET.sff.counted, tal = SFF[0].total;
+  const joint = SFF.filter(d => d !== SFF[0] && /Jaan Tallinn/.test(d.name)).reduce((s, d) => s + d.total, 0);
+  const withMosk = SFF.find(d => d.name === "Jaan Tallinn and Dustin Moskovitz").total;
+  const bul = Object.fromEntries(X.bulletin.rows.map(r => [r.name, r]));
+  const hidden25 = ["Longview Philanthropy", "Macroscopic", "AI Safety Tactical Opportunities Fund"].reduce((s, k) => s + bul[k].y2025, 0) * 1e6;
+  const hidden26 = ["Longview Philanthropy", "Macroscopic", "AI Safety Tactical Opportunities Fund"].reduce((s, k) => s + bul[k].y2026, 0) * 1e6;
+  const pledge = 37.8e9, oaif = bul["OpenAI Foundation"].y2026 * 1e6;
 
-  /* ---------- figure 1: the five records ---------- */
-  $("#recordsNote").textContent = "Every row of each record, 2015 to 2026, each dollar counted once. The three small records are mostly grants to individuals.";
+  // rows of the pinned chart, top to bottom; each step shows some of them and lights a few
+  const ROWS = [
+    { id: "mt", name: "Dustin Moskovitz and Cari Tuna", from: "Facebook, Asana", g: cg, note: "Coefficient Giving" },
+    { id: "tallinn", name: "Jaan Tallinn", from: "Skype, Kazaa", g: tal, note: "alone, in SFF" },
+    { id: "rest", name: "Everyone else in the records", from: "includes joint SFF grants", g: s => s < 2 ? net - cg : net - cg - tal, note: "five records" },
+    { id: "buterin", name: "Vitalik Buterin", from: "Ethereum", g: 5e8, approx: true, note: "one gift, 2021" },
+    { id: "hidden", name: "Donors not published", from: "Longview's clients, Macroscopic, AISTOF", g: hidden25, p: hidden26 - hidden25, note: short(hidden26) + " in 2026" },
+    { id: "oaif", name: "OpenAI Foundation", from: "OpenAI shares", g: 0, p: oaif, note: "expected 2026" },
+    { id: "founders", name: "Anthropic's seven co-founders", from: "Anthropic shares", g: 0, p: pledge, approx: true, note: "pledged 2026" }
+  ];
+
+  // kicker, headline, the one number, a line or two of fact, what they say (paraphrased, linked), the next question
+  const STEPS = [
+    { show: ["mt", "rest"], hi: ["mt"], kick: "Five public grant records",
+      h: "AI safety runs on one couple's money.",
+      n: pct(cg / net), unit: `of ${short(net)} in grants, 2015 to 2026`,
+      fact: `Coefficient Giving allocated ${short(cg)} of it. Most of that is Dustin Moskovitz and Cari Tuna's Facebook and Asana fortune.`,
+      next: "So why do they give?" },
+    { show: ["mt", "rest"], hi: ["mt"], kick: "Dustin Moskovitz and Cari Tuna",
+      h: "They back what others neglect, and they are doubling down.",
+      n: "$" + bul["Coefficient Giving"].y2026 / 1000 + "bn", unit: `expected in 2026, up from $${bul["Coefficient Giving"].y2025}m in 2025 (Manifund estimate)`,
+      fact: "Moskovitz also invested in Anthropic in 2021.",
+      says: "Tuna calls her wealth luck. She picks causes by how many they affect, how neglected they are and whether money can move them. She likens AI to nuclear power, where early accidents brought rules that stalled a whole industry.",
+      src: ["forbes_tuna"],
+      next: "Who gives the next-largest share?" },
+    { show: ["mt", "tallinn", "rest"], hi: ["tallinn"], kick: "Survival and Flourishing Fund",
+      h: "The second-largest fund is one man's money.",
+      n: pct(tal / sffNet), unit: `of SFF's ${short(sffNet)} carries Jaan Tallinn's name alone`,
+      fact: `${SFF[0].grants} grants since ${SFF[0].first}. He gave ${short(joint)} more jointly, ${short(withMosk)} of it with Moskovitz.`,
+      next: "What does he want?" },
+    { show: ["mt", "tallinn", "rest"], hi: ["tallinn"], kick: "Jaan Tallinn",
+      h: "He wants brakes on AI. He also helped build Anthropic.",
+      n: "$124m", unit: "Anthropic's first round, which he led in 2021. An investment, not a gift",
+      says: "Since July 2024 his top priority has been cutting the risk that AI destroys humanity within a decade or two. He wants certified datacentres, speed limits on training, liability for developers and a global off-switch.",
+      src: ["tallinn"],
+      next: "Is it all from these two?" },
+    { show: ["mt", "tallinn", "rest", "buterin"], hi: ["buterin"], kick: "Vitalik Buterin",
+      h: "One crypto gift outweighs SFF's entire record.",
+      n: "~$500m", unit: "in Shiba Inu tokens, cashed out by the Future of Life Institute, 2021, by his account",
+      fact: "It is not in the five grant records.",
+      says: "He takes extinction from AI seriously, but will not accept one actor monopolising AI, and wants defensive, decentralising technology built first. In March 2026 he said he was no longer closely aligned with FLI.",
+      src: ["buterin_essay", "buterin"],
+      next: "Whose names are missing?" },
+    { show: ["mt", "tallinn", "rest", "buterin", "hidden"], hi: ["hidden"], kick: "Unnamed money",
+      h: "Hundreds of millions arrive with no donor named.",
+      n: short(hidden26), unit: "expected in 2026 from Longview, Macroscopic and the Tactical Opportunities Fund, none of which publish their donors",
+      fact: "Macroscopic's money is reportedly FTX tokens Ruairí Donnelly received as pay. His lawyers say they were not FTX's funds.",
+      who: "What unnamed donors say",
+      says: "In interviews, 22 donors who withheld their names, six of them holding frontier-lab shares, asked grantees to spell out what a grant changes. 13 said they cannot tell whether AI governance work succeeds.",
+      src: ["future_matters", "ambcrypto"],
+      next: "Where does the next fortune come from?" },
+    { show: ["mt", "tallinn", "rest", "buterin", "hidden", "oaif", "founders"], hi: ["founders", "oaif"], kick: "Anthropic's co-founders",
+      h: "The biggest fortune pledged yet was made building AI.",
+      n: "~" + short(pledge), unit: "80% of the seven co-founders' wealth, pledged January 2026 (Transformer's estimate)",
+      fact: `${Math.round(pledge / net)} times every grant in the five records. The OpenAI Foundation, which holds OpenAI shares, expects to give ${short(oaif)} in 2026.`,
+      says: "Dario Amodei writes that the wealthy, above all in tech, owe society help with the disruption AI will bring, as Gilded Age industrialists felt they owed something back.",
+      src: ["amodei", "transformer"],
+      next: "See every table behind this", to: "#data" }
+  ];
+
+  // the chart
+  const chart = $("#chart"), axis = $("#axis");
+  axis.innerHTML = [0, 50, 100].map(x => `<span style="left:${x}%"><em></em></span>`).join("");
+  const rowEl = {};
+  ROWS.forEach(r => {
+    const d = el("div", "srow");
+    d.innerHTML = `<span class="nm">${esc(r.name)}<small>${esc(r.from)}</small></span><span class="tr"><span class="g"></span><span class="p"></span></span><span class="val"></span>`;
+    chart.appendChild(d);
+    rowEl[r.id] = d;
+  });
+  const nice = x => { const e = 10 ** Math.floor(Math.log10(x)); return [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(m => m * e >= x) * e; };
+  let cur = -1;
+  function draw(i) {
+    if (i === cur) return;
+    cur = i;
+    const s = STEPS[i];
+    const val = r => ({ g: typeof r.g === "function" ? r.g(i) : r.g, p: r.p || 0 });
+    const max = nice(Math.max(...ROWS.filter(r => s.show.includes(r.id)).map(r => { const v = val(r); return v.g + v.p; })));
+    axis.querySelectorAll("em").forEach((e, k) => { e.textContent = k ? short(max * k / 2) : "$0"; });
+    ROWS.forEach(r => {
+      const d = rowEl[r.id], v = val(r), on = s.show.includes(r.id);
+      d.classList.toggle("on", on);
+      d.classList.toggle("hi", s.hi.includes(r.id));
+      d.querySelector(".g").style.width = on ? `max(${v.g ? 2 : 0}px, ${(100 * v.g / max).toFixed(3)}%)` : "0";
+      d.querySelector(".p").style.width = on ? `max(${v.p ? 2 : 0}px, ${(100 * v.p / max).toFixed(3)}%)` : "0";
+      d.querySelector(".val").innerHTML = (r.approx ? "~" : "") + short(v.g || v.p) + `<small>${esc(r.note)}</small>`;
+    });
+    document.querySelectorAll(".step").forEach((st, k) => st.classList.toggle("on", k === i));
+  }
+
+  // the steps
+  const steps = $("#steps");
+  STEPS.forEach((s, i) => {
+    const a = el("article", "step");
+    a.id = "step-" + (i + 1);
+    const srcs = (s.src || []).map(srcA).join(" · ");
+    a.innerHTML = `<span class="kick">${esc(s.kick)}</span><h2>${esc(s.h)}</h2>
+      <div class="big"><b>${esc(s.n)}</b><span>${esc(s.unit)}</span></div>
+      ${s.fact ? `<p class="fact">${names(s.fact)}</p>` : ""}
+      ${s.says ? `<div class="words"><b>${esc(s.who || "What they say")}</b><p>${names(s.says)}</p><small>${srcs}</small></div>` : ""}
+      <a class="next" href="${s.to || "#step-" + (i + 2)}">${esc(s.next)} ↓</a>`;
+    steps.appendChild(a);
+  });
+
+  // the step whose top has passed the reading line is the one shown
+  const stage = $(".stage"), stepEls = [...document.querySelectorAll(".step")];
+  let ticking = false;
+  function pick() {
+    ticking = false;
+    const narrow = window.innerWidth < 900;
+    const top = narrow ? stage.getBoundingClientRect().bottom : 0;
+    const line = top + (window.innerHeight - top) * (narrow ? 0.45 : 0.55);
+    let i = 0;
+    stepEls.forEach((st, k) => { if (st.getBoundingClientRect().top < line) i = k; });
+    draw(i);
+  }
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(pick); } }, { passive: true });
+  window.addEventListener("resize", pick);
+  pick();
+
+  /* ================= THE DATA ================= */
+
+  /* ---------- the five records ---------- */
+  $("#h-records").textContent = short(net);
   const RECORD_NAME = { cg: "Coefficient Giving", sff: "Survival and Flourishing Fund", ltff: "Long-Term Future Fund", eaif: "EA Infrastructure Fund", manifund: "Manifund" };
   // whose money each record mainly is, who decides, and the kind of money
   const RECORD_BY = { cg: "Dustin Moskovitz and Cari Tuna", sff: "Jaan Tallinn", ltff: "pooled donations", eaif: "pooled donations", manifund: "individual donors" };
@@ -456,6 +604,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
 
   /* ---------- the donor named on each SFF row ---------- */
+  $("#h-sff").textContent = short(sffNet);
   const sffMax = SFF[0].total;
   SFF.forEach(d => {
     const row = el("div", "bar-row");
@@ -468,7 +617,6 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
 
   /* ---------- who funds the funders ---------- */
-  const link = k => X.sources[k] ? ` <a href="${X.sources[k].url}">Source</a>` : "";
   let lastTo = null;
   X.upstream.forEach(u => {
     if (u.to !== lastTo) { $("#upstream").appendChild(el("div", "tbl-group", esc(u.to))); lastTo = u.to; }
@@ -481,6 +629,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
 
   /* ---------- the people ---------- */
+  $("#h-people").textContent = X.people.length;
   X.people.forEach(p => {
     const card = el("article", "person");
     card.id = "p-" + p.id;
@@ -510,7 +659,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       <span class="c">${r ? money(r.total) + `<small>${pct(r.by[top.key] / r.total)} ${top.key === "cg" ? "Coefficient" : top.key === "sff" ? "SFF" : "other"}</small>` : `<small>${e || m.raw ? "no grant row" : "not in the data"}</small>`}</span>`;
     $("#mats").appendChild(row);
   });
-  $("#matsNote").innerHTML = `${matsRows} organisations MATS names on its site. ${matsWith} have funding recorded here. Figures are recorded grants. <a href="${X.sources.mats.url}">MATS: alumni</a> · <a href="${X.sources.mats_summer.url}">Summer 2026</a>`;
+  $("#h-mats").textContent = matsRows;
+  $("#matsInside").textContent = `Named on MATS's site. ${matsWith} have funding recorded here`;
+  $("#matsNote").innerHTML = `Figures are recorded grants. <a href="${X.sources.mats.url}">MATS: alumni</a> · <a href="${X.sources.mats_summer.url}">Summer 2026</a>`;
 
   /* ---------- pools ---------- */
   X.pools.forEach(o => {
@@ -520,6 +671,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   });
 
   /* ---------- every programme ---------- */
+  $("#h-progs").textContent = X.programmes.length;
   let ownOnly = false;
   function drawProgs() {
     const q = $("#progSearch").value.trim().toLowerCase();
@@ -553,11 +705,12 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
     $("#bulletinBars").appendChild(row);
   });
 
-  /* ---------- figure 4: every organisation ---------- */
+  /* ---------- every organisation ---------- */
   const TOP = 20;
   let showAll = false;
   const orgMax = orgs[0].total;
-  $("#recipientsNote").textContent = `Recorded grants to ${orgs.length} recipients: ${onMap} on the AISafety.com field map and ${orgs.length - onMap} that are not.`;
+  $("#h-orgs").textContent = orgs.length;
+  $("#recipientsNote").textContent = `${onMap} on the AISafety.com field map, ${orgs.length - onMap} not`;
   function grantsPanel(r) {
     const box = el("div", "grants");
     r.flows.slice().sort((a, b) => b.total - a.total).forEach(f => {
@@ -606,7 +759,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   $("#orgAll").addEventListener("click", () => { showAll = !showAll; drawOrgs(); });
   drawOrgs();
 
-  /* ---------- figure 5: by year ---------- */
+  /* ---------- by year ---------- */
   const years = {};
   FLOWS.forEach(f => f.grants.forEach(g => {
     const y = String(g[0]).slice(0, 4);
