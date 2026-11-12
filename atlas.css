@@ -59,7 +59,7 @@ section.chapter:has(> .opener) { padding-block: 72px 32px; }
 @media (max-width: 899px) { .specimen { justify-self: start; } }
 .specimen svg { display: block; width: 100%; height: auto; overflow: visible; }
 .specimen figcaption { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line-strong); font-size: .86rem; line-height: 1.45; color: var(--muted); }
-.specimen-tag { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.specimen-tag { font-family: var(--font-label); font-size: var(--text-label); color: var(--ink); }
 .specimen-tag b { font-weight: 500; color: var(--accent); }
 
 .sp-ink { stroke: var(--ink); } .sp-rule { stroke: var(--line-strong); } .sp-acc { stroke: var(--accent); }
@@ -96,7 +96,7 @@ section.chapter:has(> .opener) { padding-block: 72px 32px; }
    is a table too, and the stacking and measure names added on a narrow screen belong only to the ratings. */
 .dossier { margin: 0 0 40px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line-strong); }
 .dossier > table { width: 100%; border-collapse: collapse; font-size: .92rem; }
-.dossier > table caption { caption-side: bottom; text-align: left; padding: 10px 0 12px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .02em; line-height: 1.5; color: var(--muted); }
+.dossier > table caption { caption-side: bottom; text-align: left; padding: 10px 0 12px; border-top: 1px solid var(--line); font-family: var(--font-label); font-size: var(--text-label); line-height: 1.5; color: var(--muted); }
 .dossier > table th, .dossier > table td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; }
 .dossier > table thead th { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--ink); padding-bottom: 12px; width: 19%; }
 .dossier > table thead th:first-child { width: 24%; font-size: 1.08rem; }
@@ -124,7 +124,7 @@ section.chapter:has(> .opener) { padding-block: 72px 32px; }
   .dossier > table tbody tr:first-child { border-top: 0; }
   .dossier > table tbody th { grid-column: 1 / -1; padding: 0; font-size: 1.08rem; }
   .dossier > table td { padding: 0; white-space: normal; }
-  .dossier > table td::before { display: block; margin-bottom: 3px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .dossier > table td::before { display: block; margin-bottom: 3px; font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
   .dossier > table td:nth-of-type(1)::before { content: "Agents"; }
   .dossier > table td:nth-of-type(2)::before { content: "Coupling"; }
   .dossier > table td:nth-of-type(3)::before { content: "Speed"; }

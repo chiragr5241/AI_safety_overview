@@ -14,8 +14,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=8">
-<link rel="stylesheet" href="explore.css?v=2">
+<link rel="stylesheet" href="site.css?v=9">
+<link rel="stylesheet" href="explore.css?v=3">
 <style>
 /* Ecosystem page: a reference page. The map plate is the page header; hand-written reading sections follow, then lists drawn from ecosystem-data.js. */
 /* This page runs the full width of the window, and the map plate runs past the gutters to its edges. */
@@ -34,24 +34,26 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .readrow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
 @media (max-width: 860px) { .readrow { grid-template-columns: minmax(0, 1fr); } }
 
-/* The map. The stage is dark in both themes, like a printed chart plate, so its colours are fixed here and not theme tokens. */
-.web { --w-bg: #07131C; --w-raise: #102433; --w-ink: #EEF3F6; --w-muted: #A3B5C1; --w-line: #27414F; --w-hi: #7FE9D8;
-  --w-soft: #DCE4EA; --w-hot: #1B3A4E; --w-in: #07131C; --w-sel: #FFFFFF; --w-shade: rgb(0 0 0 / .7); --k-a: #2EE6C8; --k-b: #F7A93B;
+/* The map's own tokens. Its dark face is the default, like a printed chart plate; the light face follows the page's light theme.
+   The group colours change with it: see the tones in ecosystem-graph.js. */
+:root { --w-bg: #07131C; --w-raise: #102433; --w-ink: #EEF3F6; --w-muted: #A3B5C1; --w-line: #27414F; --w-hi: #7FE9D8;
+  --w-soft: #DCE4EA; --w-hot: #1B3A4E; --w-in: #07131C; --w-sel: #FFFFFF; --w-shade: rgb(0 0 0 / .7); --k-a: #2EE6C8; --k-b: #F7A93B; }
+:root[data-theme="light"] { --w-bg: #F7F9F8; --w-raise: #FCFDFC; --w-ink: #16202A; --w-muted: #56626C; --w-line: #CFD6D0; --w-hi: #1D6B67;
+  --w-soft: #3D4A54; --w-hot: #E3EAE7; --w-in: #FFFFFF; --w-sel: #16202A; --w-shade: rgb(0 0 0 / .22); --k-a: #0C8573; --k-b: #C4700A; }
+.web {
   margin: 0 calc(-1 * var(--gutter)); background: var(--w-bg); color: var(--w-ink); border-bottom: 1px solid var(--w-line); padding: 22px var(--gutter) 24px; display: grid; gap: 14px; min-width: 0; color-scheme: dark; scroll-margin-top: 72px; }
-/* The map has a light face too. The group colours change with it: see the tones in ecosystem-graph.js. */
-:root[data-theme="light"] .web { --w-bg: #F7F9F8; --w-raise: #FFFFFF; --w-ink: #16202A; --w-muted: #56626C; --w-line: #CFD6D0; --w-hi: #1D6B67;
-  --w-soft: #3D4A54; --w-hot: #E3EAE7; --w-in: #FFFFFF; --w-sel: #16202A; --w-shade: rgb(0 0 0 / .22); --k-a: #0C8573; --k-b: #C4700A; color-scheme: light; }
+:root[data-theme="light"] .web { color-scheme: light; }
 @media (max-width: 600px) { .web { padding-block: 18px; } }
 .web a { color: var(--w-hi); }
 .web :focus-visible { outline-color: var(--w-hi); }
 .web-head { display: grid; gap: 0; }
-.web-eyebrow { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); }
+.web-eyebrow { font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); }
 .web h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.06; margin-top: 6px; }
-.web h1 span { color: var(--k-a); }
+.web h1 span { color: inherit; }
 .web-sub { font-size: .92rem; line-height: 1.5; color: var(--w-muted); max-width: 44em; }
 .web-head > .web-sub { margin-top: 10px; }
 /* One line of legend under the title. The full reading guide, with the width steps, opens beneath it. */
-.web-legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font-mono); font-size: .74rem; color: var(--w-muted); }
+.web-legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); }
 .web-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .web-legend svg { width: 26px; height: 14px; flex: none; fill: var(--w-ink); stroke: var(--w-ink); }
 .web-legend svg circle { stroke: none; }
@@ -77,7 +79,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .web-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; border-top: 1px solid var(--w-line); padding-top: 12px; }
 .web-tools .pills { flex: 1 1 30rem; }
 .web .pills { gap: 6px; }
-.web .pills button { font-size: .84rem; min-height: 34px; padding: 0 11px; }
+.web .pills button { font-size: .84rem; min-height: 34px; padding: 0 11px; white-space: nowrap; }
 @media (pointer: coarse) { .web .pills button { min-height: 44px; } }
 .web-under { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: start; justify-content: space-between; }
 /* Everything the reader can set on the map: zoom level, kind of tie, bubble size and the search. On a narrow window it sits above the map.
@@ -100,9 +102,9 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
   .web-side .web-tools { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 6px; }
   .web-side .web-tools .pills, .web-side .web-blurb, .web-side .web-sizemore { flex: none; max-width: none; }
   .web-side .web-sizer { border-top: 1px solid var(--w-line); padding-top: 12px; }
-  /* two choices to a row, each as wide as the other, with a long label free to take a second line */
-  .web-side .pills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-  .web-side .pills button { font-size: .8rem; line-height: 1.2; min-height: 34px; padding: 4px 8px; border-radius: 10px; white-space: normal; }
+  /* choices flow two or three to a row and grow to fill it; a label never takes a second line */
+  .web-side .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .web-side .pills button { flex: 1 0 auto; font-size: .8rem; line-height: 1.2; min-height: 34px; padding: 4px 10px; border-radius: 10px; white-space: nowrap; }
   /* The key to the sizes keeps one height for most keys, so little under it moves when the measure or the zoom changes; a taller key is not clipped. */
   .web-side .web-sizekey { margin: 2px 0 0; min-height: 140px; align-content: flex-start; }
   .web-side .web-sizekey .shrunk { flex: 1 1 100%; white-space: normal; }
@@ -120,7 +122,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .web .pills button { background: transparent; border-color: var(--w-line); color: var(--w-muted); }
 .web .pills button:hover { color: var(--w-ink); border-color: var(--w-ink); }
 .web .pills button[aria-pressed="true"] { background: var(--w-ink); color: var(--w-bg); border-color: var(--w-ink); }
-.web .pills button:disabled { opacity: .45; cursor: default; color: var(--w-muted); border-color: var(--w-line); }
+.web .pills button:disabled { cursor: not-allowed; color: var(--w-muted); background: var(--w-bg); border-color: var(--w-line); border-style: dashed; }
 .web-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .web-find input, .web-btn { font-family: var(--font-display); font-weight: 500; font-size: .88rem; min-height: 38px; border-radius: 10px; border: 1px solid var(--w-line); background: var(--w-raise); color: var(--w-ink); padding: 0 12px; cursor: pointer; }
 .web-btn:hover, .web-find input:hover { border-color: var(--w-ink); }
@@ -128,10 +130,13 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 /* One search for every bubble, group and person. The list scrolls, and the row under the pointer previews on the map. */
 .web-find { position: relative; }
 .web-find input { width: 17rem; max-width: 100%; cursor: text; padding-left: 34px; background: var(--w-raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A3B5C1' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l5 5'/%3E%3C/svg%3E") 11px center / 15px no-repeat; }
+/* the search field's edge holds 3:1 against the map */
+.web-find input { border-color: var(--w-muted); }
+.web-find input:hover { border-color: var(--w-ink); }
 .web-find input::placeholder { color: var(--w-muted); }
 .web-find ul { position: absolute; z-index: 5; left: 0; top: calc(100% + 6px); width: max(100%, 21rem); max-width: calc(100vw - 48px); max-height: 19rem; overflow-y: auto; overscroll-behavior: contain; list-style: none; margin: 0; padding: 6px; background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 12px; box-shadow: 0 14px 28px -12px var(--w-shade); }
 .web-find li { font-size: .88rem; line-height: 1.3; }
-.web-find .grp { padding: 9px 8px 4px; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); }
+.web-find .grp { padding: 9px 8px 4px; font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); }
 .web-find [role="option"] { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 9px; align-items: center; min-height: 34px; padding: 4px 8px; border-radius: 7px; cursor: pointer; font-family: var(--font-display); font-weight: 500; }
 .web-find [role="option"] i { width: 10px; height: 10px; border-radius: 50%; }
 .web-find [role="option"] i.who { border-radius: 0; height: 0; border-top: 2px dotted var(--w-soft); }
@@ -196,7 +201,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .web-sizekey circle.unk { fill: var(--w-muted); fill-opacity: .13; stroke: var(--w-muted); stroke-width: 1.3; stroke-dasharray: 2.6 2.4; }
 .web-sizemore { flex: 1 1 100%; margin-top: -4px; }
 .web-sizelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 14px 28px; }
-.web-sizelist h3 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.web-sizelist h3 { font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; margin-bottom: 4px; }
 .web-sizelist ul { list-style: none; margin: 0; padding: 0; display: grid; }
 .web-sizelist li { display: grid; padding: 6px 0; border-bottom: 1px solid var(--w-line); }
 .web-sizelist li span { font-size: .8rem; line-height: 1.4; color: var(--w-muted); padding-left: 18px; }
@@ -208,15 +213,15 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 #webStage .lab { font-size: 13px; font-weight: 500; fill: var(--w-ink); paint-order: stroke; stroke: var(--w-bg); stroke-width: 3.5px; stroke-linejoin: round; pointer-events: none; }
 #webStage .in { font-size: 12.5px; font-weight: 800; fill: var(--w-in); pointer-events: none; }
 #webStage .in.num { font-family: var(--font-mono); font-weight: 500; font-size: 12px; }
-#webStage .ctitle { font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; paint-order: stroke; stroke: var(--w-bg); stroke-width: 4px; }
+#webStage .ctitle { font-family: var(--font-label); font-size: 12.5px; font-weight: 500; cursor: pointer; paint-order: stroke; stroke: var(--w-bg); stroke-width: 4px; }
 #webStage .ctitle:hover, #webStage .ctitle.sel { text-decoration: underline; }
 #webStage.has-focus .ctitle:not(.sel) { opacity: .55; }
 .web-panel { border-top: 1px solid var(--w-line); padding-top: 18px; margin-top: 2px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px 36px; align-items: start; min-height: 11rem; font-size: .93rem; }
 @media (max-width: 860px) { .web-panel { grid-template-columns: minmax(0, 1fr); } }
 .web-panel h2 { font-size: 1.35rem; margin: 4px 0 8px; }
-.web-panel h3 { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--w-muted); margin-bottom: 6px; }
+.web-panel h3 { font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; color: var(--w-muted); margin-bottom: 6px; }
 .wp-main { display: grid; gap: 6px; align-content: start; }
-.wp-lbl { display: block; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--w-muted); }
+.wp-lbl { display: block; font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); }
 .wp-small, .wp-none { font-size: .86rem; color: var(--w-muted); }
 .wp-ties { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 28px; }
 @media (max-width: 600px) { .wp-ties { grid-template-columns: minmax(0, 1fr); } }
@@ -253,7 +258,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .wp-notes > div { display: grid; gap: 8px; align-content: start; justify-items: start; }
 .wp-notes h2 { font-size: 1.12rem; margin: 0; }
 .wp-notes p { color: var(--w-muted); }
-.web-act { font-family: var(--font-display); font-weight: 700; font-size: .86rem; color: var(--w-hi); background: none; border: 1px solid var(--w-line); border-radius: 999px; min-height: 36px; padding: 0 14px; cursor: pointer; }
+.web-act { white-space: nowrap; font-family: var(--font-display); font-weight: 700; font-size: .86rem; color: var(--w-hi); background: none; border: 1px solid var(--w-line); border-radius: 999px; min-height: 36px; padding: 0 14px; cursor: pointer; }
 .web-act:hover { border-color: var(--w-hi); }
 .web figcaption { font-size: .82rem; color: var(--w-muted); border-top: 1px dashed var(--w-line); padding-top: 12px; max-width: 70em; }
 /* two zoom levels: the whole industry, and the AI safety field opened up inside it */
@@ -270,8 +275,8 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .web-zoom > div { display: inline-flex; align-items: center; gap: 2px; padding: 3px; background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 12px; }
 .web-zoom button { width: 36px; height: 36px; border-radius: 9px; border: 0; background: transparent; color: var(--w-ink); font: 700 1.25rem/1 var(--font-display); cursor: pointer; }
 .web-zoom button:hover:not(:disabled) { background: var(--w-hot); }
-.web-zoom button:disabled { opacity: .35; cursor: default; }
-.web-zoom span { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--w-muted); padding: 0 8px; white-space: nowrap; }
+.web-zoom button:disabled { cursor: not-allowed; color: var(--w-line); background: transparent; }
+.web-zoom span { font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); padding: 0 8px; white-space: nowrap; }
 @media (pointer: coarse) { .web-zoom button { width: 44px; height: 44px; } }
 .web.no-field .web-zoom, .web.no-field .web-level { display: none; }
 #webStage .away { display: none !important; }
@@ -291,13 +296,13 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 #webStage { cursor: grab; touch-action: pan-y; }   /* a pinch is the map's, not the page's: see ecosystem-graph.js */
 #webStage.panning, #webStage.panning * { cursor: grabbing !important; }
 #webStage.zoomed { touch-action: none; }
-#webStage .band { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; fill: var(--w-muted); }
+#webStage .band { font-family: var(--font-label); font-size: 11px; fill: var(--w-muted); }
 #webStage .bandline { fill: none; stroke: var(--w-line); stroke-dasharray: 4 5; }
 /* The search sits above the plate at both zoom levels, so it does not move when the level changes: zoomed in, the plate is taller
    than the window and a search under it would be out of reach. Zoomed in, the panel for a chosen bubble stays at the foot of the window. */
 .web.lv1.has-sel .web-panel { position: sticky; bottom: 0; z-index: 6; max-height: 42vh; overflow-y: auto; overscroll-behavior: contain; background: var(--w-bg); margin: 0 calc(-1 * var(--gutter)); padding: 14px var(--gutter) 18px; border-top: 1px solid var(--w-hi); box-shadow: 0 -18px 30px -18px var(--w-shade); }
 @media (max-width: 600px) { .web.lv1.has-sel .web-panel { padding-block: 12px 16px; } }
-.wp-close { grid-column: 1 / -1; justify-self: end; margin-bottom: -34px; position: relative; z-index: 1; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--w-muted); background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 999px; min-height: 30px; padding: 0 12px; cursor: pointer; }
+.wp-close { grid-column: 1 / -1; justify-self: end; margin-bottom: -34px; position: relative; z-index: 1; font-family: var(--font-label); font-size: var(--text-label); color: var(--w-muted); background: var(--w-raise); border: 1px solid var(--w-line); border-radius: 999px; min-height: 30px; padding: 0 12px; cursor: pointer; }
 .wp-close:hover { color: var(--w-ink); border-color: var(--w-ink); }
 .wp-grants { padding-left: 18px; font-size: .8rem; color: var(--w-muted); }
 .wp-grants summary { cursor: pointer; color: var(--w-hi); font-family: var(--font-mono); font-size: .72rem; padding: 3px 0; }
@@ -327,7 +332,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .dp-cols.one { grid-template-columns: minmax(0, 1fr); max-width: 46rem; }
 @media (max-width: 860px) { .dp-cols { grid-template-columns: minmax(0, 1fr); } }
 .dp-cols > div { border-radius: 14px; padding: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
-.dp-cols h4 { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; }
+.dp-cols h4 { font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; }
 .dp-cols ul { margin: 0; padding-left: 1.15em; display: grid; gap: 9px; font-size: .95rem; }
 .est { background: var(--surface); border: 1px solid var(--line); }
 .est h4 { color: var(--accent); }
@@ -378,7 +383,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .qnav { display: flex; flex-wrap: wrap; gap: 8px; }
 .qblock { padding-top: 44px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; scroll-margin-top: 72px; }
 .qblock-head { display: grid; gap: 6px; max-width: 46rem; }
-.qblock-head .step { font-family: var(--font-mono); font-size: .78rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.qblock-head .step { font-family: var(--font-label); font-size: var(--text-label); color: var(--accent); }
 .cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
 .cats.one { grid-template-columns: minmax(0, 1fr); max-width: 52rem; }
 @media (max-width: 860px) { .cats { grid-template-columns: minmax(0, 1fr); } }
@@ -389,7 +394,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .cat ul.pts { margin: 0; padding-left: 1.15em; display: grid; gap: 8px; font-size: .95rem; }
 .bound { margin: 0; display: grid; gap: 6px; font-size: .88rem; border-top: 1px dashed var(--line); padding-top: 12px; }
 .bound div { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 10px; }
-.bound dt { font-family: var(--font-mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding-top: 2px; }
+.bound dt { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); padding-top: 2px; }
 .bound dd { margin: 0; }
 .cat-actors { display: flex; flex-wrap: wrap; gap: 6px; }
 .cat-actors .chip { font-size: .82rem; min-height: 32px; padding: 0 10px; }
@@ -412,10 +417,10 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .pcard h3 { font-size: 1.2rem; }
 .pcard .who { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); line-height: 1.6; }
 .pcard .plain { font-size: .96rem; }
-.pcard .lbl { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pcard .lbl { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 .pcard details summary { cursor: pointer; font-family: var(--font-mono); font-size: .82rem; color: var(--accent); padding-block: 6px; }
 .pcard dl { margin: 0; display: grid; gap: 10px; font-size: .9rem; line-height: 1.55; }
-.pcard dt { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pcard dt { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 .pcard dd { margin: 2px 0 0; }
 .pcard dd ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
 
@@ -438,7 +443,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .rule3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 860px) { .rule3 { grid-template-columns: minmax(0, 1fr); } }
 .rule3 > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; font-size: .95rem; }
-.rule3 h3 { font-family: var(--font-mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 500; }
+.rule3 h3 { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); font-weight: 500; }
 .panel { background: var(--surface); border: 1.5px solid var(--ink); border-radius: 16px; padding: 22px; display: grid; gap: 16px; min-width: 0; max-width: 56rem; }
 .panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .panel-head .eyebrow { color: var(--accent); }
@@ -464,7 +469,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .tbl-box { overflow-x: auto; }
 table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .88rem; line-height: 1.5; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .tbl th, .tbl td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
-.tbl thead th { font-family: var(--font-mono); font-weight: 500; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+.tbl thead th { font-family: var(--font-label); font-weight: 500; font-size: var(--text-label); color: var(--muted); white-space: nowrap; }
 .tbl tbody tr:last-child td { border-bottom: 0; }
 .tbl td.amt { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tbl.ledger { min-width: 860px; }
@@ -478,7 +483,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 .frame-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; font-size: .94rem; }
 @media (max-width: 860px) { .frame-cols { grid-template-columns: minmax(0, 1fr); } }
 .frame-cols > div { display: grid; gap: 6px; align-content: start; }
-.frame-cols h4 { margin: 0; font-family: var(--font-mono); font-size: .74rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.frame-cols h4 { margin: 0; font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; color: var(--muted); }
 .frame-cols .can { background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; }
 .frame-cols .can h4 { color: var(--accent); }
 
@@ -510,10 +515,10 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 
 /* 9. Sources */
 .srcgroup { padding-top: 22px; display: grid; gap: 8px; max-width: 60rem; }
-.srcgroup h3 { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.srcgroup h3 { font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; color: var(--muted); }
 .srcgroup ul { list-style: none; margin: 0; padding: 0; }
 .srcgroup li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .93rem; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
-.srcgroup li .small { font-family: var(--font-mono); font-size: .76rem; }
+.srcgroup li .small { font-family: var(--font-label); font-size: var(--text-label); }
 </style>
 </head>
 <body>
@@ -631,7 +636,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">123</b> actors · <b id="nTies">159</b> ties · <b id="nSources">157</b> sources · <b id="nExtTies">20</b> control-evidence ties · <b id="nExtPeople">14</b> people, as dotted links · evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in: <b id="nFieldAll">373</b> entries from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA) · <b id="nFieldShared">32</b> also on the industry map · <b id="nFieldFlows">239</b> grant arrows · <b id="nFieldCorp">22</b> company-announcement arrows.</span></figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">123</b> actors, <b id="nTies">159</b> ties, <b id="nSources">157</b> sources, <b id="nExtTies">20</b> control-evidence ties and <b id="nExtPeople">14</b> people as dotted links; evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in: <b id="nFieldAll">373</b> entries from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> also on the industry map, <b id="nFieldFlows">239</b> grant arrows and <b id="nFieldCorp">22</b> company-announcement arrows.</span></figcaption>
     </figure>
 
     <div class="readrow">
@@ -651,7 +656,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ CONTROL AND INCENTIVES ============ -->
     <section class="chapter" id="control">
       <div class="chapter-head">
-        <span class="chapter-num">Control and incentives</span>
         <h2>Who decides, and what do they stand to gain?</h2>
         <p style="max-width:var(--measure)">The map above shows who is tied to whom but not who holds the right to decide. This section follows five decisions that shape AI safety and asks, for each one, who holds the right, who can block it, and what interests are on record.</p>
       </div>
@@ -667,7 +671,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- 1 -->
       <div class="qblock" id="dp-research">
         <div class="qblock-head">
-          <span class="step">Decision 1 of 5</span>
           <h3>What gets researched</h3>
           <p>Independent safety research runs largely on grants, so the question is who signs them off.</p>
         </div>
@@ -702,7 +705,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- 2 -->
       <div class="qblock" id="dp-evaluation">
         <div class="qblock-head">
-          <span class="step">Decision 2 of 5</span>
           <h3>What gets evaluated and published</h3>
           <p>To test a model, an evaluator needs the lab that built it to grant access. That makes the terms of access the place to look for leverage.</p>
         </div>
@@ -737,7 +739,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- 3 -->
       <div class="qblock" id="dp-release">
         <div class="qblock-head">
-          <span class="step">Decision 3 of 5</span>
           <h3>Whether a model ships</h3>
           <p>Who inside each lab can delay or stop a release, and whether anyone outside management has a say.</p>
         </div>
@@ -795,7 +796,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- 4 -->
       <div class="qblock" id="dp-rules">
         <div class="qblock-head">
-          <span class="step">Decision 4 of 5</span>
           <h3>What rules bind</h3>
           <p>A duty a regulator can fine you for is a different thing from a code a company signs. The two are often discussed together.</p>
         </div>
@@ -835,7 +835,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- 5 -->
       <div class="qblock" id="dp-people">
         <div class="qblock-head">
-          <span class="step">Decision 5 of 5</span>
           <h3>Who sits where, and who holds an interest</h3>
           <p>The same people can appear on more than one side of a decision. The record shows roles and interests, which are not the same as motives.</p>
         </div>
@@ -870,7 +869,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 1. SUMMARY ============ -->
     <section class="chapter" id="summary">
       <div class="chapter-head">
-        <span class="chapter-num">PART 1 · THE SHORT VERSION</span>
         <h2>Five findings</h2>
         <p style="max-width:var(--measure)">If you read only one section, read this one. Each finding names the evidence it rests on and the limit of what it shows.</p>
       </div>
@@ -905,7 +903,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 2. SIX QUESTIONS ============ -->
     <section class="chapter" id="questions">
       <div class="chapter-head">
-        <span class="chapter-num">PART 2 · THE STRUCTURE</span>
         <h2>Six questions, eleven categories</h2>
         <p style="max-width:var(--measure)">The map sorts its 123 actors into eleven categories. They are grouped here under six questions a political scientist might ask of any policy field. The grouping is a reading aid. Many actors play more than one role, and a category is a display choice, not an exclusive identity. An actor that clearly fills two categories, such as a university that does research and trains new researchers, is listed under both and counted once.</p>
         <div class="qnav" aria-label="Jump to a question">
@@ -921,7 +918,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q1 -->
       <div class="qblock" id="q-supply">
         <div class="qblock-head">
-          <span class="step">Question 1 of 6</span>
           <h3>Who supplies the infrastructure?</h3>
           <p>Advanced AI needs specialised chips, data centres and a great deal of electricity. A small number of firms supply them.</p>
         </div>
@@ -966,7 +962,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q2 -->
       <div class="qblock" id="q-finance">
         <div class="qblock-head">
-          <span class="step">Question 2 of 6</span>
           <h3>Who finances development?</h3>
           <p>Two very different pools of money. Investors finance the building of models. Philanthropic funds finance much of the independent safety research.</p>
         </div>
@@ -1012,7 +1007,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q3 -->
       <div class="qblock" id="q-control">
         <div class="qblock-head">
-          <span class="step">Question 3 of 6</span>
           <h3>Who controls decisions?</h3>
           <p>Inside the companies that build the models, the right to decide and the right to profit are often held by different parties.</p>
         </div>
@@ -1040,7 +1034,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q4 -->
       <div class="qblock" id="q-research">
         <div class="qblock-head">
-          <span class="step">Question 4 of 6</span>
           <h3>Who does the research?</h3>
           <p>Independent organisations test models, study how they work and advise on policy. Training programmes bring new people in.</p>
         </div>
@@ -1091,7 +1084,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q5 -->
       <div class="qblock" id="q-policy">
         <div class="qblock-head">
-          <span class="step">Question 5 of 6</span>
           <h3>Who shapes policy?</h3>
           <p>Public bodies hold legal authority. Companies, advocacy groups and political committees try to influence how it is used.</p>
         </div>
@@ -1139,7 +1131,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <!-- Q6 -->
       <div class="qblock" id="q-bears">
         <div class="qblock-head">
-          <span class="step">Question 6 of 6</span>
           <h3>Who bears the consequences?</h3>
           <p>Workers, performers, communities and the firms that deploy AI live with the results. This group also includes the bodies that check and insure: standards organisations, assessors and insurers.</p>
         </div>
@@ -1188,7 +1179,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 3. ACTORS ============ -->
     <section class="chapter" id="actors">
       <div class="chapter-head">
-        <span class="chapter-num">PART 3 · THE 123 PROFILES</span>
         <h2>The actors</h2>
         <p style="max-width:var(--measure)">Every actor and group in the map. Each card gives a one-line reading of the actor's stake. Open "Full profile" for its stated mission, formal governance, key figures, recorded ties and sources.</p>
       </div>
@@ -1219,7 +1209,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 4. TIES ============ -->
     <section class="chapter" id="ties">
       <div class="chapter-head">
-        <span class="chapter-num">PART 4 · THE 136 RELATIONSHIPS</span>
         <h2>The ties between them</h2>
         <p style="max-width:var(--measure)">Each row is one documented relationship, read from left to right. An arrow shows the stated relationship. It is not a general score of influence. Amounts are not additive, and a missing date does not mean the tie began at the evidence cutoff.</p>
       </div>
@@ -1257,7 +1246,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 5. MONEY ============ -->
     <section class="chapter" id="money">
       <div class="chapter-head">
-        <span class="chapter-num">PART 5 · THE FINANCIAL LEDGER</span>
         <h2>Money</h2>
         <p style="max-width:var(--measure)">What kind of money it is, whose wealth it came from, and who decides where it goes.</p>
       </div>
@@ -1380,7 +1368,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 6. DEBATES ============ -->
     <section class="chapter" id="field">
       <div class="chapter-head">
-        <span class="chapter-num">ZOOMED IN · THE AI SAFETY FIELD</span>
         <h2>The AI safety field, entry by entry</h2>
         <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (CC BY-SA). This section holds the same entries as a list, with the money that AI companies have announced and the grants that four public records show reaching each one.</p>
       </div>
@@ -1448,7 +1435,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 
     <section class="chapter" id="debates">
       <div class="chapter-head">
-        <span class="chapter-num">PART 6 · CONTESTED FRAMINGS</span>
         <h2>Seven disagreements the map does not settle</h2>
         <p style="max-width:var(--measure)">People in this field disagree about what the problem is and whose account to trust. Each disagreement below is attributed to those who hold it. The third column says what the evidence in this map can establish, which is usually less than either side claims.</p>
       </div>
@@ -1515,7 +1501,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 7. METHOD ============ -->
     <section class="chapter" id="method">
       <div class="chapter-head">
-        <span class="chapter-num">PART 7 · HOW THE MAP WAS BUILT</span>
         <h2>Method and boundaries</h2>
         <p style="max-width:var(--measure)">What counts as evidence here, what unit is being counted, and how much weight each entry can bear.</p>
       </div>
@@ -1588,7 +1573,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 8. GAPS ============ -->
     <section class="chapter" id="gaps">
       <div class="chapter-head">
-        <span class="chapter-num">PART 8 · WHAT IS NOT KNOWN</span>
         <h2>Twelve open questions</h2>
         <p style="max-width:var(--measure)">Each question names the evidence that would be needed to answer it. Several of these are research questions a political scientist could take up.</p>
       </div>
@@ -1625,7 +1609,6 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <!-- ============ 9. SOURCES ============ -->
     <section class="chapter" id="sources">
       <div class="chapter-head">
-        <span class="chapter-num">PART 9 · BIBLIOGRAPHY</span>
         <h2>The 127 sources</h2>
         <p style="max-width:var(--measure)">Grouped by type of source. "Older" marks evidence dated before 4 October 2025. "Undated" means no fixed date was extracted, so the age is unknown. All were accessed on 4 October 2026, except the investment sources added on 6 October and the 13 sources for actors outside the US and UK, accessed on 13 October.</p>
       </div>
@@ -1941,7 +1924,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 <script src="ecosystem-control.js"></script>
 <script src="ecosystem-graph.js?v=14"></script>
 <script src="field-list.js"></script>
-<script src="explore.js?v=5"></script>
+<script src="explore.js?v=6"></script>
 <script src="terms.js?v=2"></script>
 <script>
 /* The map and the one-line answers stay in view. The reasoning, tables and lists wait behind a button each. */

@@ -29,9 +29,9 @@
 .classifier { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 22px; }
 @media (max-width: 860px) { .classifier { grid-template-columns: minmax(0, 1fr); } }
 .grid-fig { display: grid; grid-template-columns: 6.2rem repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(3, minmax(56px, auto)); gap: 6px; font-size: .88rem; }
-.grid-fig .hd { font-family: var(--font-mono); font-size: .76rem; color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; text-transform: uppercase; letter-spacing: .06em; }
+.grid-fig .hd { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; }
 .grid-fig .rh { justify-content: flex-start; text-align: left; }
-.cell { border-radius: 10px; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-family: var(--font-display); font-weight: 700; color: var(--muted); background: var(--surface-2); transition: all .2s; }
+.cell { border-radius: 10px; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-family: var(--font-display); font-weight: 700; color: var(--muted); background: var(--surface-2); transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s, transform .2s; }
 .cell.na { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; }
 .cell.collusion { grid-column: 3; grid-row: 2 / span 3; }
 .cell.on.mis { background: var(--mis-soft); border-color: var(--mis); color: var(--mis-ink); }
@@ -50,10 +50,10 @@
 .payoff .hl { outline: 2.5px solid var(--ink); }
 .road { position: relative; height: 96px; border-radius: 12px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--line); max-width: 100%; }
 .road .lane { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed var(--line); }
-.car { position: absolute; width: 58px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; font-weight: 500; color: var(--on-fill); transition: top .8s ease, left 1.2s ease; }
+.car { position: absolute; width: 58px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; font-weight: 500; color: var(--on-fill); top: 31px; transition: translate .8s ease; }
 .car.a { background: var(--accent); left: 22%; }
 .car.b { background: var(--col); left: 62%; }
-.amb { position: absolute; width: 74px; height: 34px; border-radius: 8px; background: var(--surface); border: 2px solid var(--con); color: var(--con); display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; left: -90px; top: 31px; transition: left 1.6s ease; }
+.amb { position: absolute; width: 74px; height: 34px; border-radius: 8px; background: var(--surface); border: 2px solid var(--con); color: var(--con); display: grid; place-items: center; font-family: var(--font-mono); font-size: .7rem; left: -90px; top: 31px; transition: translate 1.6s ease; }
 .outcome { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; min-height: 1.6em; }
 .outcome.good { color: var(--good); }
 .outcome.bad { color: var(--bad); }
@@ -74,7 +74,7 @@
 
 /* Stego */
 .msg { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; font-size: 1rem; line-height: 1.7; }
-.msg .k { transition: all .3s; }
+.msg .k { transition: background-color .3s, color .3s, border-color .3s, opacity .3s, transform .3s; }
 .msg.reveal .k { background: var(--col); color: var(--on-fill); border-radius: 3px; padding: 0 2px; font-weight: 600; }
 .decoded { font-family: var(--font-mono); font-size: .9rem; min-height: 1.5em; }
 
@@ -95,7 +95,7 @@ canvas { display: block; max-width: 100%; width: 100%; border-radius: 12px; back
 .fc-mark.missed { background: none; border: 2px solid var(--bad); box-sizing: border-box; }
 .fc-card { background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 14px; padding: 18px 20px; display: grid; gap: 12px; align-content: start; }
 .fc-card.is-done { border-style: dashed; }
-.fc-kind { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.fc-kind { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); margin: 0; }
 .fc-face { display: grid; gap: 8px; align-content: start; min-height: 7.5rem; }
 .fc-face:focus { outline: none; }
 .fc-face:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 6px; }

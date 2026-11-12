@@ -288,7 +288,7 @@
   $("#shocks").innerHTML = SHARED.map(j => {
     const ms = jmembers(j.id).sort((a, b) => a.y0 - b.y0);
     return `<div class="card shock">
-      <h3>${esc(j.name)} <span>${yr(j.year)} · pp. ${esc(j.pages)}</span></h3>
+      <h3>${esc(j.name)}</h3><p class="when">${yr(j.year)}, pp. ${esc(j.pages)}</p>
       <p>${esc(j.shock)} <button class="lnk" type="button" data-jx="${j.id}">Show on the network</button></p>
       <table class="tbl"><thead><tr><th>Incident</th><th>The small difference</th><th>Outcome</th></tr></thead><tbody>
       ${ms.map(i => `<tr><td>${incBtn(i.id)}<div class="small">${esc(i.place)}</div></td><td>${i.drift ? esc(i.drift) : '<span class="small">Not named</span>'}</td><td>${outTag(i)}</td></tr>`).join("")}

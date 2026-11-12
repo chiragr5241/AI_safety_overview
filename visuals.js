@@ -96,7 +96,7 @@
     const sideBtns = $$("#drive [data-side]");
     const setBusy = b => { busy = b; sideBtns.forEach(x => x.setAttribute("aria-disabled", b ? "true" : "false")); };
     function resetRoad() {
-      carA.style.top = "31px"; carB.style.top = "31px"; amb.style.left = "-90px"; amb.style.top = "31px";
+      carA.style.translate = "0 0"; carB.style.translate = "0 0"; amb.style.translate = "0 0"; amb.style.top = "31px";
     }
     resetRoad();
     sideBtns.forEach(btn => btn.addEventListener("click", () => {
@@ -112,11 +112,13 @@
       $$("#payoff div").forEach(d => d.classList.remove("hl"));
       $("#p-" + a + b).classList.add("hl");
       // "left" = top edge of road, "right" = bottom edge (direction of travel is left→right)
-      const pos = s => (s === "L" ? "6px" : "56px");
-      setTimeout(() => { carA.style.top = pos(a); carB.style.top = pos(b); }, 50);
+      // Cars and the ambulance move by translate (from their resting top 31px, left -90px), never by top or left.
+      const pos = s => (s === "L" ? "0 -25px" : "0 25px");
+      setTimeout(() => { carA.style.translate = pos(a); carB.style.translate = pos(b); }, 50);
       setTimeout(() => {
-        if (ok) { amb.style.top = a === "L" ? "56px" : "6px"; amb.style.left = "calc(100% + 20px)"; }
-        else { amb.style.top = "31px"; amb.style.left = "calc(22% - 80px)"; }
+        const w = carA.parentElement.clientWidth;
+        if (ok) { amb.style.top = a === "L" ? "56px" : "6px"; amb.style.translate = `${w + 110}px 0`; }
+        else { amb.style.top = "31px"; amb.style.translate = `${0.22 * w + 10}px 0`; }
       }, 900);
       setTimeout(() => {
         const out = $("#driveOut");

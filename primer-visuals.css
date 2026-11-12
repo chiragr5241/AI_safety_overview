@@ -1,6 +1,6 @@
 /* Visuals for the field primer: GIF recordings and still illustrations
    inside each card's [data-visual="primer-..."] slot. */
-.pfig { --pv-paper: #FFFFFF; display: grid; gap: 8px; }
+.pfig { --pv-paper: var(--plate-paper); display: grid; gap: 8px; }
 .pv-frame { position: relative; background: var(--pv-paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; place-items: center; min-width: 0; padding: 0; }
 .pv-illu { display: block; width: 100%; height: auto; max-height: 360px; object-fit: contain; background: var(--pv-paper); }
 
@@ -9,7 +9,7 @@
 .pv-gif img { display: block; width: 100%; height: auto; max-height: 360px; object-fit: contain; }
 .pv-gif.pv-cover { height: 100%; min-height: 180px; }
 .pv-gif.pv-cover img { height: 100%; max-height: none; object-fit: cover; object-position: right bottom; }
-.pv-gif .pv-motion { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; background: #fff; }
+.pv-gif .pv-motion { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; background: var(--plate-light); }
 .pv-gif.pv-cover .pv-motion { object-fit: cover; object-position: right bottom; }
 .pv-gif.is-playing .pv-motion { opacity: 1; }
 .pv-gif.is-playing .pv-still { opacity: 0; }
@@ -22,14 +22,14 @@
 
 .pv-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; width: 100%; background: var(--line); align-items: stretch; }
 .pv-half { margin: 0; display: grid; grid-template-rows: auto 1fr; align-content: start; background: var(--pv-paper); min-width: 0; }
-.pv-half > .pv-k, .pv-steps > .pv-k { padding: 7px 10px; background: var(--surface-2); color: var(--ink); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+.pv-half > .pv-k, .pv-steps > .pv-k { padding: 7px 10px; background: var(--surface-2); color: var(--ink); font-family: var(--font-label); font-size: var(--text-label); }
 @media (max-width: 420px) { .pv-pair { grid-template-columns: minmax(0, 1fr); } }
 /* Diagram pairs carry text, so they stack as soon as a half would drop below 240px. */
 .pv-pair.pv-wrap { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
 
 /* Click-to-play videos: a 16:9 player and a pick list under it. */
 .pv-vid { display: grid; width: 100%; background: var(--surface); }
-.pv-vid-main { position: relative; aspect-ratio: 16 / 9; background: #000; }
+.pv-vid-main { position: relative; aspect-ratio: 16 / 9; background: var(--plate-dark); }
 .pv-video { all: unset; box-sizing: border-box; display: block; position: absolute; inset: 0; cursor: pointer; }
 .pv-video:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 .pv-video img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -39,10 +39,10 @@
 .pv-vid-pick:hover { background: var(--surface-2); }
 .pv-vid-pick:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 .pv-vid-pick[aria-current] { box-shadow: inset 3px 0 0 var(--accent); }
-.pv-vid-pick img { flex: none; width: 96px; height: 54px; object-fit: cover; border-radius: 4px; background: #000; }
+.pv-vid-pick img { flex: none; width: 96px; height: 54px; object-fit: cover; border-radius: 4px; background: var(--plate-dark); }
 .pv-vid-pick span { display: grid; gap: 2px; min-width: 0; }
 .pv-vid-pick b { font-family: var(--font-display); font-size: .86rem; line-height: 1.2; }
-.pv-vid-pick small { font-family: var(--font-mono); font-size: .7rem; line-height: 1.35; color: var(--muted); }
+.pv-vid-pick small { font-family: var(--font-label); font-size: var(--text-label); line-height: 1.35; color: var(--muted); }
 
 /* Source figure, then the study's steps as a looping animation with its own controls. */
 .pv-stack { display: grid; width: 100%; min-width: 0; background: var(--surface); }
@@ -66,11 +66,10 @@
 .pv-step { grid-area: 1 / 1; display: grid; gap: 10px; align-content: start; min-width: 0; opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s; }
 .pv-step.is-on { opacity: 1; visibility: visible; transition: opacity .3s; }
 .pv-step-t { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.25; }
-.pv-in { opacity: 0; transform: translateY(6px); }
 .pv-step.is-on .pv-in { animation: pv-in .45s ease-out both; animation-delay: calc(.25s + var(--d, 0) * .3s); }
 @keyframes pv-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-.pv-doc-k { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.pv-doc-k { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 .pv-doc { display: grid; gap: 6px; padding: 10px 12px 12px; border: 1.5px solid var(--ink); border-radius: 8px; font-size: .88rem; line-height: 1.4; }
 .pv-doc .pv-in { padding: 6px 9px; border-radius: 6px; background: var(--accent-soft); }
 .pv-doc .pv-gap { padding: 0 9px; background: none; line-height: 1; color: var(--muted); }
@@ -90,12 +89,12 @@
 .pv-rate { display: grid; grid-template-columns: 7.6rem minmax(0, 1fr) auto; align-items: center; gap: 10px; }
 .pv-rate-n { font-family: var(--font-display); font-weight: 600; font-size: .86rem; }
 .pv-rate-t { position: relative; height: 12px; border-radius: 3px; background: linear-gradient(var(--surface-2) 0 0) no-repeat 0 0 / var(--from) 100%; }
-.pv-rate-t i { position: absolute; inset: 0 auto 0 0; width: var(--to); min-width: 4px; border-radius: 3px; background: var(--accent); }
+.pv-rate-t i { position: absolute; inset: 0; clip-path: inset(0 calc(100% - max(4px, var(--to))) 0 0 round 3px); background: var(--accent); }
 .pv-step.is-on .pv-rate-t i { animation: pv-drop 1.2s .5s cubic-bezier(.2, .7, .2, 1) both; }
-@keyframes pv-drop { from { width: var(--from); background: var(--con); } to { width: var(--to); background: var(--accent); } }
+@keyframes pv-drop { from { clip-path: inset(0 calc(100% - var(--from)) 0 0 round 3px); background: var(--con); } to { clip-path: inset(0 calc(100% - max(4px, var(--to))) 0 0 round 3px); background: var(--accent); } }
 .pv-rate-v { font-family: var(--font-mono); font-size: .8rem; white-space: nowrap; color: var(--muted); }
 .pv-rate-v b { color: var(--accent); }
-.pv-rate-k { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.pv-rate-k { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 @container (max-width: 430px) { .pv-rate { grid-template-columns: minmax(0, 1fr) auto; } .pv-rate-t { grid-column: 1 / -1; order: 3; } .pv-think { flex-direction: column; align-items: stretch; } .pv-who::after { content: "⇣"; } }
 @media (prefers-reduced-motion: reduce) {
   .pv-step, .pv-step.is-on { transition: none; }
@@ -111,9 +110,7 @@
 @media (max-width: 760px) { .pv-frame { margin-inline: -8px; } }
 
 /* Redrawn training-run chart (emergent misalignment): main chart, a narration line, six small panels. */
-.pv-em { --em-hack: #C4413B; --em-hl: rgba(196, 65, 59, .09); display: grid; width: 100%; min-width: 0; background: var(--surface); color: var(--ink); container-type: inline-size; }
-:root[data-theme="dark"] .pv-em { --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pv-em { --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); } }
+.pv-em { display: grid; width: 100%; min-width: 0; background: var(--surface); color: var(--ink); container-type: inline-size; }
 .pv-em-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 10px 12px 0; }
 .pv-em-key { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); }
 .pv-em-key i { width: 18px; height: 3px; border-radius: 2px; background: var(--muted); opacity: .7; }
@@ -151,6 +148,6 @@
 .pv-em-mini .em-run, .pv-em-mini .em-base, .pv-em-mini .em-on { vector-effect: non-scaling-stroke; }
 .pv-em-mini .em-run { stroke-width: 2.25; }
 .pv-em-mini .em-base { stroke-width: 2.25; }
-.pv-em-tick { position: absolute; left: 4px; transform: translateY(-50%); font-family: var(--font-mono); font-size: .66rem; color: var(--muted); }
+.pv-em-tick { position: absolute; z-index: 1; left: 4px; padding: 0 2px; background: var(--surface); transform: translateY(-50%); font-family: var(--font-mono); font-size: .6875rem; color: var(--muted); }
 .pv-em-tick::before { content: ""; position: absolute; left: -9px; top: 50%; width: 5px; border-top: 1.5px solid var(--ink); }
 @media (prefers-reduced-motion: reduce) { .pv-em-say { transition: none; } .em-hl, .pv-em-svg g, .pv-em-cell > * { transition: none; } }

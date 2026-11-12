@@ -13,8 +13,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=8">
-<link rel="stylesheet" href="explore.css?v=2">
+<link rel="stylesheet" href="site.css?v=9">
+<link rel="stylesheet" href="explore.css?v=3">
 <style>
 /* Experiment 02. The page shows the coded incidents and counts; it draws no conclusions. Margined like the other experiment. */
 :root { --wrap: 1320px; }
@@ -52,7 +52,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .pick:hover { border-color: var(--accent); color: var(--accent); }
 .pick:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .pick[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.pick small { font-family: var(--font-mono); font-size: .72rem; opacity: .75; }
+.pick small { font-family: var(--font-label); font-size: var(--text-label); opacity: .75; }
 @media (pointer: coarse) { .pick { min-height: 44px; } }
 @media (max-width: 640px) { #cyclePicks, #factorPicks { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: 4px; } #cyclePicks .pick, #factorPicks .pick { flex: none; } }
 
@@ -81,7 +81,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 #net .jx:hover rect, #net .jx:focus-visible rect, #net .jx.sel rect { stroke: var(--ink); stroke-width: 2.2; }
 #net .jx.dim rect { opacity: .2; }
 #net .lb { font-size: 11.5px; font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
-#net .jx-band-lb { fill: var(--muted); font-size: 11px; font-family: var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+#net .jx-band-lb { fill: var(--muted); font-size: 11px; font-family: var(--font-label); }
 
 .detail { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; min-height: 5rem; }
 .detail .empty { color: var(--muted); font-size: .94rem; }
@@ -119,15 +119,25 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .shocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 @media (max-width: 980px) { .shocks { grid-template-columns: minmax(0, 1fr); } }
 .shock h3 { font-size: 1.2rem; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.shock h3 span { font-family: var(--font-mono); font-size: .78rem; font-weight: 400; color: var(--muted); letter-spacing: .02em; }
+.shock .when { margin: 2px 0 0; font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 .shock > p { font-size: .92rem; color: var(--muted); margin: 6px 0 10px; }
 .shock .tbl td:first-child { width: 42%; }
+/* On a phone each incident stacks into one block: name, then the small difference, then the outcome. */
+@media (max-width: 600px) {
+  .shock .tbl thead { display: none; }
+  .shock .tbl, .shock .tbl tbody, .shock .tbl tr, .shock .tbl td { display: block; width: auto; }
+  .shock .tbl tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .shock .tbl tbody tr:last-child { border-bottom: 0; }
+  .shock .tbl td { padding: 2px 0; border: 0; }
+  .shock .tbl td:first-child { width: auto; }
+  .shock .tbl td:nth-child(2)::before { content: "The small difference: "; color: var(--muted); }
+}
 
 /* ---------- cycles ---------- */
 .cycles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 @media (max-width: 900px) { .cycles { grid-template-columns: minmax(0, 1fr); } }
 .cyc { display: grid; gap: 10px; align-content: start; }
-.cyc .kind { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.cyc .kind { font-family: var(--font-label); font-size: var(--text-label); color: var(--accent); }
 .cyc h3 { font-size: 1.25rem; }
 .cyc .cterm { font-size: .86rem; color: var(--muted); }
 .loop { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-family: var(--font-display); font-size: .84rem; }
@@ -191,13 +201,12 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <main id="main" tabindex="-1">
   <div class="wrap">
     <nav class="xnav" aria-label="Experiments">
-      <a class="chip" href="experiments.html">01 · Who funds AI safety</a>
-      <a class="chip" href="experiments-cycles.html" aria-current="page">02 · Cycles in Why Nations Fail</a>
+      <a class="chip" href="experiments.html">Who funds AI safety</a>
+      <a class="chip" href="experiments-cycles.html" aria-current="page">Cycles in Why Nations Fail</a>
     </nav>
 
     <section class="chapter" id="cycles-exp" style="border-top:0;padding-top:28px">
       <div class="chapter-head">
-        <span class="chapter-num">Experiment 02</span>
         <h1 class="q">Which cycles does Why Nations Fail describe, and where do they recur?</h1>
         <p class="lede">Every incident the book uses to show a cycle, from the first farming villages to Botswana, coded from the text and joined into one network. Page numbers are the book's printed pages.</p>
       </div>
@@ -346,7 +355,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
 <script src="site.js?v=4"></script>
 <script src="cycles-data.js?v=1"></script>
-<script src="experiments-cycles.js?v=1"></script>
+<script src="experiments-cycles.js?v=2"></script>
 <i id="page-end" hidden></i>
 <script>document.documentElement.classList.remove("pre");</script>
 </body>

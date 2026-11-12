@@ -8,6 +8,7 @@
                 markup is not written as <details>)
    3. open all  one switch that opens every layer on the page, for readers who want the full text
    4. Visuals   the registry that mounts a drawing or toy model into its [data-visual] slot */
+document.documentElement.classList.add("js");
 (function () {
   "use strict";
   const $ = (s, r) => (r || document).querySelector(s);

@@ -14,9 +14,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=8">
-<link rel="stylesheet" href="explore.css?v=2">
-<link rel="stylesheet" href="visuals.css?v=2">
+<link rel="stylesheet" href="site.css?v=9">
+<link rel="stylesheet" href="explore.css?v=3">
+<link rel="stylesheet" href="visuals.css?v=3">
 <style>
 /* Goals page: three doors and two side pages. */
 /* A slight margin: the page sits in a 1560px column, narrower than the site's widest and wider than a reading page. */
@@ -25,7 +25,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .hero h1 { max-width: 50rem; }
 @media (max-width: 900px) { .hero { padding-block: 40px 28px; } }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.02; }
-.hero h1 span { color: var(--accent); }
+.hero h1 span { color: inherit; }
 
 /* Three doors, all the same shape: question on top, link pinned to the bottom. */
 .goals { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
@@ -130,8 +130,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 </footer>
 
 <script src="site.js?v=4"></script>
-<script src="explore.js?v=5"></script>
-<script src="visuals.js?v=2"></script>
+<script src="explore.js?v=6"></script>
+<script src="visuals.js?v=3"></script>
 <i id="page-end" hidden></i>
 <script>document.documentElement.classList.remove("pre");</script>
 </body>

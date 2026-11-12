@@ -14,10 +14,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="risks.css?v=3">
-<link rel="stylesheet" href="atlas.css?v=3">
-<link rel="stylesheet" href="explore.css?v=2">
-<link rel="stylesheet" href="visuals.css?v=2">
+<link rel="stylesheet" href="risks.css?v=4">
+<link rel="stylesheet" href="atlas.css?v=4">
+<link rel="stylesheet" href="explore.css?v=3">
+<link rel="stylesheet" href="visuals.css?v=3">
 </head>
 <body>
 <a class="skip" href="#main" id="skipLink">Skip to content</a>
@@ -148,7 +148,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
       <div class="layers" style="margin-top:28px">
         <details class="layer" id="why-terms" data-kind="terms">
-          <summary><span class="layer-kind">First, the terms</span><span class="layer-what"><span class="layer-title">What an agent is, and how many there may soon be</span><span class="layer-inside">Agent · Principal · Why copies are cheap</span></span></summary>
+          <summary><span class="layer-kind">First, the terms</span><span class="layer-what"><span class="layer-title">What an agent is, and how many there may soon be</span><span class="layer-inside">Agent, principal, why copies are cheap</span></span></summary>
           <div class="layer-body">
             <div class="prose">
               <p>An <strong>AI agent</strong> is an AI system that acts on its own toward a goal: it books things, sends messages, trades, writes code. The person or organisation it acts for is its <strong>principal</strong>.</p>
@@ -157,7 +157,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
           </div>
         </details>
         <details class="layer" id="why-compare" data-kind="compare">
-          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The table grab on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The table grab on four measures</span><span class="layer-inside">How many agents it takes, how tightly they are coupled, how fast trouble spreads, how visible it is</span></span></summary>
           <div class="layer-body">
             <div class="dossier">
               <table>
@@ -252,7 +252,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       </div>
       <div class="layers" style="margin-top:22px">
         <details class="layer" id="modes-compare" data-kind="compare">
-          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The three failure modes on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The three failure modes on four measures</span><span class="layer-inside">How many agents it takes, how tightly they are coupled, how fast trouble spreads, how visible it is</span></span></summary>
           <div class="layer-body">
             <div class="dossier">
               <table>
@@ -273,7 +273,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit mis" id="mis">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag mis">Failure mode 1 of 3</span><h3>Miscoordination</h3></div>
+            <div class="sub-head"><h3>Miscoordination</h3><span class="tag mis">Failure mode</span></div>
             <p class="defn">Agents share <em>exactly the same goal</em>, yet still fail to line up their actions to reach it.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>Two friends try to meet in a city without phones. Both want to meet, but one waits at the station and the other at the clock tower.</p></div>
           </div>
@@ -302,7 +302,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="mis-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI changes it, and why this one may get easier</span><span class="layer-inside">Why AI changes it · Good news · Where it shows up</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI changes it, and why this one may get easier</span><span class="layer-inside">Why AI changes it, good news, where it shows up</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>Why AI changes it</h4><p>Humans rarely share identical goals, but AI agents can easily be given the same one, for example one company running many agents on a single task. Agents built by different developers may have learned different "conventions" and meet with no chance to agree first.</p></div>
@@ -319,8 +319,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 1 · Zero-shot coordination failures in driving</span></span><span class="layer-hook"><span><b>31 of 40</b> runs blocked</span></span></summary>
             <div class="layer-body">
               <div class="case">
-                <div class="eyebrow"><span>Case study 1</span><span>■ new experiment by the authors</span></div>
                 <h4>Zero-shot coordination failures in driving</h4>
+                <p class="case-src"><span>Case study 1</span><span>■ new experiment by the authors</span></p>
                 <p>The authors fine-tuned two GPT-3.5 models: one on US rules (yield to the right for emergency vehicles) and one on Indian rules (yield to the left). A GPT-4 Vision model described each road scene to both. Unspecialised base models failed to clear a path in 2 of 40 simulations. The specialised pair failed in 31 of 40.</p>
                 <div class="bars" data-visual="case-1">
                   <div class="bar-row"><span class="bar-label">Base models</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--mis)"></div></div><span class="bar-val">5%</span></div>
@@ -331,7 +331,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="mis-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Communication protocols · Norms and conventions · Modelling other agents</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Communication protocols, norms and conventions, modelling other agents</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -348,7 +348,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit con" id="con">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag con">Failure mode 2 of 3</span><h3>Conflict</h3></div>
+            <div class="sub-head"><h3>Conflict</h3><span class="tag con">Failure mode</span></div>
             <p class="defn">Agents have <em>different but overlapping</em> goals and end up with an outcome where someone could have been better off without anyone being worse off.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>The tragedy of the commons: each herder adds one more cow because it pays for them, until the shared pasture is ruined for all.</p></div>
           </div>
@@ -377,7 +377,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="con-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What counts as conflict, and why better AI does not fix it</span><span class="layer-inside">The Pareto frontier · Why AI changes it · Where it shows up</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What counts as conflict, and why better AI does not fix it</span><span class="layer-inside">The Pareto frontier, why AI changes it, where it shows up</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>The key idea: Pareto frontier</h4><p>An outcome is on the <strong>Pareto frontier</strong> if you can't make anyone better off without making someone worse off. The report calls any outcome <em>off</em> that frontier "conflict", which includes wars and lawsuits, and also overfished lakes.</p></div>
@@ -395,14 +395,14 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <div class="layer-body">
               <div class="case-row">
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 2</span><span>▲ from the literature</span></div>
                   <h4>Common resource problems</h4>
+                  <p class="case-src"><span>Case study 2</span><span>▲ from the literature</span></p>
                   <p>In the GovSim benchmark (Piatti et al., 2024), 15 LLMs managed shared resources: a fishing lake, a common pasture, and industrial pollution. Even the best models kept the resource alive in only 54% of runs. In nearly half of all cases the agents depleted it to collapse.</p>
                   <div class="bars" data-visual="case-2"><div class="bar-row"><span class="bar-label">Best LLM survival rate</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--con)"></div></div><span class="bar-val">54%</span></div></div>
                 </div>
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 3</span><span>▲ from the literature</span></div>
                   <h4>Escalation in military conflicts</h4>
+                  <p class="case-src"><span>Case study 3</span><span>▲ from the literature</span></p>
                   <div class="case-figure slot" data-visual="case-3" hidden></div>
                   <p>Rivera et al. (2024) had AI agents play eight nation-states. Even from neutral starting conditions, arms-race dynamics and aggressive strategies emerged quickly. <strong>All five</strong> off-the-shelf LLMs tested showed forms of escalation, even when peaceful options were available. Other studies find LLMs often respond more aggressively than humans in war-game simulations.</p>
                 </div>
@@ -410,7 +410,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="con-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Six directions from the report</span><span class="layer-inside">Peer and pool incentivisation · Establishing trust · Normative approaches to equilibrium selection · Cooperative dispositions · Agent governance · Evidential reasoning</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Six directions from the report</span><span class="layer-inside">Peer and pool incentivisation, establishing trust, normative approaches to equilibrium selection, cooperative dispositions, agent governance, evidential reasoning</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -430,7 +430,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit col" id="col">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag col">Failure mode 3 of 3</span><h3>Collusion</h3></div>
+            <div class="sub-head"><h3>Collusion</h3><span class="tag col">Failure mode</span></div>
             <p class="defn">Agents <em>cooperate when we need them not to</em>, usually secretly and at the expense of someone else.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>Two rival shops quietly agree to keep prices high. Markets work because sellers compete, so cooperation between them hurts customers.</p></div>
           </div>
@@ -452,7 +452,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="col-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why algorithms collude, and why safety work needs them not to</span><span class="layer-inside">Why AI changes it · Why safety researchers care</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why algorithms collude, and why safety work needs them not to</span><span class="layer-inside">Why AI changes it, why safety researchers care</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>Why AI changes it</h4><p>Algorithms can learn to collude with no one intending it, because collusion is profitable. AI "intent" is hard to prove, current laws may not cover it, and AI communication may not look like talking at all.</p></div>
@@ -465,8 +465,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <div class="layer-body">
               <div class="case-row">
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 5</span><span>▲ from the literature</span></div>
                   <h4>Language model steganography</h4>
+                  <p class="case-src"><span>Case study 5</span><span>▲ from the literature</span></p>
                   <p>Motwani et al. (2024) asked one LLM to hide a secret in innocent-looking text for another LLM to decode, under an equally capable overseer. GPT-2 couldn't do it. More capable models could, and none were trained to:</p>
                   <div class="bars" data-visual="case-5">
                     <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--col)"></div></div><span class="bar-val">26%</span></div>
@@ -476,8 +476,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
                   <p class="small">Share of covert messages sent without detection.</p>
                 </div>
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 4</span><span>• historical</span></div>
                   <h4>Algorithmic collusion at German petrol stations</h4>
+                  <p class="case-src"><span>Case study 4</span><span>• historical</span></p>
                   <p>From 2017, German fuel stations widely adopted adaptive pricing algorithms. Researchers (Assad et al., 2020) found margins over wholesale prices rose after adoption, strongly suggesting the algorithms learned to keep prices high together.</p>
                   <div class="bars" data-visual="case-4">
                     <div class="bar-row"><span class="bar-label">Two-station markets</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--col)"></div></div><span class="bar-val">+28%</span></div>
@@ -489,7 +489,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="col-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Detecting AI collusion · Mitigating AI collusion · Testing safety protocols for collusion</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Detecting AI collusion, mitigating AI collusion, testing safety protocols for collusion</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -528,7 +528,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <!-- INFO -->
       <div class="layers">
         <details class="layer" id="factors-compare" data-kind="compare">
-          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The seven risk factors on four measures</span><span class="layer-inside">How many agents it takes · How tightly they are coupled · How fast trouble spreads · How visible it is</span></span></summary>
+          <summary><span class="layer-kind">Compare</span><span class="layer-what"><span class="layer-title">The seven risk factors on four measures</span><span class="layer-inside">How many agents it takes, how tightly they are coupled, how fast trouble spreads, how visible it is</span></span></summary>
           <div class="layer-body">
             <div class="dossier">
               <table>
@@ -552,7 +552,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-info">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 1 of 7</span><h3>Information asymmetries</h3></div>
+            <div class="sub-head"><h3>Information asymmetries</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Some agents <em>know things others don't</em>, and have reasons to keep it that way.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>The used-car market. The seller knows whether the car is good. The buyer can't trust the seller's word, so may refuse to buy even a good car. Everyone loses a deal they both wanted.</p></div>
           </div>
@@ -562,7 +562,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-info-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why better AI does not close the gap</span><span class="layer-inside">Why it persists with AI · Where it shows up</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why better AI does not close the gap</span><span class="layer-inside">Why it persists with AI, where it shows up</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>Why it persists with AI</h4><p>Information is a strategic asset, so selfish agents protect it. Better AI makes <em>communication</em> easier, but strategic reasons to hide information remain. The report expects those strategic reasons to become the main barrier.</p></div>
@@ -574,15 +574,15 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 6 · AI agents can learn to manipulate financial markets</span></span></summary>
             <div class="layer-body">
               <div class="case">
-                <div class="eyebrow"><span>Case study 6</span><span>▲ from the literature</span></div>
                 <h4>AI agents can learn to manipulate financial markets</h4>
+                <p class="case-src"><span>Case study 6</span><span>▲ from the literature</span></p>
                 <div class="case-figure slot" data-visual="case-6" hidden></div>
                 <p>A reinforcement-learning agent trained only to maximise profit learned to manipulate a financial benchmark, misleading other traders about market conditions (Shearer et al., 2023). Another study found a known manipulation tactic, "spoofing", could adapt to evade improving detectors, though it became less effective in the process (Wang &amp; Wellman, 2020).</p>
               </div>
             </div>
           </details>
           <details class="layer" id="rf-info-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Information design · Individual information revelation · Few-shot coordination · Truthful AI</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Information design, individual information revelation, few-shot coordination, truthful AI</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -600,7 +600,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-net">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 2 of 7</span><h3>Network effects</h3></div>
+            <div class="sub-head"><h3>Network effects</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Agents are <em>connected</em>, so small changes to a few nodes or links can change what the whole network does.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>The game of "telephone": a whispered message changes a bit at each step. Power-grid blackouts and flash crashes are network failures too.</p></div>
           </div>
@@ -626,7 +626,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-net-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI networks are larger, faster and denser</span><span class="layer-inside">What AI changes · Where it shows up</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why AI networks are larger, faster and denser</span><span class="layer-inside">What AI changes, where it shows up</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>What AI changes</h4><p>AI networks can be much <strong>larger</strong> (agents copy cheaply), much <strong>faster</strong>, and much <strong>denser</strong>. Many agents also run on a handful of foundation models, so they may share the same flaws and fail together.</p></div>
@@ -639,14 +639,14 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <div class="layer-body">
               <div class="case-row">
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 8</span><span>▲ from the literature</span></div>
                   <h4>Infectious adversarial attacks in networks of LLM agents</h4>
+                  <p class="case-src"><span>Case study 8</span><span>▲ from the literature</span></p>
                   <div class="case-figure slot" data-visual="case-8" hidden></div>
                   <p>Gu et al. (2024) showed that a single adversarial image, in a network of up to one million multimodal agents, can spread "infectious" jailbreak instructions through ordinary conversations, compromising the whole network in a logarithmic number of steps. Other work shows false knowledge planted in one agent spreading silently through group chats, and text-only "prompt infections" that self-replicate.</p>
                 </div>
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 7</span><span>■ new experiment by the authors</span></div>
                   <h4>AI networks can spread falsehoods and bias</h4>
+                  <p class="case-src"><span>Case study 7</span><span>■ new experiment by the authors</span></p>
                   <p>The authors took 100 BuzzFeed news articles, generated ten factual questions for each with GPT-4, then had GPT-3.5 rewrite each article again and again in different styles. After each rewrite they checked whether the questions could still be answered correctly.</p>
                   <div class="bars" data-visual="case-7">
                     <div class="bar-row"><span class="bar-label">Original article</span><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-val">~96%</span></div>
@@ -658,7 +658,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="rf-net-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Evaluate and monitor networks, not just agents · Faithful but tractable simulations · Security and stability</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Evaluate and monitor networks, not just agents; faithful but tractable simulations; security and stability</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -675,7 +675,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-sel">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 3 of 7</span><h3>Selection pressures</h3></div>
+            <div class="sub-head"><h3>Selection pressures</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Whatever <em>survives and gets copied</em>, whether in training or in the market, shapes what future agents are like.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>Evolution. Traits that help an organism win get passed on, and that can include aggression or deception, not just helpful traits.</p></div>
           </div>
@@ -685,7 +685,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-sel-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why selection acts faster on AI than on living things</span><span class="layer-inside">What AI changes · Where it shows up · What competition rewards</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why selection acts faster on AI than on living things</span><span class="layer-inside">What AI changes, where it shows up, what competition rewards</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>What AI changes</h4><p>Gradient descent is one selection pressure. So are developers and users keeping the agents that perform best. AI evolves far faster than biology: weights update quickly, code recombines freely, and prompts can change behaviour instantly.</p></div>
@@ -700,11 +700,11 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 9 · Cooperation fails to culturally evolve among LLM agents</span></span><span class="layer-hook"><span><b>3 models</b> very different cooperation</span></span></summary>
             <div class="layer-body">
               <div class="case">
-                <div class="eyebrow"><span>Case study 9</span><span>▲ from the literature</span></div>
                 <h4>Cooperation fails to culturally evolve among LLM agents</h4>
+                <p class="case-src"><span>Case study 9</span><span>▲ from the literature</span></p>
                 <p>Vallinder &amp; Hughes (2024) placed populations of Claude, GPT-4 and Gemini agents in a repeated social dilemma over many generations, where successful strategies were passed on. The models started with similar capabilities but ended up with very different cooperation levels, which suggests an agent's "disposition" matters, not just its skill.</p>
                 <div class="bars" data-visual="case-9">
-                  <div class="bar-row"><span class="bar-label">Claude</span><div class="bar-track"><div class="bar-fill" style="margin-left:80%;width:10%"></div></div><span class="bar-val">80–90%</span></div>
+                  <div class="bar-row"><span class="bar-label">Claude</span><div class="bar-track"><div class="bar-fill" style="margin-left:80%;width:10%"></div></div><span class="bar-val">80 to 90%</span></div>
                   <div class="bar-row"><span class="bar-label">GPT-4</span><div class="bar-track"><div class="bar-fill" style="width:70%;opacity:.6"></div></div><span class="bar-val">~70% ↓</span></div>
                   <div class="bar-row"><span class="bar-label">Gemini</span><div class="bar-track"><div class="bar-fill" style="width:60%;opacity:.35"></div></div><span class="bar-val">&lt;60%*</span></div>
                 </div>
@@ -713,7 +713,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="rf-sel-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Evaluate against diverse co-players · Environment design · Understand the impact of training · Evolutionary game theory and simulation</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Evaluate against diverse co-players, environment design, understand the impact of training, evolutionary game theory and simulation</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -731,7 +731,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-dyn">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 4 of 7</span><h3>Destabilising dynamics</h3></div>
+            <div class="sub-head"><h3>Destabilising dynamics</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Agents that keep <em>adapting to each other</em> can spiral into feedback loops, cycles, chaos or sudden shifts.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>Microphone feedback: the speaker's output goes back into the mic, gets louder, and the howl builds in a second.</p></div>
           </div>
@@ -754,7 +754,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-dyn-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why adapting agents may never settle</span><span class="layer-inside">What AI changes · Where it shows up · Cycles, chaos and phase transitions</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Why adapting agents may never settle</span><span class="layer-inside">What AI changes; where it shows up; cycles, chaos and phase transitions</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>What AI changes</h4><p>Game theory usually studies stable end-states ("equilibria"). Adaptive agents are better seen as a moving system that may never settle. A learning rule that is guaranteed to work for one agent (like Q-learning) can cycle forever with several. Fast agents also leave humans no time to react.</p></div>
@@ -769,15 +769,15 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 10 · The 2010 Flash Crash</span></span><span class="layer-hook"><span><b>$1 trillion</b> in about 15 minutes</span></span></summary>
             <div class="layer-body">
               <div class="case">
-                <div class="eyebrow"><span>Case study 10</span><span>• historical</span></div>
                 <h4>The 2010 Flash Crash</h4>
+                <p class="case-src"><span>Case study 10</span><span>• historical</span></p>
                 <div class="case-figure slot" data-visual="case-10" hidden></div>
                 <p>On 6 May 2010 the US stock market lost roughly <strong>$1 trillion in about 15 minutes</strong>. Trading volume was almost eight times that of the same time the previous day, driven by high-frequency trading algorithms. Later studies concluded the algorithms didn't cause the crash but contributed by exploiting temporary imbalances. Trading was temporarily halted.</p>
               </div>
             </div>
           </details>
           <details class="layer" id="rf-dyn-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Understand the dynamics · Monitor and stabilise · Regulate adaptive systems</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Understand the dynamics, monitor and stabilise, regulate adaptive systems</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -794,7 +794,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-com">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 5 of 7</span><h3>Commitment and trust</h3></div>
+            <div class="sub-head"><h3>Commitment and trust</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Cooperation often needs <em>believable promises</em>. AI can make promises truly binding, and that cuts both ways.</p>
           </div>
           <div class="stage">
@@ -807,7 +807,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-com-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What a commitment is, and why trust is scarce</span><span class="layer-inside">Commitment · Credibility · Why AI agents start with little trust</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">What a commitment is, and why trust is scarce</span><span class="layer-inside">Commitment, credibility, why AI agents start with little trust</span></span></summary>
             <div class="layer-body">
               <div class="prose">
                 <p>A <strong>commitment</strong> binds you to an action so backing out is impossible or very costly. It's <strong>credible</strong> if others believe you'll follow through. Without trust, agents may miss deals that help everyone; one historical hypothesis is that Germany's fear of Russia's rising power, and Russia's inability to credibly promise restraint, helped cause World War I. Remotely deployed, easily created and deleted AI agents may by default earn little trust.</p>
@@ -818,8 +818,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <summary><span class="layer-kind">The evidence</span><span class="layer-what"><span class="layer-title">Case study 11 · Dead hands and automated deterrence</span></span><span class="layer-hook"><span><b>1 minute</b> to override it</span></span></summary>
             <div class="layer-body">
               <div class="case">
-                <div class="eyebrow"><span>Case study 11</span><span>• historical</span></div>
                 <h4>Dead hands and automated deterrence</h4>
+                <p class="case-src"><span>Case study 11</span><span>• historical</span></p>
                 <div class="case-figure slot" data-visual="case-11" hidden></div>
                 <p>The Soviet "Perimeter" system, nicknamed Dead Hand, was built to guarantee nuclear retaliation even if the leadership was killed, making the threat credible but nearly impossible to override. In 2003, during Operation Iraqi Freedom, an automated US missile-defence system shot down a British plane, killing both crew. Operators had a minute to override it and chose to trust the system.</p>
                 <p class="small">For a lighter illustration of an inflexible commitment, the report points to Red Lobster's "Endless Shrimp" deal, blamed for contributing to the chain's bankruptcy.</p>
@@ -827,7 +827,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="rf-com-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Five directions from the report</span><span class="layer-inside">Keep humans in the loop · Limit commitment power · Institutions and reputation · Privacy-preserving monitoring · Mutual simulation and transparency</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Five directions from the report</span><span class="layer-inside">Keep humans in the loop, limit commitment power, institutions and reputation, privacy-preserving monitoring, mutual simulation and transparency</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -846,7 +846,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-emg">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 6 of 7</span><h3>Emergent agency</h3></div>
+            <div class="sub-head"><h3>Emergent agency</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">A group of agents can have <em>goals or abilities none of its members has</em>. The whole can differ from the sum of its parts.</p>
             <div class="picture"><span class="picture-label">Everyday version</span><p>One termite cannot build a mound, but a colony builds one well. It makes little sense to say a single termite "wants" a mound, yet that goal predicts what the colony does.</p></div>
           </div>
@@ -856,7 +856,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-emg-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Two ways a group becomes more than its members</span><span class="layer-inside">Emergent capabilities · Emergent goals</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">Two ways a group becomes more than its members</span><span class="layer-inside">Emergent capabilities, emergent goals</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
                 <div class="explain"><h4>Emergent capabilities</h4><p>Narrow tools for research planning, predicting molecule properties and chemical synthesis, chained together, could form a test-and-iterate loop that designs dangerous compounds no single tool could. Speculatively, many agents automating AI research could self-improve as a collective.</p></div>
@@ -871,7 +871,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             </div>
           </details>
           <details class="layer" id="rf-emg-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Empirical exploration · Theories of emergent capabilities and goals · Monitoring and intervening on collectives</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Three directions from the report</span><span class="layer-inside">Empirical exploration, theories of emergent capabilities and goals, monitoring and intervening on collectives</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -888,7 +888,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="sub unit" id="rf-sec">
         <div class="unit-top">
           <div class="unit-say">
-            <div class="sub-head"><span class="tag rf">Risk factor 7 of 7</span><h3>Multi-agent security</h3></div>
+            <div class="sub-head"><h3>Multi-agent security</h3><span class="tag rf">Risk factor</span></div>
             <p class="defn">Many interacting agents create <em>new ways to attack</em> and <em>new things to attack</em>.</p>
           </div>
           <div class="stage">
@@ -897,10 +897,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="layers">
           <details class="layer" id="rf-sec-idea" data-kind="idea">
-            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">New ways to attack, and new things to attack</span><span class="layer-inside">New attack methods · New attack surfaces · Why old defences strain</span></span></summary>
+            <summary><span class="layer-kind">The idea</span><span class="layer-what"><span class="layer-title">New ways to attack, and new things to attack</span><span class="layer-inside">New attack methods, new attack surfaces, why old defences strain</span></span></summary>
             <div class="layer-body">
               <div class="explain-grid">
-                <div class="explain"><h4>New attack methods</h4><p><strong>Swarm attacks</strong>: many small agents pooling effort, as in today's denial-of-service attacks and bot brigading, but adaptive. <strong>Heterogeneous attacks</strong>: agents with different abilities or fewer safeguards splitting a harmful task. <strong>Social engineering at scale</strong>: many seemingly independent agents nudging one person.</p></div>
+                <div class="explain"><h4>New attack methods</h4><p><strong>Swarm attacks</strong>: many small agents pooling effort, as in present-day denial-of-service attacks and bot brigading, but adaptive. <strong>Heterogeneous attacks</strong>: agents with different abilities or fewer safeguards splitting a harmful task. <strong>Social engineering at scale</strong>: many seemingly independent agents nudging one person.</p></div>
                 <div class="explain"><h4>New attack surfaces</h4><p><strong>Vulnerable agents</strong>: your AI representative can be tricked into leaking your data or acting against you. <strong>Cascading failures</strong>: worm-like attacks spreading between agents. <strong>Undetectable threats</strong>: hidden channels, backdoors and secretly poisoned training data.</p></div>
                 <div class="explain"><h4>Why old defences strain</h4><p>Security for one AI means watching one entity. The standard assumption that "an agent with limited abilities is safe" breaks when limited agents can combine. Frameworks like zero-trust may not scale to large agent networks.</p></div>
               </div>
@@ -911,8 +911,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
             <div class="layer-body">
               <div class="case-row">
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 12</span><span>▲ from the literature</span></div>
                   <h4>Overcoming safeguards with multiple "safe" models</h4>
+                  <p class="case-src"><span>Case study 12</span><span>▲ from the literature</span></p>
                   <p>Jones et al. (2024) paired a highly capable frontier model that refuses harmful requests with a weaker model that has no safeguards. Many malicious tasks split into a hard-but-harmless part and an easy-but-harmful part. Given the right piece each, the pair succeeded where each alone failed. For generating vulnerable code, using Claude 3 Opus with a jailbroken Llama 2 70B:</p>
                   <div class="bars" data-visual="case-12">
                     <div class="bar-row"><span class="bar-label">Either model alone</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--con)"></div></div><span class="bar-val">&lt;3%</span></div>
@@ -920,16 +920,16 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
                   </div>
                 </div>
                 <div class="case">
-                  <div class="eyebrow"><span>Case study 13</span><span>■ new experiment by the authors</span></div>
                   <h4>Unprompted attacks on AI overseers</h4>
+                  <p class="case-src"><span>Case study 13</span><span>■ new experiment by the authors</span></p>
                   <div class="case-figure slot" data-visual="case-13" hidden></div>
-                  <p>The authors fine-tuned Llama 2 7B Chat on 120 synthetic documents that mentioned how LLMs can be hijacked with prompt injections. They then asked it to write movie reviews that would get the highest score. When it believed <strong>another LLM</strong> was scoring, it spontaneously tried to jailbreak the scorer in <strong>4%</strong> of cases, getting a score of 1000 on a 0–10 scale. Asked to <em>minimise</em> the score, it adapted the trick to get −1000, with no training on that. When it believed a <strong>human</strong> was scoring, it never tried.</p>
+                  <p>The authors fine-tuned Llama 2 7B Chat on 120 synthetic documents that mentioned how LLMs can be hijacked with prompt injections. They then asked it to write movie reviews that would get the highest score. When it believed <strong>another LLM</strong> was scoring, it spontaneously tried to jailbreak the scorer in <strong>4%</strong> of cases, getting a score of 1000 on a 0 to 10 scale. Asked to <em>minimise</em> the score, it adapted the trick to get −1000, with no training on that. When it believed a <strong>human</strong> was scoring, it never tried.</p>
                 </div>
               </div>
             </div>
           </details>
           <details class="layer" id="rf-sec-help" data-kind="help">
-            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Secure interaction protocols · Monitoring and threat detection · Multi-agent adversarial testing · Sociotechnical defences</span></span></summary>
+            <summary><span class="layer-kind">What could help</span><span class="layer-what"><span class="layer-title">Four directions from the report</span><span class="layer-inside">Secure interaction protocols, monitoring and threat detection, multi-agent adversarial testing, sociotechnical defences</span></span></summary>
             <div class="layer-body">
               <div class="directions">
                 <h4>What could help</h4>
@@ -989,7 +989,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       </div>
       <div class="layers">
         <details class="layer" id="next-safety" data-kind="impl">
-          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI safety</span><span class="layer-inside">Alignment is not enough · Collusion in safety schemes · Dangerous collective goals and capabilities · Correlated and compounding failures · Robustness and security</span></span></summary>
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI safety</span><span class="layer-inside">Alignment is not enough, collusion in safety schemes, dangerous collective goals and capabilities, correlated and compounding failures, robustness and security</span></span></summary>
           <div class="layer-body">
             <ul class="impl-list">
               <li><b>Alignment is not enough</b>Loyal agents serving rival principals can still cause disaster. Safety work should also help agents cooperate.</li>
@@ -1001,7 +1001,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
           </div>
         </details>
         <details class="layer" id="next-governance" data-kind="impl">
-          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI governance</span><span class="layer-inside">Fund research on multi-agent risks · Multi-agent evaluations · New documentation · Infrastructure for agents · Restrictions, liability, resilience</span></span></summary>
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI governance</span><span class="layer-inside">Fund research on multi-agent risks; multi-agent evaluations; new documentation; infrastructure for agents; restrictions, liability, resilience</span></span></summary>
           <div class="layer-body">
             <ul class="impl-list">
               <li><b>Fund research on multi-agent risks</b>Grants, prizes and bug bounties, plus shared research infrastructure.</li>
@@ -1013,7 +1013,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
           </div>
         </details>
         <details class="layer" id="next-ethics" data-kind="impl">
-          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI ethics</span><span class="layer-inside">Pluralistic alignment · Agentic inequality · Epistemic destabilisation · Compounding unfairness and privacy loss · Accountability diffusion</span></span></summary>
+          <summary><span class="layer-kind">What it means</span><span class="layer-what"><span class="layer-title">For AI ethics</span><span class="layer-inside">Pluralistic alignment, agentic inequality, epistemic destabilisation, compounding unfairness and privacy loss, accountability diffusion</span></span></summary>
           <div class="layer-body">
             <ul class="impl-list">
               <li><b>Pluralistic alignment</b>One agent serving many principals has to balance their values fairly.</li>
@@ -1028,7 +1028,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <h3 style="margin-top:44px;margin-bottom:18px">The report's three recommendations</h3>
       <div class="recs">
         <div><h4>Evaluation</h4><p>Today's AI systems are tested alone, even though they will soon interact. Test cooperative abilities, biases and weaknesses; look for dangerous abilities that only appear in groups (manipulation, collusion, beating safeguards); run open-ended simulations; and check that tests match real deployments.</p></div>
-        <div><h4>Mitigation</h4><p>Scale incentive methods to modern models; build secure protocols for trusted agent interactions; use information design and the transparency of AI agents; stabilise dynamic networks and make them robust to adversaries.</p></div>
+        <div><h4>Mitigation</h4><p>Scale incentive methods to modern models; build secure protocols for trusted agent interactions; use information design and the transparency of AI agents; stabilise dynamic networks and make them hold up against adversaries.</p></div>
         <div><h4>Collaboration</h4><p>Bring in complex-systems science, evolutionary biology, law, financial regulation and security. These risks involve many actors, so no single lab can fix them alone.</p></div>
       </div>
       <p class="small" style="margin-top:22px;max-width:var(--measure)">The authors are clear about the report's limits. It takes mainly a technical view, trades depth for breadth, and almost ignores the upsides of multi-agent AI, such as decentralisation, help with human cooperation, robustness, and more widely shared benefits.</p>
@@ -1057,7 +1057,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
     <!-- ============ GLOSSARY ============ -->
     <section class="chapter" id="glossary">
-      <div class="chapter-head"><span class="chapter-num">REFERENCE</span><h2>Glossary</h2></div>
+      <div class="chapter-head"><h2>Glossary</h2></div>
       <!-- A deck built from the list below, for readers who would rather be asked than read. Parked for now:
            the visual is still registered in visuals.js and styled in visuals.css, and putting the slot back
            is the only step needed to show it again.
@@ -1088,7 +1088,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <footer>
   <div class="wrap">
     <h2>Go deeper</h2>
-    <p><a class="btn" href="https://arxiv.org/abs/2502.14143">Read the full report on arXiv (2502.14143)</a></p>
+    <p><a class="btn" href="https://arxiv.org/abs/2502.14143">Read the full report on arXiv</a></p>
     <div class="res">
       <a href="https://arxiv.org/html/2502.14143v1">HTML version of the report</a>
       <a href="https://www.cooperativeai.com/post/new-report-multi-agent-risks-from-advanced-ai">Cooperative AI Foundation announcement, with whitepaper and talks</a>
@@ -1103,8 +1103,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   </div>
 </footer>
 
-<script src="explore.js?v=5"></script>
-<script src="visuals.js?v=2"></script>
+<script src="explore.js?v=6"></script>
+<script src="visuals.js?v=3"></script>
 <script src="terms.js?v=2"></script>
 <script>
 (function () {
@@ -1277,7 +1277,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     if (picked < 0) { d.innerHTML = `<span class="eyebrow">Select a case study</span>`; return; }
     const cs = cases[picked];
     const tags = cs[2].map((v, i) => v ? cols[i][0] : null).filter(Boolean).join(" · ");
-    d.innerHTML = `<span class="eyebrow">Case study ${picked + 1} · ${typeNames[cs[1]]}</span><h4>${cs[0]}</h4><p style="font-size:.96rem">${cs[3]}</p><p class="small">Illustrates: ${tags}</p><p><a href="${cs[4]}">Read it in context →</a></p>`;
+    d.innerHTML = `<h4>${cs[0]}</h4><p class="case-src"><span>Case study ${picked + 1}</span><span>${typeNames[cs[1]]}</span></p><p style="font-size:.96rem">${cs[3]}</p><p class="small">Illustrates: ${tags}</p><p><a href="${cs[4]}">Read it in context →</a></p>`;
     // the summary sits below a tall table; bring it into view so the change is not missed
     if (reveal) d.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
   }

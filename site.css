@@ -1,3 +1,11 @@
+/* Hallmark · checked: 2026-11-11 · genre: editorial (inferred)
+ * floor: 220 open (215 x 49a data names in row buttons, owner's call; 4 x 44d printed; 1 x 63 legend keys) · fixed: 7a, 10a, 19, 26a, 26b, 34, 38i, 38iii, 39a, 40, 48, 54, 62, 63, 64, 67, 73, 75 · structural: printed (44, 58, repeated disclosure stack on ecosystem)
+ * finish-review: subagent · 5 findings · 4 resolved, 1 printed (structural) · the layer ring was kept: it fills when a layer is opened, a live state
+ * built: the project · redesign: polish · v2.0.0 */
+/* Hallmark · waive 39b · app UI controls at 34 to 40px, 44px under pointer: coarse · the ecosystem map, the timeline filters and the cycle picks are tools a reader works in */
+/* Hallmark · waive 49b · real phrases: source titles and funder names in running text · a name like Berkeley Existential Risk Initiative cannot shorten at phone width */
+/* Hallmark · waive 82 · chart marks differ in colour by cycle and in place by year · each mark on the cycles network is one dated incident from the book */
+/* Hallmark · waive 72 · closed folds measured with their hidden body · the ecosystem and experiments folds keep their text one click behind a summary */
 /* Shared by the goals page (index.html) and the ecosystem page (ecosystem.html).
    Tokens and base components match the inline styles in multi-agent-risks.html. */
 :root {
@@ -24,6 +32,19 @@
   --font-body: "Literata", Georgia, "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --measure: 66ch;
+  /* Labels, captions, table heads and tags: the UI face, a step under the body, sentence case, untracked. */
+  --font-label: var(--font-display);
+  --text-label: .84rem;
+  /* Shadows, masks and media plates. */
+  --shade: var(--shade);
+  --shade-deep: rgb(0 0 0 / .5);
+  --shade-fab: rgb(0 0 0 / .45);
+  --mask-solid: #000;
+  --plate-paper: #FFFFFF;
+  --plate-light: #FBFCFA;
+  --plate-dark: #0B1114;
+  --em-hack: #C4413B;
+  --em-hl: rgba(196, 65, 59, .09);
   /* One page width for the whole site. The risks guide's rail sits inside this, not beside it. It is wide enough to use a large screen,
      and --gutter is the room kept clear at each side of it. */
   --wrap: 1840px;
@@ -49,6 +70,7 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+html, body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.62; accent-color: var(--accent); caret-color: var(--accent); }
 
@@ -81,8 +103,10 @@ a { color: var(--accent); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 .prose { max-width: var(--measure); display: grid; gap: 1em; }
 .prose ul { margin: 0; padding-left: 1.2em; display: grid; gap: .4em; }
-.eyebrow { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.eyebrow { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
 .mono { font-family: var(--font-mono); }
+/* notes beside a widget or chart title are labels, not figures */
+.lab-head .mono, .panel-head .mono { font-family: var(--font-label); }
 .small { font-size: .88rem; color: var(--muted); }
 strong { font-weight: 600; }
 
@@ -96,7 +120,7 @@ strong { font-weight: 600; }
 .site-btn:hover, .site-btn[aria-expanded="true"] { background: var(--surface-2); }
 .site-btn::after { content: ""; flex: none; width: 7px; height: 7px; margin-top: -3px; border: solid; border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform .16s; }
 .site-btn[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 3px; }
-.site-links { display: none; position: absolute; right: 0; top: calc(100% + 8px); z-index: 2; min-width: 15rem; flex-direction: column; gap: 2px; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .35); max-height: calc(100dvh - 100px); overflow-y: auto; }
+.site-links { display: none; position: absolute; right: 0; top: calc(100% + 8px); z-index: 2; min-width: 15rem; flex-direction: column; gap: 2px; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 20px -8px var(--shade); max-height: calc(100dvh - 100px); overflow-y: auto; }
 .site-links.open { display: flex; }
 .site-links a { font-family: var(--font-display); font-weight: 500; font-size: 1rem; color: var(--ink); text-decoration: none; padding: 0 12px; min-height: 44px; border-radius: 10px; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: background-color .15s; }
 .site-links a:hover { background: var(--surface-2); }
@@ -139,7 +163,7 @@ strong { font-weight: 600; }
 .toc-btn[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 3px; }
 @media (max-width: 1059px) {
   .toc-btn { display: inline-flex; }
-  .chapters { display: none; position: absolute; left: 12px; right: 12px; top: calc(100% + 8px); flex-direction: column; gap: 2px; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .35); max-height: calc(100dvh - 140px); overflow-y: auto; }
+  .chapters { display: none; position: absolute; left: 12px; right: 12px; top: calc(100% + 8px); flex-direction: column; gap: 2px; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 20px -8px var(--shade); max-height: calc(100dvh - 140px); overflow-y: auto; }
   .chapters.open { display: flex; }
   .chapters a { min-height: 48px; font-size: 1rem; padding: 0 12px; border-radius: 10px; }
 }
@@ -151,6 +175,7 @@ strong { font-weight: 600; }
 .btn { font-family: var(--font-display); font-weight: 700; font-size: .98rem; border-radius: 10px; padding: 10px 16px; min-height: 44px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background-color .15s, border-color .15s, color .15s, transform .12s; }
 .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
 .btn:active { transform: translateY(1px); }
+.btn:disabled, .btn[aria-disabled="true"] { background: var(--surface-2); color: var(--muted); border-color: var(--line); cursor: not-allowed; pointer-events: none; }
 .btn.ghost { background: transparent; color: var(--ink); }
 .btn.ghost:hover { background: var(--surface-2); border-color: var(--ink); color: var(--ink); }
 .btn.sm { font-size: .88rem; padding: 7px 14px; border-radius: 8px; min-height: 40px; }
@@ -161,9 +186,9 @@ strong { font-weight: 600; }
 
 section.chapter { padding: 56px 0 24px; border-top: 1px solid var(--line); }
 .chapter-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 48rem; }
-.chapter-num { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.chapter-num { font-family: var(--font-label); font-size: var(--text-label); color: var(--accent); }
 .sub { padding-top: 40px; display: grid; gap: 22px; }
-.tag { font-family: var(--font-mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .1em; padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.tag { font-family: var(--font-label); font-size: var(--text-label); padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
 .tag.accent { background: var(--accent-soft); color: var(--accent); }
 .tag.warn { background: var(--mis-soft); color: var(--mis-ink); }
 .callout { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; max-width: 46rem; font-size: .96rem; }
