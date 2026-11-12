@@ -231,7 +231,7 @@ window.EXPERIMENTS = {
         { name: "MIT Tegmark Group", g: "Hires alumni", raw: "Massachusetts Institute of Technology (Tegmark group)" },
 
         { name: "Resolution", g: "Summer 2026 partner", id: "f_resolution",
-          other: "$160m from Coefficient Giving, announced July 2026: $108m base and $52m tied to hiring and compute targets. Founded in 2026 by staff from the UK AI Security Institute and Timaeus. The grant is not in the fund's public list read on 5 October", src: "resolution" },
+          note: "Founded in 2026 by staff from the UK AI Security Institute and Timaeus. Coefficient Giving announced $160m in July 2026; the $108m base is counted, and $52m tied to hiring and compute targets is not", src: "resolution" },
         { name: "Asymmetric Security", g: "Summer 2026 partner" }
       ]
     },
@@ -243,6 +243,11 @@ window.EXPERIMENTS = {
       trace_aistof: { title: "Manifund Trace: AI Safety Tactical Opportunities Fund", url: "https://trace.manifund.org/orgs/aistof" },
       sff: { title: "Survival and Flourishing Fund: recommendations", url: "https://survivalandflourishing.fund/recommendations" },
       cg: { title: "Coefficient Giving: Navigating Transformative AI, grants list", url: "https://coefficientgiving.org/funds/navigating-transformative-ai/" },
+      cg_gcro: { title: "Coefficient Giving: Global Catastrophic Risks Opportunities, grants list", url: "https://coefficientgiving.org/funds/global-catastrophic-risks-opportunities/" },
+      cg_forecasting: { title: "Coefficient Giving: Forecasting, grants list", url: "https://coefficientgiving.org/funds/forecasting/" },
+      cg_scaling: { title: "Coefficient Giving: We're urgently scaling our work on AI and biosecurity (September 2026)", url: "https://coefficientgiving.org/research/were-urgently-scaling-our-work-on-ai-and-biosecurity/" },
+      kairos: { title: "Kairos: $50m to build talent infrastructure for AI safety", url: "https://forum.effectivealtruism.org/posts/6ucKLAbrnbESYguyL/kairos-has-raised-usd50m-to-build-talent-infrastructure-for" },
+      cornell: { title: "Cornell: mathematicians win grants for AI safety research", url: "https://as.cornell.edu/news/cornell-mathematicians-win-grants-ensure-ai-safety-research-integrity" },
       aisafety_funding: { title: "AISafety.com: funding page, 57 funders", url: "https://aisafety.com/funding" },
       forbes_tuna: { title: "Forbes, 7 November 2025: profile of Cari Tuna and Dustin Moskovitz", url: "https://www.forbes.com.au/news/billionaires/this-billionaire-couple-has-a-plan-to-give-away-a-20-billion-facebook-fortune/" },
       tallinn: { title: "Jaan Tallinn: philanthropy", url: "https://jaan.info/philanthropy/" },

@@ -363,7 +363,7 @@
           note: cs.length > 1 ? `Other announcements on this map: ${cs.slice(1).map(x => `USD ${big(x.amount)} to ${byId.get(x.to).short}`).join(", ")}. They are not added together` : "", url: t.corp.src.url };
       },
       r: v => Math.max(6, 9 + 7 * (Math.log10(v) - 6)), ticks: [[1e6, "1m"], [1e7, "10m"], [1e9, "1bn USD"]],
-      about: "Five funders publish a record that this map reads row by row: Coefficient Giving (its AI fund only), the Survival and Flourishing Fund, the Long-Term Future Fund, the EA Infrastructure Fund and Manifund. Longview, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, government programmes and the AI companies' own grant schemes are on the map but publish no list that was read for this version." }
+      about: "Five funders publish a record that this map reads row by row: Coefficient Giving (its AI grants only), the Survival and Flourishing Fund, the Long-Term Future Fund, the EA Infrastructure Fund and Manifund. Longview, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, government programmes and the AI companies' own grant schemes are on the map but publish no list that was read for this version." }
   ];
   const measureById = new Map(MEASURES.map(m => [m.id, m]));
   const rUnknown = () => level ? 4.2 : 7.5;
@@ -951,7 +951,7 @@
   function grantRows(f) {
     const r = recOf(f);
     return `<ol>${f.grants.map(g =>
-      `<li><b>${esc(g[0])}</b><strong>${g[1] ? esc(U.fmtAmount(g[1], "USD")) : "pledge only"}</strong><em>${tidy(g[2])}${g[3] ? ` Plus a matching pledge of up to ${esc(U.fmtAmount(g[3], "USD"))}, paid only if outside money is raised.` : ""}</em></li>`).join("")}</ol>
+      `<li><b>${esc(g[0])}</b><strong>${g[1] ? esc(U.fmtAmount(g[1], "USD")) : "pledge only"}</strong><em>${tidy(g[2])}${g[3] ? (f.src === "sff" ? ` Plus a matching pledge of up to ${esc(U.fmtAmount(g[3], "USD"))}, paid only if outside money is raised.` : ` Plus ${esc(U.fmtAmount(g[3], "USD"))} tied to conditions, not in the total.`) : ""}</em></li>`).join("")}</ol>
       <p>${tidy(r.note)} <a href="${esc(r.url)}" rel="noopener">${tidy(r.title)}</a></p>`;
   }
   panel.addEventListener("toggle", e => {

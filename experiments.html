@@ -239,7 +239,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
           <span class="key"><span><i class="g"></i>Given</span><span><i></i>Pledged or expected</span></span>
         </div>
         <div class="chart" id="chart"><div class="axis" id="axis"></div></div>
-        <figcaption class="stage-foot">Given: five public grant records, 2015 to August 2026, each dollar counted once, plus gifts reported elsewhere. Sources in <a href="#data">The data</a>.</figcaption>
+        <figcaption class="stage-foot">Given: five public grant records, 2015 to October 2026, each dollar counted once, plus gifts reported elsewhere. Sources in <a href="#data">The data</a>.</figcaption>
       </figure>
       <div class="steps" id="steps"></div>
     </section>
@@ -304,7 +304,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
           <div class="layer-body"><p class="small" id="matsNote"></p><div class="tbl" id="mats"></div></div>
         </details>
         <details class="layer" id="fig-years">
-          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Grants by year</span><span class="layer-inside">All recipients. The 2026 column stops in August</span></span></summary>
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Grants by year</span><span class="layer-inside">All recipients. The 2026 column stops in October</span></span></summary>
           <div class="layer-body">
             <div>
               <div class="legend" id="yearLegend"></div>
@@ -348,9 +348,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 <script src="site.js?v=4"></script>
 <script src="explore.js?v=6"></script>
-<script src="field-data.js?v=5"></script>
+<script src="field-data.js?v=6"></script>
 <script src="experiments-grants.js?v=3"></script>
-<script src="experiments-data.js?v=3"></script>
+<script src="experiments-data.js?v=4"></script>
 <script>
 (function () {
   "use strict";
@@ -723,7 +723,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       const rows = f.grants.map(g => `<tr><td>${esc(g[0])}</td><td>${names(g[2] || "")}</td><td>${money(g[1])}</td></tr>`).join("");
       const part = el("div");
       part.innerHTML = `<h3><span class="sw ${s.cls}"></span>${esc(F.records[f.src].title.split(":")[0].split(",")[0])} · ${money(f.total)}</h3><table>${rows}</table>` +
-        (f.cond ? `<p class="small">Plus ${money(f.cond)} in matching pledges, not counted.</p>` : "");
+        (f.cond ? `<p class="small">Plus ${money(f.cond)} ${f.src === "sff" ? "in matching pledges" : "tied to conditions"}, not counted.</p>` : "");
       box.appendChild(part);
     });
     return box;

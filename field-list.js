@@ -17,7 +17,9 @@
   const nameOf = id => entryOf.has(id) ? entryOf.get(id).name : actor.has(id) ? actor.get(id).name : id;
   const yrs = f => f.first === f.last ? f.first : `${f.first} to ${f.last}`;
   const KIND = { cg: "listed", sff: "recommended", ltff: "paid out", eaif: "paid out" };
-  const rows = f => f.src === "manifund" ? `${f.n} project ${f.n === 1 ? "page" : "pages"}` : `${f.n} ${f.n === 1 ? "grant" : "grants"} ${KIND[f.src] || ""}`;
+  // a Coefficient Giving row taken from an announcement, not a grants list, ends its purpose with "· announced"
+  const said = f => { const a = (f.grants || []).filter(g => / · announced$/.test(g[2] || "")).length; return !a ? KIND[f.src] || "" : a === f.n ? "announced" : "listed or announced"; };
+  const rows = f => f.src === "manifund" ? `${f.n} project ${f.n === 1 ? "page" : "pages"}` : `${f.n} ${f.n === 1 ? "grant" : "grants"} ${said(f)}`;
   const amount = f => f.total ? usd(f.total) : "matching pledge only";
   const inOf = new Map(), outOf = new Map();
   F.flows.forEach(f => {
@@ -70,7 +72,7 @@
     const firm = company.filter(c => c.to === id);
     const cats = e.cats.map(c => catLabel.get(c)).join(", ");
     const given = gave.reduce((a, f) => a + f.total, 0);
-    const money = (got.length ? `<ul class="fgrants">${got.map(f => `<li><b>${esc(amount(f))}</b> from ${tidy(nameOf(f.from))} <span class="small">(${esc(rows(f))}, ${esc(yrs(f))}${f.cond ? `, plus matching pledges of up to ${esc(usd(f.cond))}` : ""})</span></li>`).join("")}</ul>` : "")
+    const money = (got.length ? `<ul class="fgrants">${got.map(f => `<li><b>${esc(amount(f))}</b> from ${tidy(nameOf(f.from))} <span class="small">(${esc(rows(f))}, ${esc(yrs(f))}${f.cond ? (f.src === "sff" ? `, plus matching pledges of up to ${esc(usd(f.cond))}` : `, plus ${esc(usd(f.cond))} tied to conditions, not counted`) : ""})</span></li>`).join("")}</ul>` : "")
       + (gave.length ? `<p class="small">Its own record lists ${esc(usd(given))} for ${gave.length} ${gave.length === 1 ? "organisation" : "organisations"} on this map.</p>` : "")
       + (firm.length ? `<ul class="fgrants">${firm.map(c => `<li><b>${c.amount ? esc(usd(c.amount)) : "Amount not stated"}</b> from ${tidy(nameOf(c.from))} <span class="small">(${esc((CKIND[c.kind] || c.kind).toLowerCase())}, ${esc(U.fmtDate(c.date))}, company announcement)</span></li>`).join("")}</ul>` : "")
       + (!got.length && !gave.length && !firm.length ? `<p class="small">No row in the four grant records and no company announcement. That is not the same as no funding.</p>` : "");
