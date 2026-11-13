@@ -20,7 +20,7 @@
   --line: #CFD6D0;
   --accent: #1D6B67;
   --accent-soft: #D5E7E4;
-  --mis: #B07A08;
+  --mis: #8F6400;
   --mis-soft: #F4E7C8;
   --con: #B8374A;
   --con-soft: #F5D9DD;
@@ -62,17 +62,17 @@
   :root:not([data-theme="light"]) {
     --bg: #0F1519; --surface: #172027; --surface-2: #1E2931; --ink: #E6ECE9; --muted: #9AA7AF; --line: #2C3943;
     --accent: #5BBDB4; --accent-soft: #173A38;
-    --mis: #E3AE45; --mis-soft: #3A2E12; --con: #EE6F80; --con-soft: #3F1D24; --col: #9C8EF2; --col-soft: #29244A;
+    --mis: #DBA63E; --mis-soft: #3A2E12; --con: #E8667A; --con-soft: #3F1D24; --col: #9486EC; --col-soft: #29244A;
     --good: #6BCB7A; --bad: #EE6F80;
-    --line-strong: #6E7F8A; --mis-ink: #E3AE45; --con-ink: #EE6F80; --good-ink: #6BCB7A; --on-fill: #0F1519; --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); color-scheme: dark;
+    --line-strong: #6E7F8A; --mis-ink: #DBA63E; --con-ink: #E8667A; --good-ink: #6BCB7A; --on-fill: #0F1519; --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0F1519; --surface: #172027; --surface-2: #1E2931; --ink: #E6ECE9; --muted: #9AA7AF; --line: #2C3943;
   --accent: #5BBDB4; --accent-soft: #173A38;
-  --mis: #E3AE45; --mis-soft: #3A2E12; --con: #EE6F80; --con-soft: #3F1D24; --col: #9C8EF2; --col-soft: #29244A;
+  --mis: #DBA63E; --mis-soft: #3A2E12; --con: #E8667A; --con-soft: #3F1D24; --col: #9486EC; --col-soft: #29244A;
   --good: #6BCB7A; --bad: #EE6F80;
-    --line-strong: #6E7F8A; --mis-ink: #E3AE45; --con-ink: #EE6F80; --good-ink: #6BCB7A; --on-fill: #0F1519; --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); color-scheme: dark;
+    --line-strong: #6E7F8A; --mis-ink: #DBA63E; --con-ink: #E8667A; --good-ink: #6BCB7A; --on-fill: #0F1519; --em-hack: #F0776F; --em-hl: rgba(240, 119, 111, .12); color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -124,7 +124,7 @@ strong { font-weight: 600; }
 /* Page menu: the links between the pages of the site, behind one button at the right of the bar. The button names the page it is on.
    It is one width and sits just before the theme switch on every page, so it does not move from page to page. */
 .site-menu { position: relative; flex: none; }
-.site-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; box-sizing: border-box; width: 9.75rem; min-height: 40px; padding: 0 14px; background: none; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; white-space: nowrap; cursor: pointer; transition: background-color .15s; }
+.site-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; box-sizing: border-box; width: 12.25rem; min-height: 40px; white-space: nowrap; padding: 0 14px; background: none; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; white-space: nowrap; cursor: pointer; transition: background-color .15s; }
 .site-btn:hover, .site-btn[aria-expanded="true"] { background: var(--surface-2); }
 .site-btn::after { content: ""; flex: none; width: 7px; height: 7px; margin-top: -3px; border: solid; border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform .16s; }
 .site-btn[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 3px; }
@@ -140,7 +140,10 @@ strong { font-weight: 600; }
   .bar:has(.chapters) .site-name svg { display: block; }
 }
 /* on a phone there is no room for the home button beside a Contents menu; Goals is the first entry of the page menu */
-@media (max-width: 480px) { .bar:has(.toc-btn) .site-name { display: none; } .site-btn { width: 9.5rem; padding: 0 12px; } }
+@media (max-width: 480px) { .bar:has(.toc-btn) .site-name { display: none; } .site-btn { width: auto; min-width: 9.5rem; padding: 0 12px; gap: 8px; font-size: .92rem; } }
+/* on the narrowest phones the page's own name shortens so the bar keeps its right margin */
+.site-page .sp-short { display: none; }
+@media (max-width: 360px) { .site-page .sp-long { display: none; } .site-page .sp-short { display: inline; } .site-btn { min-width: 0; } }
 @media (max-width: 700px) {
   .site-name { width: 40px; justify-content: center; border: 1px solid var(--line-strong); border-radius: 50%; }
   .site-name span { display: none; }

@@ -101,52 +101,53 @@
   // An actor that fills two categories (an "also" in the data) is not drawn twice. It sits in a group of its own between the two, keyed by
   // both categories ("6_10"), filled half in each colour, and counts as a member of both when either is picked.
   const C0 = [
-    { cat: 3, label: "Frontier developers", color: "#F3F6F8", x: 330, y: 345 },
-    { cat: 2, label: "Cloud and energy", color: "#7CCBFF", x: 620, y: 760 },
-    { cat: 1, label: "Chip supply chain", color: "#4F9DFF", x: 370, y: 760 },
-    { cat: 4, label: "Capital", color: "#F7A93B", x: 870, y: 760 },
-    { cat: 5, label: "Safety funders", color: "#2EE6C8", x: 170, y: 110 },
-    { cat: 6, label: "Research and think tanks", color: "#C6E86B", x: 520, y: 120 },
-    { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#C6E86B", color2: "#E6F2A8", x: 790, y: 120,
+    { cat: 3, label: "Frontier developers", color: "#E6ECE9", x: 330, y: 345 },
+    { cat: 2, label: "Cloud and energy", color: "#C68ABD", x: 620, y: 760 },
+    { cat: 1, label: "Chip supply chain", color: "#93ABC6", x: 370, y: 760 },
+    { cat: 4, label: "Capital", color: "#C9A27E", x: 870, y: 760 },
+    { cat: 5, label: "Safety funders", color: "#DBA63E", x: 170, y: 110 },
+    { cat: 6, label: "Research and think tanks", color: "#E8667A", x: 520, y: 120 },
+    { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#E8667A", color2: "#4FB0A7", x: 790, y: 120,
       about: "Universities do research and train the people who enter the field, so they sit between the two groups. Each is counted once." },
-    { cat: 10, label: "Talent pipeline", color: "#E6F2A8", x: 990, y: 120 },
-    { cat: 9, label: "Critical voices and the public", color: "#FF8A70", x: 800, y: 555 },
-    { cat: 11, label: "Standards, insurers and users", color: "#F3C9A2", x: 130, y: 770 },
-    { cat: 7, label: "Public authority", color: "#B79CFF", x: 640, y: 345 },
-    { cat: 8, label: "Advocacy and political money", color: "#FF6FB1", x: 930, y: 345 }
+    { cat: 10, label: "Talent pipeline", color: "#4FB0A7", x: 990, y: 120 },
+    { cat: 9, label: "Critical voices and the public", color: "#6DB3D3", x: 800, y: 555 },
+    { cat: 11, label: "Standards, insurers and users", color: "#B5B56E", x: 130, y: 770 },
+    { cat: 7, label: "Public authority", color: "#9486EC", x: 640, y: 345 },
+    { cat: 8, label: "Advocacy and political money", color: "#E88A52", x: 930, y: 345 }
   ];
-  // Zoomed in, there is one cluster per category on the AISafety.com map. Where a category lines up with a group on the industry map
-  // it keeps that group's colour, so a bubble that sits on both maps does not change colour. The one-line descriptions are this map's own.
+  // Zoomed in, there is one cluster per category on the AISafety.com map, coloured as on the reports page: one colour for each of the
+  // seven groups the reports chart uses, ink for the frontier labs, grey for every other category. The industry map uses the same colours
+  // where its groups line up, and five muted tones of its own (steel, plum, brown, olive, cyan) for the groups the field map does not list.
+  // The one-line descriptions are this map's own.
   const FIELD_CATS = {
-    funding: ["#2EE6C8", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
-    empirical_research: ["#C6E86B", "Groups that run experiments on AI systems: evaluations, interpretability, control and robustness."],
-    conceptual_research: ["#6FCF97", "Groups and individual researchers working on the theory of alignment and agency."],
-    strategy: ["#F2D15C", "Research on how the arrival of advanced AI could go, and what would make it go well."],
-    forecasting: ["#FFB86B", "Forecasters and trackers of AI progress and its effects."],
-    research_support: ["#7CCBFF", "Offices, fiscal sponsors, operations and other services that safety researchers rely on."],
-    capabilities_research: ["#F3F6F8", "Companies that build frontier AI systems. The field map lists them because they also run safety teams."],
-    governance: ["#B79CFF", "Policy institutes, public bodies and standards work on how AI is governed."],
-    advocacy: ["#FF6FB1", "Campaigns and groups that press governments, companies or the public to act."],
-    training_and_education: ["#E6F2A8", "Fellowships, courses and bootcamps that bring people into the field."],
-    career_support: ["#F3C9A2", "Advice, job boards and coaching for people moving into AI safety work."],
-    blog: ["#FF8A70", "Blogs that follow AI safety."],
-    newsletter: ["#FFA98F", "Newsletters that follow AI safety."],
-    podcast: ["#E58FB0", "Podcasts that cover AI safety."],
-    video: ["#FF9F68", "Video channels that cover AI safety."],
-    resource: ["#9CB6FF", "Reference sites, forums, tools and directories."],
-    company_programmes: ["#DCE6EE", "Grant funds and fellowships that an AI company or its foundation has announced for work outside the company. This map added them from the companies' own announcements. They are not entries on the AISafety.com map."],
-    gone: ["#8A94A6", "Projects the field map marks as no longer active. They stay on record because grants to them do."]
+    funding: ["#DBA63E", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
+    empirical_research: ["#E8667A", "Groups that run experiments on AI systems: evaluations, interpretability, control and robustness."],
+    conceptual_research: ["#69A3E2", "Groups and individual researchers working on the theory of alignment and agency."],
+    strategy: ["#96BC62", "Research on how the arrival of advanced AI could go, and what would make it go well."],
+    forecasting: ["#8A969C", "Forecasters and trackers of AI progress and its effects."],
+    research_support: ["#8A969C", "Offices, fiscal sponsors, operations and other services that safety researchers rely on."],
+    capabilities_research: ["#E6ECE9", "Companies that build frontier AI systems. The field map lists them because they also run safety teams."],
+    governance: ["#9486EC", "Policy institutes, public bodies and standards work on how AI is governed."],
+    advocacy: ["#E88A52", "Campaigns and groups that press governments, companies or the public to act."],
+    training_and_education: ["#4FB0A7", "Fellowships, courses and bootcamps that bring people into the field."],
+    career_support: ["#8A969C", "Advice, job boards and coaching for people moving into AI safety work."],
+    blog: ["#8A969C", "Blogs that follow AI safety."],
+    newsletter: ["#8A969C", "Newsletters that follow AI safety."],
+    podcast: ["#8A969C", "Podcasts that cover AI safety."],
+    video: ["#8A969C", "Video channels that cover AI safety."],
+    resource: ["#8A969C", "Reference sites, forums, tools and directories."],
+    company_programmes: ["#8A969C", "Grant funds and fellowships that an AI company or its foundation has announced for work outside the company. This map added them from the companies' own announcements. They are not entries on the AISafety.com map."],
+    gone: ["#8A969C", "Projects the field map marks as no longer active. They stay on record because grants to them do."]
   };
-  const C1F = F ? F.cats.map(c => ({ cat: "f-" + c.id, fid: c.id, label: c.label, color: (FIELD_CATS[c.id] || ["#A3B5C1", ""])[0], about: (FIELD_CATS[c.id] || ["", ""])[1], field: true, x: 0, y: 0 })) : [];
+  const C1F = F ? F.cats.map(c => ({ cat: "f-" + c.id, fid: c.id, label: c.label, color: (FIELD_CATS[c.id] || ["#8A969C", ""])[0], about: (FIELD_CATS[c.id] || ["", ""])[1], field: true, x: 0, y: 0 })) : [];
   const EVERY = C0.concat(C1F);
   // Each group colour above is the tone for the dark map. The light map draws the same groups in deeper tones that hold on a pale
   // ground and carry white lettering. The map paints with var(--g-…) and both palettes are written out once as a style sheet, so
   // switching the theme needs no redraw.
   const LIGHT_TONE = {
-    "#F3F6F8": "#26323D", "#7CCBFF": "#1F7FBF", "#4F9DFF": "#2459C8", "#F7A93B": "#C4700A", "#2EE6C8": "#0C8573", "#C6E86B": "#5E7F12",
-    "#E6F2A8": "#A08A12", "#FF8A70": "#C7462B", "#F3C9A2": "#8A6B52", "#B79CFF": "#6A4BD0", "#FF6FB1": "#C2317C", "#6FCF97": "#2E8B57",
-    "#F2D15C": "#A88A00", "#FFB86B": "#B5651D", "#FFA98F": "#D2603F", "#E58FB0": "#B5527E", "#FF9F68": "#CC6A2C", "#9CB6FF": "#4F6FD6",
-    "#DCE6EE": "#5B6B78", "#8A94A6": "#7A8494", "#A3B5C1": "#6B7A86"
+    "#4FB0A7": "#1D6B67", "#9486EC": "#5846B4", "#E8667A": "#B8374A", "#DBA63E": "#8F6400", "#69A3E2": "#2D6CAF",
+    "#E88A52": "#AE4A10", "#96BC62": "#4E7026", "#E6ECE9": "#16202A", "#8A969C": "#6B7A86", "#93ABC6": "#587592",
+    "#C68ABD": "#7B3F73", "#C9A27E": "#7A5432", "#B5B56E": "#64652A", "#6DB3D3": "#2A6F8C"
   };
   (function tones() {
     const dark = [], light = [];
