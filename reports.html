@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports · AI Safety Overview</title>
+<meta name="description" content="What makes third-party AI safety advice independent and credible? The field in bubbles, four organisations and their promises, and METR followed question by question.">
+<meta name="color-scheme" content="light dark">
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+/* The page is shown once it is built (see the last script in the body), so nothing shifts as it loads. */
+document.documentElement.classList.add("pre"); setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);</script>
+<script type="speculationrules">{"prerender":[{"where":{"selector_matches":"a[href$='.html'], a[href*='.html#']"},"eagerness":"moderate"}]}</script>
+<link rel="expect" href="#page-end" blocking="render">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=9">
+<link rel="stylesheet" href="explore.css?v=3">
+<style>
+/* Reports page. Three movements: a pinned bubble chart that regroups as steps scroll past (the field, the labs taken out,
+   seven groups, the technical fifty, the four we follow); four organisations and the gap each says it fills; then METR,
+   question by question, beside a route that tracks where the reader is. Tables sit closed in "The data" at the end. */
+:root { --wrap: 1320px; }
+/* One colour for each of the seven groups, grey for everything else on the map, ink for the labs. */
+:root { --g-te: #1D6B67; --g-go: #5846B4; --g-em: #B8374A; --g-fu: #8F6400; --g-co: #2D6CAF; --g-ad: #AE4A10; --g-st: #4E7026; --g-other: #A3AEA8; --g-lab: #16202A; --ring: #16202A; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --g-te: #4FB0A7; --g-go: #9486EC; --g-em: #E8667A; --g-fu: #DBA63E; --g-co: #69A3E2; --g-ad: #E88A52; --g-st: #96BC62; --g-other: #4C5A63; --g-lab: #E6ECE9; --ring: #E6ECE9; } }
+:root[data-theme="dark"] { --g-te: #4FB0A7; --g-go: #9486EC; --g-em: #E8667A; --g-fu: #DBA63E; --g-co: #69A3E2; --g-ad: #E88A52; --g-st: #96BC62; --g-other: #4C5A63; --g-lab: #E6ECE9; --ring: #E6ECE9; }
+
+/* ---------- the opening question ---------- */
+/* The question fills the first screen, under the top bar. */
+.hero { min-height: calc(100vh - 57px); min-height: calc(100svh - 57px); box-sizing: border-box; display: grid; align-content: center; gap: clamp(22px, 3.4vh, 40px); padding: 32px 0 48px; }
+.hero h1 { font-size: clamp(2.7rem, 8.6vw, 7.4rem); line-height: 1; letter-spacing: -0.02em; font-weight: 700; max-width: 16ch; }
+.hero p { font-family: var(--font-title); font-size: clamp(1.2rem, 2.2vw, 1.75rem); line-height: 1.35; max-width: 36ch; color: var(--muted); }
+.go { width: 52px; height: 52px; border: 1.5px solid var(--muted); border-radius: 50%; display: grid; place-items: center; color: var(--muted); text-decoration: none; font-family: var(--font-display); font-size: 1.15rem; }
+.go:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- the field: chart pinned on the left, steps scroll on the right ---------- */
+.story { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); }
+.stage { margin: 0; position: sticky; top: 64px; height: calc(100vh - 64px); height: calc(100svh - 64px); display: flex; flex-direction: column; gap: 10px; padding: 14px 0 16px; min-width: 0; }
+.field { position: relative; flex: 1; min-height: 0; }
+.field svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.b { transition: transform 1s cubic-bezier(.2, .8, .2, 1), opacity .6s; transform-box: view-box; transform-origin: 0 0; }
+.b circle { fill: var(--g-other); stroke: var(--bg); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.b[data-g="training_and_education"] circle { fill: var(--g-te); }
+.b[data-g="governance"] circle { fill: var(--g-go); }
+.b[data-g="empirical_research"] circle { fill: var(--g-em); }
+.b[data-g="funding"] circle { fill: var(--g-fu); }
+.b[data-g="conceptual_research"] circle { fill: var(--g-co); }
+.b[data-g="advocacy"] circle { fill: var(--g-ad); }
+.b[data-g="strategy"] circle { fill: var(--g-st); }
+.b[data-g="lab"] circle { fill: var(--g-lab); }
+.b.pick circle { stroke: var(--ring); stroke-width: 2.5; }
+.ring { fill: none; stroke: var(--ring); stroke-width: 1.5; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .6s .5s; }
+.ring.on { opacity: 1; }
+.labels { position: absolute; inset: 0; pointer-events: none; transition: opacity .3s; }
+.labels.swap { opacity: 0; }
+.lb { position: absolute; font-family: var(--font-label); line-height: 1.3; text-align: center; }
+.lb.in { transform: translate(-50%, -50%); color: var(--on-fill); font-weight: 700; font-size: .72rem; white-space: nowrap; }
+.lb.in.lab { color: var(--bg); }
+.lb.in.dk { color: var(--ink); }
+.lb.un { transform: translateX(-50%); font-size: .7rem; font-weight: 500; line-height: 1.15; }
+.lb.un i { font-style: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+/* A narrow chart, whatever the window: smaller labels, names on one line. Set by the script from the chart's own width. */
+.field.compact .lb.in { font-size: .62rem; }
+.field.compact .lb.un { font-size: .58rem; }
+.field.compact .lb.un i { display: block; white-space: nowrap; text-overflow: ellipsis; }
+.field.compact .lb.un small { font-size: .54rem; }
+.field.compact .lb.hd { font-size: .7rem; }
+.field.compact .lb.pk { font-size: .72rem; }
+.field.compact .lb.pk small { font-size: .62rem; }
+.lb.un small { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 400; color: var(--muted); }
+.lb.hd { transform: translate(-50%, -100%); font-size: .86rem; font-weight: 700; white-space: nowrap; }
+.lb.hd b { font-family: var(--font-mono); font-weight: 500; color: var(--muted); margin-left: 6px; }
+.lb.hd.wr { white-space: normal; font-size: .76rem; line-height: 1.2; text-wrap: balance; }
+.lb.hd.wr b { display: none; }
+.lb.hd.tp { transform: translateX(-50%); }
+.lb.un.nm { color: var(--muted); font-weight: 500; }
+.lb.un.nm i, .field.compact .lb.un.nm i { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; white-space: normal; overflow: hidden; }
+/* The choice: one button under each of the four bubbles. */
+.lb.ch { transition: opacity .15s; pointer-events: auto; transform: translateX(-50%); box-sizing: border-box; background: none; border: 1.5px solid transparent; border-radius: 16px; margin: 0; padding: 0 10px 14px; font: inherit; color: var(--ink); cursor: pointer; display: grid; gap: 6px; align-content: start; justify-items: center; transition: border-color .15s, background-color .15s; }
+.lb.ch b { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; letter-spacing: -0.01em; }
+.lb.ch span { font-family: var(--font-title); font-size: .98rem; line-height: 1.3; text-wrap: balance; }
+.lb.ch em { font-family: var(--font-label); font-style: normal; font-size: var(--text-label); font-weight: 700; color: var(--accent); margin-top: 2px; }
+.lb.ch:hover, .lb.ch:focus-visible { border-color: var(--ink); background: color-mix(in srgb, var(--surface) 55%, transparent); outline: none; }
+.lb.ch[disabled] { cursor: default; }
+.lb.ch[disabled] em { color: var(--muted); font-weight: 500; }
+.lb.ch[disabled]:hover { border-color: var(--line); background: none; }
+.field.compact .lb.ch b { font-size: .92rem; }
+.field.compact .lb.ch span { font-size: .74rem; line-height: 1.25; }
+.field.compact .lb.ch em { font-size: .7rem; }
+.field.compact .lb.hd.wr { font-size: .62rem; }
+.b { cursor: default; }
+#tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 7px 10px; border-radius: 8px; max-width: 18rem; }
+#tip b { font-weight: 700; display: block; }
+@keyframes land { 0% { transform: translateY(-50%) scale(1); } 40% { transform: translateY(-50%) scale(1.9); } 100% { transform: translateY(-50%) scale(1); } }
+.route.landed a:first-of-type::after { animation: land .7s cubic-bezier(.2, .8, .2, 1); }
+.route.waiting a:first-of-type::after { opacity: 0; }
+#flyer { position: fixed; left: 0; top: 0; width: 100px; height: 100px; margin: -50px 0 0 -50px; border-radius: 50%; background: var(--g-em); pointer-events: none; z-index: 30; }
+.lb.pk { transform: translateX(-50%); font-size: .95rem; font-weight: 700; }
+.lb.pk small { display: block; font-size: .76rem; font-weight: 500; color: var(--muted); line-height: 1.3; margin-top: 3px; }
+.stage-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-label); font-size: .78rem; color: var(--muted); }
+.stage-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.stage-foot i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.stage-foot .note { flex-basis: 100%; display: block; }
+.stage-foot { transition: opacity .5s; }
+.stage-foot.off { opacity: 0; pointer-events: none; }
+
+.steps { display: grid; }
+.step { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 16px; max-width: 27rem; opacity: .22; transition: opacity .4s; }
+.step.on { opacity: 1; }
+.step h2 { font-size: clamp(1.7rem, 2.8vw, 2.3rem); line-height: 1.08; }
+.big { display: flex; align-items: flex-end; gap: 8px 14px; flex-wrap: wrap; }
+.big b { font-family: var(--font-title); font-weight: 400; font-size: clamp(3.2rem, 6.4vw, 5.4rem); line-height: .9; letter-spacing: -0.045em; padding-bottom: 8px; border-bottom: 1px solid var(--line-strong); font-variant-numeric: lining-nums; }
+.big span { font-family: var(--font-display); font-size: .9rem; line-height: 1.35; color: var(--muted); max-width: 14rem; padding-bottom: 8px; }
+.step .fact { font-size: 1.02rem; }
+.words { border-left: 2px solid var(--accent); padding: 2px 0 2px 16px; display: grid; gap: 6px; }
+.words b { font-family: var(--font-label); font-size: var(--text-label); font-weight: 500; color: var(--accent); }
+.words p { font-size: .98rem; }
+.next { font-family: var(--font-title); font-style: italic; font-size: 1.3rem; color: var(--muted); text-decoration: none; margin-top: 10px; width: fit-content; }
+a.next:hover { color: var(--accent); }
+
+@media (max-width: 899px) {
+  .story { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .stage { top: 56px; height: 58svh; z-index: 5; background: var(--bg); padding: 8px 0 10px; border-bottom: 1px solid var(--line); gap: 6px; }
+  .stage-foot .note { display: none; }
+  .stage-foot { font-size: .7rem; gap: 2px 10px; }
+  .step { min-height: 70vh; justify-content: flex-start; padding-top: 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .b, .ring, .labels { transition: none; } }
+
+/* ---------- four organisations, four gaps ---------- */
+.gaps4 { padding: 72px 0 40px; display: grid; gap: 28px; border-top: 1px solid var(--line); }
+.answer { font-family: var(--font-title); font-size: clamp(1.25rem, 2.2vw, 1.65rem); line-height: 1.3; max-width: 34ch; }
+.orgs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1100px) { .orgs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .orgs { grid-template-columns: minmax(0, 1fr); } }
+.org { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; align-content: start; grid-template-rows: auto auto 1fr auto; }
+.org.sel { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.org h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.01em; }
+.org .gap { font-family: var(--font-title); font-size: 1.16rem; line-height: 1.34; }
+.org dl { margin: 0; display: grid; gap: 10px; }
+.org dt { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
+.org dd { margin: 0; font-size: .94rem; line-height: 1.45; }
+.org q { font-style: italic; }
+.org .soon { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); min-height: 40px; display: flex; align-items: center; }
+
+/* ---------- METR: a route on the left, chapters on the right ---------- */
+.trail { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: clamp(24px, 4vw, 72px); padding-top: 56px; border-top: 1px solid var(--line); scroll-margin-top: 57px; }
+.route { position: sticky; top: 88px; align-self: start; height: min(560px, calc(100svh - 120px)); }
+.route svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.route path { fill: none; stroke: var(--line-strong); stroke-width: 1.2; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
+.route path.done { stroke: var(--g-em); stroke-width: 3; stroke-dasharray: none; stroke-linecap: round; clip-path: inset(0 0 var(--left, 100%) 0); transition: clip-path .25s linear; }
+.route a { position: absolute; right: calc(100% - var(--x) + 12px); top: var(--y); transform: translateY(-50%); font-family: var(--font-label); font-size: .8rem; line-height: 1.15; color: var(--muted); text-decoration: none; text-align: right; white-space: nowrap; transition: color .2s; }
+.route a::after { content: ""; position: absolute; left: calc(100% + 8px); top: 50%; width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); transform: translateY(-50%); }
+.route a.past { color: var(--ink); }
+.route a.past::after { background: var(--g-em); }
+.route a:first-of-type::after { background: var(--g-em); width: 13px; height: 13px; left: calc(100% + 5px); }
+.route a.here { color: var(--ink); font-weight: 700; }
+.route a.here::after { background: var(--g-em); width: 9px; height: 9px; left: calc(100% + 7px); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--g-em); }
+.route a.here:first-of-type::after { width: 13px; height: 13px; left: calc(100% + 5px); }
+.route a:hover { color: var(--accent); }
+@media (max-width: 999px) { .trail { grid-template-columns: minmax(0, 1fr); } .route { display: none; } }
+
+.chaps-col { display: grid; gap: 0; min-width: 0; grid-template-columns: minmax(0, 1fr); }
+.metr-head { display: grid; gap: 14px; padding-bottom: 48px; }
+.metr-head h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 700; letter-spacing: -0.015em; }
+.chap { display: grid; gap: 22px; padding: 56px 0 64px; border-top: 1px solid var(--line); grid-template-columns: minmax(0, 1fr); scroll-margin-top: 72px; }
+.chap > h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); max-width: 22ch; }
+.chap > p, .chap > ul { max-width: 40rem; }
+.chap > ul { margin: 0; padding-left: 1.15em; display: grid; gap: .5em; }
+.chap h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; letter-spacing: 0; margin-top: 10px; }
+.plate { margin: 8px 0; display: grid; gap: 10px; max-width: 54rem; }
+.plate.narrow { max-width: 40rem; }
+.plate img { display: block; width: 100%; height: auto; background: var(--plate-paper); border: 1px solid var(--line); border-radius: 10px; padding: clamp(8px, 1.6vw, 18px); box-sizing: border-box; }
+.plate figcaption, .cap { font-family: var(--font-label); font-size: var(--text-label); line-height: 1.45; color: var(--muted); max-width: 40rem; }
+.plate figcaption b { color: var(--ink); font-weight: 700; }
+.pull { margin: 6px 0; border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; display: grid; gap: 8px; max-width: 36rem; }
+.pull p { font-family: var(--font-title); font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.3; }
+.pull cite { font-family: var(--font-label); font-size: var(--text-label); font-style: normal; color: var(--muted); }
+
+.facts { margin: 0; display: grid; max-width: 46rem; }
+.facts > div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 4px 20px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.facts > div:first-child { border-top: 1px solid var(--line); }
+.facts dt { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); padding-top: 2px; }
+.facts dd { margin: 0; font-size: .98rem; line-height: 1.5; }
+@media (max-width: 620px) { .facts > div { grid-template-columns: minmax(0, 1fr); } }
+
+.mbars { display: grid; gap: 12px; max-width: 46rem; }
+.mbar { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+.mbar b { font-family: var(--font-mono); font-weight: 500; font-size: 1.05rem; text-align: right; font-variant-numeric: tabular-nums; }
+.mbar i { display: block; height: 22px; border-radius: 0 4px 4px 0; background: var(--g-em); transform-origin: left; transform: scaleX(var(--w)); min-width: 2px; }
+.mbar i.dash { background: repeating-linear-gradient(135deg, var(--g-em) 0 2px, transparent 2px 7px); box-shadow: inset 0 0 0 1.5px var(--g-em); }
+.mbar span { grid-column: 2; font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); line-height: 1.35; }
+
+.log { display: grid; max-width: 60rem; }
+.log-row { display: grid; grid-template-columns: 8.6rem minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 6px 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .93rem; line-height: 1.45; }
+.log-row.head { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); padding: 0 0 8px; border-bottom-color: var(--line-strong); }
+.log-row > :first-child { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); padding-top: 2px; }
+.log-row.head > :first-child { font-family: var(--font-label); font-size: var(--text-label); }
+.log-row b { font-family: var(--font-display); font-weight: 700; }
+@media (max-width: 760px) {
+  .log-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .log-row.head { display: none; }
+  .log-row > [data-k]::before { content: attr(data-k) ": "; font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
+}
+
+.ledger { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 64rem; }
+@media (max-width: 1100px) { .ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .ledger { grid-template-columns: minmax(0, 1fr); } }
+.ledger > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+.ledger h3 { margin: 0; font-size: 1rem; }
+.ledger .n { font-family: var(--font-title); font-size: 2.4rem; line-height: 1; letter-spacing: -0.03em; }
+.ledger ul { margin: 0; padding-left: 1.05em; display: grid; gap: .45em; font-size: .92rem; line-height: 1.45; }
+.ledger .lab { border-style: dashed; }
+.ledger .new { border-color: var(--ink); }
+
+.verdicts { display: grid; max-width: 56rem; }
+.verdict { display: grid; grid-template-columns: minmax(0, 15rem) 5.6rem minmax(0, 1fr); gap: 6px 20px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.verdict:first-child { border-top: 1px solid var(--line-strong); }
+.verdict h3 { margin: 0; font-size: 1.02rem; line-height: 1.3; }
+.verdict p { font-size: .94rem; line-height: 1.5; }
+.v { font-family: var(--font-label); font-size: var(--text-label); font-weight: 700; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.v::before { content: ""; width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid currentColor; flex: none; }
+.v.yes::before { background: currentColor; }
+.v.part::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.v.no { color: var(--muted); }
+@media (max-width: 760px) { .verdict { grid-template-columns: minmax(0, 1fr) auto; } .verdict p { grid-column: 1 / -1; } }
+
+.versus { display: grid; max-width: 52rem; }
+.versus > div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr); gap: 4px 20px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: .95rem; line-height: 1.45; }
+.versus > div:first-child { font-family: var(--font-display); font-weight: 700; border-bottom-color: var(--line-strong); }
+.versus > div > :first-child { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); padding-top: 2px; }
+@media (max-width: 620px) { .versus > div { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .versus > div > :first-child { grid-column: 1 / -1; } }
+
+/* ---------- the data: every table, closed until opened ---------- */
+.data { padding: 72px 0 24px; display: grid; gap: 18px; border-top: 1px solid var(--line); }
+.data > p { max-width: var(--measure); }
+.data .layers { max-width: none; }
+.tbl { display: grid; }
+.tbl-row { display: grid; grid-template-columns: minmax(0, 1.2fr) 7rem 7rem minmax(0, 1.6fr); gap: 4px 16px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+.tbl-row.head { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); border-bottom-color: var(--line-strong); }
+.tbl-row:last-child { border-bottom: 0; }
+.tbl-row .a { font-family: var(--font-display); font-weight: 500; line-height: 1.35; }
+.tbl-row .c { font-family: var(--font-mono); font-size: .84rem; text-align: right; font-variant-numeric: tabular-nums; }
+.tbl-row.head .c { font-family: var(--font-label); font-size: var(--text-label); }
+.tbl-row .d { color: var(--muted); font-size: .86rem; line-height: 1.4; }
+.tbl.audit .tbl-row { grid-template-columns: minmax(0, 1.2fr) 6.4rem 6.4rem 6.4rem minmax(0, 1.5fr); }
+.tbl.three .tbl-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.4fr); }
+.tbl.five .tbl-row { grid-template-columns: 7.5rem repeat(4, minmax(0, 1fr)); }
+.tbl.three .tbl-row > *, .tbl.five .tbl-row > * { font-size: .88rem; line-height: 1.45; }
+.tbl.three .tbl-row > :first-child, .tbl.five .tbl-row > :first-child { font-family: var(--font-display); font-weight: 500; }
+@media (max-width: 760px) {
+  .tbl-row, .tbl.audit .tbl-row { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .tbl.audit .tbl-row .c:nth-of-type(4) { grid-column: 2 / -1; }
+  .tbl-row .d { grid-column: 1 / -1; }
+  .tbl.three .tbl-row, .tbl.five .tbl-row { grid-template-columns: minmax(0, 1fr); }
+}
+.notin { margin: 0; padding-left: 1.2em; display: grid; gap: .35em; max-width: var(--measure); }
+.srcs { margin: 0; padding-left: 1.2em; display: grid; gap: .3em; font-size: .92rem; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Reports</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
+        <a href="index.html">Goals</a>
+        <a href="terms.html"><span class="n">1</span>Terms</a>
+        <a href="multi-agent-risks.html"><span class="n">2</span>Risks</a>
+        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <a href="experiments.html">Experiments</a>
+        <a href="reports.html" aria-current="page">Reports</a>
+        <a href="timelines.html">Timelines</a>
+      </nav>
+    </div>
+    <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <section class="hero" id="question">
+      <h1>What makes third-party AI safety advice independent and credible?</h1>
+      <p>When an AI incident happens, a legislator has two questions. Should we respond? Can we rely on the lab’s own account?</p>
+      <a class="go" id="goBtn" href="#field" aria-label="Go to the first question">↓</a>
+    </section>
+
+    <!-- ============ THE FIELD, IN BUBBLES ============ -->
+    <section class="story" id="field" aria-label="The field, step by step">
+      <figure class="stage">
+        <div class="field" id="fieldBox" role="group" aria-label="Bubble chart of every active entry on AISafety.com’s field map, sized by money raised on record. The figures are in the table under The data.">
+          <svg id="bubbles" aria-hidden="true"></svg>
+          <div class="labels" id="labels"></div>
+        </div>
+        <figcaption class="stage-foot" id="stageFoot"></figcaption>
+      </figure>
+
+      <div class="steps" id="steps">
+        <article class="step" data-i="0">
+          <h2>Labs associated with AI safety</h2>
+          <div class="big"><b id="nAll"></b><span>active entries on AISafety.com’s field map</span></div>
+          <p class="fact">Hundreds. Each bubble is one organisation or project, at its real size: money raised for a third party, valuation for a lab. Beside the labs, the rest fit in one speck.</p>
+          <p class="small"><span id="nNone"></span> have no money on record. Point at a bubble for its name.</p>
+        </article>
+
+        <article class="step" data-i="1">
+          <h2>How big are the labs’ own safety teams?</h2>
+          <div class="big"><b>$2.5B</b><span>what the labs spend on their own safety work in 2026, as AISafety.fund estimates it</span></div>
+          <p class="fact">Each lab is now drawn at the size of its safety work, not the whole company. The split comes from <a href="https://aisafety.fund/graphs">AISafety.fund</a>, which builds it from public headcounts and compute shares. No lab publishes a safety budget.</p>
+          <p class="small">For SSI we assume a generous 10% of the money it has raised, and for DeepSeek 1%. These sizes are used from here on.</p>
+        </article>
+
+        <article class="step" data-i="2">
+          <h2>How do we define a frontier lab?</h2>
+          <div class="big"><b id="nLabs"></b><span>entries on the map pass the test</span></div>
+          <p class="fact">We borrow the definition from <a href="https://www.ilga.gov/Legislation/BillStatus?DocNum=315&amp;DocTypeID=SB&amp;GA=104&amp;GAID=18&amp;SessionID=114">Illinois SB 315</a>: a developer with over $500 million in yearly revenue, affiliates included, or training runs above 10<sup>26</sup> operations.</p>
+          <p class="small">The compute line has precedent. U.S. Executive Order 14110 (2023) made 10<sup>26</sup> operations the point at which a company developing a dual-use foundation model had to notify the federal government and share its safety test results. The 2025 U.S. AI Diffusion Framework used the same figure to restrict exports of closed model weights, according to <a href="https://epoch.ai/data-insights/open-models-threshold">Epoch AI</a>.</p>
+        </article>
+
+        <article class="step" data-i="3">
+          <h2>Is this definition of a frontier lab valid?</h2>
+          <p class="fact">It is a size test, so it can miss a lab that builds frontier models. DeepSeek sits just under the revenue line on one press report. SSI has no revenue at all, and is the only “frontier” lab with a safety focus.</p>
+          <p class="small">We take both out for now as well.</p>
+        </article>
+
+        <article class="step" data-i="4">
+          <h2>What kinds of third party are there?</h2>
+          <div class="big"><b id="nThird"></b><span>third parties once the labs are out</span></div>
+          <p class="small">One organisation can sit in several groups, so it is drawn once in each.</p>
+        </article>
+
+        <article class="step" data-i="5">
+          <h2>Let’s look at the technical safety group</h2>
+          <div class="big"><b id="nTech"></b><span>do technical safety research</span></div>
+          <p class="fact">This is the map’s empirical research group without the labs. Policy research and advice come next.</p>
+          <p class="small">Sorted by money raised on record, largest first.</p>
+        </article>
+
+        <article class="step" data-i="6">
+          <h2>What do these organizations promise?</h2>
+          <div class="big"><b id="nGaps"></b><span>gaps they say they fill, in their own descriptions</span></div>
+          <p class="small"><span id="nUnsorted"></span> of the <span id="nTech2"></span> are not sorted yet.</p>
+        </article>
+
+        <article class="step" data-i="7" id="gaps">
+          <h2>What gaps do third parties claim to fill?</h2>
+          <p class="fact">Four organisations, four different gaps. Choose one to follow.</p>
+          <p class="small">Only METR is written so far.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ METR, QUESTION BY QUESTION ============ -->
+    <section class="trail" id="metr">
+      <nav class="route" id="route" aria-label="Questions in this part"></nav>
+
+      <div class="chaps-col" id="metrChaps">
+        <header class="metr-head">
+          <h2>METR</h2>
+          <p class="answer">A nonprofit of about 40 people that tests frontier models and reads the labs’ risk reports. Its claim: a lab marking its own homework is not enough.</p>
+        </header>
+
+        <!-- 1 -->
+        <article class="chap" id="q-incentive" data-stop="Incentives">
+          <h2>Does METR have the incentive to report what a lab would not?</h2>
+          <p class="answer">Yes on money, since no lab pays it. Less so on access, because every lab can end the work.</p>
+
+          <dl class="facts">
+            <div><dt>Whose wealth</dt><dd>Philanthropy. Its named funders include the Audacious Project, Schmidt Sciences, Packard, Pew, Jane Street and the Survival and Flourishing Fund.</dd></div>
+            <div><dt>Who decides</dt><dd>METR. It says it has taken no payment or donation from a frontier AI company, bars gifts from their employees, and has turned down money tied to a company executive or foundation.</dd></div>
+            <div><dt>What labs do give</dt><dd>Free model access, tokens and laptops. METR says it could pay for the tokens itself.</dd></div>
+            <div><dt>Governance</dt><dd>Nonprofit, led by Beth Barnes. Its page names two board members, Adam Gleave and Rajiv Dattani, and lists no full board.</dd></div>
+            <div><dt>Staff ties</dt><dd>Since 9 October 2026: anyone holding shares in a lab, in job talks with it, with a partner or close family there, or given over $100 by its staff is taken off that lab’s assessment. The same tie to a competitor must be disclosed.</dd></div>
+          </dl>
+
+          <h3>Money METR reports, and money on record</h3>
+          <div class="mbars">
+            <div class="mbar"><b>$71M</b><i class="dash" style="--w:1"></i><span>Commitments METR says it received in the six months to August 2026</span></div>
+            <div class="mbar"><b>$23.4M</b><i style="--w:.33"></i><span>Grants to METR itemised by donor at AISafety.fund, 2023 to 2026</span></div>
+            <div class="mbar"><b>$0</b><i style="--w:0"></i><span>From AI companies, by METR’s account</span></div>
+          </div>
+          <p class="cap">Audit of 12 November 2026 through AISafety.fund’s MCP server. The site’s older grant record held $1.1M for METR. Its bubble uses the $71M it reports.</p>
+
+          <p>The staff rule was tested within weeks. On the Anthropic assessment, one team member had discussed a job at Anthropic, turned it down, and held shares in a competitor. METR printed that in the report and had the work checked by someone else.</p>
+          <p>The pull that remains is access. METR writes that it stays dependent on the companies to be let in, to see the data and to publish. In its first industry report a lab could leave without a trace.</p>
+
+          <figure class="plate">
+            <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/report/image4.png" alt="Diagram of METR's report process: three companies give information, METR writes private reports, companies decide what can be shared, and METR publishes. One company's line drops out, marked silent exit." width="1680" height="806">
+            <figcaption><b>How the first industry report was made.</b> A company could exit before publication and METR would treat it as if it had never taken part. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, 19 May 2026, CC BY.</figcaption>
+          </figure>
+        </article>
+
+        <!-- 2 -->
+        <article class="chap" id="q-ability" data-stop="Ability">
+          <h2>Does it have the ability?</h2>
+          <p class="answer">Only as far as each lab grants it: the lab sets the scope, the days on site and the redactions.</p>
+
+          <div class="log">
+            <div class="log-row head"><span>When</span><span>What METR did</span><span>What the lab allowed</span><span>What the lab held back</span></div>
+            <div class="log-row"><span>Feb to Mar 2026</span><span><b>Frontier Risk Report</b> on rogue agents inside labs</span><span data-k="Allowed">Anthropic, Google, Meta and OpenAI gave their strongest internal models, raw reasoning traces and answers to a questionnaire.</span><span data-k="Held back">Each approved what was published about it. Amazon, Microsoft and xAI stayed out.</span></div>
+            <div class="log-row"><span>Jul to Aug 2026</span><span><b>OpenAI and Hugging Face incident</b>, with Redwood</span><span data-k="Allowed">Six days inside OpenAI’s offices, reading the agents’ logs there.</span><span data-k="Held back">OpenAI set the scope: one week of a two-month incident. Some training details were redacted.</span></div>
+            <div class="log-row"><span>21 Jul to 11 Aug 2026</span><span><b>Red team of OpenAI’s agent monitoring</b></span><span data-k="Allowed">The codebase, the monitor’s prompts and about a dozen interviews, on OpenAI’s devices.</span><span data-k="Held back">A 61-page report stayed inside. The public got a short post. OpenAI could redact at its sole discretion, and METR could not describe the cuts.</span></div>
+            <div class="log-row"><span>12 Aug to 29 Oct 2026</span><span><b>AI R&amp;D acceleration at Anthropic</b></span><span data-k="Allowed">Internal benchmark scores, compute and staffing data, about 15 interviews.</span><span data-k="Held back">No access to unreleased models. A check on compute for safety was cancelled midway. Most of the evidence METR found most informative was redacted.</span></div>
+            <div class="log-row"><span>Oct 2026</span><span><b>Review of Anthropic’s August risk report</b></span><span data-k="Allowed">The unredacted text of three sections.</span><span data-k="Held back">Anthropic could veto or cut the review. It did neither.</span></div>
+            <div class="log-row"><span>From 15 Oct 2026</span><span><b>Six METR staff inside Anthropic</b></span><span data-k="Allowed">Company hardware, office space and internal tools, close to what Anthropic’s own risk team has.</span><span data-k="Held back">Anthropic cannot veto publication. It still decides what falls in the redaction categories.</span></div>
+          </div>
+          <p class="cap">Sources: METR’s reports for each engagement; the New York Times for the terms of the incident investigation; Anthropic for the embedded staff. Links in <a href="#data">The data</a>.</p>
+
+          <figure class="plate narrow">
+            <img loading="lazy" src="https://metr.org/assets/images/our-approach-to-working-with-ai-companies/hugging-face-redaction-disclosure.png" alt="A paragraph from METR's incident report ending in an italic note that OpenAI redacted some context about how the model was trained and used, for intellectual property reasons." width="1238" height="180">
+            <figcaption><b>What a redaction looks like.</b> One line from the incident report. Source: <a href="https://metr.org/blog/2026-10-14-our-approach-to-risk-assessment/">METR, Our approach to working with AI companies</a>, 14 October 2026, CC BY.</figcaption>
+          </figure>
+
+          <p>Inside those limits the work is real. METR catalogued 44 incidents of agents acting against their users, found several simple ways to switch off Anthropic’s monitor, and found a route around OpenAI’s sandbox.</p>
+
+          <figure class="plate narrow">
+            <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/incidents-scatter.png" alt="Scatter chart of 44 incidents. The vertical axis is how far an agent overreached, the horizontal axis how hard its deception would be to catch. Most points sit low and left; a few needed routine monitoring to catch." width="1680" height="1509">
+            <figcaption><b>Forty-four incidents, plotted by how far the agent went and how hard it was to catch.</b> Squares are public material, circles METR’s own tests, triangles cases shared by companies. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, CC BY.</figcaption>
+          </figure>
+        </article>
+
+        <!-- 3 -->
+        <article class="chap" id="q-disclosed" data-stop="Already disclosed?">
+          <h2>Did the frontier lab already disclose this?</h2>
+          <p class="answer">Mostly yes. In the case checked here Anthropic already held nearly every fact, and METR changed what those facts can bear.</p>
+
+          <p>The case is Anthropic’s August 2026 risk report. It rated the risk of catastrophic harm from misaligned models as low. A draft had said very low and was revised after incidents came to light. METR read the internal version and published its review on 20 October.</p>
+
+          <div class="ledger">
+            <div class="lab"><h3>Already in Anthropic’s report</h3><ul><li>The low rating, and the eight claims behind it.</li><li>The Mythos 5 incident: a monitor flagged about 1% of actions, and about 50% once the model’s reasoning was stripped out.</li></ul></div>
+            <div><h3>Read differently by METR</h3><ul><li>Risk is low because the models are not yet capable enough. METR does not credit the safeguards.</li><li>The covert-capability tests are a poor stand-in for evading a monitor.</li><li>The incidents look like the severe misalignment the report calls unlikely.</li></ul></div>
+            <div class="new"><h3>New from METR</h3><ul><li>One experiment. Anthropic had Claude review the report. METR showed the review shifts with the prompt and with who the user says they are.</li></ul></div>
+            <div><h3>Seen by METR, kept from the public</h3><ul><li>How the models behaved in the past and how monitoring responded.</li><li>Where the monitoring is weak.</li><li>METR says the first, and a security section, should be at least partly public.</li></ul></div>
+          </div>
+
+          <p>So was the difference new information or withheld information? For the most part it was a second reading of the same file. METR calls the report thoughtful and well calibrated, and says its methods would not reliably catch higher risk if it were there.</p>
+
+          <figure class="plate narrow">
+            <img loading="lazy" src="https://metr.org/assets/images/misalignment-risk-report-august-2026-review/fig2.webp" alt="Dot chart. Claude's rating of report quality is highest, about 75 to 78 out of 100, when the user says they are the report's author, and lower when the user says they are METR or a government institute." width="1400" height="1472">
+            <figcaption><b>The one new result.</b> Claude scored the risk report higher when the user claimed to be its author, across 100 runs per setting. Source: <a href="https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review/">METR’s review</a>, 20 October 2026, CC BY.</figcaption>
+          </figure>
+
+          <p>Where METR had data, it added more. Anthropic’s public figure for the speed-up in its models was about 1.7 times, read in the August report as a one-time jump. With scores for four unreleased models, METR put it at 1.9 times and lasting.</p>
+
+          <figure class="plate">
+            <img loading="lazy" src="https://metr.org/assets/images/ai-rd-acceleration-assessment/jump-vs-slope-change.png" alt="Line chart of Anthropic model capability from 2024 to October 2026. Green points are public models, orange points internal ones. A grey line that bends upward after late 2025 fits the newest models better than a black line with a single step." width="1880" height="1561">
+            <figcaption><b>Lab’s reading against METR’s.</b> Orange points are models the public had not seen. The black line is the one-time jump in Anthropic’s August report. The grey line is METR’s lasting acceleration, which fits the held-out models better. Source: <a href="https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/">METR, AI R&amp;D acceleration at Anthropic</a>, 5 November 2026, CC BY.</figcaption>
+          </figure>
+
+          <p>The limit came next. Anthropic redacted, in METR’s words, <q>a majority of the evidence we found most informative</q>. The public has the conclusion without the workings.</p>
+        </article>
+
+        <!-- 4 -->
+        <article class="chap" id="q-deliver" data-stop="Does it deliver?">
+          <h2>Do the third parties really deliver on their promises?</h2>
+          <p class="answer">METR delivers information and says plainly that it cannot deliver assurance.</p>
+
+          <p>The promise is to inform the public about the risks of advanced AI. The gap it claims is that a lab’s self-assessment is not enough. Six tests of that.</p>
+
+          <div class="verdicts">
+            <div class="verdict"><h3>Tells the public things it did not know</h3><span class="v yes">Yes</span><p>Forty-four agent incidents. Simple ways to switch off Anthropic’s monitor. A sandbox bypass at OpenAI. Four unreleased models on Anthropic’s capability curve.</p></div>
+            <div class="verdict"><h3>Checks the lab’s claims itself</h3><span class="v part">Partly</span><p>It says it often relies on information it cannot verify. At Anthropic most data came through two staff. At OpenAI the lab chose which week to examine.</p></div>
+            <div class="verdict"><h3>Says so when the lab is wrong</h3><span class="v part">Partly</span><p>It disputed Anthropic’s reasoning, called two redactions unjustified, and withdrew a line saying every OpenAI flaw was patched. Its bottom line still matched Anthropic’s: low.</p></div>
+            <div class="verdict"><h3>Shows what it could not see</h3><span class="v yes">Yes</span><p>Redaction summaries, a checklist of access conditions that were not met, and staff conflicts printed in the report.</p></div>
+            <div class="verdict"><h3>Covers the labs that matter</h3><span class="v no">No</span><p>Amazon, Microsoft and xAI stayed out of the industry report. The break-in to OpenAI’s own systems during the Hugging Face incident was out of scope.</p></div>
+            <div class="verdict"><h3>Arrives in time to matter</h3><span class="v part">Partly</span><p>February evidence was published in May. An August report was reviewed in October. One post waited while OpenAI patched.</p></div>
+          </div>
+
+          <h3>The test that has not happened</h3>
+          <p>An independent check proves itself when it finds something the lab would rather bury, and publishes it anyway. That has not been seen. Each lab let its findings out. Anthropic held a veto and did not use it.</p>
+          <p>That shows good faith. Independence is still untested, because the terms that produced these reports are the terms that would hide a failure. A lab could leave the industry report silently. OpenAI could cut anything, and METR could not say what was cut. Had a finding been buried, the public record would look as it does today.</p>
+
+          <blockquote class="pull">
+            <p>This proposal will not provide confident assurance about whether development is safe.</p>
+            <cite><a href="https://metr.org/blog/2026-10-14-better-informing-the-public-about-loss-of-control-risks/">METR, 14 October 2026</a></cite>
+          </blockquote>
+
+          <p>So the gap is narrower and still open. METR is a second reader of the lab’s file, and the lab still chooses the file. Three things would change that: access by right, a scope the lab cannot set alone, and a rule that a refusal or an exit is itself reported.</p>
+        </article>
+
+        <!-- 5 -->
+        <article class="chap" id="q-agenda" data-stop="Whose agenda?">
+          <h2>Is there an overlap in agenda?</h2>
+          <p class="answer">Yes, by design. METR studies loss of control, the labs’ own worst case, and leaves their products alone.</p>
+
+          <p>The test is the share of work that serves a lab’s commercial worries, such as offensive output, lawsuits and disobedient products, against the share that serves catastrophic risk. METR’s six latest publications are all on loss of control. None is on content or brand safety.</p>
+
+          <figure class="plate narrow">
+            <img loading="lazy" src="https://metr.org/assets/images/loss-of-control-proposals/three-assessments-overview.png" alt="METR's overview of the core questions an assessment of loss-of-control risk should address, in three parts: alignment, control and AI R&D acceleration." width="1600" height="900">
+            <figcaption><b>METR’s three questions.</b> Is the model aligned, can it be controlled, and is AI speeding up AI research? Source: <a href="https://metr.org/blog/2026-10-14-better-informing-the-public-about-loss-of-control-risks/">METR’s proposal</a>, 14 October 2026, CC BY.</figcaption>
+          </figure>
+
+          <p>The overlap is with the labs’ safety teams. Those three questions are the risk pathways in Anthropic’s own report. The ties behind it:</p>
+          <dl class="facts">
+            <div><dt>Funding</dt><dd>None from labs.</dd></div>
+            <div><dt>Access</dt><dd>All of it. Tokens, laptops, logs and desks come from the labs it assesses: OpenAI, Anthropic, Google DeepMind, Meta and Amazon.</dd></div>
+            <div><dt>People</dt><dd>It co-writes with Redwood Research, which advises Google DeepMind and Anthropic. Six of its staff now work inside Anthropic.</dd></div>
+            <div><dt>Governance</dt><dd>No lab seat is published.</dd></div>
+          </dl>
+          <p>It does push past the lab’s frame. It asked Anthropic to count a model swaying the company’s own safety decisions, and models still in training. It leaves out weight security and whether a lab keeps its own rules.</p>
+          <p class="cap">Not measured here: how the labs split their own safety work between commercial risk and catastrophic risk.</p>
+        </article>
+
+        <!-- 6 -->
+        <article class="chap" id="q-policy" data-stop="For a legislator">
+          <h2>If they are trustworthy, how easy is this to translate to a policy maker?</h2>
+          <p class="answer">It is hard: the evidence is voluntary, redacted and long, and it has reached Congress once.</p>
+
+          <ul>
+            <li>Rep. Bill Foster of Illinois cited METR’s report on the OpenAI and Hugging Face incident to argue that software controls cannot contain superhuman AI. He proposed air gaps and two-person approval. None of this is law yet.</li>
+            <li>That report runs to 91 pages. The OpenAI monitoring report runs to 61, and the public saw a summary.</li>
+            <li>California’s SB 813 and AB 1405 let the state name independent verifiers and keep a registry of auditors.</li>
+          </ul>
+
+          <h3>The audit Illinois will require, and what METR does</h3>
+          <div class="versus">
+            <div><span></span><span>SB 315 audit, from 2028</span><span>METR today</span></div>
+            <div><span>Who picks the checker</span><span>The lab</span><span>The lab agrees to let METR in</span></div>
+            <div><span>Who pays</span><span>The lab</span><span>Philanthropy</span></div>
+            <div><span>What is checked</span><span>Compliance with the lab’s own framework</span><span>Whether the lab could lose control of its models</span></div>
+            <div><span>Who reads it</span><span>The Attorney General and IEMA-OHS, redacted</span><span>The public, redacted</span></div>
+            <div><span>Access</span><span>By contract with the lab</span><span>Voluntary, ended at will</span></div>
+          </div>
+          <p>METR does not fit the slot the law creates. It says its exercises are not audits, compliance assessments or formal oversight. The law’s auditor is paid by the lab, and METR takes no lab money.</p>
+          <p>What a legislator can lift today is the form of the reports: METR’s redaction summary and its checklist of access conditions. Both state what an outsider was not allowed to see. No law requires either.</p>
+
+          <blockquote class="pull">
+            <p>We need to make sure that reporting incidents and containment failures is mandatory.</p>
+            <cite>Rep. Suhas Subramanyam, to the <a href="https://www.thestar.com.my/tech/tech-news/2026/09/13/after-openais-bots-went-rogue-watchdogs-were-kept-on-a-short-leash">New York Times</a>, September 2026</cite>
+          </blockquote>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ THE DATA ============ -->
+    <section class="data" id="data">
+      <h2>The data</h2>
+      <p class="small">Every table behind the page. Bubble sizes were audited on 12 November 2026 against AISafety.fund through its MCP server.</p>
+      <div class="layers">
+        <details class="layer" id="fig-audit">
+          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Technical safety research: money raised on record</span><span class="layer-inside">AISafety.fund’s itemised grants, this site’s grant records, and published investment</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
+          <div class="layer-body"><p class="small">Each organisation was looked up by name. The two grant columns add up itemised grants, so each is a lower bound. A bubble uses the larger, or the figure an organisation reports itself, plus investment. “None found” means no grant row was found; the organisation may have other money.</p><div class="tbl audit" id="auditTbl"></div></div>
+        </details>
+        <details class="layer" id="fig-labs">
+          <summary><span class="layer-kind">Definition</span><span class="layer-what"><span class="layer-title">The frontier lab test</span><span class="layer-inside">Illinois SB 315: revenue over $500M with affiliates, or training compute over 10^26 operations</span></span></summary>
+          <div class="layer-body"><div class="tbl three" id="labTbl"></div></div>
+        </details>
+        <details class="layer" id="fig-groups">
+          <summary><span class="layer-kind">Counts</span><span class="layer-what"><span class="layer-title">Third parties by group</span><span class="layer-inside">AISafety.com’s field map, read 5 October 2026, labs taken out</span></span></summary>
+          <div class="layer-body"><div class="tbl three" id="groupTbl"></div></div>
+        </details>
+        <details class="layer" id="fig-tengaps">
+          <summary><span class="layer-kind">Promises</span><span class="layer-what"><span class="layer-title">Ten gaps third parties say they fill</span><span class="layer-inside">From the organisations’ own descriptions</span></span></summary>
+          <div class="layer-body">
+            <div class="tbl three">
+              <div class="tbl-row head"><span>Claimed gap</span><span>Their promise</span><span>Who says it</span></div>
+              <div class="tbl-row"><span>Developer self-assessment is insufficient</span><span>Check safety claims independently and make the evidence public</span><span>AVERI, METR, Transluce</span></div>
+              <div class="tbl-row"><span>Safety measurements can be unreliable or far from real harm</span><span>Audit evaluations, build missing tests, turn capabilities into risk estimates</span><span>Generality Labs, Neo Research, SaferAI</span></div>
+              <div class="tbl-row"><span>Apparent compliance can conceal deception or dangerous capabilities</span><span>Detect dishonesty, scheming and failures ordinary tests miss</span><span>Apollo, Cadenza, Aether, Contramont</span></div>
+              <div class="tbl-row"><span>Safe behavior in a test does not establish control during deployment</span><span>Build and test monitoring, containment and intervention in realistic settings</span><span>Redwood, Luthien, Gray Swan</span></div>
+              <div class="tbl-row"><span>We lack scientific understanding of how models work</span><span>Explain internal mechanisms well enough to diagnose and change behavior</span><span>Simplex, Goodfire</span></div>
+              <div class="tbl-row"><span>Mainstream alignment approaches may be too narrow or fragile</span><span>Pursue neglected approaches and alignment that survives further training</span><span>AE Studio, Resolution, Geodesic</span></div>
+              <div class="tbl-row"><span>Existing architectures may create avoidable safety problems</span><span>Build alternative systems designed for safety, which is a development promise</span><span>Conjecture, LawZero, SSI</span></div>
+              <div class="tbl-row"><span>Technical alignment may neglect institutions, values and affected people</span><span>Address human objectives, democratic institutions and concentrated power</span><span>AOI, MAI, Formation, CaML</span></div>
+              <div class="tbl-row"><span>Technical evidence does not become useful policy by itself</span><span>Connect research to decisions, standards and risk management</span><span>CASP, CLTC, SaferAI</span></div>
+              <div class="tbl-row"><span>Research access, talent and geography are uneven</span><span>Provide open tools, training and local expertise</span><span>EleutherAI, Neuronpedia, Arcadia, FAIR, SAFL</span></div>
+            </div>
+          </div>
+        </details>
+        <details class="layer" id="fig-four">
+          <summary><span class="layer-kind">Comparison</span><span class="layer-what"><span class="layer-title">The four, side by side</span><span class="layer-inside">What each provides and gathers, whose money, who decides, ties and access</span></span></summary>
+          <div class="layer-body">
+            <div class="tbl five">
+              <div class="tbl-row head"><span></span><span>METR</span><span>Apollo Research</span><span>Goodfire</span><span>Redwood Research</span></div>
+              <div class="tbl-row"><span>Provides</span><span>Evaluations before release; public reviews of lab risk reports</span><span>Scheming evaluations before release; monitoring products</span><span>An interpretability platform sold to Arc Institute, Mayo Clinic, Microsoft and others</span><span>Control protocols, published research, advice to Google DeepMind and Anthropic</span></div>
+              <div class="tbl-row"><span>Gathers</span><span>Model access and free tokens from five labs; internal risk reports, partly unredacted</span><span>Model checkpoints, sometimes reasoning traces</span><span>The internals of customers’ models and open models</span><span>OpenAI’s internal monitoring and incident data; Anthropic’s models through joint work</span></div>
+              <div class="tbl-row"><span>Whose wealth</span><span>Philanthropy. About $71M in six months. No AI-company money</span><span>Venture investors (seed led by 50Y), paid lab contracts, the lab-funded AI Safety Fund, SFF</span><span>Venture capital: $50M Series A led by Menlo with Anthropic; $150M Series B led by B Capital, with Eric Schmidt</span><span>Coefficient Giving, meaning Dustin Moskovitz and Cari Tuna; ARIA (UK government)</span></div>
+              <div class="tbl-row"><span>Who decides</span><span>METR; it turns down money that would give a company influence</span><span>Its board, with two seats independent of Apollo and its funders</span><span>Founders and investors; board not published</span><span>Coefficient Giving staff recommend, Good Ventures approves; Redwood spends</span></div>
+              <div class="tbl-row"><span>Governance</span><span>Nonprofit; published conflict-of-interest policy</span><span>Public benefit corporation since January 2026</span><span>For-profit company</span><span>Nonprofit; three-person board including CEO Buck Shlegeris</span></div>
+              <div class="tbl-row"><span>Access</span><span>Voluntary, on each lab’s terms</span><span>Voluntary and short</span><span>Least dependent: open models and customers’ own</span><span>By invitation</span></div>
+            </div>
+          </div>
+        </details>
+        <details class="layer" id="fig-notin">
+          <summary><span class="layer-kind">Gaps</span><span class="layer-what"><span class="layer-title">Not in the data</span></span></summary>
+          <div class="layer-body">
+            <ul class="notin">
+              <li>Investment without a published amount. Apollo Research and Softmax have investors and no figure, so only their grants count. SSI is drawn at $3B, the two rounds it has disclosed.</li>
+              <li>A lab’s safety work is a yearly spending estimate for 2026, set beside third parties’ money raised over all years. AISafety.fund’s estimate also covers Microsoft and Meta, which are not on the map. SSI’s 10% and DeepSeek’s 1% of money raised ($3B and about $7.4B) are assumptions, not estimates. DeepSeek’s round is reported from filings and the figures vary between reports.</li>
+              <li>A lab’s size on the opening steps is its valuation, not money raised. Two are outside estimates: DeepMind has no valuation of its own, so its figure is an analyst’s value for DeepMind and Google’s chip business together; SpaceXAI’s is the price put on xAI when SpaceX absorbed it.</li>
+              <li>Organisations outside the technical group were checked against AISafety.fund’s 200 largest recipients only, not one by one.</li>
+              <li>The map was read on 5 October 2026. Its empirical research group then held 53 entries, three of them labs.</li>
+              <li>Apollo Research, Goodfire and Redwood Research past their promises. Those parts are not written.</li>
+              <li>The labs’ own split between commercial safety work and catastrophic risk.</li>
+              <li>Anthropic’s August risk report was read through METR’s review of it, not line by line.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="layer" id="fig-sources">
+          <summary><span class="layer-kind">Sources</span><span class="layer-what"><span class="layer-title">Sources</span></span></summary>
+          <div class="layer-body">
+            <ul class="srcs">
+              <li><a href="https://aisafety.fund/">AISafety.fund</a>, itemised grants, read through its MCP server on 12 November 2026 (CC BY-NC-SA 4.0)</li>
+              <li><a href="https://aisafety.com/map">AISafety.com field map</a>, read 5 October 2026 (CC BY-SA)</li>
+              <li><a href="https://metr.org/about">METR: About</a> and <a href="https://metr.org/coi-policy.pdf">conflict of interest policy, version 1.1</a></li>
+              <li><a href="https://metr.org/blog/2026-08-14-funding-update/">METR: funding update</a>, 14 August 2026</li>
+              <li><a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR: Frontier Risk Report (February to March 2026)</a>, 19 May 2026</li>
+              <li><a href="https://metr.org/hugging-face-incident-report-aug-2026.pdf">METR and Redwood Research: OpenAI and Hugging Face incident report</a>, August 2026</li>
+              <li><a href="https://metr.org/blog/2026-10-14-our-approach-to-risk-assessment/">METR: Our approach to working with AI companies</a>, 14 October 2026</li>
+              <li><a href="https://metr.org/blog/2026-10-14-better-informing-the-public-about-loss-of-control-risks/">METR: A proposal for better informing the public about loss-of-control risks</a>, 14 October 2026</li>
+              <li><a href="https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review/">METR: Review of the misalignment section in Anthropic’s Risk Report (August 2026)</a>, 20 October 2026</li>
+              <li><a href="https://metr.org/blog/2026-10-22-red-teaming-openai-agent-monitoring/">METR: Red-Teaming OpenAI’s Internal Agent Monitoring Systems</a>, 22 October 2026</li>
+              <li><a href="https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/">METR: Independent Assessment of AI R&amp;D Acceleration at Anthropic</a>, 5 November 2026</li>
+              <li><a href="https://www-cdn.anthropic.com/f61d49fa5596956a5dec75fea0e973bf6a6a8378/Redacted%20Risk%20Report%20August%202026%20.pdf">Anthropic: Risk Report, August 2026</a> (redacted)</li>
+              <li><a href="https://anthropic.com/news/an-update-on-independent-evaluators">Anthropic: An update on independent evaluators</a>, 15 October 2026</li>
+              <li><a href="https://www.thestar.com.my/tech/tech-news/2026/09/13/after-openais-bots-went-rogue-watchdogs-were-kept-on-a-short-leash">New York Times (Dylan Freedman), as carried by The Star: After OpenAI’s bots went rogue, watchdogs were kept on a short leash</a>, September 2026</li>
+              <li><a href="https://www.ilga.gov/Legislation/BillStatus?DocNum=315&amp;DocTypeID=SB&amp;GA=104&amp;GAID=18&amp;SessionID=114">Illinois General Assembly: SB 315, Artificial Intelligence Safety Measures Act</a></li>
+              <li><a href="https://www.lw.com/en/insights/illinois-joins-growing-state-level-effort-to-regulate-frontier-ai-with-new-safety-measures-act">Latham &amp; Watkins on Illinois SB 315</a></li>
+              <li><a href="https://epoch.ai/data-insights/open-models-threshold">Epoch AI on the 10^26 threshold in Executive Order 14110 and the AI Diffusion Framework</a></li>
+              <li>Investment: <a href="https://www.maginative.com/article/sutskevers-safe-superintelligence-raises-another-2b-at-32b-valuation//">SSI</a>, <a href="https://finance.yahoo.com/news/ai-lab-goodfire-raises-150m-150100095.html">Goodfire</a>, <a href="https://www.grayswan.ai/news/gray-swan-announces-series-a">Gray Swan</a>, <a href="https://www.longtermwiki.com/organizations/conjecture">Conjecture</a>, <a href="https://apolloresearch.ai/blog/apollo-research-is-becoming-a-pbc">Apollo Research</a>, <a href="https://www.trendingtopics.eu/deepseek-raises-7-4-billion-only-the-chinese-state-gets-voting-rights/">DeepSeek</a></li>
+              <li><a href="https://foster.house.gov/media/press-releases/foster-huizenga-moolenaar-krishnamoorthi-introduce-bill-stop-smuggling">Office of Rep. Bill Foster: Chip Security Act press release</a></li>
+              <li><a href="https://www.akingump.com/en/insights/ai-law-and-regulation-tracker/california-enacts-ai-auditor-registry-and-independent-verification-framework-sb-813-and-ab-1405">Akin Gump on California SB 813 and AB 1405</a></li>
+              <li><a href="https://www.apolloresearch.ai/">Apollo Research</a>, <a href="https://www.goodfire.com/">Goodfire</a>, <a href="https://www.redwoodresearch.org/">Redwood Research</a>: their own sites</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="tip" hidden></div>
+<div id="flyer" hidden></div>
+
+<footer>
+  <div class="wrap">
+    <div class="res">
+      <a href="experiments.html">Experiments: who pays for AI safety?</a>
+      <a href="ecosystem.html">See these organisations on the ecosystem map</a>
+      <a href="index.html">All goals of this site</a>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js?v=4"></script>
+<script src="explore.js?v=6"></script>
+<script src="field-data.js?v=6"></script>
+<script src="reports-data.js?v=5"></script>
+<script>
+(function () {
+  "use strict";
+  const F = window.FIELD, R = window.REPORT;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const money = v => !v ? "none found" : v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? "$" + (v >= 1e8 ? Math.round(v / 1e6) : (v / 1e6).toFixed(1)) + "M" : "$" + Math.max(1, Math.round(v / 1e3)) + "k";
+  const SVG = "http://www.w3.org/2000/svg";
+  const catLabel = Object.fromEntries(F.cats.map(c => [c.id, c.label]));
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- every active entry on the map, with the money on record for it ---------- */
+  const site = {};
+  F.flows.forEach(f => { site[f.to] = (site[f.to] || 0) + f.total; });
+  const labSet = new Set(R.labs.filter(l => l.meets).map(l => l.id));
+  const asideSet = new Set(R.labs.filter(l => l.aside).map(l => l.id));
+  const labOf = Object.fromEntries(R.labs.map(l => [l.id, l]));
+  const ents = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
+    const k = e.id.replace(/^f_/, "");
+    const s = site[e.node] || site[e.id] || 0, f = R.fund[k];
+    const grants = Math.max(s, f || 0, R.reported[k] || 0), inv = (R.invest[k] || {}).usd || 0;
+    return { k, name: e.name, short: e.short, cats: e.cats, site: s, fund: f, grants, inv, usd: grants + inv, lab: labSet.has(k), aside: asideSet.has(k), L: labOf[k], groups: R.groups.filter(g => e.cats.includes(g)) };
+  });
+  const safeOf = en => en.L.safe || en.L.safePct * en.L.raised;
+  const third = ents.filter(e => !e.lab && !e.aside);
+  const tech = third.filter(e => e.cats.includes("empirical_research")).sort((a, b) => b.usd - a.usd);
+  const sorted = new Set(R.promises.flatMap(p => p.orgs));
+
+  $("#nAll").textContent = ents.length;
+  $("#nNone").textContent = ents.filter(e => !e.usd && !e.lab && !e.aside).length;
+  $("#nLabs").textContent = labSet.size;
+  $("#nThird").textContent = third.length;
+  $("#nTech").textContent = $("#nTech2").textContent = tech.length;
+  $("#nGaps").textContent = R.promises.length;
+  $("#nUnsorted").textContent = tech.filter(e => !sorted.has(e.k)).length;
+
+  /* One bubble for each group an entry sits in. The first is the one shown before the groups split. */
+  const nodes = [];
+  ents.forEach(en => {
+    const gs = en.lab || en.aside ? ["lab"] : en.groups.length ? en.groups : ["other"];
+    gs.forEach((g, i) => nodes.push({ en, g, main: i === 0, base: en.lab || en.aside ? Math.sqrt(en.L.val / 1e6) : Math.max(Math.sqrt(en.usd / 1e6), 0.62), P: [] }));
+  });
+  nodes.sort((a, b) => b.base - a.base);
+  const mainOf = new Map(nodes.filter(n => n.main).map(n => [n.en, n]));
+
+  const svg = $("#bubbles"), box = $("#fieldBox"), labelsEl = $("#labels"), foot = $("#stageFoot");
+  nodes.forEach((n, i) => {
+    const g = document.createElementNS(SVG, "g");
+    g.setAttribute("class", "b");
+    g.setAttribute("data-g", n.g);
+    g.style.transitionDelay = (i % 24) * 9 + "ms";
+    const c = document.createElementNS(SVG, "circle");
+    c.setAttribute("r", 1);
+    g.appendChild(c); svg.appendChild(g);
+    g.__n = n; n.el = g;
+  });
+
+  /* ---------- a bubble's name on hover ---------- */
+  const tip = $("#tip");
+  const line = en => en.lab || en.aside ? (cur >= SAFE ? money(safeOf(en)) + (en.L.safe ? " on its own safety work in 2026, an estimate" : " assumed for safety: " + en.L.safePct * 100 + "% of the " + money(en.L.raised) + " it has raised") : (en.lab ? "Frontier lab under SB 315. " : "") + money(en.L.val) + " valuation" + (en.L.est ? ", an estimate" : "")) :
+    en.usd ? money(en.usd) + " raised on record" + (en.inv ? (en.grants ? ": " + money(en.grants) + " grants, " : ": ") + money(en.inv) + " investment" : "") : "No money on record";
+  svg.addEventListener("pointermove", e => {
+    const g = e.target.closest && e.target.closest(".b");
+    if (!g || g.style.opacity === "0") { tip.hidden = true; return; }
+    tip.innerHTML = `<b>${esc(g.__n.en.name)}</b>${esc(line(g.__n.en))}`;
+    tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.transform = `translate(${Math.max(8, Math.min(e.clientX + 14, window.innerWidth - w - 8))}px, ${e.clientY + 18 + h > window.innerHeight ? e.clientY - h - 12 : e.clientY + 18}px)`;
+  });
+  svg.addEventListener("pointerleave", () => { tip.hidden = true; });
+  window.addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
+
+  /* ---------- layout ---------- */
+  const W = 1000, LAST = 7, SAFE = 1;
+  let H = 700, u = 1.3, labelSets = [], cur = -1;
+
+  /* Place circles one by one, largest first, at the first free spot along a spiral. ax stretches the spiral sideways. */
+  function spiral(items, ax, pad) {
+    const placed = [];
+    let dPrev = 0;
+    items.forEach((it, n) => {
+      if (!placed.length) { it.x = 0; it.y = 0; placed.push(it); return; }
+      const step = Math.max(it.r * 0.7, 0.35);
+      let d = Math.max(0, dPrev - it.r * 3), a = n * 2.4;
+      for (let guard = 0; guard < 400000; guard++) {
+        const x = Math.cos(a) * d * ax, y = Math.sin(a) * d;
+        let ok = true;
+        for (let j = 0; j < placed.length; j++) {
+          const p = placed[j], dx = p.x - x, dy = p.y - y, rr = p.r + it.r + pad;
+          if (dx * dx + dy * dy < rr * rr) { ok = false; break; }
+        }
+        if (ok) { it.x = x; it.y = y; break; }
+        const da = step / Math.max(d, step);
+        a += da; d += step * da / 6.283;
+      }
+      dPrev = Math.hypot(it.x / ax, it.y);
+      placed.push(it);
+    });
+  }
+  /* Scale and move a set of circles to fill a box. */
+  function fit(items, b) {
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
+    const s = Math.min(b.w / (x1 - x0), b.h / (y1 - y0));
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    items.forEach(it => { it.x = b.x + b.w / 2 + (it.x - cx) * s; it.y = b.y + b.h / 2 + (it.y - cy) * s; it.r *= s; });
+    return s;
+  }
+  const inLabel = (n, p) => {
+    const px = p.r / u, t = n.en.short;
+    return px >= 17 && t.length * 6.1 <= px * 1.86 ? `<span class="lb in${n.g === "lab" ? " lab" : n.g === "other" ? " dk" : ""}" style="left:${p.x / u}px;top:${p.y / u}px">${esc(t)}</span>` : "";
+  };
+
+  function layout() {
+    const bw = box.clientWidth, bh = box.clientHeight;
+    if (!bw || !bh) return;
+    u = W / bw; H = bh * u;
+    const m = 10 * u, wide = bw > 620;
+    box.classList.toggle("compact", !wide);
+    nodes.forEach(n => { n.P = []; });
+    const mains = nodes.filter(n => n.main);
+    const labs = nodes.filter(n => n.en.lab), aside = nodes.filter(n => n.en.aside);
+    labelSets = Array.from({ length: LAST + 1 }, () => []);
+
+    /* Groups set out in rows, a heading over each. Used for the seven kinds and for the promises. */
+    function flowGroups(groups, step, minPx, headPx, wrap, floorPx) {
+      const head = headPx * u, gapG = (wide ? 26 : 12) * u, minGW = minPx * u;
+      groups.forEach(gr => {
+        spiral(gr.items, 1, 0.16);
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+        gr.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
+        gr.w = x1 - x0; gr.h = y1 - y0; gr.ox = (x0 + x1) / 2; gr.oy = (y0 + y1) / 2;
+      });
+      const flow = k => {
+        const out = []; let row = [], x = 0, y = 0, rowH = 0;
+        const flush = () => {
+          let cx = m + (W - 2 * m - (x - gapG)) / 2;
+          row.forEach(c => { c.cx = cx + c.cw / 2; c.cy = y + head + rowH / 2; c.top = y + head + (rowH - c.gr.h * k) / 2; cx += c.cw + gapG; });
+          y += head + rowH + 14 * u; out.push(...row); row = []; x = 0; rowH = 0;
+        };
+        groups.forEach(gr => {
+          const cw = Math.max(gr.w * k, minGW);
+          if (row.length && x + cw > W - 2 * m) flush();
+          row.push({ gr, cw }); x += cw + gapG; rowH = Math.max(rowH, gr.h * k, 2 * floorPx * u);
+        });
+        flush();
+        return { h: y, out };
+      };
+      let lo = 0, hi = (W - 2 * m) / Math.max(...groups.map(g => g.w));
+      for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (flow(mid).h <= H - 2 * m) lo = mid; else hi = mid; }
+      const f = flow(lo), off = m + Math.max(0, (H - 2 * m - f.h) / 2);
+      f.out.forEach(c => {
+        c.gr.items.forEach(it => {
+          it.n.P[step] = { x: c.cx + (it.x - c.gr.ox) * lo, y: c.cy + off + (it.y - c.gr.oy) * lo, r: Math.max(it.r * lo, floorPx * u), o: 1 };
+          labelSets[step].push(inLabel(it.n, it.n.P[step]));
+        });
+        labelSets[step].push(`<span class="lb hd${wrap ? " wr" : ""}" style="left:${c.cx / u}px;top:${(c.top + off) / u - 6}px${wrap ? `;width:${c.cw / u + 8}px` : ""}">${esc(c.gr.label)}<b>${c.gr.count}</b></span>`);
+      });
+    }
+
+    /* 0 to 2: one scale for everything, so each lab is its real size beside the rest.
+       The third parties are packed once as a cloud, and the cloud is then placed as one piece. */
+    const dust = mains.filter(n => !n.en.lab && !n.en.aside).map(n => ({ n, r: n.base }));
+    spiral(dust, 1, 0.16);
+    const dustR = Math.max(...dust.map(it => Math.hypot(it.x, it.y) + it.r));
+    const byVal = n => n.base, bySafe = n => Math.sqrt(safeOf(n.en) / 1e6);
+    const cloud = () => ({ dust: true, r: dustR });
+    function scene(step, size, clusters) {
+      const head = (wide ? 44 : 34) * u, gapC = (wide ? 40 : 14) * u, foot0 = 22 * u, minC = (wide ? 132 : 78) * u;
+      clusters.forEach(c => {
+        c.items = c.items.map(it => it.dust ? it : { n: it, r: size(it) }).sort((a, b) => b.r - a.r);
+        spiral(c.items, 1, dustR * 0.06);
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+        c.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
+        c.w = x1 - x0; c.h = y1 - y0; c.ox = (x0 + x1) / 2; c.oy = (y0 + y1) / 2;
+      });
+      const maxH = Math.max(...clusters.map(c => c.h)), roomH = H - 2 * m - head - foot0;
+      const room = W - 2 * m - gapC * (clusters.length - 1), total = q => clusters.reduce((a, c) => a + Math.max(c.w * q, c.label ? minC : 0), 0);
+      let lo = 0, hi = roomH / maxH;
+      for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (total(mid) <= room) lo = mid; else hi = mid; }
+      const k = lo, cy = m + head + roomH / 2;
+      let x = m + (room - total(k)) / 2;
+      clusters.forEach(c => {
+        const cw = Math.max(c.w * k, c.label ? minC : 0), cx = x + cw / 2;
+        c.items.forEach(it => {
+          const px = cx + (it.x - c.ox) * k, py = cy + (it.y - c.oy) * k;
+          if (it.dust) dust.forEach(dd => { dd.n.P[step] = { x: px + dd.x * k, y: py + dd.y * k, r: dd.r * k, o: 1 }; labelSets[step].push(inLabel(dd.n, dd.n.P[step])); });
+          else {
+            it.n.P[step] = { x: px, y: py, r: it.r * k, o: 1 };
+            labelSets[step].push(inLabel(it.n, it.n.P[step]) || `<span class="lb un" style="left:${px / u}px;top:${(py + it.r * k) / u + 4}px;width:90px"><i>${esc(it.n.en.short)}</i></span>`);
+          }
+        });
+        if (c.label) labelSets[step].push(`<span class="lb hd wr" style="left:${cx / u}px;top:${(cy - c.h * k / 2) / u - 8}px;width:${cw / u + 16}px">${esc(c.label)}</span>`);
+        x += cw + gapC;
+      });
+    }
+    const split = () => [{ label: "Frontier labs", items: labs.slice() }].concat(aside.map(n => ({ label: n.en.L.head, items: [n] })), [{ label: third.length + " third parties", items: [cloud()] }]);
+    const whole = () => [{ items: labs.concat(aside) }, { label: "Every other third party, together", items: [cloud()] }];
+    scene(0, byVal, whole());
+    /* 1: the same picture with each lab cut down to its own safety work, the size used from here on */
+    scene(SAFE, bySafe, whole());
+    scene(2, bySafe, [{ label: "Frontier labs", items: labs.slice() }, { label: "Third parties", items: aside.concat([cloud()]) }]);
+    scene(3, bySafe, split());
+    /* the extra bubbles of an entry wait, unseen, inside its first one */
+    nodes.forEach(n => { if (!n.main) for (let i = 0; i <= SAFE; i++) { const p = mainOf.get(n.en).P[i]; n.P[i] = { x: p.x, y: p.y, r: p.r * 0.3, o: 0 }; } });
+
+    /* 4: seven groups, in the order of the brief */
+    flowGroups(R.groups.map(g => ({ label: catLabel[g], count: third.filter(e => e.groups.includes(g)).length, items: nodes.filter(n => n.g === g).map(n => ({ n, r: n.base })) })),
+      4, wide ? 150 : 104, 24, false, 0);
+
+    /* 5: the technical group, in rows, every one named */
+    const tn = tech.map(en => nodes.find(n => n.en === en && n.g === "empirical_research"));
+    const labW = (wide ? 78 : 56) * u, labH = (wide ? 46 : 27) * u, gap = 5 * u, rmin = (wide ? 4.5 : 3.5) * u, maxW = W - 2 * m;
+    const rows = k => {
+      const out = []; let row = [], x = 0, y = 0, rowR = 0;
+      const flush = () => {
+        let cx = m + (maxW - (x - gap)) / 2;
+        row.forEach(c => { c.x = cx + c.w / 2; c.y = y + 2 * rowR - c.r; c.ly = y + 2 * rowR; cx += c.w + gap; });
+        y += 2 * rowR + labH; out.push(...row); row = []; x = 0; rowR = 0;
+      };
+      tn.forEach(n => {
+        const r = Math.max(Math.sqrt(n.en.usd / 1e6) * k, rmin), w = Math.max(2 * r, labW);
+        if (row.length && x + w > maxW) flush();
+        row.push({ n, r, w }); x += w + gap; rowR = Math.max(rowR, r);
+      });
+      flush();
+      return { h: y, out };
+    };
+    let lo = 0, hi = maxW / 4 / Math.sqrt(tech[0].usd / 1e6);
+    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (rows(mid).h <= H - 2 * m) lo = mid; else hi = mid; }
+    const r4 = rows(lo), off4 = m + Math.max(0, (H - 2 * m - r4.h) / 2);
+    r4.out.forEach(c => {
+      c.n.P[5] = { x: c.x, y: c.y + off4, r: c.r, o: 1 };
+      labelSets[5].push(`<span class="lb un" style="left:${c.x / u}px;top:${(c.ly + off4) / u + 3}px;width:${c.w / u}px"><i>${esc(c.n.en.short)}</i><small>${c.n.en.usd ? money(c.n.en.usd) : ""}</small></span>`);
+    });
+
+    /* 6: the same group, grouped by the gap each says it fills */
+    const byK = new Map(tn.map(n => [n.en.k, n]));
+    const pg = R.promises.map(p => ({ label: p.label, count: 0, items: p.orgs.map(k => byK.get(k)).filter(Boolean).map(n => ({ n, r: n.base })) }));
+    const loose = tn.filter(n => !sorted.has(n.en.k));
+    if (loose.length) pg.push({ label: "Not sorted yet", count: loose.length, items: loose.map(n => ({ n, r: n.base })) });
+    pg.forEach(g => g.items.sort((a, b) => b.r - a.r));
+    /* a grid of equal cells, one scale for all of them: the largest group sets it */
+    const cols5 = wide ? 4 : 3, rows5 = Math.ceil(pg.length / cols5), head5 = (wide ? 40 : 30) * u, names5 = (wide ? 44 : 30) * u, floor5 = (wide ? 4.5 : 3.2) * u;
+    const cellW = (W - 2 * m) / cols5, cellH = (H - 2 * m) / rows5, roomW = cellW - 14 * u, roomH = cellH - head5 - names5 - 6 * u;
+    const packAt = k => pg.every(gr => {
+      gr.items.forEach(it => { it.r = Math.max(it.n.base * k, floor5); });
+      spiral(gr.items, 1, 1.5 * u);
+      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+      gr.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
+      gr.ox = (x0 + x1) / 2; gr.oy = (y0 + y1) / 2; gr.bh = y1 - y0;
+      return x1 - x0 <= roomW && y1 - y0 <= roomH;
+    });
+    let lo5 = 0, hi5 = Math.min(roomW, roomH) / 2 / tn[0].base;
+    for (let i = 0; i < 18; i++) { const mid = (lo5 + hi5) / 2; if (packAt(mid)) lo5 = mid; else hi5 = mid; }
+    packAt(lo5);
+    pg.forEach((gr, i) => {
+      const cx = m + cellW * ((i % cols5) + 0.5), top = m + cellH * Math.floor(i / cols5), cy = top + head5 + roomH / 2;
+      gr.items.forEach(it => {
+        it.n.P[6] = { x: cx + it.x - gr.ox, y: cy + it.y - gr.oy, r: it.r, o: 1 };
+        labelSets[6].push(inLabel(it.n, it.n.P[6]));
+      });
+      labelSets[6].push(`<span class="lb un nm" style="left:${cx / u}px;top:${(cy + gr.bh / 2) / u + 5}px;width:${cellW / u - 12}px"><i>${esc(gr.items.map(it => it.n.en.short).join(", "))}</i></span>`);
+      labelSets[6].push(`<span class="lb hd wr tp" style="left:${cx / u}px;top:${top / u}px;width:${cellW / u - 10}px">${esc(gr.label)}</span>`);
+    });
+
+    /* 7: the four to choose between */
+    const picks = Object.keys(R.choices).map(k => byK.get(k)).filter(Boolean);
+    const cols = wide ? picks.length : 2, rowsN = Math.ceil(picks.length / cols);
+    const bigR = wide ? Math.min(W / cols * 0.3, H * 0.17) : Math.min(W * 0.13, H * 0.1);
+    const k6 = bigR / Math.sqrt(Math.max(...picks.map(n => n.en.usd)) / 1e6);
+    const cellH6 = (H - 2 * m) / rowsN, top6 = wide ? Math.max(m, H * 0.12) : m;
+    picks.forEach((n, i) => {
+      const x = W * ((i % cols) + 0.5) / cols, cy = (wide ? top6 : m + Math.floor(i / cols) * cellH6) + bigR + 8 * u;
+      n.P[LAST] = { x, y: cy, r: Math.max(Math.sqrt(n.en.usd / 1e6) * k6, 6 * u), o: 1, pick: true };
+      const c = R.choices[n.en.k];
+      labelSets[LAST].push(`<button type="button" class="lb ch" data-k="${n.en.k}"${c.ready ? "" : " disabled"} style="left:${x / u}px;top:${(cy - bigR) / u - 8}px;width:${W / cols / u - 8}px;padding-top:${2 * bigR / u + 22}px"><b>${esc(n.en.short)}</b><span>${esc(c.gap)}</span><em>${c.ready ? "Follow " + esc(n.en.short) + " ↓" : "Not written yet"}</em></button>`);
+    });
+
+    /* anything without a place at a step fades out where it last stood */
+    for (let i = 1; i <= LAST; i++) nodes.forEach(n => { if (!n.P[i]) { const p = n.P[i - 1]; n.P[i] = { x: p.x, y: p.y, r: p.o ? p.r * 0.4 : p.r, o: 0 }; } });
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  }
+
+  let swapT = 0;
+  function show(i, instant) {
+    if (!nodes[0].P[i]) return;
+    cur = i;
+    nodes.forEach(n => {
+      const p = n.P[i];
+      n.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${p.r})`;
+      n.el.style.opacity = p.o;
+      n.el.style.pointerEvents = p.o ? "" : "none";
+      n.el.classList.toggle("pick", !!p.pick);
+    });
+    foot.classList.toggle("off", i === LAST);
+    tip.hidden = true;
+    const put = () => { labelsEl.innerHTML = labelSets[i].join(""); labelsEl.classList.remove("swap"); };
+    clearTimeout(swapT);
+    if (instant) put(); else { labelsEl.classList.add("swap"); swapT = setTimeout(put, 520); }
+  }
+
+  /* the key under the chart */
+  foot.innerHTML = R.groups.map(g => `<span><i style="background:var(--g-${{ training_and_education: "te", governance: "go", empirical_research: "em", funding: "fu", conceptual_research: "co", advocacy: "ad", strategy: "st" }[g]})"></i>${esc(catLabel[g])}</span>`).join("") +
+    `<span><i style="background:var(--g-other)"></i>Other</span><span><i style="background:var(--g-lab)"></i>Frontier lab</span>` +
+    `<span class="note">Size: money raised on record, meaning grants plus investment where a round is published. Labs are sized by valuation on the first step, then by their own safety work. Sources in <a href="#data">The data</a>.</span>`;
+
+  const steps = $$(".step");
+  layout();
+  show(0, true);
+  steps[0].classList.add("on");
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const i = +e.target.dataset.i;
+      steps.forEach(s => s.classList.toggle("on", s === e.target));
+      if (i !== cur) show(i);
+    });
+  }, { rootMargin: "-45% 0px -45% 0px" });
+  steps.forEach(s => io.observe(s));
+  let rz = 0;
+  window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { layout(); show(Math.max(cur, 0), true); }, 180); });
+
+  /* ---------- the question, then each step, settles in the middle of the screen; arrow keys move between them ---------- */
+  const hero = $("#question"), BAR = 57;
+  const desk = window.matchMedia("(min-width: 900px)");
+  const targets = () => [hero.getBoundingClientRect().top + window.scrollY - BAR].concat(steps.map(s => {
+    const r = s.getBoundingClientRect();
+    return r.top + window.scrollY + r.height / 2 - (window.innerHeight + BAR) / 2;
+  }), [$("#metr").getBoundingClientRect().top + window.scrollY - BAR]);
+  const glide = y => window.scrollTo({ top: y, behavior: calm ? "auto" : "smooth" });
+  /* Scroll a little past a step and the page carries on to the next one; a little back, to the one before. */
+  let snapT = 0, flying = false, restY = window.scrollY;
+  window.addEventListener("scroll", () => {
+    clearTimeout(snapT);
+    if (!desk.matches || flying) return;
+    snapT = setTimeout(() => {
+      const t = targets(), y = window.scrollY, last = t[t.length - 1], dir = Math.sign(y - restY);
+      let to = null;
+      if (y > last + 4) { if (dir < 0 && y < last + window.innerHeight * 0.6) to = last; }
+      else if (dir > 0) to = t.find(v => v >= y - 4);
+      else if (dir < 0) to = t.slice().reverse().find(v => v <= y + 4);
+      if (to == null || Math.abs(to - y) < 4) { restY = y; return; }
+      restY = to;
+      glide(to);
+    }, 70);
+  }, { passive: true });
+  window.addEventListener("keydown", e => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName || "")) return;
+    const down = e.key === "ArrowDown" || e.key === "PageDown", up = e.key === "ArrowUp" || e.key === "PageUp";
+    if (!down && !up) return;
+    const t = targets(), y = window.scrollY;
+    if (y > t[t.length - 1] + (up ? window.innerHeight * 0.5 : -8)) return;
+    const to = down ? t.find(v => v > y + 8) : t.slice().reverse().find(v => v < y - 8);
+    if (to == null) return;
+    e.preventDefault();
+    glide(to);
+  });
+  $("#goBtn").addEventListener("click", e => { e.preventDefault(); glide(targets()[1]); });
+
+  /* ---------- the route beside the METR chapters ---------- */
+  const route = $("#route"), chaps = $$(".chap");
+  const RH = 600, RX = y => 150 + 16 * Math.sin(y / 62) + 7 * Math.sin(y / 23 + 1);
+  const stopY = i => 14 + i * (RH - 28) / (chaps.length - 1);
+  let d = "";
+  for (let y = 14; y <= RH - 14; y += 4) d += (d ? "L" : "M") + RX(y).toFixed(1) + " " + y;
+  route.innerHTML = `<svg viewBox="0 0 216 ${RH}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}"/><path class="done" d="${d}"/></svg>` +
+    chaps.map((c, i) => `<a href="#${c.id}" style="--x:${(RX(stopY(i)) / 216 * 100).toFixed(2)}%;--y:${(stopY(i) / RH * 100).toFixed(2)}%">${esc(c.dataset.stop)}</a>`).join("");
+  const stops = $$("a", route), done = $(".done", route);
+  function onScroll() {
+    const mid = window.innerHeight * 0.42;
+    let idx = -1, frac = 0;
+    chaps.forEach((c, i) => { const r = c.getBoundingClientRect(); if (r.top < mid) { idx = i; frac = Math.min(1, Math.max(0, (mid - r.top) / r.height)); } });
+    const y = idx < 0 ? 0 : idx >= chaps.length - 1 ? stopY(idx) : stopY(idx) + frac * (stopY(idx + 1) - stopY(idx));
+    done.style.setProperty("--left", (100 - y / RH * 100).toFixed(2) + "%");
+    stops.forEach((a, i) => { a.classList.toggle("past", i < idx); a.classList.toggle("here", i === idx); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- after the choice, scrolling carries the chosen bubble down to the route's first stop ----------
+     The flight is tied to the scroll: at the choice it sits in the chart, at the start of the METR part it is the first dot. */
+  const flyer = $("#flyer"), trail = $("#metr"), stage = $(".stage");
+  const chosen = () => nodes.find(x => x.en.k === "metr" && x.P[LAST] && x.P[LAST].pick);
+  const flightStart = () => targets()[LAST + 1];
+  const flightEnd = () => targets()[LAST + 2];
+  let flown = -1;
+  function fly() {
+    const n = chosen();
+    if (!n || !route.offsetWidth) { flyer.hidden = true; route.classList.remove("waiting"); return; }
+    const y0 = flightStart(), y1 = flightEnd(), y = window.scrollY;
+    const t = Math.min(1, Math.max(0, (y - y0) / Math.max(1, y1 - y0)));
+    route.classList.toggle("waiting", t < 1);
+    /* the three not chosen fade out as soon as the bubble sets off */
+    if (cur === LAST) {
+      const f = String(Math.max(0, 1 - t / 0.25));
+      nodes.forEach(x => { if (x !== n && x.P[LAST].pick) x.el.style.opacity = f; });
+      $$(".ch", labelsEl).forEach(b => { b.style.opacity = b.dataset.k === n.en.k ? "" : f; });
+    }
+    if (t <= 0 || t >= 1) {
+      flyer.hidden = true;
+      n.el.style.visibility = "";
+      if (t >= 1 && flown < 1) { route.classList.remove("landed"); void route.offsetWidth; route.classList.add("landed"); }
+      flown = t;
+      return;
+    }
+    flown = t;
+    /* where the bubble sat while the chart was pinned */
+    const bx = box.getBoundingClientRect(), pinTop = 64 + (bx.top - stage.getBoundingClientRect().top), P = n.P[LAST];
+    const sx = bx.left + P.x / u, sy = pinTop + P.y / u, sd = 2 * P.r / u;
+    /* where the first stop is now */
+    const rr = route.getBoundingClientRect();
+    const tx = rr.left + RX(stopY(0)) / 216 * rr.width, ty = rr.top + stopY(0) / RH * rr.height;
+    const k = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, sway = Math.sin(t * Math.PI);
+    const d = sd + (13 - sd) * k;
+    n.el.style.visibility = "hidden";
+    flyer.hidden = false;
+    flyer.style.transform = `translate(${sx + (tx - sx) * k + sway * 60}px, ${sy + (ty - sy) * k - sway * 40}px) scale(${d / 100})`;
+  }
+  window.addEventListener("scroll", fly, { passive: true });
+  window.addEventListener("resize", fly);
+  fly();
+  labelsEl.addEventListener("click", e => {
+    const btn = e.target.closest(".ch");
+    if (!btn || btn.disabled) return;
+    clearTimeout(snapT);
+    flying = true;
+    glide(flightEnd());
+    setTimeout(() => { flying = false; restY = window.scrollY; }, 1400);
+  });
+
+  /* ---------- the data ---------- */
+  $("#h-audit").textContent = tech.length;
+  $("#auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">This site</span><span class="c">Investment</span><span>Note</span></div>` +
+    tech.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${e.fund ? money(e.fund) : "none found"}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
+  const byId = Object.fromEntries(ents.map(e => [e.k, e]));
+  $("#labTbl").innerHTML = `<div class="tbl-row head"><span>Entry on the map</span><span>Passes the test?</span><span>Why</span></div>` +
+    R.labs.map(l => `<div class="tbl-row"><span>${esc((byId[l.id] || {}).name || l.id)}</span><span>${l.meets ? "Yes" : "Not shown to. Set aside for now"}</span><span>${esc(l.why)}. Drawn at ${money(l.val)}: ${esc(l.valNote)}.</span></div>`).join("");
+  $("#groupTbl").innerHTML = `<div class="tbl-row head"><span>Group</span><span>Third parties in it</span><span>Largest by money raised on record</span></div>` +
+    R.groups.map(g => {
+      const inG = third.filter(e => e.groups.includes(g)).sort((a, b) => b.usd - a.usd);
+      return `<div class="tbl-row"><span>${esc(catLabel[g])}</span><span>${inG.length}</span><span>${inG.slice(0, 3).map(e => esc(e.short) + " " + money(e.usd)).join("; ")}</span></div>`;
+    }).join("");
+})();
+</script>
+<i id="page-end" hidden></i>
+<script>document.documentElement.classList.remove("pre");</script>
+</body>
+</html>
