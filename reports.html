@@ -75,6 +75,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .lb.hd.wr b { display: none; }
 .lb.hd.tp { transform: translateX(-50%); }
 .lb.un.nm { color: var(--muted); font-weight: 500; }
+.lb.un.nw i, .field.compact .lb.un.nw i { display: block; white-space: nowrap; overflow: visible; }
 .lb.un.nm i, .field.compact .lb.un.nm i { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; white-space: normal; overflow: hidden; }
 /* The choice: one button under each of the four bubbles. */
 .lb.ch { transition: opacity .15s; pointer-events: auto; transform: translateX(-50%); box-sizing: border-box; background: none; border: 1.5px solid transparent; border-radius: 16px; margin: 0; padding: 0 10px 14px; font: inherit; color: var(--ink); cursor: pointer; display: grid; gap: 6px; align-content: start; justify-items: center; transition: border-color .15s, background-color .15s; }
@@ -821,32 +822,56 @@ a.next:hover { color: var(--accent); }
     const byVal = n => n.base, bySafe = n => Math.sqrt(safeOf(n.en) / 1e6);
     const cloud = () => ({ dust: true, r: dustR });
     function scene(step, size, clusters) {
-      const head = (wide ? 44 : 34) * u, gapC = (wide ? 40 : 14) * u, foot0 = 22 * u, minC = (wide ? 132 : 78) * u;
-      clusters.forEach(c => {
-        c.items = c.items.map(it => it.dust ? it : { n: it, r: size(it) }).sort((a, b) => b.r - a.r);
-        spiral(c.items, 1, dustR * 0.06);
-        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-        c.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
-        c.w = x1 - x0; c.h = y1 - y0; c.ox = (x0 + x1) / 2; c.oy = (y0 + y1) / 2;
-      });
-      const maxH = Math.max(...clusters.map(c => c.h)), roomH = H - 2 * m - head - foot0;
-      const room = W - 2 * m - gapC * (clusters.length - 1), total = q => clusters.reduce((a, c) => a + Math.max(c.w * q, c.label ? minC : 0), 0);
-      let lo = 0, hi = roomH / maxH;
-      for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (total(mid) <= room) lo = mid; else hi = mid; }
-      const k = lo, cy = m + head + roomH / 2;
+      const head = (wide ? 44 : 34) * u, gapC = (wide ? 28 : 12) * u, foot0 = 22 * u, minC = (wide ? 104 : 70) * u;
+      clusters.forEach(c => { c.items = c.items.map(it => it.dust ? it : { n: it, r: size(it) }).sort((a, b) => b.r - a.r); });
+      const roomH = H - 2 * m - head - foot0, room = W - 2 * m - gapC * (clusters.length - 1);
+      const total = q => clusters.reduce((a, c) => a + Math.max(c.w * q, c.label ? minC : 0), 0);
+      /* pack, find the scale, then pack again with a gap wide enough for a name under a small bubble */
+      let pad = dustR * 0.06, k = 0;
+      for (let pass = 0; pass < 2; pass++) {
+        clusters.forEach(c => {
+          spiral(c.items, 1, pad);
+          let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+          c.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
+          c.w = x1 - x0; c.h = y1 - y0; c.ox = (x0 + x1) / 2; c.oy = (y0 + y1) / 2;
+        });
+        const maxH = Math.max(...clusters.map(c => c.h));
+        let lo = 0, hi = roomH / maxH;
+        for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (total(mid) <= room) lo = mid; else hi = mid; }
+        k = lo;
+        if (!pass) pad = Math.max(dustR * 0.06, (wide ? 44 : 30) * u / k);
+      }
+      const cy = m + head + roomH / 2, outside = [], rings = [], heads = [];
       let x = m + (room - total(k)) / 2;
       clusters.forEach(c => {
         const cw = Math.max(c.w * k, c.label ? minC : 0), cx = x + cw / 2;
         c.items.forEach(it => {
           const px = cx + (it.x - c.ox) * k, py = cy + (it.y - c.oy) * k;
+          if (it.dust) rings.push({ x: px, y: py, r: it.r * k });
           if (it.dust) dust.forEach(dd => { dd.n.P[step] = { x: px + dd.x * k, y: py + dd.y * k, r: dd.r * k, o: 1 }; labelSets[step].push(inLabel(dd.n, dd.n.P[step])); });
           else {
             it.n.P[step] = { x: px, y: py, r: it.r * k, o: 1 };
-            labelSets[step].push(inLabel(it.n, it.n.P[step]) || `<span class="lb un" style="left:${px / u}px;top:${(py + it.r * k) / u + 4}px;width:90px"><i>${esc(it.n.en.short)}</i></span>`);
+            const inside = inLabel(it.n, it.n.P[step]);
+            if (inside) labelSets[step].push(inside); else outside.push({ n: it.n, c });
           }
         });
-        if (c.label) labelSets[step].push(`<span class="lb hd wr" style="left:${cx / u}px;top:${(cy - c.h * k / 2) / u - 8}px;width:${cw / u + 16}px">${esc(c.label)}</span>`);
+        if (c.label) heads.push({ c, cx, top: cy - c.h * k / 2, w: cw + gapC * 0.8 });
         x += cw + gapC;
+      });
+      /* a name that does not fit inside its bubble goes below it, or above, left or right: the first side clear of every bubble */
+      const circles = rings.concat(nodes.filter(z => z.P[step] && z.P[step].o && (z.en.lab || z.en.aside)).map(z => z.P[step]));
+      const clear = (x0, y0, x1, y1) => circles.every(c => { const nx = Math.max(x0, Math.min(c.x, x1)), ny = Math.max(y0, Math.min(c.y, y1)); return Math.hypot(nx - c.x, ny - c.y) >= c.r + 2 * u; });
+      outside.forEach(({ n, c }) => {
+        const p = n.P[step], t = n.en.short, w = (t.length * 6.6 + 8) * u, h = 16 * u, g = 4 * u;
+        const opts = [[p.x - w / 2, p.y + p.r + g], [p.x + p.r + g, p.y - h / 2], [p.x - p.r - g - w, p.y - h / 2], [p.x - w / 2, p.y - p.r - g - h]];
+        const at = opts.find(([a, b]) => clear(a, b, a + w, b + h)) || opts[0];
+        c.labTop = Math.min(c.labTop == null ? Infinity : c.labTop, at[1]);
+        labelSets[step].push(`<span class="lb un nw" style="left:${(at[0] + w / 2) / u}px;top:${at[1] / u}px;width:${w / u}px"><i>${esc(t)}</i></span>`);
+      });
+      /* each heading sits above its group, and above any name placed over the group */
+      heads.forEach(hd => {
+        const top = Math.min(hd.top, hd.c.labTop == null ? Infinity : hd.c.labTop);
+        labelSets[step].push(`<span class="lb hd wr" style="left:${hd.cx / u}px;top:${top / u - 8}px;width:${hd.w / u}px">${esc(hd.c.label)}</span>`);
       });
     }
     const split = () => [{ label: "Frontier labs", items: labs.slice() }].concat(aside.map(n => ({ label: n.en.L.head, items: [n] })), [{ label: third.length + " third parties", items: [cloud()] }]);
