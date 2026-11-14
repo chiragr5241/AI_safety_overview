@@ -72,6 +72,8 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 .ev-body h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
 .ev-body p { font-size: .94rem; }
 .ev-meta { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 2px; }
+.ev-src { align-self: center; font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
+.ev-src a { color: inherit; }
 
 .fig { margin: 0; padding-top: 40px; display: grid; gap: 14px; min-width: 0; }
 .fig-head { display: grid; gap: 4px; max-width: 46rem; }
@@ -244,6 +246,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
     const tags = [`<span class="tag">${esc(e.by ? (e.kind === "Response" ? "Response" : "Said by " + e.by) : e.kind)}</span>`];
     (e.lane === 1 ? e.tags || [] : []).forEach(t => tags.push(`<span class="tag">${esc(t)}</span>`));
     if (e.lag) tags.push(`<span class="tag warn">${lagText(e)} after it happened</span>`);
+    if (e.src) tags.push(`<span class="ev-src">Source: ${e.src.map(s => `<a href="${s.u}">${esc(s.n)}</a>`).join(", ")}</span>`);
     li.innerHTML = `<span class="ev-date">${dayMonth(e.on)}</span><i class="ev-dot l${e.lane}" title="${esc(ALL[e.lane].tab)}"></i>
       <div class="ev-body"><h3>${esc(e.title)}</h3>${e.text ? `<p>${esc(e.text)}</p>` : ""}<div class="ev-meta">${tags.join("")}</div></div>`;
     li.addEventListener("pointerenter", () => { if (marks[e.id]) marks[e.id].classList.add("hot"); });
@@ -416,7 +419,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
     });
   })();
 
-  $("#srcs").innerHTML = ALL.flatMap(t => t.sources.map(s => `<li><b>${esc(t.tab)}.</b> <a href="${s.url}">${esc(s.title)}</a>${s.note ? ". " + esc(s.note) : ""}</li>`)).join("");
+  $("#srcs").innerHTML = ALL.flatMap(t => t.sources.map(s => `<li><b>${esc(t.tab)}.</b> <a href="${s.url}">${esc(s.title)}</a>${s.note ? ". " + esc(s.note) : ""}</li>`)).join("") + "<li>A detail these sources do not cover links its own source under the event.</li>";
 
   new ResizeObserver(draw).observe(over);
   draw();
