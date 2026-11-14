@@ -87,6 +87,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .lb.ch[disabled] em { color: var(--muted); font-weight: 500; }
 .lb.ch[disabled]:hover { border-color: var(--line); background: none; }
 .field.compact .lb.ch b { font-size: .92rem; }
+.field.compact .lb.ch span { display: none; }
 .field.compact .lb.ch span { font-size: .74rem; line-height: 1.25; }
 .field.compact .lb.ch em { font-size: .7rem; }
 .field.compact .lb.hd.wr { font-size: .62rem; }
@@ -96,6 +97,11 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 @keyframes land { 0% { transform: translateY(-50%) scale(1); } 40% { transform: translateY(-50%) scale(1.9); } 100% { transform: translateY(-50%) scale(1); } }
 .route.landed a:first-of-type::after { animation: land .7s cubic-bezier(.2, .8, .2, 1); }
 .route.waiting a:first-of-type::after { opacity: 0; }
+/* back to the top: shows once the reader is past the opening question */
+.totop { position: fixed; left: max(16px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 25; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line-strong); color: var(--ink); font-family: var(--font-label); font-size: .86rem; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgb(0 0 0 / .12); opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .25s, transform .25s; }
+.totop.on { opacity: 1; transform: none; pointer-events: auto; }
+@media (max-width: 899px) { .totop { left: auto; right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 60px); width: 44px; padding: 0; justify-content: center; border-radius: 50%; } .totop span { display: none; } }
+.totop:hover { border-color: var(--ink); color: var(--accent); }
 #flyer { position: fixed; left: 0; top: 0; width: 100px; height: 100px; margin: -50px 0 0 -50px; border-radius: 50%; background: var(--g-em); pointer-events: none; z-index: 30; }
 .lb.pk { transform: translateX(-50%); font-size: .95rem; font-weight: 700; }
 .lb.pk small { display: block; font-size: .76rem; font-weight: 500; color: var(--muted); line-height: 1.3; margin-top: 3px; }
@@ -145,9 +151,27 @@ a.next:hover { color: var(--accent); }
 .org q { font-style: italic; }
 .org .soon { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); min-height: 40px; display: flex; align-items: center; }
 
-/* ---------- METR: a route on the left, chapters on the right ---------- */
-.trail { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: clamp(24px, 4vw, 72px); padding-top: 56px; border-top: 1px solid var(--line); scroll-margin-top: 57px; }
-.route { position: sticky; top: 88px; align-self: start; height: min(560px, calc(100svh - 120px)); }
+/* ---------- METR: the route on the left, a board of metrics and figures in the middle, chapters on the right ---------- */
+.trail { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: clamp(24px, 4vw, 72px); padding-top: 24px; border-top: 1px solid var(--line); scroll-margin-top: 57px; }
+.trail > .chaps-col { grid-column: 2; grid-row: 1; }
+.trail > .route { grid-column: 1; grid-row: 1; }
+.board { display: none; }
+@media (min-width: 1100px) {
+  /* wider than the reading column, so three columns fit */
+  .trail { --tw: min(1560px, calc(100vw - 2 * var(--gutter))); width: var(--tw); margin-left: calc(50% - var(--tw) / 2); grid-template-columns: 12rem minmax(0, 1.08fr) minmax(0, 0.92fr); gap: clamp(28px, 3vw, 56px); }
+  .trail > .board { grid-column: 2; grid-row: 1; }
+  .trail > .route { grid-column: 1; }
+  .trail > .chaps-col { grid-column: 3; }
+  .board { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 82px; align-self: start; height: calc(100vh - 98px); height: calc(100svh - 98px); min-width: 0; }
+  /* figures move to the board on wide screens; the empty figure keeps its place in the text as a marker */
+  .chaps-col .plate { height: 0; overflow: hidden; margin: 0; padding: 0; visibility: hidden; }
+  .narrow-only { display: none !important; }
+  .trail .chap { padding: 0; border: 0; gap: 0; }
+  .trail .chaps-col .blk { min-height: calc(100vh - 57px); min-height: calc(100svh - 57px); box-sizing: border-box; padding: 32px 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .trail .chaps-col .blk.eng { padding-left: 0; border-left: 0; }
+  .eng.on .when { color: var(--g-em); }
+}
+.route { position: sticky; top: 82px; align-self: start; height: min(560px, calc(100svh - 120px)); }
 .route svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .route path { fill: none; stroke: var(--line-strong); stroke-width: 1.2; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
 .route path.done { stroke: var(--g-em); stroke-width: 3; stroke-dasharray: none; stroke-linecap: round; clip-path: inset(0 0 var(--left, 100%) 0); transition: clip-path .25s linear; }
@@ -160,7 +184,105 @@ a.next:hover { color: var(--accent); }
 .route a.here::after { background: var(--g-em); width: 9px; height: 9px; left: calc(100% + 7px); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--g-em); }
 .route a.here:first-of-type::after { width: 13px; height: 13px; left: calc(100% + 5px); }
 .route a:hover { color: var(--accent); }
-@media (max-width: 999px) { .trail { grid-template-columns: minmax(0, 1fr); } .route { display: none; } }
+@media (max-width: 999px) { .trail { grid-template-columns: minmax(0, 1fr); } .trail > .chaps-col { grid-column: 1; } .route { display: none; } }
+
+/* the board: the metrics always on show, then the figure for the part being read */
+.mtr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; flex: none; }
+.m { background: var(--surface); padding: 8px 12px 10px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.m.wide { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; }
+.m.wide > .mk { grid-column: 1; }
+.m.wide > b { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.m.cred { grid-template-columns: minmax(0, 1fr) auto; }
+.m.cred > .mk { grid-column: 1 / -1; }
+.m.cred > svg { grid-column: 1; grid-row: 2 / span 3; }
+.m.cred > .lrv { grid-column: 2; grid-row: 2; }
+.m.cred > small { grid-column: 1 / -1; }
+.lrv { display: grid; grid-template-columns: auto auto; gap: 2px 10px; align-items: baseline; justify-content: end; }
+.lrv span { font-family: var(--font-label); font-size: .74rem; color: var(--muted); text-align: right; }
+.lrv b { font-size: 1.6rem; }
+.m.wide > small, .m.wide > .rsb, .m.wide > svg { grid-column: 1; }
+.mk { font-family: var(--font-label); font-size: .78rem; color: var(--muted); line-height: 1.25; }
+.m b { font-family: var(--font-title); font-weight: 400; font-size: 1.6rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; transition: color .3s; }
+.m b.dim { color: var(--line-strong); }
+.m small:empty { display: none; }
+.m small { font-family: var(--font-label); font-size: .74rem; line-height: 1.3; color: var(--muted); min-height: 1.3em; }
+.rsb { display: grid; gap: 4px; }
+.rsb > div { display: grid; grid-template-columns: 5.6rem minmax(0, 1fr) 2.6rem; gap: 8px; align-items: center; font-family: var(--font-label); font-size: .76rem; }
+.rsb i { display: block; height: 8px; border-radius: 0 3px 3px 0; background: var(--accent); transform-origin: left; transform: scaleX(var(--v, 0)); transition: transform .8s cubic-bezier(.2, .8, .2, 1); box-shadow: inset 0 0 0 1px var(--accent); }
+.rsb > div { background: linear-gradient(var(--line), var(--line)) no-repeat calc(5.6rem + 8px) 50% / calc(100% - 5.6rem - 2.6rem - 16px) 8px; }
+.rsb em { font-style: normal; font-family: var(--font-mono); font-size: .76rem; text-align: right; }
+#lrc { width: 100%; max-width: 280px; height: auto; display: block; overflow: visible; }
+#lrc .ring { fill: var(--surface); stroke: var(--ink); stroke-width: 2; transition: transform .8s cubic-bezier(.2, .8, .2, 1), opacity .4s; }
+#lrc .ax { stroke: var(--line-strong); stroke-width: 1; }
+#lrc .ln { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+#lrc .one { stroke: var(--line-strong); stroke-dasharray: 3 3; }
+#lrc text { font-family: var(--font-label); font-size: 9px; fill: var(--muted); }
+#lrc .dot { fill: var(--g-em); transition: transform .8s cubic-bezier(.2, .8, .2, 1), opacity .4s; }
+.media { position: relative; flex: 1; min-height: 0; }
+.mly { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 8px; justify-content: safe center; overflow: hidden; opacity: 0; transform: translateY(10px); transition: opacity .45s, transform .45s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+.mly.on { opacity: 1; transform: none; pointer-events: auto; }
+.mfit { display: flex; flex-direction: column; gap: 8px; transform-origin: top center; }
+.mly img { display: block; max-width: 100%; max-height: calc(100% - 4.5em); width: auto; height: auto; object-fit: contain; align-self: center; background: var(--plate-paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px; box-sizing: border-box; }
+.mly figcaption, .mly .mcap { font-family: var(--font-label); font-size: .8rem; line-height: 1.4; color: var(--muted); }
+.mly figcaption b, .mly .mcap b { color: var(--ink); }
+.mly figure { margin: 0; display: flex; flex-direction: column; gap: 10px; min-height: 0; max-height: 100%; }
+.fbar { display: grid; grid-template-columns: 13rem minmax(0, 1fr) 3.6rem; gap: 10px; align-items: center; font-family: var(--font-label); font-size: .76rem; line-height: 1.35; }
+.fbar i.dash { background: repeating-linear-gradient(135deg, var(--g-fu) 0 2px, transparent 2px 7px); box-shadow: inset 0 0 0 1.5px var(--g-fu); }
+.fbar i { height: 14px; border-radius: 0 4px 4px 0; background: var(--g-fu); transform-origin: left; transform: scaleX(var(--w)); }
+.fbar em { font-style: normal; font-family: var(--font-mono); font-size: .8rem; text-align: right; }
+.docs { display: flex; gap: 14px; align-items: flex-end; justify-content: center; }
+.doc { width: 30%; max-width: 150px; display: grid; gap: 6px; }
+.doc .pg { background: var(--surface); border: 1px solid var(--line-strong); border-radius: 4px; padding: 10px 8px; display: grid; gap: 5px; aspect-ratio: 3 / 4; align-content: start; box-shadow: 4px 4px 0 -1px var(--surface), 4px 4px 0 0 var(--line), 8px 8px 0 -1px var(--surface), 8px 8px 0 0 var(--line); }
+.doc .pg i { height: 5px; border-radius: 2px; background: var(--line); }
+.doc .pg i.x { background: var(--ink); height: 7px; }
+.doc .pg.thin { aspect-ratio: 3 / 1.4; box-shadow: none; }
+.doc span { font-family: var(--font-label); font-size: .76rem; line-height: 1.3; color: var(--muted); text-align: center; }
+.doc span b { color: var(--ink); display: block; }
+.tiers { display: grid; gap: 8px; }
+.tiers div { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; display: grid; gap: 2px; background: var(--surface); }
+.tiers div.on { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.tiers b { font-family: var(--font-display); font-size: .95rem; }
+.tiers span { font-family: var(--font-label); font-size: .8rem; color: var(--muted); line-height: 1.35; }
+
+/* the measures, and the blocks of text the board follows */
+.metr-name { font-family: var(--font-title); font-weight: 700; font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -0.015em; }
+.measures { display: grid; gap: 14px; padding: 72px 0 56px; border-top: 1px solid var(--line); scroll-margin-top: 57px; }
+.mlink { font-family: var(--font-label); font-size: .8rem; }
+.m.mfoot { display: flex; justify-content: flex-end; padding: 8px 12px; }
+.measures h2 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); }
+.measures h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; margin-top: 12px; }
+.measures > p { max-width: 40rem; }
+.formula { font-family: var(--font-body); font-size: 1.15rem; line-height: 2.4; display: block; padding: 6px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; width: fit-content; max-width: 100%; box-sizing: border-box; }
+.formula sub, .formula sup { font-size: .7em; }
+.frac { display: inline-grid; text-align: center; vertical-align: middle; font-size: .9em; line-height: 1.2; }
+.frac > span:first-child { border-bottom: 1px solid currentColor; padding: 0 3px; }
+.sum { font-size: 1.15em; }
+.sum sub, .sum sup { font-size: .55em; }
+.sep { display: inline-block; width: 22px; }
+.terms > div { grid-template-columns: 8rem minmax(0, 1fr); }
+.chap .blk > h3, .eng h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; letter-spacing: 0; margin: 0 0 6px; }
+.chap .blk > p, .chap .blk > ul { max-width: 40rem; }
+.chap .blk { display: grid; gap: 10px; }
+.chap .blk > ul { margin: 0; padding-left: 1.15em; display: grid; gap: .5em; }
+.eng { border-left: 2px solid var(--line); padding: 2px 0 2px 18px; transition: border-color .3s; }
+.eng.on { border-left-color: var(--g-em); }
+.eng .when { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); }
+.eng dl { margin: 0; display: grid; gap: 6px; max-width: 40rem; }
+.eng dl div { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); gap: 12px; }
+.eng dt { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); padding-top: 2px; }
+.eng dd { margin: 0; font-size: .97rem; line-height: 1.5; }
+.scorecard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 40rem; }
+.scorecard div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 2px; }
+.scorecard b { font-family: var(--font-title); font-weight: 400; font-size: 1.7rem; line-height: 1; }
+.scorecard span { font-family: var(--font-label); font-size: .78rem; color: var(--muted); line-height: 1.3; }
+@media (prefers-reduced-motion: reduce) { .mly, .rsb i, #lrc .dot { transition: none; } }
+@media (max-height: 820px) { #lrc { max-width: 190px; } .m { padding: 8px 12px; gap: 2px; } .m b { font-size: 1.35rem; } .lrv b { font-size: 1.35rem; } .board { gap: 10px; } .mly { gap: 6px; } }
+@media (min-width: 1100px) {
+  .trail .ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trail .verdict { grid-template-columns: minmax(0, 1fr) auto; }
+  .trail .verdict p { grid-column: 1 / -1; }
+  .trail .versus > div { grid-template-columns: 7.5rem minmax(0, 1fr) minmax(0, 1fr); }
+}
 
 .chaps-col { display: grid; gap: 0; min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .metr-head { display: grid; gap: 14px; padding-bottom: 48px; }
@@ -362,91 +484,167 @@ a.next:hover { color: var(--accent); }
       <nav class="route" id="route" aria-label="Questions in this part"></nav>
 
       <div class="chaps-col" id="metrChaps">
-        <header class="metr-head">
-          <h2>METR</h2>
-          <p class="answer">A nonprofit of about 40 people that tests frontier models and reads the labs’ risk reports. Its claim: a lab marking its own homework is not enough.</p>
-        </header>
 
         <!-- 1 -->
         <article class="chap" id="q-incentive" data-stop="Incentives">
-          <h2>Does METR have the incentive to report what a lab would not?</h2>
-          <p class="answer">Yes on money, since no lab pays it. Less so on access, because every lab can end the work.</p>
+          <div class="blk" data-k="head">
+          <p class="metr-name">METR</p>
+          <h2>Does METR independently report what a lab would not?</h2>
+          <p class="answer">Yes, given no money links to labs. Less so on access, because every lab can end the work.</p>
 
-          <dl class="facts">
-            <div><dt>Whose wealth</dt><dd>Philanthropy. Its named funders include the Audacious Project, Schmidt Sciences, Packard, Pew, Jane Street and the Survival and Flourishing Fund.</dd></div>
-            <div><dt>Who decides</dt><dd>METR. It says it has taken no payment or donation from a frontier AI company, bars gifts from their employees, and has turned down money tied to a company executive or foundation.</dd></div>
-            <div><dt>What labs do give</dt><dd>Free model access, tokens and laptops. METR says it could pay for the tokens itself.</dd></div>
-            <div><dt>Governance</dt><dd>Nonprofit, led by Beth Barnes. Its page names two board members, Adam Gleave and Rajiv Dattani, and lists no full board.</dd></div>
-            <div><dt>Staff ties</dt><dd>Since 9 October 2026: anyone holding shares in a lab, in job talks with it, with a partner or close family there, or given over $100 by its staff is taken off that lab’s assessment. The same tie to a competitor must be disclosed.</dd></div>
-          </dl>
-
-          <h3>Money METR reports, and money on record</h3>
-          <div class="mbars">
-            <div class="mbar"><b>$71M</b><i class="dash" style="--w:1"></i><span>Commitments METR says it received in the six months to August 2026</span></div>
-            <div class="mbar"><b>$23.4M</b><i style="--w:.33"></i><span>Grants to METR itemised by donor at AISafety.fund, 2023 to 2026</span></div>
-            <div class="mbar"><b>$0</b><i style="--w:0"></i><span>From AI companies, by METR’s account</span></div>
+          <div class="scorecard narrow-only">
+            <div><b>0.61</b><span>OECD independence index, on the terms of its first industry report</span></div>
+            <div><b>0.67</b><span>Staff score</span></div>
+            <div><b>1.00</b><span>Budget score: no lab pays</span></div>
+            <div><b>1.8</b><span>Effective funders, of four on record</span></div>
           </div>
-          <p class="cap">Audit of 12 November 2026 through AISafety.fund’s MCP server. The site’s older grant record held $1.1M for METR. Its bubble uses the $71M it reports.</p>
+          <a class="mlink narrow-only" href="#measures">Details on measures ↓</a>
+          </div>
 
-          <p>The staff rule was tested within weeks. On the Anthropic assessment, one team member had discussed a job at Anthropic, turned it down, and held shares in a competitor. METR printed that in the report and had the work checked by someone else.</p>
-          <p>The pull that remains is access. METR writes that it stays dependent on the companies to be let in, to see the data and to publish. In its first industry report a lab could leave without a trace.</p>
+          <div class="blk" data-k="inc-wealth">
+            <h3>Whose wealth</h3>
+            <p>Philanthropy: the Audacious Project, Schmidt Sciences, Packard, Pew, Jane Street, the Survival and Flourishing Fund. No lab pays, so budget scores 1.</p>
+            <h3>Who decides</h3>
+            <p>METR. It takes no money from frontier AI companies or their staff, and has refused money tied to a company executive.</p>
+            <h3>Governance</h3>
+            <p>A nonprofit led by Beth Barnes. Two board members are named; no full board is listed.</p>
+          </div>
+          <div class="blk" data-k="inc-give">
+            <h3>What labs give</h3>
+            <p>Free model access, tokens and laptops, of unpublished value. Lab share: 0% of cash.</p>
+            <p>That is a quieter tie than money. The lab supplies the means of checking it and can take them back, so we track it engagement by engagement.</p>
+          </div>
+          <div class="blk" data-k="inc-staff">
+            <h3>Staff ties</h3>
+            <p>Since 9 October 2026, staff with lab shares, job talks, family there, or gifts over $100 from lab staff are taken off that lab’s assessment. </p>
+            <p>Staff scores 0.67, the average of three checks: lab shares are banned on assessments (1), past lab jobs are allowed (0.5), and close friendships with lab staff are only disclosed (0.5).</p>
+            <p>Tested within weeks: a team member who had discussed a job at Anthropic and held shares in a competitor was disclosed in the report, and their work checked.</p>
+          </div>
 
-          <figure class="plate">
-            <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/report/image4.png" alt="Diagram of METR's report process: three companies give information, METR writes private reports, companies decide what can be shared, and METR publishes. One company's line drops out, marked silent exit." width="1680" height="806">
-            <figcaption><b>How the first industry report was made.</b> A company could exit before publication and METR would treat it as if it had never taken part. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, 19 May 2026, CC BY.</figcaption>
-          </figure>
+          <div class="blk" data-k="inc-money">
+            <h3>Money METR reports, and money on record</h3>
+            <p>METR says it received $71M in commitments in the six months to August 2026. AISafety.fund itemises $23.4M of grants to it by donor, 2023 to 2026. From AI companies: $0, by METR’s account.</p>
+            <p>Of the itemised grants, the Audacious Project gave 73%, the Survival and Flourishing Fund 19%, the Future of Life Institute 6% and Longview 3%. That is a Herfindahl index of 0.57, or 0.42 normalised: in effect 1.8 funders. Most of the $71M is not itemised by donor, so the true spread may be wider.</p>
+            <p class="cap">Audited 14 November 2026 against AISafety.fund’s record for METR: eight grants, $23.4M.</p>
+          </div>
+
+          <div class="blk" data-k="inc-process">
+            <p>The pull that remains is access. METR writes that it stays dependent on the companies to be let in, to see the data and to publish. In its first industry report a lab could leave without a trace. On those terms the relationship part scores 0.17, and the index 0.61.</p>
+            <figure class="plate">
+              <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/report/image4.png" alt="Diagram of METR's report process: three companies give information, METR writes private reports, companies decide what can be shared, and METR publishes. One company's line drops out, marked silent exit." width="1680" height="806">
+              <figcaption><b>How the first industry report was made.</b> A company could exit before publication and METR would treat it as if it had never taken part. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, 19 May 2026, CC BY.</figcaption>
+            </figure>
+          </div>
         </article>
 
         <!-- 2 -->
         <article class="chap" id="q-ability" data-stop="Ability">
+          <div class="blk" data-k="ab-q">
           <h2>Does it have the ability?</h2>
-          <p class="answer">Only as far as each lab grants it: the lab sets the scope, the days on site and the redactions.</p>
-
-          <div class="log">
-            <div class="log-row head"><span>When</span><span>What METR did</span><span>What the lab allowed</span><span>What the lab held back</span></div>
-            <div class="log-row"><span>Feb to Mar 2026</span><span><b>Frontier Risk Report</b> on rogue agents inside labs</span><span data-k="Allowed">Anthropic, Google, Meta and OpenAI gave their strongest internal models, raw reasoning traces and answers to a questionnaire.</span><span data-k="Held back">Each approved what was published about it. Amazon, Microsoft and xAI stayed out.</span></div>
-            <div class="log-row"><span>Jul to Aug 2026</span><span><b>OpenAI and Hugging Face incident</b>, with Redwood</span><span data-k="Allowed">Six days inside OpenAI’s offices, reading the agents’ logs there.</span><span data-k="Held back">OpenAI set the scope: one week of a two-month incident. Some training details were redacted.</span></div>
-            <div class="log-row"><span>21 Jul to 11 Aug 2026</span><span><b>Red team of OpenAI’s agent monitoring</b></span><span data-k="Allowed">The codebase, the monitor’s prompts and about a dozen interviews, on OpenAI’s devices.</span><span data-k="Held back">A 61-page report stayed inside. The public got a short post. OpenAI could redact at its sole discretion, and METR could not describe the cuts.</span></div>
-            <div class="log-row"><span>12 Aug to 29 Oct 2026</span><span><b>AI R&amp;D acceleration at Anthropic</b></span><span data-k="Allowed">Internal benchmark scores, compute and staffing data, about 15 interviews.</span><span data-k="Held back">No access to unreleased models. A check on compute for safety was cancelled midway. Most of the evidence METR found most informative was redacted.</span></div>
-            <div class="log-row"><span>Oct 2026</span><span><b>Review of Anthropic’s August risk report</b></span><span data-k="Allowed">The unredacted text of three sections.</span><span data-k="Held back">Anthropic could veto or cut the review. It did neither.</span></div>
-            <div class="log-row"><span>From 15 Oct 2026</span><span><b>Six METR staff inside Anthropic</b></span><span data-k="Allowed">Company hardware, office space and internal tools, close to what Anthropic’s own risk team has.</span><span data-k="Held back">Anthropic cannot veto publication. It still decides what falls in the redaction categories.</span></div>
+          <p class="answer">Only as far as each lab grants it: the lab sets the scope, the days on site and the redactions. The more access, the more a negative report is worth.</p>
           </div>
-          <p class="cap">Sources: METR’s reports for each engagement; the New York Times for the terms of the incident investigation; Anthropic for the embedded staff. Links in <a href="#data">The data</a>.</p>
 
-          <figure class="plate narrow">
-            <img loading="lazy" src="https://metr.org/assets/images/our-approach-to-working-with-ai-companies/hugging-face-redaction-disclosure.png" alt="A paragraph from METR's incident report ending in an italic note that OpenAI redacted some context about how the model was trained and used, for intellectual property reasons." width="1238" height="180">
-            <figcaption><b>What a redaction looks like.</b> One line from the incident report. Source: <a href="https://metr.org/blog/2026-10-14-our-approach-to-risk-assessment/">METR, Our approach to working with AI companies</a>, 14 October 2026, CC BY.</figcaption>
-          </figure>
+          <div class="eng blk" data-k="ab-frr">
+            <p class="when">February to March 2026</p>
+            <h3>Frontier Risk Report on rogue agents inside labs</h3>
+            <dl><div><dt>Allowed</dt><dd>Anthropic, Google, Meta and OpenAI gave their strongest internal models, raw reasoning traces and answers to a questionnaire.</dd></div>
+            <div><dt>Held back</dt><dd>Each approved what was published about it. Amazon, Microsoft and xAI stayed out.</dd></div></dl>
+            <p>Inside those limits the work was real: 44 incidents of agents acting against their users, and several simple ways to switch off Anthropic’s monitor.</p>
+            <figure class="plate narrow">
+              <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/incidents-scatter.png" alt="Scatter chart of 44 incidents. The vertical axis is how far an agent overreached, the horizontal axis how hard its deception would be to catch. Most points sit low and left; a few needed routine monitoring to catch." width="1680" height="1509">
+              <figcaption><b>Forty-four incidents, plotted by how far the agent went and how hard it was to catch.</b> Squares are public material, circles METR’s own tests, triangles cases shared by companies. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, CC BY.</figcaption>
+            </figure>
+          </div>
 
-          <p>Inside those limits the work is real. METR catalogued 44 incidents of agents acting against their users, found several simple ways to switch off Anthropic’s monitor, and found a route around OpenAI’s sandbox.</p>
+          <div class="eng blk" data-k="ab-hf">
+            <p class="when">July to August 2026</p>
+            <h3>The OpenAI and Hugging Face incident, with Redwood</h3>
+            <dl><div><dt>Allowed</dt><dd>Six days inside OpenAI’s offices, reading the agents’ logs there.</dd></div>
+            <div><dt>Held back</dt><dd>OpenAI set the scope: one week of a two-month incident. Some training details were redacted.</dd></div></dl>
+            <figure class="plate narrow">
+              <img loading="lazy" src="https://metr.org/assets/images/our-approach-to-working-with-ai-companies/hugging-face-redaction-disclosure.png" alt="A paragraph from METR's incident report ending in an italic note that OpenAI redacted some context about how the model was trained and used, for intellectual property reasons." width="1238" height="180">
+              <figcaption><b>What a redaction looks like.</b> One line from the incident report. Source: <a href="https://metr.org/blog/2026-10-14-our-approach-to-risk-assessment/">METR, Our approach to working with AI companies</a>, 14 October 2026, CC BY.</figcaption>
+            </figure>
+          </div>
 
-          <figure class="plate narrow">
-            <img loading="lazy" src="https://metr.org/assets/images/frontier-risk-report/incidents-scatter.png" alt="Scatter chart of 44 incidents. The vertical axis is how far an agent overreached, the horizontal axis how hard its deception would be to catch. Most points sit low and left; a few needed routine monitoring to catch." width="1680" height="1509">
-            <figcaption><b>Forty-four incidents, plotted by how far the agent went and how hard it was to catch.</b> Squares are public material, circles METR’s own tests, triangles cases shared by companies. Source: <a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR, Frontier Risk Report</a>, CC BY.</figcaption>
-          </figure>
+          <div class="eng blk" data-k="ab-oai">
+            <p class="when">21 July to 11 August 2026</p>
+            <h3>A red team of OpenAI’s agent monitoring</h3>
+            <dl><div><dt>Allowed</dt><dd>The codebase, the monitor’s prompts and about a dozen interviews, on OpenAI’s devices.</dd></div>
+            <div><dt>Held back</dt><dd>A 61-page report stayed inside. The public got a short post. OpenAI could redact at its sole discretion, and METR could not describe the cuts.</dd></div></dl>
+          </div>
+
+          <div class="eng blk" data-k="ab-rd">
+            <p class="when">12 August to 29 October 2026</p>
+            <h3>AI R&amp;D acceleration at Anthropic</h3>
+            <dl><div><dt>Allowed</dt><dd>Internal benchmark scores, compute and staffing data, about 15 interviews.</dd></div>
+            <div><dt>Held back</dt><dd>No access to unreleased models. A check on compute for safety was cancelled midway. Most of the evidence METR found most informative was redacted.</dd></div></dl>
+          </div>
+
+          <div class="eng blk" data-k="ab-rev">
+            <p class="when">October 2026</p>
+            <h3>A review of Anthropic’s August risk report</h3>
+            <dl><div><dt>Allowed</dt><dd>The unredacted text of three sections.</dd></div>
+            <div><dt>Held back</dt><dd>Anthropic could veto or cut the review. It did neither.</dd></div></dl>
+          </div>
+
+          <div class="eng blk" data-k="ab-emb">
+            <p class="when">From 15 October 2026</p>
+            <h3>Six METR staff inside Anthropic</h3>
+            <dl><div><dt>Allowed</dt><dd>Company hardware, office space and internal tools, close to what Anthropic’s own risk team has.</dd></div>
+            <div><dt>Held back</dt><dd>Anthropic cannot veto publication. It still decides what falls in the redaction categories.</dd></div></dl>
+            <p>This is the best access any evaluator has had. The relationship part rises to 0.33 and the index to 0.67. A negative report on these terms would be worth about three times one written in six days.</p>
+          </div>
+
+          <div class="blk forecast" data-k="ab-forecast">
+            <h3>What the access buys: a forecast</h3>
+            <p>METR’s report on Anthropic is the clearest case of technical access turned into a forecast. It set out the method in advance, in <a href="https://metr.org/blog/2026-10-14-ai-rd-acceleration-assessment-proposal/">How an assessor could investigate evidence of acceleration from the automation of AI R&amp;D</a>, then ran it.</p>
+            <ul>
+              <li>Anthropic’s models improve about 1.9 times faster than before October 2025 (95% interval 1.5 to 2.8), and about 80% of that is due to AI. <a href="https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/">Assessment</a></li>
+              <li>Anthropic’s public report said less than 2 times. METR’s <a href="https://metr.org/blog/2026-11-05-rd-section-anthropic-risk-report-august-2026-review/">review</a> calls that overconfident: the private figures imply about 1.97, so the threshold was plausibly crossed by 15 July.</li>
+              <li>It cannot rule out a substantial further acceleration in the next six months, which could quickly lead to high risk. That can be checked around May 2027.</li>
+            </ul>
+            <figure class="plate">
+              <img loading="lazy" src="https://metr.org/assets/images/ai-rd-acceleration-assessment/aeci-main.png" alt="Line chart of a capability index for Anthropic model snapshots from early 2024 to the internal Model 4. The trend steepens after October 2025." width="1880" height="1561">
+              <figcaption><b>The forecast’s evidence.</b> A capability index for each Anthropic snapshot, public and internal; the slope steepens after October 2025. Source: <a href="https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/">METR, AI R&amp;D acceleration at Anthropic</a>, 5 November 2026, CC BY.</figcaption>
+            </figure>
+          </div>
+
+          <div class="blk forecast" data-k="ab-track">
+            <h3>Track record</h3>
+            <p>One METR forecast with a stated interval has been checked. In March 2025 it put the doubling time of AI agents’ task length at 196 days, with a 95% interval of 162 to 223. Re-measured on its revised task suite in January 2026, the 2019 to 2025 trend came out at 196.5 days: inside the interval. Read as a 95% probability, that scores a Brier of 0.003, close to perfect. <a href="https://metr.org/blog/2026-1-29-time-horizon-1-1">Time Horizon 1.1</a></p>
+            <p>The caveat is in the same re-measurement. Since 2023 the doubling time is 131 days, faster than the interval’s fast end: the long-run call held while recent progress outran it. The 1.9 times estimate above will be the next to resolve.</p>
+          </div>
         </article>
 
         <!-- 3 -->
         <article class="chap" id="q-disclosed" data-stop="Already disclosed?">
+          <div class="blk">
           <h2>Did the frontier lab already disclose this?</h2>
           <p class="answer">Mostly yes. In the case checked here Anthropic already held nearly every fact, and METR changed what those facts can bear.</p>
 
           <p>The case is Anthropic’s August 2026 risk report. It rated the risk of catastrophic harm from misaligned models as low. A draft had said very low and was revised after incidents came to light. METR read the internal version and published its review on 20 October.</p>
-
-          <div class="ledger">
-            <div class="lab"><h3>Already in Anthropic’s report</h3><ul><li>The low rating, and the eight claims behind it.</li><li>The Mythos 5 incident: a monitor flagged about 1% of actions, and about 50% once the model’s reasoning was stripped out.</li></ul></div>
-            <div><h3>Read differently by METR</h3><ul><li>Risk is low because the models are not yet capable enough. METR does not credit the safeguards.</li><li>The covert-capability tests are a poor stand-in for evading a monitor.</li><li>The incidents look like the severe misalignment the report calls unlikely.</li></ul></div>
-            <div class="new"><h3>New from METR</h3><ul><li>One experiment. Anthropic had Claude review the report. METR showed the review shifts with the prompt and with who the user says they are.</li></ul></div>
-            <div><h3>Seen by METR, kept from the public</h3><ul><li>How the models behaved in the past and how monitoring responded.</li><li>Where the monitoring is weak.</li><li>METR says the first, and a security section, should be at least partly public.</li></ul></div>
           </div>
 
+          <div class="blk">
+          <div class="ledger">
+            <div class="lab"><h3>Already in Anthropic’s report</h3><ul><li>The low rating and its eight claims.</li><li>The Mythos 5 incident: a monitor caught 1% of actions, 50% with reasoning stripped.</li></ul></div>
+            <div><h3>Read differently by METR</h3><ul><li>Risk is low because models lack the capability, not because safeguards work.</li><li>The incidents look like the misalignment the report calls unlikely.</li></ul></div>
+            <div class="new"><h3>New from METR</h3><ul><li>One experiment: Claude’s review of the report shifts with the prompt and the claimed author.</li></ul></div>
+            <div><h3>Seen by METR, kept from the public</h3><ul><li>Past model behaviour, and where monitoring is weak.</li><li>METR says some of it should be public.</li></ul></div>
+          </div>
+          </div>
+
+          <div class="blk">
           <p>So was the difference new information or withheld information? For the most part it was a second reading of the same file. METR calls the report thoughtful and well calibrated, and says its methods would not reliably catch higher risk if it were there.</p>
 
           <figure class="plate narrow">
             <img loading="lazy" src="https://metr.org/assets/images/misalignment-risk-report-august-2026-review/fig2.webp" alt="Dot chart. Claude's rating of report quality is highest, about 75 to 78 out of 100, when the user says they are the report's author, and lower when the user says they are METR or a government institute." width="1400" height="1472">
             <figcaption><b>The one new result.</b> Claude scored the risk report higher when the user claimed to be its author, across 100 runs per setting. Source: <a href="https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review/">METR’s review</a>, 20 October 2026, CC BY.</figcaption>
           </figure>
+          </div>
 
+          <div class="blk">
           <p>Where METR had data, it added more. Anthropic’s public figure for the speed-up in its models was about 1.7 times, read in the August report as a one-time jump. With scores for four unreleased models, METR put it at 1.9 times and lasting.</p>
 
           <figure class="plate">
@@ -455,38 +653,48 @@ a.next:hover { color: var(--accent); }
           </figure>
 
           <p>The limit came next. Anthropic redacted, in METR’s words, <q>a majority of the evidence we found most informative</q>. The public has the conclusion without the workings.</p>
+          </div>
         </article>
 
         <!-- 4 -->
         <article class="chap" id="q-deliver" data-stop="Does it deliver?">
+          <div class="blk">
           <h2>Do the third parties really deliver on their promises?</h2>
           <p class="answer">METR delivers information and says plainly that it cannot deliver assurance.</p>
 
           <p>The promise is to inform the public about the risks of advanced AI. The gap it claims is that a lab’s self-assessment is not enough. Six tests of that.</p>
-
-          <div class="verdicts">
-            <div class="verdict"><h3>Tells the public things it did not know</h3><span class="v yes">Yes</span><p>Forty-four agent incidents. Simple ways to switch off Anthropic’s monitor. A sandbox bypass at OpenAI. Four unreleased models on Anthropic’s capability curve.</p></div>
-            <div class="verdict"><h3>Checks the lab’s claims itself</h3><span class="v part">Partly</span><p>It says it often relies on information it cannot verify. At Anthropic most data came through two staff. At OpenAI the lab chose which week to examine.</p></div>
-            <div class="verdict"><h3>Says so when the lab is wrong</h3><span class="v part">Partly</span><p>It disputed Anthropic’s reasoning, called two redactions unjustified, and withdrew a line saying every OpenAI flaw was patched. Its bottom line still matched Anthropic’s: low.</p></div>
-            <div class="verdict"><h3>Shows what it could not see</h3><span class="v yes">Yes</span><p>Redaction summaries, a checklist of access conditions that were not met, and staff conflicts printed in the report.</p></div>
-            <div class="verdict"><h3>Covers the labs that matter</h3><span class="v no">No</span><p>Amazon, Microsoft and xAI stayed out of the industry report. The break-in to OpenAI’s own systems during the Hugging Face incident was out of scope.</p></div>
-            <div class="verdict"><h3>Arrives in time to matter</h3><span class="v part">Partly</span><p>February evidence was published in May. An August report was reviewed in October. One post waited while OpenAI patched.</p></div>
           </div>
 
+          <div class="blk">
+          <div class="verdicts">
+            <div class="verdict"><h3>Tells the public things it did not know</h3><span class="v yes">Yes</span><p>44 agent incidents, a monitor switched off, a sandbox bypass, four unreleased models measured.</p></div>
+            <div class="verdict"><h3>Checks the lab’s claims itself</h3><span class="v part">Partly</span><p>It often relies on what it cannot verify, and the lab chose the week to examine.</p></div>
+            <div class="verdict"><h3>Says so when the lab is wrong</h3><span class="v part">Partly</span><p>It disputed Anthropic’s reasoning and two redactions, yet reached the same verdict: low.</p></div>
+            <div class="verdict"><h3>Shows what it could not see</h3><span class="v yes">Yes</span><p>Redaction summaries, unmet access conditions and staff conflicts are all printed.</p></div>
+            <div class="verdict"><h3>Covers the labs that matter</h3><span class="v no">No</span><p>Amazon, Microsoft and xAI stayed out; the break-in to OpenAI’s own systems was out of scope.</p></div>
+            <div class="verdict"><h3>Arrives in time to matter</h3><span class="v part">Partly</span><p>Months after the evidence, and one post waited while OpenAI patched.</p></div>
+          </div>
+          </div>
+
+          <div class="blk">
           <h3>The test that has not happened</h3>
           <p>An independent check proves itself when it finds something the lab would rather bury, and publishes it anyway. That has not been seen. Each lab let its findings out. Anthropic held a veto and did not use it.</p>
           <p>That shows good faith. Independence is still untested, because the terms that produced these reports are the terms that would hide a failure. A lab could leave the industry report silently. OpenAI could cut anything, and METR could not say what was cut. Had a finding been buried, the public record would look as it does today.</p>
+          </div>
 
+          <div class="blk">
           <blockquote class="pull">
             <p>This proposal will not provide confident assurance about whether development is safe.</p>
             <cite><a href="https://metr.org/blog/2026-10-14-better-informing-the-public-about-loss-of-control-risks/">METR, 14 October 2026</a></cite>
           </blockquote>
 
           <p>So the gap is narrower and still open. METR is a second reader of the lab’s file, and the lab still chooses the file. Three things would change that: access by right, a scope the lab cannot set alone, and a rule that a refusal or an exit is itself reported.</p>
+          </div>
         </article>
 
         <!-- 5 -->
         <article class="chap" id="q-agenda" data-stop="Whose agenda?">
+          <div class="blk">
           <h2>Is there an overlap in agenda?</h2>
           <p class="answer">Yes, by design. METR studies loss of control, the labs’ own worst case, and leaves their products alone.</p>
 
@@ -496,29 +704,35 @@ a.next:hover { color: var(--accent); }
             <img loading="lazy" src="https://metr.org/assets/images/loss-of-control-proposals/three-assessments-overview.png" alt="METR's overview of the core questions an assessment of loss-of-control risk should address, in three parts: alignment, control and AI R&D acceleration." width="1600" height="900">
             <figcaption><b>METR’s three questions.</b> Is the model aligned, can it be controlled, and is AI speeding up AI research? Source: <a href="https://metr.org/blog/2026-10-14-better-informing-the-public-about-loss-of-control-risks/">METR’s proposal</a>, 14 October 2026, CC BY.</figcaption>
           </figure>
+          </div>
 
-          <p>The overlap is with the labs’ safety teams. Those three questions are the risk pathways in Anthropic’s own report. The ties behind it:</p>
+          <div class="blk">
+          <p>The overlap is with the labs’ safety teams: these are the risk pathways in Anthropic’s own report.</p>
           <dl class="facts">
             <div><dt>Funding</dt><dd>None from labs.</dd></div>
-            <div><dt>Access</dt><dd>All of it. Tokens, laptops, logs and desks come from the labs it assesses: OpenAI, Anthropic, Google DeepMind, Meta and Amazon.</dd></div>
-            <div><dt>People</dt><dd>It co-writes with Redwood Research, which advises Google DeepMind and Anthropic. Six of its staff now work inside Anthropic.</dd></div>
+            <div><dt>Access</dt><dd>All of it: tokens, laptops, logs and desks, from the labs it assesses.</dd></div>
+            <div><dt>People</dt><dd>Co-writes with Redwood Research, an adviser to two labs. Six staff sit inside Anthropic.</dd></div>
             <div><dt>Governance</dt><dd>No lab seat is published.</dd></div>
           </dl>
-          <p>It does push past the lab’s frame. It asked Anthropic to count a model swaying the company’s own safety decisions, and models still in training. It leaves out weight security and whether a lab keeps its own rules.</p>
+          <p>It pushes past the lab’s frame in places, asking Anthropic to count models still in training. It leaves out weight security.</p>
           <p class="cap">Not measured here: how the labs split their own safety work between commercial risk and catastrophic risk.</p>
+          </div>
         </article>
 
         <!-- 6 -->
         <article class="chap" id="q-policy" data-stop="For a legislator">
+          <div class="blk">
           <h2>If they are trustworthy, how easy is this to translate to a policy maker?</h2>
           <p class="answer">It is hard: the evidence is voluntary, redacted and long, and it has reached Congress once.</p>
 
           <ul>
-            <li>Rep. Bill Foster of Illinois cited METR’s report on the OpenAI and Hugging Face incident to argue that software controls cannot contain superhuman AI. He proposed air gaps and two-person approval. None of this is law yet.</li>
-            <li>That report runs to 91 pages. The OpenAI monitoring report runs to 61, and the public saw a summary.</li>
+            <li>Rep. Bill Foster of Illinois cited METR’s incident report to propose air gaps and two-person approval. None of it is law.</li>
+            <li>That report runs to 91 pages; the public saw only a summary of another 61.</li>
             <li>California’s SB 813 and AB 1405 let the state name independent verifiers and keep a registry of auditors.</li>
           </ul>
+          </div>
 
+          <div class="blk">
           <h3>The audit Illinois will require, and what METR does</h3>
           <div class="versus">
             <div><span></span><span>SB 315 audit, from 2028</span><span>METR today</span></div>
@@ -528,6 +742,9 @@ a.next:hover { color: var(--accent); }
             <div><span>Who reads it</span><span>The Attorney General and IEMA-OHS, redacted</span><span>The public, redacted</span></div>
             <div><span>Access</span><span>By contract with the lab</span><span>Voluntary, ended at will</span></div>
           </div>
+          </div>
+
+          <div class="blk">
           <p>METR does not fit the slot the law creates. It says its exercises are not audits, compliance assessments or formal oversight. The law’s auditor is paid by the lab, and METR takes no lab money.</p>
           <p>What a legislator can lift today is the form of the reports: METR’s redaction summary and its checklist of access conditions. Both state what an outsider was not allowed to see. No law requires either.</p>
 
@@ -535,8 +752,56 @@ a.next:hover { color: var(--accent); }
             <p>We need to make sure that reporting incidents and containment failures is mandatory.</p>
             <cite>Rep. Suhas Subramanyam, to the <a href="https://www.thestar.com.my/tech/tech-news/2026/09/13/after-openais-bots-went-rogue-watchdogs-were-kept-on-a-short-leash">New York Times</a>, September 2026</cite>
           </blockquote>
+          </div>
         </article>
       </div>
+
+      <aside class="board" id="board" aria-label="METR, measured">
+        <div class="mtr">
+          <div class="m wide"><span class="mk">Independence, OECD index</span><b id="mI">–</b>
+            <div class="rsb">
+              <div><span>Relationship</span><i id="bR"></i><em id="mR">–</em></div>
+              <div><span>Staff</span><i id="bS"></i><em id="mS">–</em></div>
+              <div><span>Budget</span><i id="bB"></i><em id="mB">–</em></div>
+            </div>
+            <small id="mIn"></small>
+          </div>
+          <div class="m"><span class="mk">Lab share</span><b id="mLab">–</b><small id="mLabN"></small></div>
+          <div class="m"><span class="mk">Effective funders</span><b id="mNe">–</b><small id="mNeN"></small></div>
+          <div class="m"><span class="mk">Brier score</span><b id="mBS">–</b><small id="mBSn"></small></div>
+          <div class="m wide cred"><span class="mk">Credibility of a negative report, <i>LR</i><sup>−</sup>. Lower is stronger</span>
+            <div class="lrv"><span>This report</span><b id="mLR">–</b><span>Overall, so far</span><b id="mLO">–</b></div>
+            <svg id="lrc" viewBox="0 0 260 104" aria-hidden="true"></svg>
+            <small id="mLRn"></small>
+          </div>
+          <div class="m wide mfoot"><a class="mlink" href="#measures">Details on measures ↓</a></div>
+        </div>
+        <div class="media" id="media"><div class="mly on"></div><div class="mly"></div></div>
+      </aside>
+    </section>
+
+    <!-- ============ HOW THE METRICS ARE MEASURED ============ -->
+    <section class="measures" id="measures" aria-labelledby="measuresHead">
+      <h2 id="measuresHead">Measurement metrics</h2>
+      <h3>Independence</h3>
+      <p>OECD’s index for regulators, scored here for an evaluator. Each part runs from 0 to 1, where 1 is fully independent.</p>
+      <p class="formula"><i>I</i><sub>OECD</sub> = <span class="frac"><span>1</span><span>3</span></span><i>R</i> + <span class="frac"><span>1</span><span>3</span></span><i>S</i> + <span class="frac"><span>1</span><span>3</span></span><i>B</i></p>
+      <dl class="facts terms">
+        <div><dt><i>R</i>, relationship</dt><dd>Who chooses the evaluator, who controls model access, and who can review, redact or veto what it publishes.</dd></div>
+        <div><dt><i>S</i>, staff</dt><dd>Former lab employees, equity held in labs, and social ties to lab staff.</dd></div>
+        <div><dt><i>B</i>, budget</dt><dd>Who pays.</dd></div>
+      </dl>
+      <p>Two financial measures sit beside it. <b>Lab share</b> is the fraction of income, free tokens and compute included, that comes from the labs the evaluator tests. <b>Funding concentration</b> is the Herfindahl index of funders’ shares <i>s</i><sub><i>k</i></sub>, normalised for the number of funders <i>K</i> and read as an effective number of funders.</p>
+      <p class="formula"><i>H</i> = <span class="sum">Σ<sub><i>k</i>=1</sub><sup><i>K</i></sup></span> <i>s</i><sub><i>k</i></sub><sup>2</sup> <span class="sep"></span> <i>H</i><sub>norm</sub> = <span class="frac"><span><i>H</i> − 1/<i>K</i></span><span>1 − 1/<i>K</i></span></span> <span class="sep"></span> <i>N</i><sub>effective</sub> = <span class="frac"><span>1</span><span><i>H</i></span></span></p>
+      <h3>Credibility</h3>
+      <p>How much a report should change a reader’s belief. The likelihood ratio of a negative report:</p>
+      <p class="formula"><i>LR</i><sup>−</sup> = <span class="frac"><span>1 − sensitivity</span><span>specificity</span></span></p>
+      <p>Far below 1, “no dangerous capability found” is strong evidence the capability is absent. Near 1, the report tells the reader little. Sensitivity rises with elicitation effort (access, time and compute) and falls with pressure from labs.</p>
+      <p>The overall reading averages the sensitivity of every engagement so far. We average rather than multiply: the engagements cover different labs and questions, so they are not repeated tests of one claim. It is shown as where a reader who starts at 50/50 ends after a negative report.</p>
+      <p>Where an evaluator’s claims can be checked later, the Brier score of its stated probabilities <i>p</i><sub><i>i</i></sub> against outcomes <i>y</i><sub><i>i</i></sub> gives an outside check on both.</p>
+      <p>A forecast given as a 95% interval is scored as a 95% probability that the outcome falls inside it.</p>
+      <p class="formula"><i>BS</i> = <span class="frac"><span>1</span><span><i>N</i></span></span> <span class="sum">Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup></span> (<i>p</i><sub><i>i</i></sub> − <i>y</i><sub><i>i</i></sub>)<sup>2</sup></p>
+      <p class="cap">No evaluator publishes its sensitivity. We place each engagement on a rough scale from the access it had, with specificity held at 0.9. The scores for <i>R</i>, <i>S</i> and <i>B</i> are ours too. The rules for both are under <a href="#fig-scoring">The data</a>.</p>
     </section>
 
     <!-- ============ THE DATA ============ -->
@@ -588,6 +853,33 @@ a.next:hover { color: var(--accent); }
             </div>
           </div>
         </details>
+        <details class="layer" id="fig-scoring">
+          <summary><span class="layer-kind">Scoring</span><span class="layer-what"><span class="layer-title">How METR was scored</span><span class="layer-inside">Our rules for R, S, B and sensitivity, and each engagement’s scores</span></span></summary>
+          <div class="layer-body">
+            <p class="small">Each part of the OECD index is the average of its items, each scored 0, 0.5 or 1. These are our readings of METR’s and the labs’ published terms, not METR’s own figures.</p>
+            <div class="tbl three">
+              <div class="tbl-row head"><span>Item</span><span>Score</span><span>Why</span></div>
+              <div class="tbl-row"><span>R: who chooses the evaluator</span><span>0</span><span>A lab invites METR or agrees to it, and can end the work.</span></div>
+              <div class="tbl-row"><span>R: who controls model access</span><span>0, or 0.5 when embedded</span><span>Access is at the lab’s discretion; the embedded team has near-internal access under an enforceable agreement.</span></div>
+              <div class="tbl-row"><span>R: review, redaction and veto</span><span>0 to 0.5</span><span>0: the lab can cut at its sole discretion and METR cannot describe the cuts. 0.25: the lab holds veto or unilateral redaction, and METR can describe it. 0.5: no veto, cuts limited to set categories or the lab’s own attributed claims.</span></div>
+              <div class="tbl-row"><span>S: equity held in labs</span><span>1</span><span>Barred from that lab’s assessment, including equity kept after leaving a lab.</span></div>
+              <div class="tbl-row"><span>S: former lab employees</span><span>0.5</span><span>Allowed; only current paid work or job talks require recusal.</span></div>
+              <div class="tbl-row"><span>S: social ties to lab staff</span><span>0.5</span><span>Partners and family require recusal; a close friendship is only disclosed.</span></div>
+              <div class="tbl-row"><span>B: who pays</span><span>1</span><span>No lab money, by METR’s account and AISafety.fund’s record. Free tokens are counted in the lab share instead.</span></div>
+            </div>
+            <p class="small">Sensitivity starts at 0.5. Add 0.1 for the lab’s internal models, 0.05 for raw data (reasoning traces, logs, code or internal measurements), 0.05 for a window of weeks or more, and 0.15 for employee-like access. Subtract 0.1 when the lab set or cut the scope, 0.05 for a window of days, and 0.05 when the lab could redact at its sole discretion. Specificity is held at 0.9.</p>
+            <div class="tbl five">
+              <div class="tbl-row head"><span>Engagement</span><span>R</span><span>Index</span><span>Sensitivity</span><span><i>LR</i><sup>−</sup></span></div>
+              <div class="tbl-row"><span>Frontier Risk Report</span><span>0.17</span><span>0.61</span><span>0.70</span><span>0.33</span></div>
+              <div class="tbl-row"><span>Hugging Face incident</span><span>0.08</span><span>0.58</span><span>0.40</span><span>0.67</span></div>
+              <div class="tbl-row"><span>OpenAI monitoring red team</span><span>0</span><span>0.56</span><span>0.55</span><span>0.50</span></div>
+              <div class="tbl-row"><span>AI R&amp;D at Anthropic</span><span>0.08</span><span>0.58</span><span>0.50</span><span>0.56</span></div>
+              <div class="tbl-row"><span>Review of the risk report</span><span>0.08</span><span>0.58</span><span>0.55</span><span>0.50</span></div>
+              <div class="tbl-row"><span>Six staff inside Anthropic</span><span>0.33</span><span>0.67</span><span>0.85</span><span>0.17</span></div>
+            </div>
+            <p class="small">S is 0.67 and B is 1 throughout. Funding concentration uses the eight itemised grants on AISafety.fund: shares 0.726, 0.186, 0.060 and 0.029, so <i>H</i> = 0.566, <i>H</i><sub>norm</sub> = 0.421 and <i>N</i><sub>effective</sub> = 1.77.</p>
+          </div>
+        </details>
         <details class="layer" id="fig-notin">
           <summary><span class="layer-kind">Gaps</span><span class="layer-what"><span class="layer-title">Not in the data</span></span></summary>
           <div class="layer-body">
@@ -636,6 +928,7 @@ a.next:hover { color: var(--accent); }
   </div>
 </main>
 
+<a class="totop" id="toTop" href="#question" aria-label="Back to the top">↑ <span>Top</span></a>
 <div id="tip" hidden></div>
 <div id="flyer" hidden></div>
 
@@ -839,7 +1132,7 @@ a.next:hover { color: var(--accent); }
         let lo = 0, hi = roomH / maxH;
         for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (total(mid) <= room) lo = mid; else hi = mid; }
         k = lo;
-        if (!pass) pad = Math.max(dustR * 0.06, (wide ? 44 : 30) * u / k);
+        if (!pass) pad = Math.max(dustR * 0.06, (wide ? 44 : 50) * u / k);
       }
       const cy = m + head + roomH / 2, outside = [], rings = [], heads = [];
       let x = m + (room - total(k)) / 2;
@@ -860,11 +1153,18 @@ a.next:hover { color: var(--accent); }
       });
       /* a name that does not fit inside its bubble goes below it, or above, left or right: the first side clear of every bubble */
       const circles = rings.concat(nodes.filter(z => z.P[step] && z.P[step].o && (z.en.lab || z.en.aside)).map(z => z.P[step]));
-      const clear = (x0, y0, x1, y1) => circles.every(c => { const nx = Math.max(x0, Math.min(c.x, x1)), ny = Math.max(y0, Math.min(c.y, y1)); return Math.hypot(nx - c.x, ny - c.y) >= c.r + 2 * u; });
+      const taken = [];
+      const clear = (x0, y0, x1, y1) => circles.every(c => { const nx = Math.max(x0, Math.min(c.x, x1)), ny = Math.max(y0, Math.min(c.y, y1)); return Math.hypot(nx - c.x, ny - c.y) >= c.r + 2 * u; }) && taken.every(t => x1 <= t[0] || x0 >= t[2] || y1 <= t[1] || y0 >= t[3]);
       outside.forEach(({ n, c }) => {
         const p = n.P[step], t = n.en.short, w = (t.length * 6.6 + 8) * u, h = 16 * u, g = 4 * u;
-        const opts = [[p.x - w / 2, p.y + p.r + g], [p.x + p.r + g, p.y - h / 2], [p.x - p.r - g - w, p.y - h / 2], [p.x - w / 2, p.y - p.r - g - h]];
-        const at = opts.find(([a, b]) => clear(a, b, a + w, b + h)) || opts[0];
+        const opts = [];
+        [g, g + 10 * u, g + 22 * u, g + 36 * u].forEach(d => opts.push(
+          [p.x - w / 2, p.y + p.r + d], [p.x + p.r + d, p.y - h / 2], [p.x - p.r - d - w, p.y - h / 2], [p.x - w / 2, p.y - p.r - d - h],
+          [p.x + p.r * 0.7 + d, p.y + p.r * 0.7 + d * 0.5], [p.x - p.r * 0.7 - d - w, p.y + p.r * 0.7 + d * 0.5],
+          [p.x + p.r * 0.7 + d, p.y - p.r * 0.7 - d * 0.5 - h], [p.x - p.r * 0.7 - d - w, p.y - p.r * 0.7 - d * 0.5 - h]));
+        const inside = ([a, b]) => a >= 2 * u && a + w <= W - 2 * u && b >= 0 && b + h <= H;
+        const at = opts.find(o => inside(o) && clear(o[0], o[1], o[0] + w, o[1] + h)) || opts.find(inside) || opts[0];
+        taken.push([at[0] - 3 * u, at[1] - 2 * u, at[0] + w + 3 * u, at[1] + h + 2 * u]);
         c.labTop = Math.min(c.labTop == null ? Infinity : c.labTop, at[1]);
         labelSets[step].push(`<span class="lb un nw" style="left:${(at[0] + w / 2) / u}px;top:${at[1] / u}px;width:${w / u}px"><i>${esc(t)}</i></span>`);
       });
@@ -921,16 +1221,16 @@ a.next:hover { color: var(--accent); }
     if (loose.length) pg.push({ label: "Not sorted yet", count: loose.length, items: loose.map(n => ({ n, r: n.base })) });
     pg.forEach(g => g.items.sort((a, b) => b.r - a.r));
     /* a grid of equal cells, one scale for all of them: the largest group sets it */
-    const cols5 = wide ? 4 : 3, rows5 = Math.ceil(pg.length / cols5), head5 = (wide ? 40 : 30) * u, names5 = (wide ? 44 : 30) * u, floor5 = (wide ? 4.5 : 3.2) * u;
+    const cols5 = wide ? 4 : 3, rows5 = Math.ceil(pg.length / cols5), head5 = (wide ? 40 : 36) * u, names5 = (wide ? 44 : 24) * u, floor5 = (wide ? 4.5 : 2.4) * u;
     const cellW = (W - 2 * m) / cols5, cellH = (H - 2 * m) / rows5, roomW = cellW - 14 * u, roomH = cellH - head5 - names5 - 6 * u;
-    const packAt = k => pg.every(gr => {
+    const packAt = k => pg.map(gr => {
       gr.items.forEach(it => { it.r = Math.max(it.n.base * k, floor5); });
       spiral(gr.items, 1, 1.5 * u);
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       gr.items.forEach(it => { x0 = Math.min(x0, it.x - it.r); x1 = Math.max(x1, it.x + it.r); y0 = Math.min(y0, it.y - it.r); y1 = Math.max(y1, it.y + it.r); });
       gr.ox = (x0 + x1) / 2; gr.oy = (y0 + y1) / 2; gr.bh = y1 - y0;
       return x1 - x0 <= roomW && y1 - y0 <= roomH;
-    });
+    }).every(Boolean);
     let lo5 = 0, hi5 = Math.min(roomW, roomH) / 2 / tn[0].base;
     for (let i = 0; i < 18; i++) { const mid = (lo5 + hi5) / 2; if (packAt(mid)) lo5 = mid; else hi5 = mid; }
     packAt(lo5);
@@ -1007,7 +1307,8 @@ a.next:hover { color: var(--accent); }
   const targets = () => [hero.getBoundingClientRect().top + window.scrollY - BAR].concat(steps.map(s => {
     const r = s.getBoundingClientRect();
     return r.top + window.scrollY + r.height / 2 - (window.innerHeight + BAR) / 2;
-  }), [$("#metr").getBoundingClientRect().top + window.scrollY - BAR]);
+  }), [$("#metr").getBoundingClientRect().top + window.scrollY - BAR],
+    $("#board").offsetWidth ? $$("#metrChaps .blk").slice(1).map(b => b.getBoundingClientRect().top + window.scrollY - BAR) : []);
   const glide = y => window.scrollTo({ top: y, behavior: calm ? "auto" : "smooth" });
   /* Scroll a little past a step and the page carries on to the next one; a little back, to the one before. */
   let snapT = 0, flying = false, restY = window.scrollY;
@@ -1037,6 +1338,17 @@ a.next:hover { color: var(--accent); }
     glide(to);
   });
   $("#goBtn").addEventListener("click", e => { e.preventDefault(); glide(targets()[1]); });
+  const toTop = $("#toTop");
+  const showTop = () => toTop.classList.toggle("on", window.scrollY > window.innerHeight);
+  window.addEventListener("scroll", showTop, { passive: true });
+  showTop();
+  toTop.addEventListener("click", e => {
+    e.preventDefault();
+    clearTimeout(snapT);
+    flying = true;
+    glide(0);
+    setTimeout(() => { flying = false; restY = window.scrollY; }, 1600);
+  });
 
   /* ---------- the route beside the METR chapters ---------- */
   const route = $("#route"), chaps = $$(".chap");
@@ -1108,6 +1420,166 @@ a.next:hover { color: var(--accent); }
     glide(flightEnd());
     setTimeout(() => { flying = false; restY = window.scrollY; }, 1400);
   });
+
+  /* ---------- the board beside the METR chapters: metrics that fill in as the text makes its case, and the figure for the part being read ---------- */
+  const board = $("#board"), SPEC = 0.9;
+  const ST = {
+    head: { media: { t: "note", html: "<p class=\"mcap\"><b>METR, measured.</b> Each number fills in as the text makes the case for it. The scores for R, S, B and sensitivity are ours; the definitions are at the foot of the page.</p>" } },
+    "inc-wealth": { B: 1, In: "Budget: no lab pays it", media: { t: "funders" } },
+    "inc-give": { lab: "0%", labN: "of cash. In kind: free access, tokens and laptops, value not published" },
+    "inc-staff": { S: 0.67, In: "Staff: (1 + 0.5 + 0.5) / 3. Lab shares banned, past lab jobs allowed, friendships only disclosed" },
+    "inc-money": { Ne: 1.77, NeN: "of 4 funders on record. H 0.57, normalised 0.42", media: { t: "money" } },
+    "inc-process": { R: 0.17, In: "Relationship, on the terms of the first industry report" },
+    "ab-frr": { kind: "internal models and reasoning traces", R: 0.17, sens: 0.70, eng: "Frontier Risk Report", In: "On the terms of the Frontier Risk Report" },
+    "ab-hf": { kind: "office space and logs read on site", R: 0.08, sens: 0.40, eng: "Hugging Face incident", In: "On the terms of the incident investigation" },
+    "ab-oai": { kind: "devices, codebase and staff time", R: 0, sens: 0.55, eng: "OpenAI monitoring red team", In: "On the terms of the OpenAI red team", media: { t: "docs", set: "oai" } },
+    "ab-rd": { kind: "laptops, free tokens and internal data", R: 0.08, sens: 0.50, eng: "AI R&D at Anthropic", In: "On the terms of the R&D assessment", media: { t: "docs", set: "rd" } },
+    "ab-rev": { kind: "the unredacted report", R: 0.08, sens: 0.55, eng: "Review of the risk report", In: "On the terms of the report review", media: { t: "docs", set: "rev" } },
+    "ab-emb": { kind: "hardware, desks and internal tools", R: 0.33, sens: 0.85, eng: "Six staff inside Anthropic", In: "On the terms of the embedded team, from 15 October", media: { t: "tiers" } },
+    "ab-track": { BS: 0.0025, BSn: "1 forecast resolved: the 7-month doubling, re-measured in 2026. 1 pending" }
+  };
+  const chapCol = $("#metrChaps");
+  const blocks = $$(".blk, .plate", chapCol).filter(el => !(el.classList.contains("plate") && el.closest(".blk")));
+  const plateMedia = f => { const im = f.querySelector("img"); return { t: "img", src: im.getAttribute("src"), alt: im.alt, w: im.getAttribute("width"), h: im.getAttribute("height"), cap: f.querySelector("figcaption").innerHTML }; };
+  const states = blocks.map(el => {
+    const st = Object.assign({}, el.dataset.k ? ST[el.dataset.k] : null);
+    const f = el.classList.contains("plate") ? el : el.querySelector(".plate");
+    if (!st.media && f) st.media = plateMedia(f);
+    return st;
+  });
+  /* the overall reading averages the sensitivity of every engagement read so far */
+  const cum = [];
+  states.reduce((acc, st, i) => {
+    const c = Object.assign({}, acc, st);
+    c.seen = (acc.seen || []).concat(st.sens != null ? [st.sens] : []);
+    c.kinds = (acc.kinds || []).concat(st.kind ? [st.kind] : []);
+    return (cum[i] = c);
+  }, {});
+
+  const FUND = [["The Audacious Project", 17.0], ["Survival and Flourishing Fund", 4.346], ["Future of Life Institute", 1.401], ["Longview Philanthropy", 0.67]];
+  const DOCS = {
+    oai: { cap: "<b>A red team of OpenAI’s agent monitoring.</b> What was written, and what reached the public. Source: <a href=\"https://metr.org/blog/2026-10-22-red-teaming-openai-agent-monitoring/\">METR</a>, 22 October 2026.", d: [["61 pages", "Report for OpenAI", 12, 0], ["38 pages", "Cut by OpenAI, for METR’s and Redwood’s leaders", 12, 6], ["A short post", "For the public", 4, 0, true]] },
+    rd: { cap: "<b>AI R&amp;D acceleration at Anthropic.</b> Anthropic redacted, in METR’s words, a majority of the evidence it found most informative. Source: <a href=\"https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/\">METR</a>, 5 November 2026.", d: [["As written", "The evidence METR gathered", 12, 0], ["As published", "Estimates by stage, bottlenecks, forecasts and interviews cut", 12, 7]] },
+    rev: { cap: "<b>Review of Anthropic’s August risk report.</b> METR read three sections unredacted. The public version cuts the parts on monitoring weaknesses and past behaviour. Source: <a href=\"https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review/\">METR</a>, 20 October 2026.", d: [["What METR read", "Three sections in full", 12, 0], ["What the public reads", "Monitoring weaknesses and past behaviour cut", 12, 3]] }
+  };
+  function mediaHTML(md) {
+    if (!md) return "";
+    if (md.t === "note") return md.html;
+    if (md.t === "img") return `<figure><img src="${md.src}" alt="${esc(md.alt)}" width="${md.w}" height="${md.h}"><figcaption>${md.cap}</figcaption></figure>`;
+    if (md.t === "money") {
+      const M = [["$71M", 71, "Commitments METR says it received, six months to August 2026", true], ["$23.4M", 23.4, "Grants itemised by donor at AISafety.fund, 2023 to 2026"], ["$0", 0, "From AI companies, by METR’s account"]];
+      const T = FUND.reduce((a, f) => a + f[1], 0);
+      return `<p class="mcap"><b>Money METR reports, and money on record.</b></p>` +
+        M.map(m => `<div class="fbar"><span>${m[2]}</span><i class="${m[3] ? "dash" : ""}" style="--w:${(m[1] / 71).toFixed(3)}"></i><em>${m[0]}</em></div>`).join("") +
+        `<p class="mcap"><b>The $23.4M, by funder.</b></p>` +
+        FUND.map(f => `<div class="fbar"><span>${f[0]}</span><i style="--w:${(f[1] / FUND[0][1]).toFixed(3)}"></i><em>${Math.round(f[1] / T * 100)}%</em></div>`).join("") +
+        `<p class="mcap">Survival and Flourishing Fund grants are Jaan Tallinn’s money. Sources: <a href="https://aisafety.fund/metr">AISafety.fund</a>, audited 14 November 2026; <a href="https://metr.org/blog/2026-08-14-funding-update/">METR, funding update</a>.</p>`;
+    }
+    if (md.t === "funders") {
+      const T = FUND.reduce((a, f) => a + f[1], 0);
+      return `<p class="mcap"><b>Grants to METR on record, by funder.</b> $23.4M across eight grants, 2023 to 2026.</p>` +
+        FUND.map(f => `<div class="fbar"><span>${f[0]}</span><i style="--w:${(f[1] / FUND[0][1]).toFixed(3)}"></i><em>${Math.round(f[1] / T * 100)}%</em></div>`).join("") +
+        `<p class="mcap">Survival and Flourishing Fund grants are Jaan Tallinn’s money. Most of the $71M METR reports is not itemised by donor. Source: AISafety.fund, audited 14 November 2026.</p>`;
+    }
+    if (md.t === "docs") {
+      const D = DOCS[md.set];
+      return `<div class="docs">` + D.d.map(([n, l, lines, x, thin]) => {
+        const marks = Array.from({ length: lines }, (_, j) => `<i class="${j % 2 === 1 && (j - 1) / 2 < x ? "x" : ""}" style="width:${70 + (j * 37) % 30}%"></i>`).join("");
+        return `<div class="doc"><div class="pg${thin ? " thin" : ""}">${marks}</div><span><b>${n}</b>${l}</span></div>`;
+      }).join("") + `</div><p class="mcap">${D.cap}</p>`;
+    }
+    if (md.t === "tiers") return `<p class="mcap"><b>Anthropic’s three tiers of outside evaluator.</b></p><div class="tiers">` +
+      `<div><b>Tier 1</b><span>A narrow investigation. Anthropic decides the access and approves publication.</span></div>` +
+      `<div><b>Tier 2</b><span>Publication without approval. Anthropic can cut set categories; the evaluator can say whether the cuts were justified.</span></div>` +
+      `<div class="on"><b>Tier 3, METR</b><span>Employee-like access on the same publication terms. Anthropic cannot veto, but decides what falls in a category.</span></div></div>` +
+      `<p class="mcap">Source: <a href="https://anthropic.com/news/an-update-on-independent-evaluators">Anthropic, An update on independent evaluators</a>, 15 October 2026.</p>`;
+    return "";
+  }
+
+  /* the credibility line: LR− against sensitivity, with specificity held at 0.9 */
+  /* x is sensitivity, y is LR−. The line is (1 − sensitivity) / 0.9, drawn only where it is 1 or less: above 1 a negative report would count for nothing. */
+  const lx = v => 30 + v * 220, ly = v => 82 - v * 68;
+  $("#lrc").innerHTML = `<line class="ax" x1="30" y1="82" x2="250" y2="82"/><line class="ax" x1="30" y1="14" x2="30" y2="82"/>` +
+    `<line class="one" x1="30" y1="${ly(1)}" x2="250" y2="${ly(1)}"/><text x="34" y="${ly(1) - 4}">1: the report tells you nothing</text>` +
+    `<text x="24" y="${ly(1) + 3}" text-anchor="end">1</text><text x="24" y="85" text-anchor="end">0</text>` +
+    `<line class="ln" x1="${lx(1 - SPEC)}" y1="${ly(1)}" x2="${lx(1)}" y2="${ly(0)}"/>` +
+    `<text x="30" y="95">0</text><text x="140" y="95" text-anchor="middle">sensitivity</text><text x="250" y="95" text-anchor="end">1</text>` +
+    `<circle class="ring" r="5" cx="0" cy="0" style="opacity:0"/><circle class="dot" r="5" cx="0" cy="0" style="opacity:0"/>`;
+  const dot = $("#lrc .dot"), ring = $("#lrc .ring");
+
+  const shown = {};
+  function setNum(id, v, d) {
+    const el = $("#" + id);
+    if (v == null) { el.textContent = "–"; el.classList.add("dim"); shown[id] = null; return; }
+    el.classList.remove("dim");
+    if (typeof v === "string") { el.textContent = v; shown[id] = null; return; }
+    const from = shown[id] == null ? 0 : shown[id], t0 = performance.now();
+    shown[id] = v;
+    if (calm) { el.textContent = v.toFixed(d); return; }
+    (function step(now) {
+      if (shown[id] !== v) return;
+      const t = Math.min(1, (now - t0) / 700), k = 1 - Math.pow(1 - t, 3);
+      el.textContent = (from + (v - from) * k).toFixed(d);
+      if (t < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  let curB = -1, mediaKey = "", mlay = 0;
+  function renderBoard(i) {
+    if (i === curB) return;
+    curB = i;
+    const st = cum[i] || {}, now = states[i] || {};
+    const has = st.R != null && st.S != null && st.B != null;
+    setNum("mI", has ? (st.R + st.S + st.B) / 3 : null, 2);
+    ["R", "S", "B"].forEach(k => { setNum("m" + k, st[k], 2); $("#b" + k).style.setProperty("--v", st[k] || 0); });
+    $("#mIn").textContent = now.In ? now.In + (now.kind ? `. The lab supplied ${now.kind}.` : "") : "";
+    setNum("mLab", st.lab);
+    $("#mLabN").textContent = now.kind ? `of cash. In kind: ${st.kinds.length} of ${st.kinds.length} engagements ran on lab supplies` : (now.labN || "");
+    setNum("mNe", st.Ne, 1); $("#mNeN").textContent = now.NeN || "";
+    if (st.sens != null) {
+      const lr = (1 - st.sens) / SPEC;
+      setNum("mLR", lr, 2);
+      $("#mLRn").textContent = now.sens != null ? `Filled dot, this report: ${now.eng}, sensitivity about ${now.sens.toFixed(2)}. Ring, overall. Our placement, not a measured rate.` : "";
+      dot.style.opacity = 1;
+      dot.style.transform = `translate(${lx(st.sens)}px, ${ly(lr)}px)`;
+      const avg = st.seen.reduce((a, v) => a + v, 0) / st.seen.length, lo = (1 - avg) / SPEC;
+      setNum("mLO", lo, 2);
+      ring.style.opacity = 1;
+      ring.style.transform = `translate(${lx(avg)}px, ${ly(lo)}px)`;
+    } else {
+      setNum("mLR", null); setNum("mLO", null); dot.style.opacity = 0; ring.style.opacity = 0;
+      $("#mLRn").textContent = "";
+    }
+    setNum("mBS", st.BS, 3); $("#mBSn").textContent = now.BSn || "";
+    $$(".eng", chapCol).forEach(e => e.classList.toggle("on", e === blocks[i]));
+    const key = JSON.stringify(st.media || null);
+    if (key !== mediaKey) {
+      mediaKey = key;
+      const lays = $$(".mly", board);
+      mlay = 1 - mlay;
+      lays[mlay].innerHTML = st.media && st.media.t !== "img" ? `<div class="mfit">${mediaHTML(st.media)}</div>` : mediaHTML(st.media);
+      fitMedia(lays[mlay]);
+      lays[mlay].classList.add("on");
+      lays[1 - mlay].classList.remove("on");
+    }
+  }
+  /* a generated figure taller than the space shrinks to fit, so its source line always shows */
+  function fitMedia(lay) {
+    const f = lay.querySelector(".mfit");
+    if (!f) return;
+    f.style.transform = "";
+    const k = Math.min(1, lay.clientHeight / f.scrollHeight);
+    f.style.transform = k < 1 ? `scale(${k.toFixed(3)})` : "";
+  }
+  function onBoard() {
+    if (!board.offsetWidth) return;
+    const line = window.innerHeight * 0.55;
+    let i = 0;
+    blocks.forEach((b, j) => { if (b.getBoundingClientRect().top < line) i = j; });
+    renderBoard(i);
+  }
+  window.addEventListener("scroll", onBoard, { passive: true });
+  window.addEventListener("resize", () => { curB = -1; onBoard(); $$(".mly", board).forEach(fitMedia); });
+  onBoard();
 
   /* ---------- the data ---------- */
   $("#h-audit").textContent = tech.length;
