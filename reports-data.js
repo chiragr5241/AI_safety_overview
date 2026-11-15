@@ -1,4 +1,4 @@
-/* Data for reports.html, read on 12 November 2026.
+/* Data for reports.html, read on 12 November 2026; every map entry looked up one by one on 15 November 2026.
    'fund' is the audit: itemised grants to each organisation in AISafety.fund's database, read through its MCP server
    (data version 14388, CC BY-NC-SA 4.0). Each figure adds every spelling of the recipient the database lists
    ("X", "X (via Jaan Tallinn)", an earlier name). Rows the database leaves out of its totals (conditional matching pledges,
@@ -31,7 +31,21 @@ window.REPORT = {
     manifold_markets: 3084000, heron: 3055164, chinatalk: 3000000, ari: 3000000, vista_institute: 2989873,
     ai_impacts: 2972578, good_impressions: 2835000, clr: 2574627, fli: 2364000, carma: 2300000, aipi: 2077000,
     foresight_institute: 2022000, encode: 2000000, nightingale: 1963400, rational_animations: 1946249,
-    fri: 1879850, eip: 1876000, aiaf: 1570000, pauseai: 1497000, arena: 1435258, acs: 3260700, catalyze: 1341963
+    fri: 1879850, eip: 1876000, aiaf: 1570000, pauseai: 1497000, arena: 1435258, acs: 3260700, catalyze: 1341963,
+
+    /* Every other entry, looked up one by one on 15 November 2026 with the MCP server's grants_query (recipient name,
+       then its short name and other spellings). Entries with no row are left out here. */
+    chai: 6747550, lesswrong: 2335286, good_ancestors: 2278356, tfs: 1879000, ist: 1840773, saif: 1747513,
+    fig_fellowship: 1552586, pibbss: 1493000, apart: 1428838, secure_ai_project: 1241064, aisc: 1221938,
+    lasst: 1218000, iliad: 1175496, ai_standards_lab: 1130000, ml4good: 1095293, cesia: 1035309, dovetail: 1019000,
+    tfi: 1017510, gcp: 1008465, ilina: 854841, legal_safety_lab: 811000, sash: 774000, orthogonal: 753000,
+    ceealar: 651046, gcri: 575850, modeling_cooperation: 571416, coral: 560300, alter: 552800, rob_miles: 507537,
+    forethought: 483899, affine: 477000, lens: 452000, roman_yampolskiy: 429000, equistamp: 400000,
+    non_trivial: 350195, convergence: 338000, xlab_fellowship: 329000, future_matters: 299460, lasr_labs: 288732,
+    cser: 283500, aiwi: 251000, cfg: 223834, algoverse: 216769, vanessa_kosoy: 200000, zvi_mowshowitz: 200000,
+    aed: 190330, spar: 189350, aisafety_info: 162000, aisafety_com: 150000, dylan_hadfield_menell: 134175,
+    evitable: 111802, athena: 91600, ero: 78484, humans_in_control: 48000, tmp: 31000, tara: 14901, base: 14110,
+    odyssean_institute: 7900, ai_plans: 5370
   },
 
   /* Notes shown beside a figure in the audit table. */
@@ -46,7 +60,16 @@ window.REPORT = {
     apollo: "Includes a grant from the AI Safety Fund, which the Frontier Model Forum’s member companies pay for. Its 2026 seed round, led by 50Y, has no published amount.",
     softmax: "Backed by Andreessen Horowitz and others; no published amount.",
     lawzero: "Four rows, mostly government commitments from Germany and Canada.",
-    ae_studio: "One undisclosed row of $75,000 matches the name; it is not counted here."
+    ae_studio: "One undisclosed row of $75,000 matches the name; it is not counted here.",
+    aisafety_com: "One row: SFF's 2026 main round, $150,000 through Ashgro. AISafety.com's own about page says it runs on about $150k a year of SFF funding, which pays one full-time and one part-time salary.",
+    aed: "LTFF ($99k) and SFF ($91k). AED builds AISafety.com and AISafety.info; their own grants are counted under them.",
+    pibbss: "Rows under PIBBSS. Principles of Intelligence, the organisation that runs it, is counted apart.",
+    sash: "Leaves out $553k to Neo Research that passed through it as fiscal sponsor.",
+    gcri: "Leaves out grants to Lens Academy and AFFINE through the Beacon Institute, and Beacon's own grant.",
+    convergence: "Leaves out a grant to Modeling Cooperation that passed through it.",
+    alter: "Rows named ALTER only; the name search also matched unrelated recipients.",
+    aiwi: "Recorded under its former name, OAISIS, through Whistleblower Netzwerk.",
+    aisc: "Leaves out the Swiss AI Safety Summer Camp and AI Safety Camp Toronto, separate events."
   },
 
   /* Venture and other investment, counted in a bubble's size beside grants. Only published rounds. */

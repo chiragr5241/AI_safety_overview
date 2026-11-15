@@ -810,7 +810,7 @@ a.next:hover { color: var(--accent); }
       <p class="small">Every table behind the page. Bubble sizes were audited on 12 November 2026 against AISafety.fund through its MCP server.</p>
       <div class="layers">
         <details class="layer" id="fig-audit">
-          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Technical safety research: money raised on record</span><span class="layer-inside">AISafety.fund’s itemised grants, this site’s grant records, and published investment</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
+          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Third parties: money raised on record</span><span class="layer-inside">AISafety.fund’s itemised grants, this site’s grant records, and published investment</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
           <div class="layer-body"><p class="small">Each organisation was looked up by name. The two grant columns add up itemised grants, so each is a lower bound. A bubble uses the larger, or the figure an organisation reports itself, plus investment. “None found” means no grant row was found; the organisation may have other money.</p><div class="tbl audit" id="auditTbl"></div></div>
         </details>
         <details class="layer" id="fig-labs">
@@ -887,7 +887,7 @@ a.next:hover { color: var(--accent); }
               <li>Investment without a published amount. Apollo Research and Softmax have investors and no figure, so only their grants count. SSI is drawn at $3B, the two rounds it has disclosed.</li>
               <li>A lab’s safety work is a yearly spending estimate for 2026, set beside third parties’ money raised over all years. AISafety.fund’s estimate also covers Microsoft and Meta, which are not on the map. SSI’s 10% and DeepSeek’s 1% of money raised ($3B and about $7.4B) are assumptions, not estimates. DeepSeek’s round is reported from filings and the figures vary between reports.</li>
               <li>A lab’s size on the opening steps is its valuation, not money raised. Two are outside estimates: DeepMind has no valuation of its own, so its figure is an analyst’s value for DeepMind and Google’s chip business together; SpaceXAI’s is the price put on xAI when SpaceX absorbed it.</li>
-              <li>Organisations outside the technical group were checked against AISafety.fund’s 200 largest recipients only, not one by one.</li>
+              <li>AISafety.fund’s figures are itemised grants only. An organisation’s own statement of its yearly funding is used where we found one (METR); others may report more than their grant rows show.</li>
               <li>The map was read on 5 October 2026. Its empirical research group then held 53 entries, three of them labs.</li>
               <li>Apollo Research, Goodfire and Redwood Research past their promises. Those parts are not written.</li>
               <li>The labs’ own split between commercial safety work and catastrophic risk.</li>
@@ -1582,9 +1582,10 @@ a.next:hover { color: var(--accent); }
   onBoard();
 
   /* ---------- the data ---------- */
-  $("#h-audit").textContent = tech.length;
+  const audit = third.filter(e => e.usd || e.cats.includes("empirical_research")).sort((a, b) => b.usd - a.usd);
+  $("#h-audit").textContent = audit.length;
   $("#auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">This site</span><span class="c">Investment</span><span>Note</span></div>` +
-    tech.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${e.fund ? money(e.fund) : "none found"}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
+    audit.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${e.fund ? money(e.fund) : "none found"}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
   const byId = Object.fromEntries(ents.map(e => [e.k, e]));
   $("#labTbl").innerHTML = `<div class="tbl-row head"><span>Entry on the map</span><span>Passes the test?</span><span>Why</span></div>` +
     R.labs.map(l => `<div class="tbl-row"><span>${esc((byId[l.id] || {}).name || l.id)}</span><span>${l.meets ? "Yes" : "Not shown to. Set aside for now"}</span><span>${esc(l.why)}. Drawn at ${money(l.val)}: ${esc(l.valNote)}.</span></div>`).join("");
