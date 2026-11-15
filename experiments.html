@@ -156,6 +156,26 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 .tbl-row .b { color: var(--muted); font-size: .86rem; line-height: 1.4; }
 .tbl-row .c { font-family: var(--font-mono); font-size: .84rem; text-align: right; font-variant-numeric: tabular-nums; }
 .tbl-row .c small { display: block; color: var(--muted); font-size: .76rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.chips button { font: inherit; font-size: .84rem; padding: 5px 11px; min-height: 32px; border: 1px solid var(--line-strong); border-radius: 999px; background: none; color: var(--ink); cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chips button span { color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.chips button[aria-pressed="true"] span { color: inherit; opacity: .75; }
+.tbl.audit-sum .tbl-row { grid-template-columns: minmax(0, 1.6fr) repeat(6, minmax(3.6rem, .55fr)); }
+.tbl.audit-rows { margin-top: 12px; }
+.tbl.audit-rows .tbl-row { grid-template-columns: minmax(0, 1.5fr) 5.2rem 6.4rem 6.4rem minmax(0, 1.1fr); }
+.tbl.audit-rows .tbl-row .a small, .tbl.audit-rows .st small { display: block; color: var(--muted); font-size: .8rem; font-weight: 400; line-height: 1.35; }
+.tbl.audit-rows .tbl-row .a { font-family: var(--font-display); font-weight: 500; }
+.st { font-size: .86rem; line-height: 1.35; }
+.st b { font-weight: 600; }
+.st.missing b { color: var(--accent); }
+.audit-h { margin: 28px 0 4px; font-family: var(--font-display); font-size: 1.05rem; }
+@media (max-width: 720px) {
+  .tbl.audit-sum .tbl-row { grid-template-columns: minmax(0, 1fr) repeat(3, auto); }
+  .tbl.audit-sum .tbl-row .c:nth-of-type(n+4) { display: none; }
+  .tbl.audit-rows .tbl-row { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .tbl.audit-rows .tbl-row .d, .tbl.audit-rows .tbl-row .st { grid-column: 1 / -1; }
+}
 .tbl.audit .tbl-row { grid-template-columns: minmax(0, 1.2fr) 6.4rem 6.4rem 6.4rem minmax(0, 1.5fr); }
 .tbl-row.head { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); border-bottom-color: var(--line-strong); }
 .tbl-row.head .c { font-family: var(--font-label); font-size: var(--text-label); }
@@ -261,8 +281,23 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       <p class="small">Every table behind the story. Money is a grant (from a foundation, fund or government), a donation (from a person), an investment (for equity) or corporate funding (from a company). Whose money it is and who decides where it goes are kept apart.</p>
       <div class="layers">
         <details class="layer" id="fig-audit">
-          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Data audit</span><span class="layer-inside">The grants this site collected, beside AISafety.fund’s, for every organisation on the field map</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
-          <div class="layer-body"><p class="small">Each organisation was looked up by name on AISafety.fund through its MCP server. Both grant columns add up itemised grants, so each is a lower bound. “None found” means no grant row was found; the organisation may have other money. Investment is published venture rounds.</p><div class="tbl audit" id="auditTbl"></div></div>
+          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Data audit</span><span class="layer-inside">Every money row this site gathered, checked against AISafety.fund one by one</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
+          <div class="layer-body">
+            <p class="small">Before it switched to AISafety.fund, this site gathered its own money data: five grant downloads, the industry map's grant ties, the control evidence and company announcements. Each row is matched to a row in AISafety.fund with the same funder and recipient, an amount within 1% and the same year or the next. Failing that, a row with the same funder, amount and month under another recipient name counts as found, since AISafety.fund often names the researcher where a funder names the university. People AISafety.fund leaves unnamed are never matched this way.</p>
+            <div class="tbl audit-sum" id="auditSum"></div>
+            <p class="small" id="auditOnly"></p>
+            <div class="tools">
+              <input type="search" id="auditSearch" placeholder="Find a funder, recipient or purpose" aria-label="Find a funder, recipient or purpose" autocomplete="off">
+              <span class="small" id="auditCount" aria-live="polite"></span>
+            </div>
+            <div class="chips" id="auditStatus" role="group" aria-label="Show rows by result"></div>
+            <div class="chips" id="auditSrc" role="group" aria-label="Show rows by source"></div>
+            <div class="tbl audit-rows" id="auditRows"></div>
+            <button class="btn ghost sm" id="auditMore" type="button" hidden>Show more</button>
+            <h3 class="audit-h">By organisation</h3>
+            <p class="small">Each organisation's total in the five downloads beside its total in AISafety.fund. Investment is published venture rounds.</p>
+            <div class="tbl audit" id="auditTbl"></div>
+          </div>
         </details>
         <details class="layer" id="fig-records">
           <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Grants by funder</span><span class="layer-inside">AISafety.fund's itemised grants, each dollar counted once, at the funder that chose the recipient</span></span><span class="layer-hook"><span><b id="h-records"></b></span></span></summary>
@@ -366,8 +401,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 <script src="field-data.js?v=7"></script>
 <script src="experiments-grants.js?v=4"></script>
 <script src="experiments-data.js?v=4"></script>
-<script src="collected-data.js?v=1"></script>
-<script src="reports-data.js?v=6"></script>
+<script src="collected-data.js?v=2"></script>
+<script src="audit-data.js?v=1"></script>
+<script src="reports-data.js?v=7"></script>
 <script>
 (function () {
   "use strict";
@@ -818,21 +854,73 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 <i id="page-end" hidden></i>
 <script>document.documentElement.classList.remove("pre");</script>
 <script>
-/* Data audit: the grant records this site collected (collected-data.js) beside AISafety.fund's itemised grants (reports-data.js). */
+/* Data audit: every money row this site gathered (collected-data.js, checked in audit-data.js) beside AISafety.fund. */
 (function () {
-  const F = window.FIELD, R = window.REPORT, C = window.COLLECTED; if (!F || !R || !C) return;
+  const F = window.FIELD, R = window.REPORT, C = window.COLLECTED, AU = window.AUDIT; if (!F || !R || !C || !AU) return;
+  const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const money = v => !v ? "none found" : v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? "$" + (v >= 1e8 ? Math.round(v / 1e6) : (v / 1e6).toFixed(1)) + "M" : "$" + Math.max(1, Math.round(v / 1e3)) + "k";
+  const amt = v => typeof v === "number" ? (v ? money(v) : "pledge only") : v ? esc(v) : "no amount";
+  const ST = { missing: "Not found", diff: "Different amount", uncounted: "Not counted there", in: "Found", agg: "A total, compared", scope: "Outside its scope" };
+  const STX = { missing: "No row in AISafety.fund for this funder, recipient and year", diff: "AISafety.fund has another amount", uncounted: "In AISafety.fund, left out of its totals as off-topic or doubtful",
+    in: "In AISafety.fund", agg: "A total over many grantees, beside the funder's total for that year", scope: "Money AISafety.fund does not record: budgets, expenses, political money, investment, credits" };
+  const ORDER = ["missing", "diff", "uncounted", "in", "agg", "scope"];
+  const rows = AU.rows;   // [source, funder, recipient, date, amount, status, fund amount, fund date, note, recorded as]
+  const num = v => typeof v === "number" ? v : 0;
+  $("#h-audit").textContent = rows.length.toLocaleString("en-US");
+
+  /* summary by source */
+  const sum = Object.keys(AU.sources).map(k => {
+    const rs = rows.filter(r => r[0] === k), by = {};
+    ORDER.forEach(s => { by[s] = rs.filter(r => r[5] === s); });
+    return { k, n: rs.length, by };
+  });
+  $("#auditSum").innerHTML = `<div class="tbl-row head"><span>What was gathered</span><span class="c">Rows</span><span class="c">Found</span><span class="c">Not found</span><span class="c">Different</span><span class="c">Not counted</span><span class="c">Out of scope</span></div>` +
+    sum.map(x => `<div class="tbl-row"><span class="a">${esc(AU.sources[x.k])}</span><span class="c">${x.n}</span><span class="c">${x.by.in.length + x.by.agg.length}</span>` +
+      `<span class="c">${x.by.missing.length}<small>${(m => m ? money(m) : "")(x.by.missing.reduce((t, r) => t + num(r[4]), 0))}</small></span>` +
+      `<span class="c">${x.by.diff.length}</span><span class="c">${x.by.uncounted.length}</span><span class="c">${x.by.scope.length}</span></div>`).join("");
+  const RL = { cg: "Coefficient Giving", sff: "SFF", ltff: "LTFF", eaif: "EAIF", manifund: "Manifund" };
+  $("#auditOnly").textContent = "The other way round: for the same funders and recipients, AISafety.fund has rows the downloads did not: " +
+    Object.entries(AU.onlyFund).sort((a, b) => b[1].usd - a[1].usd).map(([k, v]) => `${RL[k] || k} ${v.rows} (${money(v.usd)})`).join(", ") + ".";
+
+  /* the rows, by result and source */
+  let status = "missing", src = "all", shown = 60;
+  const chip = (val, label, n, cur) => `<button type="button" data-v="${val}" aria-pressed="${val === cur}">${esc(label)}<span>${n}</span></button>`;
+  function chips() {
+    const inSrc = r => src === "all" || r[0] === src, inSt = r => status === "all" || r[5] === status;
+    $("#auditStatus").innerHTML = ORDER.map(s => chip(s, ST[s], rows.filter(r => r[5] === s && inSrc(r)).length, status)).join("") + chip("all", "All results", rows.filter(inSrc).length, status);
+    $("#auditSrc").innerHTML = chip("all", "Every source", rows.filter(inSt).length, src) +
+      Object.keys(AU.sources).map(k => chip(k, AU.sources[k], rows.filter(r => r[0] === k && inSt(r)).length, src)).join("");
+  }
+  function draw() {
+    chips();
+    const q = $("#auditSearch").value.trim().toLowerCase();
+    const list = rows.filter(r => (status === "all" || r[5] === status) && (src === "all" || r[0] === src) &&
+      (!q || [r[1], r[2], r[8], r[9]].join(" ").toLowerCase().includes(q)))
+      .sort((a, b) => ORDER.indexOf(a[5]) - ORDER.indexOf(b[5]) || num(b[4]) - num(a[4]));
+    $("#auditRows").innerHTML = `<div class="tbl-row head"><span>Funder to recipient</span><span>Date</span><span class="c">Gathered</span><span class="c">AISafety.fund</span><span>Result</span></div>` +
+      list.slice(0, shown).map(r => `<div class="tbl-row"><span class="a">${esc(r[1])} → ${esc(r[2])}${r[8] ? `<small>${esc(r[8])}</small>` : ""}</span><span class="d">${esc(r[3] || "")}</span>` +
+        `<span class="c">${amt(r[4])}</span><span class="c">${r[6] != null ? money(r[6]) : ""}</span>` +
+        `<span class="st ${r[5]}"><b>${ST[r[5]]}</b><small>${r[9] ? "Recorded as " + esc(r[9]) : esc(STX[r[5]])}</small></span></div>`).join("");
+    $("#auditCount").textContent = `Showing ${Math.min(shown, list.length)} of ${list.length}`;
+    $("#auditMore").hidden = list.length <= shown;
+  }
+  $("#auditStatus").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { status = b.dataset.v; shown = 60; draw(); } });
+  $("#auditSrc").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { src = b.dataset.v; shown = 60; draw(); } });
+  $("#auditSearch").addEventListener("input", () => { shown = 60; draw(); });
+  $("#auditMore").addEventListener("click", () => { shown += 200; draw(); });
+  draw();
+
+  /* by organisation */
   const site = {};
   C.flows.forEach(f => { site[f.to] = (site[f.to] || 0) + f.total; });
   const labs = new Set(R.labs.map(l => l.id));
-  const rows = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
+  const orgs = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
     const k = e.id.replace(/^f_/, ""), inv = (R.invest[k] || {}).usd || 0;
     return { k, name: e.name, site: site[e.node] || site[e.id] || 0, fund: R.fund[k] || 0, inv };
   }).filter(e => !labs.has(e.k) && (e.site || e.fund || e.inv)).sort((a, b) => Math.max(b.site, b.fund) + b.inv - Math.max(a.site, a.fund) - a.inv);
-  document.getElementById("h-audit").textContent = rows.length;
-  document.getElementById("auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">This site</span><span class="c">Investment</span><span>Note</span></div>` +
-    rows.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${money(e.fund)}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
+  $("#auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">Downloads</span><span class="c">Investment</span><span>Note</span></div>` +
+    orgs.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${money(e.fund)}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
 })();
 </script>
 </body>

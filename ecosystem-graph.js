@@ -105,22 +105,22 @@
     { cat: 2, label: "Cloud and energy", color: "#C68ABD", x: 620, y: 760 },
     { cat: 1, label: "Chip supply chain", color: "#93ABC6", x: 370, y: 760 },
     { cat: 4, label: "Capital", color: "#C9A27E", x: 870, y: 760 },
-    { cat: 5, label: "Safety funders", color: "#DBA63E", x: 170, y: 110 },
+    { cat: 5, label: "Safety funders", color: "#B5B56E", x: 170, y: 110 },
     { cat: 6, label: "Research and think tanks", color: "#E8667A", x: 520, y: 120 },
     { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#E8667A", color2: "#4FB0A7", x: 790, y: 120,
       about: "Universities do research and train the people who enter the field, so they sit between the two groups. Each is counted once." },
     { cat: 10, label: "Talent pipeline", color: "#4FB0A7", x: 990, y: 120 },
     { cat: 9, label: "Critical voices and the public", color: "#6DB3D3", x: 800, y: 555 },
-    { cat: 11, label: "Standards, insurers and users", color: "#B5B56E", x: 130, y: 770 },
+    { cat: 11, label: "Standards, insurers and users", color: "#DBA63E", x: 130, y: 770 },
     { cat: 7, label: "Public authority", color: "#9486EC", x: 640, y: 345 },
     { cat: 8, label: "Advocacy and political money", color: "#E88A52", x: 930, y: 345 }
   ];
   // Zoomed in, there is one cluster per category on the AISafety.com map, coloured as on the reports page: one colour for each of the
   // seven groups the reports chart uses, ink for the frontier labs, grey for every other category. The industry map uses the same colours
-  // where its groups line up, and five muted tones of its own (steel, plum, brown, olive, cyan) for the groups the field map does not list.
+  // where its groups line up, and five muted tones of its own (steel, plum, brown, amber, cyan) for the groups the field map does not list.
   // The one-line descriptions are this map's own.
   const FIELD_CATS = {
-    funding: ["#DBA63E", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
+    funding: ["#B5B56E", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
     empirical_research: ["#E8667A", "Groups that run experiments on AI systems: evaluations, interpretability, control and robustness."],
     conceptual_research: ["#69A3E2", "Groups and individual researchers working on the theory of alignment and agency."],
     strategy: ["#96BC62", "Research on how the arrival of advanced AI could go, and what would make it go well."],
