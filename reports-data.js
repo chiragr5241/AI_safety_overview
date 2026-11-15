@@ -1,50 +1,41 @@
-/* Data for reports.html, read on 12 November 2026; every map entry looked up one by one on 15 November 2026.
-   'fund' is the audit: itemised grants to each organisation in AISafety.fund's database, read through its MCP server
-   (data version 14388, CC BY-NC-SA 4.0). Each figure adds every spelling of the recipient the database lists
+/* Data for reports.html, read on 12 November 2026; grant figures rebuilt on 15 November 2026.
+   'fund' is itemised grants to each organisation in AISafety.fund's database (CC BY-NC-SA 4.0). Each figure adds every spelling of the recipient the database lists
    ("X", "X (via Jaan Tallinn)", an earlier name). Rows the database leaves out of its totals (conditional matching pledges,
-   repeats of one gift) are left out here too. Null means the organisation was looked up and no grant row was found.
-   A bubble on the page is sized by the larger of this figure and the site's own five grant records (field-data.js),
-   both being lower bounds, plus any published investment ('invest' below). Keys are the field map ids without the "f_" prefix. */
+   repeats of one gift) are left out here too. An entry with no figure has no grant row.
+   A bubble on the page is sized by this figure (a lower bound), or the money an organisation reports itself ('reported'),
+   plus any published investment ('invest' below). The site's own grant records are compared with it in the data audit on experiments.html. Keys are the field map ids without the "f_" prefix. */
 window.REPORT = {
   read: "2026-11-12",
-  fundSource: { name: "AISafety.fund", url: "https://aisafety.fund/", licence: "CC BY-NC-SA 4.0", version: 14388 },
+  fundSource: { name: "AISafety.fund", url: "https://aisafety.fund/", licence: "CC BY-NC-SA 4.0", version: 16714 },
 
   /* Technical safety research: each of the 50 looked up by name. */
+  /* Every entry's counted grants in AISafety.fund, from the local copy of its database (evidence/aisafety_fund, pulled through its MCP server
+     on 15 November 2026, data version 16714) and matched to map entries by evidence/aisafety_fund/build.py. An entry not listed has no row. */
   fund: {
-    lawzero: 228985396, resolution: 160000000, redwood_research: 139324971, far_ai: 65956276, metr: 23417000,
-    cais: 16740788, geodesic: 14295046, palisade: 12244177, arcadia_impact: 12229609, ought: 8536333,
-    apollo: 6672180, averi: 5000000, eleutherai: 2923273, aoi: 2752000, simplex: 2634700, saferai: 1669515,
-    conjecture: 1221910, mai: 831196, cltc: 808353, aether: 756570, neo_research: 553000, caml: 477000,
-    cadenza_labs: 441549, luthien: 150000, softmax: 90000, cavendish_labs: 88000, formation_research: 87300,
-    harmony: 54270, transluce: 40250,
-    truthfulai: null, aligned_ai: null, goodfire: null, gray_swan: null, neuronpedia: null, generality: null,
-    contramont: null, eurosafeai: null, paradigm_3: null, ssi: null, baif: null, ae_studio: null, casp: null,
-    arg: null, aag: null, fair: null, safl: null, beijing_aisi: null, cbl: null, janus: null, alignment_forum: null,
-
-    /* The rest of the map: matched by name against the database's 200 largest recipients (every recipient above about $1.3M). */
-    cset: 122073000, epoch_ai: 93309897, rand: 83430751, mats: 56307205, kairos: 53437080, govai: 47107352,
-    iaps: 34316132, bluedot: 30136024, openai: 30000000, longview: 29429707, constellation: 26250000, miri: 21678379,
-    lightcone: 17956300, ai_digest: 16040775, beri: 14595184, aigi: 14128018, lawai: 12401954, caif: 11422847,
-    cbai: 10230303, simon_institute: 8858633, cltr: 8401746, talos_fellowship: 7466189, metaculus: 6678400,
-    arc: 5785043, aifp: 5345000, aiss: 4960352, lisa: 4702962, meridian: 4299534, era_ai_fellowship: 4172685,
-    successif: 4054570, iaseai: 3800000, pivotal_fellowship: 3751690, princint: 3491355, pai: 3305000,
-    manifold_markets: 3084000, heron: 3055164, chinatalk: 3000000, ari: 3000000, vista_institute: 2989873,
-    ai_impacts: 2972578, good_impressions: 2835000, clr: 2574627, fli: 2364000, carma: 2300000, aipi: 2077000,
-    foresight_institute: 2022000, encode: 2000000, nightingale: 1963400, rational_animations: 1946249,
-    fri: 1879850, eip: 1876000, aiaf: 1570000, pauseai: 1497000, arena: 1435258, acs: 3260700, catalyze: 1341963,
-
-    /* Every other entry, looked up one by one on 15 November 2026 with the MCP server's grants_query (recipient name,
-       then its short name and other spellings). Entries with no row are left out here. */
-    chai: 6747550, lesswrong: 2335286, good_ancestors: 2278356, tfs: 1879000, ist: 1840773, saif: 1747513,
-    fig_fellowship: 1552586, pibbss: 1493000, apart: 1428838, secure_ai_project: 1241064, aisc: 1221938,
-    lasst: 1218000, iliad: 1175496, ai_standards_lab: 1130000, ml4good: 1095293, cesia: 1035309, dovetail: 1019000,
-    tfi: 1017510, gcp: 1008465, ilina: 854841, legal_safety_lab: 811000, sash: 774000, orthogonal: 753000,
-    ceealar: 651046, gcri: 575850, modeling_cooperation: 571416, coral: 560300, alter: 552800, rob_miles: 507537,
-    forethought: 483899, affine: 477000, lens: 452000, roman_yampolskiy: 429000, equistamp: 400000,
-    non_trivial: 350195, convergence: 338000, xlab_fellowship: 329000, future_matters: 299460, lasr_labs: 288732,
-    cser: 283500, aiwi: 251000, cfg: 223834, algoverse: 216769, vanessa_kosoy: 200000, zvi_mowshowitz: 200000,
-    aed: 190330, spar: 189350, aisafety_info: 162000, aisafety_com: 150000, dylan_hadfield_menell: 134175,
-    evitable: 111802, athena: 91600, ero: 78484, humans_in_control: 48000, tmp: 31000, tara: 14901, base: 14110,
+    lawzero: 228985396, resolution: 160000000, redwood_research: 139324971, cset: 122073000, epoch_ai: 94761872, rand: 83430751,
+    far_ai: 66639276, mats: 58711127, kairos: 53437080, govai: 48608352, iaps: 35256182, bluedot: 30149324, openai: 30000000,
+    longview: 29729707, constellation: 26250000, miri: 23662373, metr: 23417000, lightcone: 18694765, cais: 17647788,
+    ai_digest: 16633505, beri: 15466022, aigi: 14833018, geodesic: 14296046, lawai: 12879479, palisade: 12244177,
+    arcadia_impact: 12229609, caif: 11422847, cltr: 10816746, cbai: 10726303, simon_institute: 10003633, ought: 9328333,
+    metaculus: 8194788, talos_fellowship: 7589189, chai: 6747550, apollo: 6672180, arc: 5785043, aifp: 5389022, aiss: 5235352,
+    averi: 5000000, lisa: 4702962, ai_impacts: 4536210, meridian: 4299534, era_ai_fellowship: 4172685, successif: 4054570,
+    iaseai: 4000000, pivotal_fellowship: 3751690, ashgro: 3718896, princint: 3644555, simplex: 3355700, acs: 3318700,
+    pai: 3305000, fli: 3239000, foresight_institute: 3148000, clr: 3136627, manifold_markets: 3084000, heron: 3055164,
+    chinatalk: 3020017, encode: 3000000, ari: 3000000, vista_institute: 2989873, good_impressions: 2835000, eip: 2790000,
+    aoi: 2752000, fri: 2747850, eleutherai: 2642273, lesswrong: 2303760, carma: 2300000, good_ancestors: 2278356, aipi: 2277000,
+    pauseai: 2120574, nightingale: 1963400, rational_animations: 1946249, tfs: 1879000, ist: 1840773, saif: 1747513,
+    saferai: 1669515, tfi: 1633659, aiaf: 1570000, fig_fellowship: 1552586, arena: 1435258, apart: 1428838, catalyze: 1415963,
+    pibbss: 1411000, secure_ai_project: 1241064, aisc: 1221938, lasst: 1218000, ceealar: 1185046, iliad: 1175496,
+    conjecture: 1149083, ai_standards_lab: 1130000, ml4good: 1095293, cesia: 1034310, dovetail: 1019000, gcp: 1008465,
+    mai: 831196, legal_safety_lab: 811000, cltc: 808353, sash: 779167, ilina: 764170, aether: 756570, orthogonal: 753000,
+    nonlinear: 599000, gcri: 575850, modeling_cooperation: 571416, coral: 560300, neo_research: 553000, alter: 552800,
+    caml: 534000, rob_miles: 507537, aistof: 500000, forethought: 483899, affine: 477000, lens: 452000, cadenza_labs: 441549,
+    roman_yampolskiy: 429000, equistamp: 400000, non_trivial: 350195, convergence: 338000, xlab_fellowship: 329000,
+    future_matters: 299460, lasr_labs: 288732, cser: 283500, aiwi: 251000, founders_pledge: 232668, cfg: 223834,
+    algoverse: 216769, vanessa_kosoy: 200000, zvi_mowshowitz: 200000, aed: 190330, spar: 189350, aisafety_info: 162000,
+    manifund: 155000, luthien: 150000, aisafety_com: 150000, dylan_hadfield_menell: 134175, evitable: 111802, athena: 91600,
+    softmax: 90000, cavendish_labs: 88000, formation_research: 87300, ero: 78484, harmony: 54270, axrp: 51102,
+    humans_in_control: 48000, transluce: 40250, gwwc: 36000, tmp: 31000, tara: 14901, base: 14100, dr_waku: 10000,
     odyssean_institute: 7900, ai_plans: 5370
   },
 

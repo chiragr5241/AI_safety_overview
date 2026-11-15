@@ -156,6 +156,16 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 .tbl-row .b { color: var(--muted); font-size: .86rem; line-height: 1.4; }
 .tbl-row .c { font-family: var(--font-mono); font-size: .84rem; text-align: right; font-variant-numeric: tabular-nums; }
 .tbl-row .c small { display: block; color: var(--muted); font-size: .76rem; }
+.tbl.audit .tbl-row { grid-template-columns: minmax(0, 1.2fr) 6.4rem 6.4rem 6.4rem minmax(0, 1.5fr); }
+.tbl-row.head { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); border-bottom-color: var(--line-strong); }
+.tbl-row.head .c { font-family: var(--font-label); font-size: var(--text-label); }
+.tbl-row .d { color: var(--muted); font-size: .86rem; line-height: 1.4; }
+.tbl.audit .tbl-row .a { font-family: var(--font-display); font-weight: 500; }
+@media (max-width: 720px) {
+  .tbl.audit .tbl-row { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .tbl.audit .tbl-row .c:nth-of-type(4) { grid-column: 2 / -1; }
+  .tbl.audit .tbl-row .d { grid-column: 1 / -1; }
+}
 @media (max-width: 720px) {
   .tbl-row { grid-template-columns: minmax(0, 1fr) auto; }
   .tbl-row .b { grid-column: 1 / -1; grid-row: 2; }
@@ -240,7 +250,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
           <span class="key"><span><i class="g"></i>Given</span><span><i></i>Pledged or expected</span></span>
         </div>
         <div class="chart" id="chart"><div class="axis" id="axis"></div></div>
-        <figcaption class="stage-foot">Given: five public grant records, 2015 to October 2026, each dollar counted once, plus gifts reported elsewhere. Sources in <a href="#data">The data</a>.</figcaption>
+        <figcaption class="stage-foot">Given: AISafety.fund’s itemised grants, to October 2026, each dollar counted once, plus gifts reported elsewhere. Sources in <a href="#data">The data</a>.</figcaption>
       </figure>
       <div class="steps" id="steps"></div>
     </section>
@@ -250,12 +260,16 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       <h2>The data</h2>
       <p class="small">Every table behind the story. Money is a grant (from a foundation, fund or government), a donation (from a person), an investment (for equity) or corporate funding (from a company). Whose money it is and who decides where it goes are kept apart.</p>
       <div class="layers">
+        <details class="layer" id="fig-audit">
+          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Data audit</span><span class="layer-inside">The grants this site collected, beside AISafety.fund’s, for every organisation on the field map</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
+          <div class="layer-body"><p class="small">Each organisation was looked up by name on AISafety.fund through its MCP server. Both grant columns add up itemised grants, so each is a lower bound. “None found” means no grant row was found; the organisation may have other money. Investment is published venture rounds.</p><div class="tbl audit" id="auditTbl"></div></div>
+        </details>
         <details class="layer" id="fig-records">
-          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Five grant records, by funder</span><span class="layer-inside">2015 to 2026, each dollar counted once</span></span><span class="layer-hook"><span><b id="h-records"></b></span></span></summary>
-          <div class="layer-body"><p class="small">Every row of each record. The three small records are mostly grants to individuals.</p><div class="bars" id="recordBars"></div></div>
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">Grants by funder</span><span class="layer-inside">AISafety.fund's itemised grants, each dollar counted once, at the funder that chose the recipient</span></span><span class="layer-hook"><span><b id="h-records"></b></span></span></summary>
+          <div class="layer-body"><p class="small">The fifteen largest of the funders AISafety.fund itemises. Each name links to its page there.</p><div class="bars" id="recordBars"></div></div>
         </details>
         <details class="layer" id="fig-sff">
-          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">The donor named on each SFF grant</span><span class="layer-inside">2019 to 2026. Recommendations, not confirmed payments</span></span><span class="layer-hook"><span><b id="h-sff"></b></span></span></summary>
+          <summary><span class="layer-kind">Records</span><span class="layer-what"><span class="layer-title">The payer named on each SFF grant</span><span class="layer-inside">2019 to 2026, as AISafety.fund records it. A fiscal sponsor is not a payer</span></span><span class="layer-hook"><span><b id="h-sff"></b></span></span></summary>
           <div class="layer-body"><div class="bars" id="sffBars"></div></div>
         </details>
         <details class="layer" id="fig-bulletin">
@@ -319,10 +333,10 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
           <div class="layer-body">
             <ul class="gaps">
               <li>The donors to the AI Safety Tactical Opportunities Fund, and Longview's private clients. No source names them.</li>
-              <li>Individual donors on Manifund other than Leo Gao. Manifund Trace has them; it is not imported yet.</li>
-              <li>Venture funding of companies, except Goodfire. Grants to individuals from EA Funds and Manifund.</li>
+              <li>Who paid SFF's 2026 grants. AISafety.fund names no payer on those rows.</li>
+              <li>Venture funding of companies, except Goodfire. People AISafety.fund lists as “Individual #”, who are left unnamed.</li>
               <li>Any organisation's full budget. A share here is a share of recorded grants.</li>
-              <li>SFF figures are recommendations. OpenAI's $30m is a 2017 grant, made when it was a non-profit.</li>
+              <li>Recipients with less than $50k in all are not listed one by one; they are in every total. OpenAI's $30m is a 2017 grant, made when it was a non-profit.</li>
             </ul>
           </div>
         </details>
@@ -349,9 +363,11 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
 <script src="site.js?v=4"></script>
 <script src="explore.js?v=6"></script>
-<script src="field-data.js?v=6"></script>
-<script src="experiments-grants.js?v=3"></script>
+<script src="field-data.js?v=7"></script>
+<script src="experiments-grants.js?v=4"></script>
 <script src="experiments-data.js?v=4"></script>
+<script src="collected-data.js?v=1"></script>
+<script src="reports-data.js?v=6"></script>
 <script>
 (function () {
   "use strict";
@@ -369,7 +385,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   F.entries.forEach(e => { byId[e.id] = e; if (e.node) byId[e.node] = e; });
   const EXTRA = { cnas: "CNAS", carnegie: "Carnegie Endowment", ltff: "Long-Term Future Fund", uiuc: "University of Illinois Urbana-Champaign",
     mit: "Massachusetts Institute of Technology", stanford: "Stanford University", cmu: "Carnegie Mellon University", berkeley: "University of California, Berkeley" };
-  const full = id => id.startsWith("raw:") ? id.slice(4) : EXTRA[id] || (byId[id] ? byId[id].name.replace(/\s*\([^)]*\)\s*$/, "") : id);
+  const full = id => id.startsWith("raw:") ? id.slice(4) : EXTRA[id] || (F.funders[id] ? F.funders[id].name : byId[id] ? byId[id].name.replace(/\s*\([^)]*\)\s*$/, "") : id);
 
   /* ---------- the three series: the two large records, and the three small ones together ---------- */
   const SERIES = [
@@ -431,27 +447,23 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   /* ---------- totals from the grant records ---------- */
   const rec = {};
   const payers0 = new Set(window.RECORD_PAYERS);
-  const FLOWS = F.flows.filter(f => !payers0.has(f.to));   // a grant to another record's fund is counted when that fund pays it out
+  const FLOWS = F.flows.filter(f => !payers0.has(f.to));   // AISafety.fund already counts each dollar once, so RECORD_PAYERS is empty
   FLOWS.forEach(f => {
     const r = rec[f.to] || (rec[f.to] = { id: f.to, total: 0, by: { cg: 0, sff: 0, other: 0 }, flows: [] });
     r.total += f.total;
     r.by[seriesOf(f.src)] += f.total;
     r.flows.push(f);
   });
-  // recipients that are in the two large records but not on the field map
+  // recipients that are not entries on the field map
   OFF.forEach(o => {
-    const flows = ["cg", "sff"].filter(k => o[k] > 0).map(k => ({ src: k, total: o[k], cond: 0,
-      grants: o.grants.filter(g => g[3] === k).map(g => [g[0], g[1], g[2] + (g[4] ? " · " + g[4] : "")]) }));
-    if (o.to) {   // the same organisation as a map entry, under another name in the record
-      const r = rec[o.to] || (rec[o.to] = { id: o.to, total: 0, by: { cg: 0, sff: 0, other: 0 }, flows: [] });
-      r.total += o.cg + o.sff; r.by.cg += o.cg; r.by.sff += o.sff; r.flows.push(...flows);
-      return;
-    }
-    rec["raw:" + o.name] = { id: "raw:" + o.name, off: true, total: o.cg + o.sff, by: { cg: o.cg, sff: o.sff, other: 0 }, flows };
+    const byRec = {};
+    o.grants.forEach(g => { (byRec[g[4]] || (byRec[g[4]] = [])).push([g[0], g[1], g[2]]); });
+    const flows = Object.entries(byRec).map(([k, gs]) => ({ src: k, total: gs.reduce((t, g) => t + g[1], 0), cond: 0, grants: gs }));
+    rec["raw:" + o.name] = { id: "raw:" + o.name, off: true, total: o.total, by: o.by, flows };
   });
   const orgs = Object.values(rec).filter(r => r.total > 0).sort((a, b) => b.total - a.total);
   const onMap = orgs.filter(r => !r.off).length;
-  // each record's total with every dollar counted once (worked out and checked in evidence/field/unmatched.py)
+  // each funder's counted total; AISafety.fund counts every dollar once (evidence/aisafety_fund/build.py)
   const NET = window.RECORD_NET;
   const net = Object.values(NET).reduce((s, r) => s + r.counted, 0);
   const link = k => X.sources[k] ? ` <a href="${X.sources[k].url}">Source</a>` : "";
@@ -459,8 +471,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
   /* ================= THE STORY ================= */
   const cg = NET.cg.counted, sffNet = NET.sff.counted, tal = SFF[0].total;
-  const joint = SFF.filter(d => d !== SFF[0] && /Jaan Tallinn/.test(d.name)).reduce((s, d) => s + d.total, 0);
-  const withMosk = SFF.find(d => d.name === "Jaan Tallinn and Dustin Moskovitz").total;
+  const sffUnnamed = (SFF.find(d => d.name === "No payer named") || { total: 0 }).total;
+  const sff26 = window.FUND_YEARS["2026"] ? window.FUND_YEARS["2026"].sff : 0;
+  const META = window.FUND_META;
   const bul = Object.fromEntries(X.bulletin.rows.map(r => [r.name, r]));
   const hidden25 = ["Longview Philanthropy", "Macroscopic", "AI Safety Tactical Opportunities Fund"].reduce((s, k) => s + bul[k].y2025, 0) * 1e6;
   const hidden26 = ["Longview Philanthropy", "Macroscopic", "AI Safety Tactical Opportunities Fund"].reduce((s, k) => s + bul[k].y2026, 0) * 1e6;
@@ -469,8 +482,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   // rows of the pinned chart, top to bottom; each step shows some of them and lights a few
   const ROWS = [
     { id: "mt", name: "Dustin Moskovitz and Cari Tuna", from: "Facebook, Asana", g: cg, note: "Coefficient Giving" },
-    { id: "tallinn", name: "Jaan Tallinn", from: "Skype, Kazaa", g: tal, note: "alone, in SFF" },
-    { id: "rest", name: "Everyone else in the records", from: "includes joint SFF grants", g: s => s < 2 ? net - cg : net - cg - tal, note: "five records" },
+    { id: "tallinn", name: "Jaan Tallinn", from: "Skype, Kazaa", g: tal, note: "paid, in SFF" },
+    { id: "rest", name: "Every other funder", from: "includes SFF rows with no payer named", g: s => s < 2 ? net - cg : net - cg - tal, note: "AISafety.fund" },
     { id: "buterin", name: "Vitalik Buterin", from: "Ethereum", g: 5e8, approx: true, note: "one gift, 2021" },
     { id: "hidden", name: "Donors not published", from: "Longview's clients, Macroscopic, AISTOF", g: hidden25, p: hidden26 - hidden25, note: short(hidden26) + " in 2026" },
     { id: "oaif", name: "OpenAI Foundation", from: "OpenAI shares", g: 0, p: oaif, note: "expected 2026" },
@@ -479,9 +492,9 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
   // kicker, headline, the one number, a line or two of fact, what they say (paraphrased, linked), the next question
   const STEPS = [
-    { show: ["mt", "rest"], hi: ["mt"], kick: "Five public grant records",
+    { show: ["mt", "rest"], hi: ["mt"], kick: "AISafety.fund's itemised grants",
       h: "AI safety runs on one couple's money.",
-      n: pct(cg / net), unit: `of ${short(net)} in grants, 2015 to 2026`,
+      n: pct(cg / net), unit: `of ${short(net)} in grants AISafety.fund itemises, to October 2026`,
       fact: `Coefficient Giving allocated ${short(cg)} of it. Most of that is Dustin Moskovitz and Cari Tuna's Facebook and Asana fortune.`,
       next: "So why do they give?" },
     { show: ["mt", "rest"], hi: ["mt"], kick: "Dustin Moskovitz and Cari Tuna",
@@ -493,8 +506,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
       next: "Who gives the next-largest share?" },
     { show: ["mt", "tallinn", "rest"], hi: ["tallinn"], kick: "Survival and Flourishing Fund",
       h: "The second-largest fund is one man's money.",
-      n: pct(tal / sffNet), unit: `of SFF's ${short(sffNet)} carries Jaan Tallinn's name alone`,
-      fact: `${SFF[0].grants} grants since ${SFF[0].first}. He gave ${short(joint)} more jointly, ${short(withMosk)} of it with Moskovitz.`,
+      n: pct(tal / sffNet), unit: `of SFF's ${short(sffNet)} is marked as paid by Jaan Tallinn`,
+      fact: `${SFF[0].grants} grants, ${SFF[0].first} to ${SFF[0].last}. Rows with no payer named come to ${short(sffUnnamed)}, ${short(sff26)} of it SFF's 2026 round.`,
       next: "What does he want?" },
     { show: ["mt", "tallinn", "rest"], hi: ["tallinn"], kick: "Jaan Tallinn",
       h: "He wants brakes on AI. He also helped build Anthropic.",
@@ -505,7 +518,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
     { show: ["mt", "tallinn", "rest", "buterin"], hi: ["buterin"], kick: "Vitalik Buterin",
       h: "One crypto gift outweighs SFF's entire record.",
       n: "~$500m", unit: "in Shiba Inu tokens, cashed out by the Future of Life Institute, 2021, by his account",
-      fact: "It is not in the five grant records.",
+      fact: "It is not among AISafety.fund's itemised grants.",
       says: "He takes extinction from AI seriously, but will not accept one actor monopolising AI, and wants defensive, decentralising technology built first. In March 2026 he said he was no longer closely aligned with FLI.",
       src: ["buterin_essay", "buterin"],
       next: "Whose names are missing?" },
@@ -520,7 +533,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
     { show: ["mt", "tallinn", "rest", "buterin", "hidden", "oaif", "founders"], hi: ["founders", "oaif"], kick: "Anthropic's co-founders",
       h: "The biggest fortune pledged yet was made building AI.",
       n: "~" + short(pledge), unit: "80% of the seven co-founders' wealth, pledged January 2026 (Transformer's estimate)",
-      fact: `${Math.round(pledge / net)} times every grant in the five records. The OpenAI Foundation, which holds OpenAI shares, expects to give ${short(oaif)} in 2026.`,
+      fact: `${Math.round(pledge / net)} times every grant AISafety.fund itemises. The OpenAI Foundation, which holds OpenAI shares, expects to give ${short(oaif)} in 2026.`,
       says: "Dario Amodei writes that the wealthy, above all in tech, owe society help with the disruption AI will bring, as Gilded Age industrialists felt they owed something back.",
       src: ["amodei", "transformer"],
       next: "See every table behind this", to: "#data" }
@@ -592,7 +605,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 
   /* ================= THE DATA ================= */
 
-  /* ---------- the five records ---------- */
+  /* ---------- the funders, largest first ---------- */
   $("#h-records").textContent = short(net);
   const RECORD_NAME = { cg: "Coefficient Giving", sff: "Survival and Flourishing Fund", ltff: "Long-Term Future Fund", eaif: "EA Infrastructure Fund", manifund: "Manifund" };
   // whose money each record mainly is, who decides, and the kind of money
@@ -600,12 +613,14 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   const RECORD_WHO = { cg: "Coefficient Giving staff; Good Ventures approves", sff: "recommenders; funders set amounts", ltff: "fund managers", eaif: "fund managers", manifund: "regrantors and donors" };
   const RECORD_KIND = { cg: "Grants", sff: "Grants", ltff: "Grants", eaif: "Grants", manifund: "Donations" };
   const recMax = Math.max(...Object.values(NET).map(r => r.counted));
-  Object.entries(NET).sort((a, b) => b[1].counted - a[1].counted).forEach(([key, r]) => {
+  Object.entries(NET).sort((a, b) => b[1].counted - a[1].counted).slice(0, 15).forEach(([key, r]) => {
     const row = el("div", "bar-row");
-    row.innerHTML = `<span class="nm">${RECORD_NAME[key]}<small>${RECORD_KIND[key]} · money: ${names(RECORD_BY[key])} · decides: ${esc(RECORD_WHO[key])}</small></span>
+    const nm = RECORD_NAME[key] || F.records[key].title;
+    const who = RECORD_BY[key] ? ` · money: ${names(RECORD_BY[key])} · decides: ${esc(RECORD_WHO[key])}` : "";
+    row.innerHTML = `<span class="nm"><a href="${F.records[key].url}">${esc(nm)}</a><small>${RECORD_KIND[key] || "Grants"}${who}</small></span>
       <span class="track"><span class="stack"><span class="seg ${key === "cg" ? "k1" : key === "sff" ? "k2" : "k3"}" style="width:${(100 * r.counted / recMax).toFixed(2)}%"></span></span></span>
-      <span class="val">${money(r.counted)}<small>${F.records[key].rows} rows</small></span>`;
-    bindTip(row.querySelector(".seg"), `<b>${RECORD_NAME[key]}</b><br>${money(r.counted)}`);
+      <span class="val">${money(r.counted)}<small>${F.records[key].rows} row${F.records[key].rows === 1 ? "" : "s"}</small></span>`;
+    bindTip(row.querySelector(".seg"), `<b>${esc(nm)}</b><br>${money(r.counted)}`);
     $("#recordBars").appendChild(row);
   });
 
@@ -766,18 +781,8 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   drawOrgs();
 
   /* ---------- by year ---------- */
-  const years = {};
-  FLOWS.forEach(f => f.grants.forEach(g => {
-    const y = String(g[0]).slice(0, 4);
-    const o = years[y] || (years[y] = { cg: 0, sff: 0, other: 0 });
-    o[seriesOf(f.src)] += g[1];
-  }));
-  OFF.forEach(r => r.grants.forEach(g => {
-    const y = String(g[0]).slice(0, 4);
-    const o = years[y] || (years[y] = { cg: 0, sff: 0, other: 0 });
-    o[g[3]] += g[1];
-  }));
-  const ys = Object.keys(years).sort();
+  const years = window.FUND_YEARS;   // every counted row, built with the data
+  const ys = Object.keys(years).filter(y => y >= "2015").sort();
   const yTot = y => years[y].cg + years[y].sff + years[y].other;
   const yMax = Math.max(...ys.map(yTot));
   const peak = ys.reduce((a, b) => yTot(b) > yTot(a) ? b : a);
@@ -801,7 +806,7 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
   $("#yearCols").setAttribute("aria-label", "Grants by year: " + ys.map(y => y + " " + money(yTot(y))).join(", ") + ".");
 
   /* ---------- sources ---------- */
-  const srcs = Object.values(F.records).map(r => ({ title: r.title, url: r.url }));
+  const srcs = [{ title: `AISafety.fund: itemised grants (${META.licence}), pulled through its MCP server on ${META.pulled}, data version ${META.dataVersion}`, url: META.url }];
   const seen = new Set();
   srcs.concat([{ title: F.source.name + " (" + F.source.licence + ")", url: F.source.url }], Object.values(X.sources)).forEach(s => {
     if (seen.has(s.title)) return;
@@ -812,5 +817,23 @@ a.pp:hover, a.pp:focus-visible { color: var(--accent); }
 </script>
 <i id="page-end" hidden></i>
 <script>document.documentElement.classList.remove("pre");</script>
+<script>
+/* Data audit: the grant records this site collected (collected-data.js) beside AISafety.fund's itemised grants (reports-data.js). */
+(function () {
+  const F = window.FIELD, R = window.REPORT, C = window.COLLECTED; if (!F || !R || !C) return;
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const money = v => !v ? "none found" : v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? "$" + (v >= 1e8 ? Math.round(v / 1e6) : (v / 1e6).toFixed(1)) + "M" : "$" + Math.max(1, Math.round(v / 1e3)) + "k";
+  const site = {};
+  C.flows.forEach(f => { site[f.to] = (site[f.to] || 0) + f.total; });
+  const labs = new Set(R.labs.map(l => l.id));
+  const rows = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
+    const k = e.id.replace(/^f_/, ""), inv = (R.invest[k] || {}).usd || 0;
+    return { k, name: e.name, site: site[e.node] || site[e.id] || 0, fund: R.fund[k] || 0, inv };
+  }).filter(e => !labs.has(e.k) && (e.site || e.fund || e.inv)).sort((a, b) => Math.max(b.site, b.fund) + b.inv - Math.max(a.site, a.fund) - a.inv);
+  document.getElementById("h-audit").textContent = rows.length;
+  document.getElementById("auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">This site</span><span class="c">Investment</span><span>Note</span></div>` +
+    rows.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${money(e.fund)}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
+})();
+</script>
 </body>
 </html>

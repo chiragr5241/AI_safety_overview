@@ -14,12 +14,12 @@
   // a bubble is an entry, or an actor of the industry map that an entry is attached to
   const entryOf = new Map();
   F.entries.forEach(e => entryOf.set(e.node || e.id, e));
-  const nameOf = id => entryOf.has(id) ? entryOf.get(id).name : actor.has(id) ? actor.get(id).name : id;
+  const nameOf = id => entryOf.has(id) ? entryOf.get(id).name : actor.has(id) ? actor.get(id).name : F.funders && F.funders[id] ? F.funders[id].name : id;
   const yrs = f => f.first === f.last ? f.first : `${f.first} to ${f.last}`;
-  const KIND = { cg: "listed", sff: "recommended", ltff: "paid out", eaif: "paid out" };
+  const KIND = {};
   // a Coefficient Giving row taken from an announcement, not a grants list, ends its purpose with "· announced"
-  const said = f => { const a = (f.grants || []).filter(g => / · announced$/.test(g[2] || "")).length; return !a ? KIND[f.src] || "" : a === f.n ? "announced" : "listed or announced"; };
-  const rows = f => f.src === "manifund" ? `${f.n} project ${f.n === 1 ? "page" : "pages"}` : `${f.n} ${f.n === 1 ? "grant" : "grants"} ${said(f)}`;
+  const said = f => "itemised";
+  const rows = f => `${f.n} ${f.n === 1 ? "grant" : "grants"} ${said(f)}`;
   const amount = f => f.total ? usd(f.total) : "matching pledge only";
   const inOf = new Map(), outOf = new Map();
   F.flows.forEach(f => {
@@ -49,7 +49,7 @@
     baseTies.map(e => `${nameOf(e.from)} to ${nameOf(e.to)}${e.amount != null ? " (" + usd(e.amount) + ")" : " (amount not stated)"}`).join("; ") + "." : "");
 
   /* ---------- the records ---------- */
-  const order = ["cg", "sff", "ltff", "eaif", "manifund"].filter(k => F.records[k]);
+  const order = Object.keys(F.records).sort((a, b) => F.records[b].listed - F.records[a].listed).slice(0, 15);
   $("fieldRecords").innerHTML = order.map(k => {
     const r = F.records[k];
     return `<tr><td><a href="${esc(r.url)}" rel="noopener">${tidy(r.title)}</a><br><span class="small">${tidy(r.note)}</span></td><td>${tidy(r.kind.charAt(0).toUpperCase() + r.kind.slice(1))}</td>
@@ -57,11 +57,11 @@
   }).join("");
 
   /* ---------- the largest totals, one record at a time ---------- */
-  $("fieldTop").innerHTML = order.map(k => {
+  $("fieldTop").innerHTML = order.slice(0, 6).map(k => {
     const r = F.records[k], top = F.flows.filter(f => f.src === k && f.total > 0).sort((a, b) => b.total - a.total).slice(0, 8);
     return `<div class="labcard"><span class="eyebrow">${tidy(nameOf(r.funder))}</span><ul class="fgrants">${top.map(f =>
       `<li><b>${esc(usd(f.total))}</b> ${tidy(nameOf(f.to))} <span class="small">(${esc(rows(f))}, ${esc(yrs(f))})</span></li>`).join("")}</ul>
-      <p class="small used">${tidy(r.kind.charAt(0).toUpperCase() + r.kind.slice(1))}, in this record only.</p></div>`;
+      <p class="small used">Grants from this funder only.</p></div>`;
   }).join("");
 
   /* ---------- every entry ---------- */
@@ -75,7 +75,7 @@
     const money = (got.length ? `<ul class="fgrants">${got.map(f => `<li><b>${esc(amount(f))}</b> from ${tidy(nameOf(f.from))} <span class="small">(${esc(rows(f))}, ${esc(yrs(f))}${f.cond ? (f.src === "sff" ? `, plus matching pledges of up to ${esc(usd(f.cond))}` : `, plus ${esc(usd(f.cond))} tied to conditions, not counted`) : ""})</span></li>`).join("")}</ul>` : "")
       + (gave.length ? `<p class="small">Its own record lists ${esc(usd(given))} for ${gave.length} ${gave.length === 1 ? "organisation" : "organisations"} on this map.</p>` : "")
       + (firm.length ? `<ul class="fgrants">${firm.map(c => `<li><b>${c.amount ? esc(usd(c.amount)) : "Amount not stated"}</b> from ${tidy(nameOf(c.from))} <span class="small">(${esc((CKIND[c.kind] || c.kind).toLowerCase())}, ${esc(U.fmtDate(c.date))}, company announcement)</span></li>`).join("")}</ul>` : "")
-      + (!got.length && !gave.length && !firm.length ? `<p class="small">No row in the four grant records and no company announcement. That is not the same as no funding.</p>` : "");
+      + (!got.length && !gave.length && !firm.length ? `<p class="small">No row in AISafety.fund and no company announcement. That is not the same as no funding.</p>` : "");
     const text = [e.name, e.short, cats, e.desc].concat(got.map(f => nameOf(f.from))).join(" ").toLowerCase();
     return `<article class="pcard" id="fe-${esc(e.id)}" data-cat="${esc(e.cats.join(" "))}" data-money="${got.length || firm.length ? "in" : ""} ${gave.length ? "out" : ""} ${!got.length && !gave.length && !firm.length ? "none" : ""}" data-text="${esc(text)}">
       <h3>${tidy(e.name)}</h3>

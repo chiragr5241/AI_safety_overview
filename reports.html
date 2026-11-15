@@ -807,12 +807,8 @@ a.next:hover { color: var(--accent); }
     <!-- ============ THE DATA ============ -->
     <section class="data" id="data">
       <h2>The data</h2>
-      <p class="small">Every table behind the page. Bubble sizes were audited on 12 November 2026 against AISafety.fund through its MCP server.</p>
+      <p class="small">Every table behind the page. Bubble sizes come from AISafety.fund; the organisation-by-organisation check is the <a href="experiments.html#fig-audit">data audit</a> on the Experiments page.</p>
       <div class="layers">
-        <details class="layer" id="fig-audit">
-          <summary><span class="layer-kind">Audit</span><span class="layer-what"><span class="layer-title">Third parties: money raised on record</span><span class="layer-inside">AISafety.fund’s itemised grants, this site’s grant records, and published investment</span></span><span class="layer-hook"><span><b id="h-audit"></b></span></span></summary>
-          <div class="layer-body"><p class="small">Each organisation was looked up by name. The two grant columns add up itemised grants, so each is a lower bound. A bubble uses the larger, or the figure an organisation reports itself, plus investment. “None found” means no grant row was found; the organisation may have other money.</p><div class="tbl audit" id="auditTbl"></div></div>
-        </details>
         <details class="layer" id="fig-labs">
           <summary><span class="layer-kind">Definition</span><span class="layer-what"><span class="layer-title">The frontier lab test</span><span class="layer-inside">Illinois SB 315: revenue over $500M with affiliates, or training compute over 10^26 operations</span></span></summary>
           <div class="layer-body"><div class="tbl three" id="labTbl"></div></div>
@@ -944,8 +940,8 @@ a.next:hover { color: var(--accent); }
 
 <script src="site.js?v=4"></script>
 <script src="explore.js?v=6"></script>
-<script src="field-data.js?v=6"></script>
-<script src="reports-data.js?v=5"></script>
+<script src="field-data.js?v=7"></script>
+<script src="reports-data.js?v=6"></script>
 <script>
 (function () {
   "use strict";
@@ -967,7 +963,7 @@ a.next:hover { color: var(--accent); }
   const ents = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
     const k = e.id.replace(/^f_/, "");
     const s = site[e.node] || site[e.id] || 0, f = R.fund[k];
-    const grants = Math.max(s, f || 0, R.reported[k] || 0), inv = (R.invest[k] || {}).usd || 0;
+    const grants = Math.max(f || 0, R.reported[k] || 0), inv = (R.invest[k] || {}).usd || 0;
     return { k, name: e.name, short: e.short, cats: e.cats, site: s, fund: f, grants, inv, usd: grants + inv, lab: labSet.has(k), aside: asideSet.has(k), L: labOf[k], groups: R.groups.filter(g => e.cats.includes(g)) };
   });
   const safeOf = en => en.L.safe || en.L.safePct * en.L.raised;
@@ -1582,11 +1578,7 @@ a.next:hover { color: var(--accent); }
   onBoard();
 
   /* ---------- the data ---------- */
-  const audit = third.filter(e => e.usd || e.cats.includes("empirical_research")).sort((a, b) => b.usd - a.usd);
-  $("#h-audit").textContent = audit.length;
-  $("#auditTbl").innerHTML = `<div class="tbl-row head"><span>Organisation</span><span class="c">AISafety.fund</span><span class="c">This site</span><span class="c">Investment</span><span>Note</span></div>` +
-    audit.map(e => `<div class="tbl-row"><span class="a">${esc(e.name)}</span><span class="c">${e.fund ? money(e.fund) : "none found"}</span><span class="c">${e.site ? money(e.site) : "none"}</span><span class="c">${e.inv ? money(e.inv) : ""}</span><span class="d">${esc([R.fundNote[e.k], (R.invest[e.k] || {}).what].filter(Boolean).join(" "))}</span></div>`).join("");
-  const byId = Object.fromEntries(ents.map(e => [e.k, e]));
+    const byId = Object.fromEntries(ents.map(e => [e.k, e]));
   $("#labTbl").innerHTML = `<div class="tbl-row head"><span>Entry on the map</span><span>Passes the test?</span><span>Why</span></div>` +
     R.labs.map(l => `<div class="tbl-row"><span>${esc((byId[l.id] || {}).name || l.id)}</span><span>${l.meets ? "Yes" : "Not shown to. Set aside for now"}</span><span>${esc(l.why)}. Drawn at ${money(l.val)}: ${esc(l.valNote)}.</span></div>`).join("");
   $("#groupTbl").innerHTML = `<div class="tbl-row head"><span>Group</span><span>Third parties in it</span><span>Largest by money raised on record</span></div>` +

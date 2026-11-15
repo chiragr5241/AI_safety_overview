@@ -637,7 +637,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
         </div>
       </div>
       <div class="web-panel" id="webPanel" aria-live="polite"></div>
-      <figcaption><span class="web-facts"><b id="nActors">123</b> actors, <b id="nTies">159</b> ties, <b id="nSources">157</b> sources, <b id="nExtTies">20</b> control-evidence ties and <b id="nExtPeople">14</b> people as dotted links; evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in: <b id="nFieldAll">373</b> entries from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> also on the industry map, <b id="nFieldFlows">239</b> grant arrows and <b id="nFieldCorp">22</b> company-announcement arrows.</span></figcaption>
+      <figcaption><span class="web-facts"><b id="nActors">123</b> actors, <b id="nTies">159</b> ties, <b id="nSources">157</b> sources, <b id="nExtTies">20</b> control-evidence ties and <b id="nExtPeople">14</b> people as dotted links; evidence to 4 Oct 2026.</span><span id="webFieldNote" hidden> Zoomed in: <b id="nFieldAll">373</b> entries from the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (5 Oct 2026, CC BY-SA); <b id="nFieldShared">32</b> also on the industry map, <b id="nFieldFlows">239</b> grant arrows from <a href="https://aisafety.fund/" rel="noopener">AISafety.fund</a> and <b id="nFieldCorp">22</b> company-announcement arrows.</span></figcaption>
     </figure>
 
     <div class="readrow">
@@ -1370,7 +1370,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
     <section class="chapter" id="field">
       <div class="chapter-head">
         <h2>The AI safety field, entry by entry</h2>
-        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (CC BY-SA). This section holds the same entries as a list, with the money that AI companies have announced and the grants that four public records show reaching each one.</p>
+        <p style="max-width:var(--measure)">Zoom the map at the top of this page and the AI safety field opens up inside the industry: <b id="nFieldEntries">373</b> organisations, programmes and resources, as listed on the <a href="https://aisafety.com/map" rel="noopener">AISafety.com field map</a> (CC BY-SA). This section holds the same entries as a list, with the money that AI companies have announced and the grants that <a href="https://aisafety.fund/" rel="noopener">AISafety.fund</a> itemises for each one.</p>
       </div>
 
       <div class="sub" id="field-company">
@@ -1389,23 +1389,23 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       </div>
 
       <div class="sub" id="field-records">
-        <h3>The four grant records behind the money arrows</h3>
+        <h3>The funders behind the money arrows</h3>
         <div class="prose">
-          <p>Each arrow added in the zoomed view is one funder's public record for one recipient. The record's rows that name the recipient are listed one by one and added up inside that record. Totals from different records are never added together: they cover different years, they count different things (a grant listed, a grant recommended to a donor, a grant paid out, money raised on a platform), and one funder's grant is sometimes passed on by another. The Effective Altruism Funds database is one record that holds two funds, so it takes two rows of the table and the map draws five funders from four records.</p>
+          <p>Every grant figure here is from <a href="https://aisafety.fund/" rel="noopener">AISafety.fund</a> (CC BY-NC-SA 4.0): its counted AI safety grants, pulled through its MCP server on <span id="fundPulled">15 November 2026</span> into a local copy of the database. AISafety.fund counts each dollar once, at the funder that chose the recipient. Each arrow in the zoomed view is one funder's grants to one entry, listed one by one. Coefficient Giving's programmes are taken together as one funder. Funders that are not bubbles on the map still appear in each entry's list below.</p>
         </div>
-        <div class="tbl-box" tabindex="0" role="region" aria-label="Grant records read for the zoomed map">
+        <div class="tbl-box" tabindex="0" role="region" aria-label="Funders in AISafety.fund, largest first">
           <table class="tbl">
-            <thead><tr><th>Record</th><th>What a row is</th><th>Rows read</th><th>Sum of all rows</th><th>Rows that reach a bubble</th><th>Sum of those rows</th></tr></thead>
+            <thead><tr><th>Funder</th><th>What a row is</th><th>Rows</th><th>Sum of all rows</th><th>Rows that reach an entry</th><th>Sum of those rows</th></tr></thead>
             <tbody class="needs-data" id="fieldRecords"></tbody>
           </table>
         </div>
-        <p class="small" style="max-width:var(--measure)">A row reaches a bubble when its recipient matches an organisation on the map by name, or by the web address the record links to. A grant to a university counts for a lab there only where the record names the lab. Grants to individuals are left out, because people are not bubbles on this map. A sum is given for one record at a time and no column is added down.</p>
-        <p class="small" style="max-width:var(--measure)"><strong>What is missing.</strong> Coefficient Giving's grants to organisations that work on several causes, Longview Philanthropy, the AI Safety Tactical Opportunities Fund, Founders Pledge, Schmidt Sciences, the Future of Life Institute, the Navigation Fund, government programmes and the AI companies' own grant schemes are on the map, but no row-by-row list from them was read for this version. Company revenue, government budgets and private gifts are in none of the four records. An entry with no grant below has no row in these records, which is not the same as no funding.</p>
+        <p class="small" style="max-width:var(--measure)">A row reaches an entry when its recipient matches an organisation on the map by name, short name or an earlier name ("X (via Jaan Tallinn)" counts for X). People AISafety.fund leaves unnamed are never attached to an organisation. The table shows the fifteen largest funders.</p>
+        <p class="small" style="max-width:var(--measure)"><strong>What is missing.</strong> Company revenue, government budgets, investment and private gifts that AISafety.fund does not itemise. An entry with no grant below has no row in AISafety.fund, which is not the same as no funding.</p>
       </div>
 
       <div class="sub" id="field-top">
-        <h3>The largest totals in each record</h3>
-        <p class="small" style="max-width:var(--measure)">For each record, the recipients on the map with the most money in that record alone. Use "Show on the map" on any entry further down to see its arrows.</p>
+        <h3>The largest totals from each funder</h3>
+        <p class="small" style="max-width:var(--measure)">For the six largest funders, the entries on the map with the most money from that funder. Use "Show on the map" on any entry further down to see its arrows.</p>
         <div class="labgrid needs-data" id="fieldTop"></div>
       </div>
 
@@ -1640,7 +1640,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 <script src="ecosystem-data.js?v=7"></script>
 <script src="control-data.js?v=2"></script>
 <script src="size-data.js?v=4"></script>
-<script src="field-data.js?v=6"></script>
+<script src="field-data.js?v=7"></script>
 <script src="site.js?v=4"></script>
 <script>
 (function () {
@@ -1923,8 +1923,8 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=16"></script>
-<script src="field-list.js?v=2"></script>
+<script src="ecosystem-graph.js?v=17"></script>
+<script src="field-list.js?v=3"></script>
 <script src="explore.js?v=6"></script>
 <script src="terms.js?v=2"></script>
 <script>

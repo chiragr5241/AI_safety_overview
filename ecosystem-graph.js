@@ -12,7 +12,7 @@
    The map has two zoom levels. The first is the whole industry. Zooming in opens up the AI safety field: every entry on the AISafety.com
    field map takes the plate in that map's own categories, the industry map's safety groups sit beside the field groups closest to them, the
    rest of the industry moves to a band underneath,
-   and arrows are added for the money that four public grant records show passing between the bubbles. From there the plate itself zooms and pans.
+   and arrows are added for the grants AISafety.fund itemises between the bubbles. From there the plate itself zooms and pans.
    Needs ecosystem-data.js (window.ECOSYSTEM), size-data.js (window.ECO_SIZE) and the helpers the page script exports as window.ECO_UI.
    field-data.js (window.FIELD) is optional: without it the map stays at the first level. */
 (function () {
@@ -235,10 +235,13 @@
   FIELD_TIES.forEach(t => { byId.get(t.from).deg1++; byId.get(t.to).deg1++; });
   const recOf = f => F.records[f.src];
   const yrs = f => f.first === f.last ? f.first : `${f.first} to ${f.last}`;
-  const UNIT = { cg: "listed", sff: "recommended", ltff: "paid out", eaif: "paid out" };
+  const UNIT = {};
   function flowLabel(f) {
-    return f.src === "manifund" ? `${f.n} project ${f.n === 1 ? "page" : "pages"} funded, ${yrs(f)}` : `${f.n} ${f.n === 1 ? "grant" : "grants"} ${UNIT[f.src] || "on record"}, ${yrs(f)}`;
+    return `${f.n} ${f.n === 1 ? "grant" : "grants"} itemised, ${yrs(f)}`;
   }
+  // every funder's grants to an entry, drawn or not: AISafety.fund counts each dollar once, so these add up
+  const ALLIN = new Map();
+  (F ? F.flows : []).forEach(f => { const a = ALLIN.get(f.to) || { v: 0, n: 0, k: 0 }; a.v += f.total; a.n += f.n; a.k++; ALLIN.set(f.to, a); });
   const GIN = new Map(), GOUT = new Map();
   FLOWS.forEach(f => { if (!GIN.has(f.to)) GIN.set(f.to, []); GIN.get(f.to).push(f); if (!GOUT.has(f.from)) GOUT.set(f.from, []); GOUT.get(f.from).push(f); });
   const pairs = new Map();
@@ -333,10 +336,11 @@
       about: "Counted from the source list attached to each actor in the base dataset. An actor with few sources is one this version documents lightly." },
     // the two measures below exist only when the map is zoomed into the AI safety field
     { id: "gin", field: true, pill: "Grants received", key: "size = grants received", unit: "", log: true,
-      keyText: "the largest total that any one funder's public record lists for the organisation; each step up in size is ten times more",
+      keyText: "the grants AISafety.fund itemises for the organisation, from every funder; each step up in size is ten times more",
       of: n => {
         // one candidate for each funder's record, each company announcement and, for a joint programme, its stated size; the largest is drawn
-        const c = (GIN.get(n.id) || []).filter(f => f.total > 0).map(f => ({ v: f.total, text: `USD ${big(f.total)} from ${byId.get(f.from).short}: ${flowLabel(f)}`, short: `${byId.get(f.from).short} USD ${big(f.total)}`, basis: recOf(f).title, url: recOf(f).url }))
+        const all = ALLIN.get(n.id);
+        const c = (all ? [{ v: all.v, text: `USD ${big(all.v)} in ${all.n} ${all.n === 1 ? "grant" : "grants"} from ${all.k} ${all.k === 1 ? "funder" : "funders"}`, short: `AISafety.fund USD ${big(all.v)}`, basis: "AISafety.fund (CC BY-NC-SA 4.0)", url: "https://aisafety.fund/" }] : [])
           .concat((CIN.get(n.id) || []).filter(t => t.amount && (t.corp.kind === "grant" || t.corp.kind === "commitment")).map(t => ({ v: t.amount, text: `USD ${big(t.amount)} from ${byId.get(t.from).short}: ${KIND[t.corp.kind].toLowerCase()}, ${U.fmtDate(t.date)}`, short: `${byId.get(t.from).short} USD ${big(t.amount)}`, basis: t.corp.src.title, url: t.corp.src.url })))
           .concat(n.entry && n.entry.stated ? [{ v: n.entry.stated.v, text: n.entry.stated.text, short: "", basis: n.entry.src.title, url: n.entry.src.url }] : [])
           .sort((a, b) => b.v - a.v);
@@ -346,7 +350,7 @@
           note: rest.length ? `Other sources list money for it: ${rest.map(x => x.short).join(", ")}. They are not added together` : "", url: c[0].url };
       },
       r: v => Math.max(4.5, 4.5 + 4.3 * (Math.log10(v) - 3)), ticks: [[1e4, "10k"], [1e6, "1m"], [1e8, "100m USD"]],
-      about: "For each organisation, the map takes one funder's record at a time and adds up the rows in that record that name the organisation, over all the years the record covers. The bubble shows the largest of those totals. A recipient is matched by its name or by the web address the record links to. A grant to a university counts for a lab there only where the record names the lab. Grants to individuals are left out, because people are not bubbles on this map." },
+      about: "For each organisation, the map adds up every counted grant AISafety.fund itemises for it, from every funder and over all years. AISafety.fund counts each dollar once, at the funder that chose the recipient. Where a company announcement is larger, the bubble shows that instead. A recipient is matched by its name, short name or an earlier name. A grant to a university counts for a lab there only where the row names the lab. People AISafety.fund leaves unnamed are never attached to an organisation." },
     { id: "gout", field: true, pill: "Grants given", key: "size = grants given", unit: "", log: true,
       keyText: "what a funder's own public record lists for organisations on this map; each step up in size is ten times more",
       of: n => {
@@ -1037,7 +1041,7 @@
           <p><span class="wp-lbl">Stake, as read by this map</span>${tidy(n.data.stake)}</p>
           ${fundLines(n.id)}
           ${level && e ? `<p class="wp-small"><span class="wp-lbl">On the AISafety.com map · ${tidy(listed)}</span>${tidy(e.desc)}</p>` : ""}`;
-      const none = level && !GIN.has(n.id) && !GOUT.has(n.id) && !CIN.has(n.id) && !COUT.has(n.id) ? " No grant to or from it appears in the four grant records or the company announcements read here, which is not the same as no funding." : "";
+      const none = level && !GIN.has(n.id) && !GOUT.has(n.id) && !CIN.has(n.id) && !COUT.has(n.id) ? " No grant to or from it appears in AISafety.fund or the company announcements read here, which is not the same as no funding." : "";
       panel.innerHTML = `<div class="wp-main">
           ${head}
           ${measure.id === "ties" ? "" : `<p class="wp-small"><span class="wp-lbl">Bubble size · ${esc(measure.pill)}</span>${valueLine(n)}</p>`}
@@ -1062,7 +1066,7 @@
       const got = new Set(FLOWS.map(f => f.to)), gives = new Set(FLOWS.map(f => f.from)), R = F.records;
       const cgN = FLOWS.filter(f => f.src === "cg").length, chained = FLOWS.filter(f => gives.has(f.to)).length;
       panel.innerHTML = `<div class="wp-notes">
-          <div><h2>Four public records, one dominant funder</h2><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
+          <div><h2>One grant database, one dominant funder</h2><button type="button" class="web-act" data-node="cg">Show Coefficient Giving's grants</button></div>
           <div><h2>Most bubbles show no grant</h2><button type="button" class="web-act" data-lens="grants">Show only the grants</button></div>
           <div><h2>Funders fund funders</h2><button type="button" class="web-act" data-group="f-funding">Show the funders</button></div>
           <div><h2>Corporate funding is small on the public record</h2><button type="button" class="web-act" data-lens="corp">Show corporate funding</button></div>
@@ -1672,7 +1676,7 @@
     const note = $("webFieldNote");
     if (note) note.hidden = !level;
     if (!svg.dataset.label0) svg.dataset.label0 = svg.getAttribute("aria-label") || "";
-    svg.setAttribute("aria-label", level ? `Network map zoomed into the AI safety field: ${all.length} bubbles. ${NFIELD} entries from the AISafety.com field map are grouped under its categories, with the companies' own grant programmes in a group of their own, and the groups of the industry map that it does not list sit in a band underneath. ${FLOWS.length} arrows from four public grant records and ${CORP_TIES.length} from company announcements join funders to recipients, wider for larger amounts, next to the ties of the industry map. The same information is in the lists and tables below.` : svg.dataset.label0);
+    svg.setAttribute("aria-label", level ? `Network map zoomed into the AI safety field: ${all.length} bubbles. ${NFIELD} entries from the AISafety.com field map are grouped under its categories, with the companies' own grant programmes in a group of their own, and the groups of the industry map that it does not list sit in a band underneath. ${FLOWS.length} arrows from AISafety.fund's itemised grants and ${CORP_TIES.length} from company announcements join funders to recipients, wider for larger amounts, next to the ties of the industry map. The same information is in the lists and tables below.` : svg.dataset.label0);
   }
   function setLevel(v, ms) {
     v = v && F ? 1 : 0;
