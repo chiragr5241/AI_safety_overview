@@ -114,6 +114,53 @@ window.REPORT = {
   /* The seven groups the chart sorts third parties into, in the order of the brief. */
   groups: ["training_and_education", "governance", "empirical_research", "funding", "conceptual_research", "advocacy", "strategy"],
 
+  /* Each third party sits in one group only. An entry the map tags with one of the seven sits there; these 42 carry two or more,
+     so each gets one home, chosen from its map description, and the reason shown at the foot of the page. Our call, not the map's. */
+  home: {
+    fli: ["advocacy", "Outreach and policy advocacy lead its own description; grantmaking and events come after."],
+    arcadia_impact: ["training_and_education", "Education and career pathways are its main work; the research arm is recent."],
+    resolution: ["empirical_research", "Pairs theory with automation to build alignment methods, so its work is tested on systems, not only argued."],
+    ae_studio: ["empirical_research", "A large technical team trying neglected alignment approaches; policy is a smaller part."],
+    alignment_forum: ["conceptual_research", "A discussion hub, mostly for models of agency and alignment; it runs no experiments or policy work."],
+    cais: ["empirical_research", "Safety research comes first in its description; field building and advocacy follow."],
+    miri: ["advocacy", "Now focused on policy and public outreach; its research is mostly past work."],
+    alter: ["conceptual_research", "Academic research on ways to safeguard the future, chiefly theoretical alignment."],
+    clr: ["conceptual_research", "Research on conflict and cooperation leads; grants and community building support it."],
+    iliad: ["conceptual_research", "Incubates technical research bets and runs a journal; training and conferences serve that research."],
+    princint: ["conceptual_research", "Builds scientific foundations through research; the PIBBSS Fellowship trains people for it."],
+    apollo: ["empirical_research", "Scheming research and pre-deployment evals are its core; governance support builds on them."],
+    casp: ["governance", "Its stated aim is knowledge for high-stakes decisions on frontier AI."],
+    controlai: ["advocacy", "Public outreach and helping people contact their representatives."],
+    saferai: ["empirical_research", "Builds quantitative risk models and rates company practices; standards work applies them."],
+    cesia: ["governance", "Public policy analysis and recommendations are the core of its description."],
+    convergence: ["strategy", "Its main output is reports on AI scenarios; awareness campaigns come second."],
+    cltr: ["governance", "Works to improve how governments decide on extreme risks."],
+    buddhism_ai_initiative: ["advocacy", "Brings communities together to shape AI; no policy or strategy research is described."],
+    aisf: ["training_and_education", "Educational work comes first; awareness campaigns second."],
+    janus: ["empirical_research", "Studies how language models behave by working with them; the Simulators framework came from that work."],
+    softmax: ["conceptual_research", "Developing a theory of organic alignment comes first in its description."],
+    formation_research: ["conceptual_research", "Researches the basic dynamics of lock-in; interventions follow from that."],
+    fair: ["empirical_research", "Runs theoretical and empirical safety research; the empirical side is the larger map tag."],
+    aag: ["conceptual_research", "Conceptual understanding leads its description, then techniques and policy."],
+    equilibria_network: ["conceptual_research", "Theory of where multi-agent systems break down and where to intervene."],
+    paradigm_3: ["empirical_research", "Research on the science of evals comes first; grantmaking second."],
+    cltc: ["governance", "Bridges academic research and policy needs on AI and cyber security."],
+    harmony: ["empirical_research", "Builds defensive cybersecurity products and runs evals; its government advice draws on them."],
+    encode: ["advocacy", "Campaigns for legislation: it sponsored SB 53 and backed the RAISE Act."],
+    iaiga: ["advocacy", "Campaigns for a new independent global AI body."],
+    averi: ["governance", "Works for a world where frontier labs are audited by third parties: a policy goal."],
+    beijing_aisi: ["governance", "Its output is safety and governance frameworks."],
+    eip: ["strategy", "Advises on how institutions decide across many global risks, not on AI policy itself."],
+    iaps: ["governance", "Policy and standards, compute governance and international governance."],
+    iaseai: ["governance", "Convenes experts to shape AI safety policy."],
+    vista_institute: ["governance", "Aims at informed policymaking; skill building serves it."],
+    safl: ["governance", "Governance research and government engagement lead; talent work supports them."],
+    aigsi: ["advocacy", "Outreach and educational materials to change how institutions respond to AI risk."],
+    odyssean_institute: ["strategy", "Horizon scanning and decisions under deep uncertainty."],
+    intelligence_rising: ["training_and_education", "An educational roleplay game for decision makers."],
+    ilina: ["training_and_education", "Developing African talent leads its description; research and policy follow."]
+  },
+
   /* The four organisations the report follows, one for each of four claimed gaps. */
   picks: ["metr", "apollo", "goodfire", "redwood_research"]
 };

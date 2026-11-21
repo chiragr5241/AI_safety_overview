@@ -379,6 +379,16 @@ a.next:hover { color: var(--accent); }
   .tbl.three .tbl-row, .tbl.five .tbl-row { grid-template-columns: minmax(0, 1fr); }
 }
 .notin { margin: 0; padding-left: 1.2em; display: grid; gap: .35em; max-width: var(--measure); }
+.kinds { padding: 56px 0 24px; display: grid; gap: 18px; border-top: 1px solid var(--line); }
+.kinds > p { max-width: var(--measure); }
+.kinds-list { display: grid; gap: 30px; }
+.kinds-list h3 { margin: 0 0 6px; font-size: 1.1rem; display: flex; gap: 10px; align-items: baseline; }
+.kinds-list h3 b { font-family: var(--font-mono); font-size: .84rem; font-weight: 400; color: var(--muted); }
+.kinds-list ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.kinds-list li { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 2px 18px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .9rem; line-height: 1.45; }
+.kinds-list li > b { font-family: var(--font-display); font-weight: 500; }
+.kinds-list li em { font-style: normal; color: var(--muted); }
+@media (max-width: 620px) { .kinds-list li { grid-template-columns: minmax(0, 1fr); } }
 .srcs { margin: 0; padding-left: 1.2em; display: grid; gap: .3em; font-size: .92rem; }
 </style>
 </head>
@@ -455,7 +465,7 @@ a.next:hover { color: var(--accent); }
         <article class="step" data-i="4">
           <h2>What kinds of third party are there?</h2>
           <div class="big"><b id="nThird"></b><span>third parties once the labs are out</span></div>
-          <p class="small">One organisation can sit in several groups, so it is drawn once in each.</p>
+          <p class="small">Each sits in one group only. <a href="#kinds">Why each one is where it is</a>.</p>
         </article>
 
         <article class="step" data-i="5">
@@ -921,6 +931,13 @@ a.next:hover { color: var(--accent); }
         </details>
       </div>
     </section>
+
+    <!-- ============ WHY EACH THIRD PARTY IS IN ITS GROUP ============ -->
+    <section class="kinds" id="kinds" aria-labelledby="kindsHead">
+      <h2 id="kindsHead">Why each third party is in its group</h2>
+      <p class="small">One line each. Where AISafety.com’s map gives an organisation one of the seven groups, the line is the map’s own description. Where it gives two or more, we chose one and say why. <a href="#field">Back to the groups</a>.</p>
+      <div class="kinds-list" id="kindsList"></div>
+    </section>
   </div>
 </main>
 
@@ -941,7 +958,7 @@ a.next:hover { color: var(--accent); }
 <script src="site.js?v=4"></script>
 <script src="explore.js?v=6"></script>
 <script src="field-data.js?v=7"></script>
-<script src="reports-data.js?v=7"></script>
+<script src="reports-data.js?v=8"></script>
 <script>
 (function () {
   "use strict";
@@ -960,15 +977,21 @@ a.next:hover { color: var(--accent); }
   const labSet = new Set(R.labs.filter(l => l.meets).map(l => l.id));
   const asideSet = new Set(R.labs.filter(l => l.aside).map(l => l.id));
   const labOf = Object.fromEntries(R.labs.map(l => [l.id, l]));
+  /* one group per entry: its only one of the seven, or the home set for it in reports-data.js */
+  const homeOf = (k, cats) => {
+    const gs = R.groups.filter(g => cats.includes(g));
+    if (gs.length > 1 && !R.home[k]) console.warn("No home group for " + k);
+    return R.home[k] ? [R.home[k][0]] : gs.slice(0, 1);
+  };
   const ents = F.entries.filter(e => !e.own && !e.cats.includes("gone")).map(e => {
     const k = e.id.replace(/^f_/, "");
     const s = site[e.node] || site[e.id] || 0, f = R.fund[k];
     const grants = Math.max(f || 0, R.reported[k] || 0), inv = (R.invest[k] || {}).usd || 0;
-    return { k, name: e.name, short: e.short, cats: e.cats, site: s, fund: f, grants, inv, usd: grants + inv, lab: labSet.has(k), aside: asideSet.has(k), L: labOf[k], groups: R.groups.filter(g => e.cats.includes(g)) };
+    return { k, name: e.name, short: e.short, cats: e.cats, site: s, fund: f, grants, inv, usd: grants + inv, lab: labSet.has(k), aside: asideSet.has(k), L: labOf[k], groups: homeOf(k, e.cats) };
   });
   const safeOf = en => en.L.safe || en.L.safePct * en.L.raised;
   const third = ents.filter(e => !e.lab && !e.aside);
-  const tech = third.filter(e => e.cats.includes("empirical_research")).sort((a, b) => b.usd - a.usd);
+  const tech = third.filter(e => e.groups[0] === "empirical_research").sort((a, b) => b.usd - a.usd);
   const sorted = new Set(R.promises.flatMap(p => p.orgs));
 
   $("#nAll").textContent = ents.length;
@@ -976,7 +999,8 @@ a.next:hover { color: var(--accent); }
   $("#nLabs").textContent = labSet.size;
   $("#nThird").textContent = third.length;
   $("#nTech").textContent = $("#nTech2").textContent = tech.length;
-  $("#nGaps").textContent = R.promises.length;
+  const techK = new Set(tech.map(e => e.k));
+  $("#nGaps").textContent = R.promises.filter(p => p.orgs.some(k => techK.has(k))).length;
   $("#nUnsorted").textContent = tech.filter(e => !sorted.has(e.k)).length;
 
   /* One bubble for each group an entry sits in. The first is the one shown before the groups split. */
@@ -1212,7 +1236,7 @@ a.next:hover { color: var(--accent); }
 
     /* 6: the same group, grouped by the gap each says it fills */
     const byK = new Map(tn.map(n => [n.en.k, n]));
-    const pg = R.promises.map(p => ({ label: p.label, count: 0, items: p.orgs.map(k => byK.get(k)).filter(Boolean).map(n => ({ n, r: n.base })) }));
+    const pg = R.promises.map(p => ({ label: p.label, count: 0, items: p.orgs.map(k => byK.get(k)).filter(Boolean).map(n => ({ n, r: n.base })) })).filter(g => g.items.length);
     const loose = tn.filter(n => !sorted.has(n.en.k));
     if (loose.length) pg.push({ label: "Not sorted yet", count: loose.length, items: loose.map(n => ({ n, r: n.base })) });
     pg.forEach(g => g.items.sort((a, b) => b.r - a.r));
@@ -1586,6 +1610,21 @@ a.next:hover { color: var(--accent); }
       const inG = third.filter(e => e.groups.includes(g)).sort((a, b) => b.usd - a.usd);
       return `<div class="tbl-row"><span>${esc(catLabel[g])}</span><span>${inG.length}</span><span>${inG.slice(0, 3).map(e => esc(e.short) + " " + money(e.usd)).join("; ")}</span></div>`;
     }).join("");
+
+  /* one line for each third party: why it sits in its group */
+  const descOf = Object.fromEntries(F.entries.map(e => [e.id.replace(/^f_/, ""), e]));
+  const groupsShown = R.groups.concat(["other"]);
+  $("#kindsList").innerHTML = groupsShown.map(g => {
+    const inG = third.filter(e => (e.groups[0] || "other") === g).sort((a, b) => a.name.localeCompare(b.name));
+    const lines = inG.map(e => {
+      const why = R.home[e.k], also = R.groups.filter(c => c !== g && e.cats.includes(c)).map(c => catLabel[c]);
+      const txt = why ? esc(why[1]) + ` <em>Also tagged ${esc(also.join(", "))}.</em>`
+        : g === "other" ? esc(descOf[e.k].desc) + ` <em>Map tags: ${esc(e.cats.map(c => catLabel[c] || c).join(", "))}.</em>`
+        : esc(descOf[e.k].desc);
+      return `<li><b>${esc(e.name)}</b><span>${txt}</span></li>`;
+    }).join("");
+    return `<div><h3>${g === "other" ? "Other, none of the seven" : esc(catLabel[g])}<b>${inG.length}</b></h3><ul>${lines}</ul></div>`;
+  }).join("");
 })();
 </script>
 <i id="page-end" hidden></i>
