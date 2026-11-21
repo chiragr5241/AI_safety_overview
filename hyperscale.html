@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyperscale atlas · AI Safety Overview</title>
+<meta name="description" content="Where the AI data center build-out is happening, who is named at each site, the contracts behind it and the capital in the largest AI campuses.">
+<meta name="color-scheme" content="light dark">
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+document.documentElement.classList.add("pre"); setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);</script>
+<script type="speculationrules">{"prerender":[{"where":{"selector_matches":"a[href$='.html'], a[href*='.html#']"},"eagerness":"moderate"}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=10">
+<style>
+/* Hyperscale atlas. The map runs the width of the page; everything under it sits in a margined reading column.
+   Data comes from hyperscale-data.js, built by hyperscale_build.py from the standalone atlas. */
+:root {
+  --read: 1320px;
+  --frame: #E4EAE6; --sphere: #D6E4E2; --land: #FBFCF8; --land-line: #BFCBC5; --grat: rgb(22 32 42 / .07);
+  --s-op: #1D6B67; --s-bd: #B8740A; --s-pl: #5846B4; --s-cx: #8A959C;
+  --halo: rgb(251 252 248 / .9); --glass: rgb(255 255 255 / .86); --label-ink: #16202A;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --frame: #0A1013; --sphere: #101B21; --land: #1C272E; --land-line: #33424B; --grat: rgb(230 236 233 / .06);
+  --s-op: #5BBDB4; --s-bd: #E5A93B; --s-pl: #9C8FF0; --s-cx: #6E7F8A;
+  --halo: rgb(15 21 25 / .9); --glass: rgb(23 32 39 / .86); --label-ink: #E6ECE9; } }
+:root[data-theme="dark"] {
+  --frame: #0A1013; --sphere: #101B21; --land: #1C272E; --land-line: #33424B; --grat: rgb(230 236 233 / .06);
+  --s-op: #5BBDB4; --s-bd: #E5A93B; --s-pl: #9C8FF0; --s-cx: #6E7F8A;
+  --halo: rgb(15 21 25 / .9); --glass: rgb(23 32 39 / .86); --label-ink: #E6ECE9; }
+
+.read { max-width: calc(var(--read) + 2 * var(--gutter)); margin: 0 auto; padding-inline: var(--gutter); }
+h1, h2, h3 { font-family: var(--font-title); font-weight: 600; letter-spacing: -0.01em; margin: 0; line-height: 1.1; }
+p { margin: 0; }
+.lede { font-size: 1.08rem; color: var(--muted); max-width: 60ch; }
+
+/* ---------- opening ---------- */
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 48px; align-items: end; padding: clamp(28px, 5vh, 56px) 0 22px; }
+.intro h1 { font-size: clamp(2.4rem, 6vw, 4.6rem); letter-spacing: -0.025em; }
+.intro .lede { margin-top: 14px; }
+.figs { display: flex; gap: clamp(18px, 3vw, 40px); }
+.fig { display: grid; gap: 2px; }
+.fig b { font-family: var(--font-title); font-weight: 500; font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.fig span { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); }
+@media (max-width: 860px) { .intro { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- the map ---------- */
+.atlas { position: relative; margin-inline: var(--gutter); height: clamp(540px, calc(100svh - 120px), 860px); border-radius: 20px; overflow: hidden; background: var(--frame); border: 1px solid var(--line); isolation: isolate; }
+.atlas > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.atlas > svg.drag { cursor: grabbing; }
+.atlas > svg.hot { cursor: pointer; }
+.sphere { fill: var(--sphere); }
+.grat { fill: none; stroke: var(--grat); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.land { fill: var(--land); stroke: var(--land-line); stroke-width: .7; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.dot { stroke: var(--halo); stroke-width: 1.2; vector-effect: non-scaling-stroke; fill-opacity: .88; transition: opacity .25s; }
+.dot.op { fill: var(--s-op); } .dot.bd { fill: var(--s-bd); } .dot.pl { fill: var(--s-pl); } .dot.cx { fill: var(--s-cx); }
+.dots.dim .dot:not(.on) { opacity: .18; }
+.dim-labels { opacity: .3; transition: opacity .25s; }
+.parties { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.parties span { font-family: var(--font-label); font-size: .78rem; color: var(--muted); }
+.pick { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; pointer-events: none; }
+.pulse { fill: none; stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; pointer-events: none; transform-box: fill-box; transform-origin: center; animation: pulse 1.8s cubic-bezier(.2, .7, .2, 1) infinite; }
+@keyframes pulse { from { transform: scale(1); opacity: .7; } to { transform: scale(2.6); opacity: 0; } }
+.lbl { font-family: var(--font-label); font-weight: 600; fill: var(--label-ink); paint-order: stroke; stroke: var(--halo); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+
+/* overlays on the map */
+.panel { position: absolute; z-index: 2; background: var(--glass); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 30px -14px var(--shade-deep); }
+.controls { top: 16px; left: 16px; width: 19rem; padding: 14px; display: grid; gap: 12px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; background: var(--surface-2); border-radius: 10px; }
+.seg button { font-family: var(--font-label); font-size: .82rem; font-weight: 600; line-height: 1.2; min-height: 38px; padding: 4px 8px; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; transition: background-color .15s, color .15s; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px var(--shade); }
+.field-in { width: 100%; font: 500 .92rem var(--font-display); color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 10px; min-height: 40px; padding: 0 12px; }
+.field-in:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.keys { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.key { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; min-height: 34px; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: var(--ink); font: 500 .9rem var(--font-display); text-align: left; cursor: pointer; transition: background-color .15s, opacity .15s; }
+.key:hover { background: var(--surface-2); }
+.key i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--sw); background: var(--sw); }
+.key[aria-pressed="false"] { opacity: .5; }
+.key[aria-pressed="false"] i { background: none; }
+.key b { font-family: var(--font-mono); font-weight: 400; font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.size-key { display: flex; align-items: center; gap: 8px; font-family: var(--font-label); font-size: .78rem; color: var(--muted); padding: 0 8px; }
+.size-key svg { flex: none; }
+.size-key circle { fill: none; stroke: var(--muted); }
+.count { font-variant-numeric: tabular-nums; font-family: var(--font-label); font-size: .82rem; color: var(--muted); padding: 0 8px; }
+
+.zoom { left: 16px; bottom: 16px; display: grid; padding: 4px; gap: 2px; }
+.zoom button, .regions button { border: 0; background: none; color: var(--ink); cursor: pointer; border-radius: 9px; transition: background-color .15s; }
+.zoom button { width: 38px; height: 38px; display: grid; place-items: center; }
+.zoom button:hover, .regions button:hover { background: var(--surface-2); }
+.zoom svg { width: 18px; height: 18px; }
+.regions { left: 50%; translate: -50% 0; bottom: 16px; display: flex; gap: 2px; padding: 4px; max-width: calc(100% - 120px); overflow-x: auto; scrollbar-width: none; }
+.regions button { font: 600 .84rem var(--font-label); padding: 0 12px; min-height: 36px; white-space: nowrap; }
+.regions button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+.detail { top: 16px; right: 16px; bottom: 72px; width: min(25rem, calc(100% - 32px)); display: flex; flex-direction: column; overflow: hidden; transition: opacity .25s, translate .3s cubic-bezier(.16, 1, .3, 1); }
+.detail[hidden] { display: flex !important; opacity: 0; translate: 24px 0; pointer-events: none; visibility: hidden; }
+.detail-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 16px 16px 12px; border-bottom: 1px solid var(--line); }
+.detail-head h2 { font-size: 1.25rem; line-height: 1.2; }
+.detail-head p { font-family: var(--font-label); font-size: .84rem; color: var(--muted); margin-top: 6px; }
+.x { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line-strong); background: none; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
+.x svg { width: 16px; height: 16px; }
+.detail-body { overflow-y: auto; padding: 4px 16px 16px; display: grid; gap: 4px; align-content: start; font-size: .92rem; overscroll-behavior: contain; }
+.rec { padding: 12px 0; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.rec:last-child { border-bottom: 0; }
+.rec h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: .95rem; line-height: 1.3; }
+.st { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: .8rem; color: var(--muted); }
+.st i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); }
+.kv { display: grid; gap: 2px; }
+.kv span { font-family: var(--font-label); font-size: .78rem; color: var(--muted); }
+.money { font-family: var(--font-mono); font-size: .86rem; }
+.rec details summary { font-family: var(--font-label); font-size: .84rem; color: var(--accent); cursor: pointer; min-height: 30px; display: flex; align-items: center; }
+.rec details p, .rec details li { font-size: .86rem; line-height: 1.45; margin-top: 6px; overflow-wrap: anywhere; }
+.rec details ul { margin: 0; padding-left: 1.1em; }
+
+#tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.3; padding: 8px 11px; border-radius: 9px; max-width: 20rem; }
+#tip b { font-weight: 700; display: block; }
+#tip span { opacity: .75; }
+
+@media (max-width: 1100px) {
+  .atlas { height: auto; display: flex; flex-direction: column; margin-inline: 12px; }
+  .atlas > svg { position: relative; inset: auto; height: auto; aspect-ratio: 1.5; order: 2; }
+  .controls { position: relative; inset: auto; width: auto; order: 1; margin: 10px 10px 0; box-shadow: none; gap: 10px; }
+  .keys { grid-template-columns: 1fr 1fr; }
+  .key { gap: 6px; font-size: .84rem; padding: 0 6px; }
+  .regions { position: relative; order: 3; left: auto; bottom: auto; translate: none; max-width: none; margin: 0 10px 10px; box-shadow: none; }
+  .zoom { position: absolute; left: auto; right: 10px; bottom: auto; top: calc(var(--ctl-h, 0px) + 10px); }
+  .detail { position: relative; inset: auto; width: auto; order: 4; margin: 0 10px 10px; max-height: 70svh; box-shadow: none; }
+  .detail[hidden] { display: none !important; }
+}
+
+/* ---------- reading sections ---------- */
+.sec { padding-top: clamp(56px, 9vh, 96px); display: grid; gap: 18px; }
+.sec h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
+.sec > p { max-width: var(--measure); }
+.note { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); max-width: 70ch; line-height: 1.5; }
+
+.fold { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 18px; font-family: var(--font-display); font-weight: 600; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::after { content: ""; width: 14px; height: 14px; flex: none; background: linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat, linear-gradient(var(--ink), var(--ink)) center / 2px 100% no-repeat; transition: transform .2s cubic-bezier(.16, 1, .3, 1); }
+.fold[open] > summary::after { transform: rotate(45deg); }
+.fold > summary small { font-family: var(--font-label); font-weight: 500; font-size: .82rem; color: var(--muted); margin-left: 8px; }
+.fold-body { padding: 0 18px 18px; display: grid; gap: 12px; }
+
+.pane { max-height: 32rem; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { font-variant-numeric: tabular-nums; border-collapse: collapse; width: 100%; font-size: .9rem; line-height: 1.45; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { position: sticky; top: 0; z-index: 1; background: var(--surface-2); font-family: var(--font-label); font-weight: 600; font-size: .82rem; white-space: nowrap; }
+th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; min-height: 28px; }
+th button::after { content: "↕"; opacity: .35; font-size: .8em; }
+th button[data-dir="asc"]::after { content: "↑"; opacity: 1; }
+th button[data-dir="desc"]::after { content: "↓"; opacity: 1; }
+td.n { font-family: var(--font-mono); font-size: .84rem; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+th.n { text-align: right; }
+td button.go-site { font: inherit; text-align: left; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.cf { font-family: var(--font-label); font-size: .72rem; padding: 1px 6px; border-radius: 5px; margin-left: 4px; white-space: nowrap; background: var(--surface-2); color: var(--muted); }
+.cf.confident { background: var(--accent-soft); color: var(--accent); }
+.cf.likely { background: var(--mis-soft); color: var(--mis-ink); }
+.cf.speculative { background: var(--con-soft); color: var(--con-ink); }
+
+/* contracts as cards */
+.deals { display: grid; grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr)); gap: 12px; }
+.deal { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.deal h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; line-height: 1.25; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.deal .meta { font-family: var(--font-label); font-size: .8rem; color: var(--muted); }
+.deal p { font-size: .92rem; line-height: 1.45; }
+.deal a { font-family: var(--font-label); font-size: .84rem; }
+
+/* bars */
+.bars { display: grid; gap: 10px; max-width: 56rem; }
+.bar-row { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) 4.5rem; gap: 14px; align-items: center; }
+.bar-row > span:first-child { font-family: var(--font-display); font-weight: 600; font-size: .92rem; }
+.bar-track { height: 22px; border-radius: 6px; background: var(--surface-2); overflow: hidden; display: flex; }
+.bar-track i { display: block; height: 100%; background: var(--accent); }
+.bar-track i + i { box-shadow: inset 1.5px 0 0 var(--bg); }
+.bar-row > b { font-family: var(--font-mono); font-weight: 500; font-size: .86rem; text-align: right; font-variant-numeric: tabular-nums; }
+.bar-sub { grid-column: 2 / -1; font-family: var(--font-label); font-size: .78rem; color: var(--muted); margin-top: -6px; line-height: 1.4; }
+@media (max-width: 620px) { .bar-row { grid-template-columns: 6.5rem minmax(0, 1fr) 3.8rem; gap: 10px; } }
+
+.chain { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; counter-reset: c; max-width: 72rem; }
+.chain div { padding: 14px 16px 14px 0; border-top: 2px solid var(--line-strong); display: grid; gap: 4px; align-content: start; }
+.chain b { font-family: var(--font-display); font-size: .96rem; }
+.chain span { font-size: .88rem; color: var(--muted); line-height: 1.4; }
+@media (max-width: 900px) { .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; } }
+
+.report { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px 24px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; max-width: 52rem; }
+.report svg { width: 44px; height: 54px; color: var(--accent); }
+.report p + p { margin-top: 8px; }
+.srcs { margin: 0; padding-left: 1.2em; display: grid; gap: .5em; max-width: 78ch; font-size: .94rem; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <button class="toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="chapters"><span id="tocName">Contents</span></button>
+    <nav class="chapters" id="chapters" aria-label="Sections of this page">
+      <a href="#map">Map</a>
+      <a href="#deals">Contracts</a>
+      <a href="#campuses">AI campuses</a>
+      <a href="#capital">Capital</a>
+      <a href="#spend">Spending</a>
+      <a href="#gpu">Supply chain</a>
+      <a href="#nvidia">NVIDIA</a>
+      <a href="#sources">Sources</a>
+    </nav>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Hyperscale atlas</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
+        <a href="index.html">Goals</a>
+        <a href="terms.html"><span class="n">1</span>Terms</a>
+        <a href="multi-agent-risks.html"><span class="n">2</span>Multi-agent risks</a>
+        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <a href="experiments.html">Experiments</a>
+        <a href="reports.html">Reports</a>
+        <a href="timelines.html">Timelines</a>
+        <a href="hyperscale.html" aria-current="page">Hyperscale atlas</a>
+      </nav>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="read">
+    <section class="intro" id="map">
+      <div>
+        <h1>Hyperscale data centers</h1>
+        <p class="lede">Where the AI build-out is happening, who is named at each site, and what the contracts and capital behind it say.</p>
+      </div>
+      <div class="figs" aria-label="The atlas in figures">
+        <div class="fig"><b id="figRec">1,358</b><span>project records</span></div>
+        <div class="fig"><b id="figSite">1,249</b><span>physical sites</span></div>
+        <div class="fig"><b id="figCountry">92</b><span>countries</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="atlas" id="atlas">
+    <svg id="mapSvg" role="img" aria-label="World map of data center projects. Each dot is a site, coloured by status and sized by its largest reported investment. The same records are listed under the map.">
+      <defs><clipPath id="sphereClip"><path id="sphereClipPath"/></clipPath></defs>
+      <g id="world">
+        <path class="sphere" id="sphere"/>
+        <path class="grat" id="grat"/>
+        <path class="land" id="land"/>
+        <g class="dots" id="dots"></g>
+        <g id="sel"></g>
+      </g>
+      <g id="labels"></g>
+    </svg>
+
+    <div class="panel controls" id="controls">
+      <div class="seg" role="group" aria-label="Which projects">
+        <button type="button" data-scope="n" aria-pressed="true" title="Projects naming a major operator, compute provider or model developer">Named AI or cloud</button>
+        <button type="button" data-scope="a" aria-pressed="false">All projects</button>
+      </div>
+      <input class="field-in" id="query" type="search" placeholder="Search a company or place" aria-label="Search a company or place" autocomplete="off">
+      <select class="field-in" id="country" aria-label="Country"><option value="">All countries</option></select>
+      <ul class="keys" id="keys"></ul>
+      <div class="size-key"><svg width="44" height="22" viewBox="0 0 44 22" aria-hidden="true"><circle cx="5" cy="17" r="3"/><circle cx="16" cy="14" r="6"/><circle cx="33" cy="11" r="10"/></svg><span>Size: largest reported investment in US dollars</span></div>
+      <p class="count" id="count" aria-live="polite"></p>
+    </div>
+
+    <div class="panel regions" id="regions" role="group" aria-label="Zoom to a region"></div>
+
+    <div class="panel zoom" role="group" aria-label="Zoom">
+      <button type="button" id="zin" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button type="button" id="zout" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+    </div>
+
+    <aside class="panel detail" id="detail" hidden aria-live="polite">
+      <div class="detail-head">
+        <div><h2 id="dTitle"></h2><p id="dSub"></p></div>
+        <button class="x" type="button" id="dClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="detail-body" id="dBody"></div>
+    </aside>
+  </div>
+
+  <div class="read">
+    <section class="sec" style="padding-top: 18px">
+      <details class="fold" id="listFold">
+        <summary><span>The records on the map<small id="listCount"></small></span></summary>
+        <div class="fold-body">
+          <p class="note">The named filter is a text match on the title and recorded roles, so it can miss subsidiaries and unnamed tenants. Projects and phases can share a campus.</p>
+          <div class="pane"><table><thead><tr><th>Project or phase</th><th>Country</th><th>Last observed status</th><th>As of</th></tr></thead><tbody id="list"></tbody></table></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="sec" id="deals">
+      <h2>Contracts</h2>
+      <p>22 major disclosures: service payments, equipment purchases, power contracts, financing and deployment targets. Portfolio deals name no site.</p>
+      <div class="deals" id="dealCards"></div>
+      <details class="fold">
+        <summary><span>Project contract and financing documents<small id="docCount"></small></span></summary>
+        <div class="fold-body">
+          <p class="note">Atlas source titles that mention contracts, leases, joint ventures, offtake, partnerships or financing. These are leads, including proposals and amendments; one document can support several projects.</p>
+          <input class="field-in" id="docq" type="search" placeholder="Filter by company or place" aria-label="Filter documents" style="max-width: 24rem">
+          <div class="pane"><table><thead><tr><th>Project</th><th>Country</th><th>Source document</th><th>Published</th></tr></thead><tbody id="docs"></tbody></table></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="sec" id="campuses">
+      <h2>The largest AI campuses</h2>
+      <p>Epoch AI’s 96 campuses, by current IT power. Owner means who owns the chips. Power and chip types include estimates.</p>
+      <input class="field-in" id="campq" type="search" placeholder="Filter by campus, owner or user" aria-label="Filter campuses" style="max-width: 24rem">
+      <div class="pane"><table id="campTbl"><thead><tr>
+        <th><button type="button" data-k="0">Campus</button></th><th><button type="button" data-k="1">Country</button></th><th><button type="button" data-k="2">Chip owner</button></th><th>Compute users</th><th>Chips</th><th class="n"><button type="button" data-k="5" data-dir="desc">IT MW</button></th><th>Builder or energy company</th><th>Evidence</th>
+      </tr></thead><tbody id="camps"></tbody></table></div>
+      <p class="note">Confidence labels are Epoch’s, one per affiliation. Blank means no data.</p>
+    </section>
+
+    <section class="sec" id="capital">
+      <h2>Capital by country</h2>
+      <p>Modeled installed capital in the 96 campuses, in billions of constant 2025 dollars. Epoch derives it from IT power, so it is cumulative and US-heavy. The owner owns the chips; that does not show who financed the campus.</p>
+      <div class="bars" id="capBars"></div>
+    </section>
+
+    <section class="sec" id="spend">
+      <h2>Who is spending in 2026</h2>
+      <p>Danske Bank’s 20 November tracker, estimated 2026 capital spending. These are company-wide figures; the SpaceX figure includes its other businesses. The bank’s total is $917B.</p>
+      <div class="bars" id="spendBars"></div>
+      <p class="note"><a href="https://research.danskebank.com/link/AIinvestmenttrackerNovember2026201126/%24file/AI%20investment%20tracker%20November%202026_201126.pdf">Danske Bank, AI investment tracker, November 2026</a></p>
+    </section>
+
+    <section class="sec" id="gpu">
+      <h2>Where the GPU fits</h2>
+      <div class="chain">
+        <div><b>Model developer</b><span>buys compute time</span></div>
+        <div><b>Cloud operator</b><span>buys or leases servers</span></div>
+        <div><b>System builder</b><span>such as Dell; integrates boards, CPUs, memory and networking</span></div>
+        <div><b>Chip designer</b><span>NVIDIA or AMD designs the GPU</span></div>
+        <div><b>Foundry and memory</b><span>fabricate silicon, supply HBM, package the two</span></div>
+        <div><b>Developer and utility</b><span>deliver the building, power and cooling</span></div>
+      </div>
+      <p>In Childress, Texas, Microsoft agreed to pay IREN about $9.7B for compute, and IREN agreed to buy about $5.8B of equipment from Dell; NVIDIA designed the GB300 GPUs. The contracts are successive stages of one deployment, and both are in the contracts above.</p>
+    </section>
+
+    <section class="sec" id="nvidia">
+      <h2>NVIDIA financial due diligence</h2>
+      <div class="report">
+        <svg viewBox="0 0 44 54" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 2h26l10 10v40H4z"/><path d="M30 2v10h10M11 26h22M11 33h22M11 40h14"/></svg>
+        <div>
+          <p>Twelve quarters, FY2024 Q4 to FY2027 Q3: cash flows, receivables, investments, debt and guarantees, and how customer financing relates to the sale of computing infrastructure.</p>
+          <p><a href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>Download the report</a> <span class="note">PDF, 21 pages, 21 November 2026</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="sources">
+      <h2>Sources</h2>
+      <ul class="srcs">
+        <li>Kian Kyars, <a href="https://kiankyars.github.io/datacenter-atlas/versions/">Data Center Atlas</a>, 11 November 2026 snapshot. All 1,358 project records and their locators. Some locators are administrative areas; affiliations can be historical, proposed or uncertain; status dates vary.</li>
+        <li><a href="https://epoch.ai/data/ai-data-centers">Epoch AI, AI data centers</a>, 18 November 2026. Independent of the atlas and can overlap with it, so the two counts must not be added.</li>
+        <li>Both datasets adapted under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; third-party evidence keeps its own terms. Some locators use © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>; see the <a href="https://github.com/kiankyars/datacenter-atlas/blob/main/DATA_LICENSE.md">atlas data licence</a>. Basemap from Natural Earth, public domain, in the Equal Earth projection.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="res">
+      <a href="ecosystem.html">Ecosystem</a>
+      <a href="reports.html">Reports</a>
+      <a href="index.html">All goals of this site</a>
+    </div>
+  </div>
+</footer>
+
+<div id="tip" hidden></div>
+
+<script src="site.js?v=4"></script>
+<script src="hyperscale-data.js"></script>
+<script>
+(() => {
+  const D = window.HS, P = D.P, MAP = D.map;
+  const $ = s => document.querySelector(s);
+  const esc = x => String(x ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const link = (u, t) => /^https?:\/\//.test(u) ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t);
+  const nf = new Intl.NumberFormat("en");
+  const words = s => String(s).replaceAll("_", " ");
+  const SVGNS = "http://www.w3.org/2000/svg";
+
+  /* ---------- status groups ---------- */
+  const GROUP = { operational: "op", completed: "op", partially_operational: "op", commissioning: "op",
+    under_construction: "bd", site_preparation: "bd", shell: "bd", mep_electrical: "bd", foundations: "bd", civil_works: "bd", clearing: "bd", expansion: "bd",
+    announced: "pl", permitted: "pl", proposed: "pl", cancelled: "cx" };
+  const GROUPS = [["op", "Operating", "--s-op"], ["bd", "Under construction", "--s-bd"], ["pl", "Announced or permitted", "--s-pl"], ["cx", "Cancelled", "--s-cx"]];
+  const RANK = { op: 0, bd: 1, pl: 2, cx: 3 };
+  const grp = s => GROUP[s] || "pl";
+
+  /* ---------- Equal Earth, the same constants as hyperscale_build.py ---------- */
+  const A1 = 1.340264, A2 = -0.081106, A3 = 0.000893, A4 = 0.003796, M = Math.sqrt(3) / 2;
+  function proj(lon, lat) {
+    const lam = lon * Math.PI / 180, th = Math.asin(M * Math.sin(lat * Math.PI / 180)), t2 = th * th, t6 = t2 * t2 * t2;
+    const x = lam * Math.cos(th) / (M * (A1 + 3 * A2 * t2 + t6 * (7 * A3 + 9 * A4 * t2)));
+    const y = th * (A1 + A2 * t2 + t6 * (A3 + A4 * t2));
+    return [x * MAP.s - MAP.x0, -y * MAP.s - MAP.y0];
+  }
+
+  /* ---------- money ---------- */
+  const QUAL = { approximately: "about ", more_than: "more than ", up_to: "up to ", at_least: "at least ", range: "up to " };
+  const SYM = { USD: "$", EUR: "€", GBP: "£" };
+  function money(n, cur) {
+    const v = Number(n), sym = SYM[cur], u = v >= 1e9 ? [v / 1e9, "B"] : v >= 1e6 ? [v / 1e6, "M"] : [v, ""];
+    const num = (u[0] >= 100 ? Math.round(u[0]) : +u[0].toFixed(1)).toLocaleString("en") + u[1];
+    return sym ? sym + num : num + " " + cur;
+  }
+
+  /* ---------- sites: records grouped by physical site ---------- */
+  const sites = new Map();
+  P.forEach((p, i) => {
+    let s = sites.get(p[11]);
+    if (!s) { const [x, y] = proj(p[2], p[3]); s = { id: p[11], x, y, recs: [], usd: 0 }; sites.set(p[11], s); }
+    s.recs.push(i);
+    p[9].forEach(m => { if (m[3] === "USD") s.usd = Math.max(s.usd, Number(m[2])); });
+  });
+  const SITES = [...sites.values()];
+  const shortName = n => n.split(/\s+[—–]\s+|\s+-\s+|\s+\(/)[0];
+  SITES.forEach(s => {
+    s.name = shortName(P[s.recs[0]][0]);
+    s.country = P[s.recs[0]][1];
+    s.r0 = s.usd ? Math.min(15, 2.6 + Math.sqrt(s.usd / 1e9) * 1.15) : 2.6;
+  });
+  SITES.sort((a, b) => b.r0 - a.r0); // large first, so small dots sit on top
+
+  $("#figRec").textContent = nf.format(P.length);
+  $("#figSite").textContent = nf.format(SITES.length);
+  $("#figCountry").textContent = new Set(P.map(p => p[1])).size;
+
+  /* ---------- basemap ---------- */
+  const svg = $("#mapSvg"), world = $("#world"), dotsG = $("#dots"), selG = $("#sel"), labelsG = $("#labels");
+  svg.setAttribute("viewBox", `0 0 ${MAP.w} ${MAP.h}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  $("#sphere").setAttribute("d", MAP.sphere);
+  $("#grat").setAttribute("d", MAP.grat);
+  $("#land").setAttribute("d", MAP.land);
+  SITES.forEach(s => {
+    const c = document.createElementNS(SVGNS, "circle");
+    c.setAttribute("cx", s.x.toFixed(2)); c.setAttribute("cy", s.y.toFixed(2)); c.setAttribute("r", s.r0);
+    s.el = c; dotsG.appendChild(c);
+  });
+
+  /* ---------- filters ---------- */
+  const F = { scope: "n", q: "", country: "", off: new Set() };
+  const countries = [...new Set(P.map(p => p[1]))].sort((a, b) => a.localeCompare(b));
+  $("#country").insertAdjacentHTML("beforeend", countries.map(c => `<option>${esc(c)}</option>`).join(""));
+  const keys = $("#keys");
+  keys.innerHTML = GROUPS.map(([g, label, v]) => `<li><button class="key" type="button" data-g="${g}" aria-pressed="true" style="--sw: var(${v})"><i></i><span>${label}</span><b data-n="${g}"></b></button></li>`).join("");
+
+  const recOK = (p, ignoreStatus) => (F.scope === "a" || p[7]) && (!F.country || p[1] === F.country)
+    && (!F.q || (p[0] + " " + p[6] + " " + p[1]).toLowerCase().includes(F.q)) && (ignoreStatus || !F.off.has(grp(p[4])));
+
+  let shown = [];
+  function apply() {
+    const counts = { op: 0, bd: 0, pl: 0, cx: 0 };
+    shown = [];
+    let nrec = 0;
+    SITES.forEach(s => {
+      const recs = s.recs.filter(i => recOK(P[i], true));
+      recs.forEach(i => counts[grp(P[i][4])]++);
+      const vis = recs.filter(i => !F.off.has(grp(P[i][4])));
+      s.vis = vis;
+      if (vis.length) {
+        s.g = vis.map(i => grp(P[i][4])).sort((a, b) => RANK[a] - RANK[b])[0];
+        s.el.setAttribute("class", "dot " + s.g);
+        s.el.style.display = "";
+        shown.push(s); nrec += vis.length;
+      } else s.el.style.display = "none";
+    });
+    GROUPS.forEach(([g]) => { keys.querySelector(`[data-n="${g}"]`).textContent = nf.format(counts[g]); });
+    const txt = `${nf.format(nrec)} records at ${nf.format(shown.length)} sites`;
+    $("#count").textContent = txt;
+    $("#listCount").textContent = txt;
+    if (pick && !shown.includes(pick)) closeDetail();
+    renderList();
+    placeLabels();
+  }
+
+  $("#controls").addEventListener("click", e => {
+    const b = e.target.closest("[data-scope]");
+    if (b) {
+      F.scope = b.dataset.scope;
+      document.querySelectorAll("[data-scope]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+      apply();
+    }
+    const k = e.target.closest(".key");
+    if (k) {
+      const g = k.dataset.g, on = k.getAttribute("aria-pressed") === "true";
+      k.setAttribute("aria-pressed", on ? "false" : "true");
+      on ? F.off.add(g) : F.off.delete(g);
+      apply();
+    }
+  });
+  let qt;
+  $("#query").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { F.q = e.target.value.trim().toLowerCase(); apply(); }, 120); });
+  $("#country").addEventListener("change", e => {
+    F.country = e.target.value; apply();
+    if (F.country && shown.length) fitTo(shown); else home();
+  });
+
+  /* ---------- the list under the map ---------- */
+  function renderList() {
+    const rows = [];
+    shown.slice().sort((a, b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name))
+      .forEach(s => s.vis.forEach(i => { const p = P[i]; rows.push(`<tr><td><button class="go-site" type="button" data-site="${esc(s.id)}">${esc(p[0])}</button></td><td>${esc(p[1])}</td><td><span class="st" style="--sw: var(--s-${grp(p[4])})"><i></i>${esc(words(p[4]))}</span></td><td class="n">${esc(p[5])}</td></tr>`); }));
+    $("#list").innerHTML = rows.join("");
+  }
+  $("#list").addEventListener("click", e => {
+    const b = e.target.closest("[data-site]");
+    if (!b) return;
+    const s = sites.get(b.dataset.site);
+    $("#atlas").scrollIntoView({ behavior: "smooth", block: "center" });
+    openDetail(s); fitTo([s], 10);
+  });
+
+  /* ---------- zoom and pan ---------- */
+  let T = { k: 1, x: 0, y: 0 };
+  const KMAX = 60;
+  // The map may move anywhere inside the visible frame, and past it only when it is bigger than the frame.
+  function clampT(t) {
+    const k = Math.max(.6, Math.min(KMAX, t.k)), v = viewBoxRect();
+    const lo = (o, len, size) => Math.min(o, o + len - size), hi = (o, len, size) => Math.max(o, o + len - size);
+    const x = Math.min(hi(v.x, v.w, MAP.w * k), Math.max(lo(v.x, v.w, MAP.w * k), t.x));
+    const y = Math.min(hi(v.y, v.h, MAP.h * k), Math.max(lo(v.y, v.h, MAP.h * k), t.y));
+    return { k, x, y };
+  }
+  function setT(t, settle = true) {
+    T = clampT(t);
+    world.setAttribute("transform", `translate(${T.x.toFixed(2)} ${T.y.toFixed(2)}) scale(${T.k.toFixed(4)})`);
+    const f = Math.pow(T.k, 0.6);
+    SITES.forEach(s => s.el.setAttribute("r", (s.r0 / f).toFixed(3)));
+    if (pick) drawPick();
+    if (settle) placeLabels(); else labelsG.innerHTML = "";
+  }
+  let anim = 0;
+  function zoomTo(k, x, y, ms = 650) {
+    cancelAnimationFrame(anim);
+    const a = { ...T }, b = clampT({ k, x, y }), t0 = performance.now();
+    if (!ms || matchMedia("(prefers-reduced-motion: reduce)").matches) return setT(b);
+    const ease = u => 1 - Math.pow(1 - u, 3);
+    const step = now => {
+      const u = Math.min(1, (now - t0) / ms), e = ease(u);
+      // interpolate scale geometrically so the zoom feels even
+      const kk = a.k * Math.pow(b.k / a.k, e);
+      const cxA = (MAP.w / 2 - a.x) / a.k, cyA = (MAP.h / 2 - a.y) / a.k, cxB = (MAP.w / 2 - b.x) / b.k, cyB = (MAP.h / 2 - b.y) / b.k;
+      const cx = cxA + (cxB - cxA) * e, cy = cyA + (cyB - cyA) * e;
+      setT({ k: kk, x: MAP.w / 2 - cx * kk, y: MAP.h / 2 - cy * kk }, u === 1);
+      if (u < 1) anim = requestAnimationFrame(step);
+    };
+    anim = requestAnimationFrame(step);
+  }
+  // visible area in viewBox units, given that "meet" may leave bands at the sides
+  function viewBoxRect() {
+    const r = svg.getBoundingClientRect(), s = Math.min(r.width / MAP.w, r.height / MAP.h) || 1;
+    const w = r.width / s, h = r.height / s;
+    return { x: (MAP.w - w) / 2, y: (MAP.h - h) / 2, w, h, s };
+  }
+  // The part of the frame not under the controls (left) or the open detail panel (right), in viewBox units.
+  function freeRect() {
+    const v = viewBoxRect(), ctl = $("#controls"), det = $("#detail");
+    if (getComputedStyle(ctl).position !== "absolute") return v;
+    const l = (ctl.offsetLeft + ctl.offsetWidth + 8) / v.s, r = det.hidden ? 12 / v.s : (det.offsetWidth + 24) / v.s;
+    return { x: v.x + l, y: v.y + 12 / v.s, w: v.w - l - r, h: v.h - 70 / v.s };
+  }
+  function fitBox(x0, y0, x1, y1, kmax = 14, ms) {
+    const f = freeRect(), pad = 1.12;
+    const k = Math.min(kmax, f.w / ((x1 - x0) * pad || 1), f.h / ((y1 - y0) * pad || 1), KMAX);
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    zoomTo(k, f.x + f.w / 2 - cx * k, f.y + f.h / 2 - cy * k, ms);
+  }
+  const home = ms => fitBox(0, 0, MAP.w, MAP.h, 8, ms);
+  function fitTo(list, kmax) {
+    const xs = list.map(s => s.x), ys = list.map(s => s.y);
+    fitBox(Math.min(...xs) - 6, Math.min(...ys) - 6, Math.max(...xs) + 6, Math.max(...ys) + 6, kmax);
+  }
+  const REGIONS = [["World"], ["North America", -126, 24, -66, 52], ["Europe", -12, 35, 32, 66], ["Middle East", 28, 12, 62, 40], ["Asia Pacific", 68, -42, 155, 46], ["Latin America", -95, -45, -32, 25], ["Africa", -20, -36, 52, 37]];
+  $("#regions").innerHTML = REGIONS.map((r, i) => `<button type="button" data-r="${i}" aria-pressed="${i ? "false" : "true"}">${r[0]}</button>`).join("");
+  $("#regions").addEventListener("click", e => {
+    const b = e.target.closest("[data-r]");
+    if (!b) return;
+    document.querySelectorAll("#regions button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    const r = REGIONS[+b.dataset.r];
+    if (r.length === 1) return home();
+    const pts = [proj(r[1], r[2]), proj(r[3], r[4]), proj(r[1], r[4]), proj(r[3], r[2]), proj((r[1] + r[3]) / 2, r[4]), proj((r[1] + r[3]) / 2, r[2])];
+    fitBox(Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1])), 30);
+  });
+  const clearRegion = () => document.querySelectorAll("#regions button").forEach(x => x.setAttribute("aria-pressed", "false"));
+  function zoomBy(f, px = MAP.w / 2, py = MAP.h / 2, ms) {
+    const k = Math.max(.6, Math.min(KMAX, T.k * f));
+    zoomTo(k, px - (px - T.x) * k / T.k, py - (py - T.y) * k / T.k, ms);
+  }
+  $("#zin").addEventListener("click", () => { clearRegion(); zoomBy(2); });
+  $("#zout").addEventListener("click", () => { clearRegion(); zoomBy(.5); });
+
+  const toVB = (cx, cy) => { const pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
+  let settleT;
+  svg.addEventListener("wheel", e => {
+    e.preventDefault(); clearRegion(); cancelAnimationFrame(anim);
+    const p = toVB(e.clientX, e.clientY), f = Math.exp(-e.deltaY * (e.ctrlKey ? .01 : .0022));
+    const k = Math.max(.6, Math.min(KMAX, T.k * f));
+    setT({ k, x: p.x - (p.x - T.x) * k / T.k, y: p.y - (p.y - T.y) * k / T.k }, false);
+    clearTimeout(settleT); settleT = setTimeout(placeLabels, 140);
+  }, { passive: false });
+
+  const ptrs = new Map();
+  let drag = null, moved = false;
+  svg.addEventListener("pointerdown", e => {
+    svg.setPointerCapture(e.pointerId);
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    cancelAnimationFrame(anim);
+    moved = false;
+    drag = { t: { ...T }, pts: new Map([...ptrs].map(([k, v]) => [k, { ...v }])) };
+  });
+  svg.addEventListener("pointermove", e => {
+    if (!ptrs.has(e.pointerId)) return hover(e);
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const a = [...drag.pts.values()], b = [...ptrs.values()];
+    if (b.length === 1 && a.length === 1) {
+      const p0 = toVB(a[0].x, a[0].y), p1 = toVB(b[0].x, b[0].y);
+      if (Math.hypot(b[0].x - a[0].x, b[0].y - a[0].y) > 4) { moved = true; svg.classList.add("drag"); hideTip(); }
+      if (moved) setT({ k: drag.t.k, x: drag.t.x + p1.x - p0.x, y: drag.t.y + p1.y - p0.y }, false);
+    } else if (b.length >= 2 && a.length >= 2) {
+      moved = true;
+      const ma = toVB((a[0].x + a[1].x) / 2, (a[0].y + a[1].y) / 2), mb = toVB((b[0].x + b[1].x) / 2, (b[0].y + b[1].y) / 2);
+      const f = Math.hypot(b[0].x - b[1].x, b[0].y - b[1].y) / Math.max(1, Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y));
+      const k = Math.max(.6, Math.min(KMAX, drag.t.k * f));
+      setT({ k, x: mb.x - (ma.x - drag.t.x) * k / drag.t.k, y: mb.y - (ma.y - drag.t.y) * k / drag.t.k }, false);
+    }
+  });
+  const endPtr = e => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    svg.classList.remove("drag");
+    if (!moved && e.type === "pointerup") { const s = nearest(e); if (s) { openDetail(s); } else if (pick) closeDetail(); }
+    if (moved) { clearRegion(); placeLabels(); }
+    drag = ptrs.size ? { t: { ...T }, pts: new Map([...ptrs].map(([k, v]) => [k, { ...v }])) } : null;
+  };
+  svg.addEventListener("pointerup", endPtr);
+  svg.addEventListener("pointercancel", endPtr);
+  svg.addEventListener("dblclick", e => { const p = toVB(e.clientX, e.clientY); clearRegion(); zoomBy(2.2, p.x, p.y, 450); });
+  svg.addEventListener("pointerleave", hideTip);
+
+  /* ---------- hover: the nearest dot within reach ---------- */
+  const tip = $("#tip");
+  function nearest(e) {
+    const p = toVB(e.clientX, e.clientY), scr = svg.getScreenCTM().a * T.k; // screen px per map unit
+    let best = null, bd = Infinity;
+    for (const s of shown) {
+      const d = Math.hypot((s.x - (p.x - T.x) / T.k) * scr, (s.y - (p.y - T.y) / T.k) * scr);
+      const reach = Math.max(9, s.r0 / Math.pow(T.k, .6) * scr + 4);
+      if (d < reach && d - reach < bd) { bd = d - reach; best = s; }
+    }
+    return best;
+  }
+  function hover(e) {
+    if (e.pointerType === "touch") return;
+    const s = nearest(e);
+    svg.classList.toggle("hot", !!s);
+    if (!s) return hideTip();
+    const recs = s.vis, inv = s.usd ? `Largest reported investment ${money(s.usd, "USD")}` : "";
+    tip.innerHTML = `<b>${esc(s.name)}</b><span>${esc(s.country)}; ${recs.length > 1 ? recs.length + " records" : esc(words(P[recs[0]][4]))}</span>${inv ? "<br><span>" + inv + "</span>" : ""}`;
+    tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+    tip.style.transform = `translate(${x}px, ${y}px)`;
+  }
+  function hideTip() { tip.hidden = true; svg.classList.remove("hot"); }
+
+  /* ---------- labels: largest visible sites first, none overlapping ---------- */
+  function placeLabels() {
+    labelsG.innerHTML = "";
+    if (T.k < 2.5) return;
+    const r = svg.getBoundingClientRect(), ctm = svg.getScreenCTM(), px = ctm.a; // screen px per viewBox unit
+    const v = viewBoxRect(), ox = (MAP.w - v.w) / 2, oy = (MAP.h - v.h) / 2;
+    const fs = 12 / px, placed = [];
+    const cand = shown.filter(s => s.usd || P[s.recs[0]][7]).sort((a, b) => b.r0 - a.r0);
+    const f = Math.pow(T.k, .6);
+    let n = 0;
+    for (const s of cand) {
+      const x = s.x * T.k + T.x, y = s.y * T.k + T.y;
+      if (x < ox || x > ox + v.w || y < oy || y > oy + v.h) continue;
+      const rr = s.r0 / f * T.k, w = s.name.length * fs * .56, h = fs * 1.2;
+      const box = [x + rr + 3 / px, y - h / 2, x + rr + 3 / px + w, y + h / 2];
+      if (box[2] > ox + v.w) continue;
+      if (placed.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue;
+      placed.push(box);
+      const t = document.createElementNS(SVGNS, "text");
+      t.setAttribute("class", "lbl"); t.setAttribute("x", box[0]); t.setAttribute("y", y + fs * .35); t.setAttribute("font-size", fs);
+      t.textContent = s.name; labelsG.appendChild(t);
+      if (++n > 40) break;
+    }
+  }
+  addEventListener("resize", () => { clearTimeout(settleT); settleT = setTimeout(placeLabels, 150); });
+
+  /* ---------- the detail panel ---------- */
+  let pick = null;
+  function drawPick() {
+    const r = pick.r0 / Math.pow(T.k, .6);
+    selG.innerHTML = `<circle class="pick" cx="${pick.x}" cy="${pick.y}" r="${r + 2.4 / T.k}"/><circle class="pulse" cx="${pick.x}" cy="${pick.y}" r="${r + 1.6 / T.k}"/>`;
+  }
+  function openDetail(s) {
+    pick = s; drawPick();
+    labelsG.classList.add("dim-labels");
+    dotsG.classList.add("dim");
+    SITES.forEach(x => x.el.classList.toggle("on", x === s));
+    const recs = s.vis && s.vis.length ? s.vis : s.recs;
+    $("#dTitle").textContent = s.name;
+    $("#dSub").textContent = `${s.country}; ${recs.length === 1 ? "1 record" : recs.length + " records"} at this site`;
+    $("#dBody").innerHTML = recs.map(i => {
+      const p = P[i], g = grp(p[4]);
+      const inv = p[9].length ? `<div class="kv"><span>Reported investment</span>${p[9].map(m => `<div><span class="money">${esc(QUAL[m[1]] || "")}${esc(money(m[2], m[3]))}</span> <span class="note">${esc(m[0])}</span></div>`).join("")}</div>` : "";
+      const invNotes = p[9].length ? `<details><summary>What the figures cover</summary>${p[9].map(m => `<p>${esc(m[4])} ${m[5].map((u, j) => link(u, "Evidence" + (m[5].length > 1 ? " " + (j + 1) : ""))).join(", ")}</p>`).join("")}</details>` : "";
+      return `<div class="rec">
+        <h3>${esc(p[0])}</h3>
+        <span class="st" style="--sw: var(--s-${g})"><i></i>${esc(words(p[4]))}, as of ${esc(p[5])}</span>
+        <div class="kv"><span>Named parties</span>${p[6] ? `<ul class="parties">${p[6].split(" · ").map(x => { const m = x.match(/^(.*?)\s*\(([^)]*)\)$/); return m ? `<li>${esc(m[1])} <span>${esc(m[2].replaceAll("_", " ").replace(/, unknown$/, ""))}</span></li>` : `<li>${esc(x)}</li>`; }).join("")}</ul>` : "<div>Undisclosed</div>"}</div>
+        ${inv}${invNotes}
+        <details><summary>Sources (${p[10].length})</summary><ul>${p[10].map(v => `<li>${link(v[1], v[0])}</li>`).join("")}</ul></details>
+        <details><summary>Location precision</summary><p>${esc(p[8])}</p></details>
+      </div>`;
+    }).join("");
+    $("#dBody").scrollTop = 0;
+    $("#detail").hidden = false;
+    hideTip();
+    if (getComputedStyle($("#detail")).position !== "absolute") $("#detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  function closeDetail() {
+    pick = null; selG.innerHTML = ""; dotsG.classList.remove("dim"); labelsG.classList.remove("dim-labels");
+    $("#detail").hidden = true;
+  }
+  $("#dClose").addEventListener("click", closeDetail);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && pick) closeDetail(); });
+
+  const ctlH = () => $("#atlas").style.setProperty("--ctl-h", ($("#controls").offsetHeight + 20) + "px");
+  ctlH();
+  apply();
+  home(0);
+  addEventListener("resize", () => { ctlH(); if (!ptrs.size) setT(T); });
+
+  /* ---------- contracts ---------- */
+  const conf = s => esc(s).replace(/\s*#(confident|likely|speculative)/g, ' <span class="cf $1">$1</span>');
+  $("#dealCards").innerHTML = D.deals.map(r => `<article class="deal">
+    <h3>${esc(r[0])} and ${esc(r[1])}</h3>
+    <div class="meta">${esc(r[2])}; ${esc(r[3])}</div>
+    <p>${esc(r[4])}</p>
+    ${Array.isArray(r[5]) ? link(r[5][1], "Source") : ""}
+  </article>`).join("");
+
+  function docs() {
+    const q = $("#docq").value.trim().toLowerCase();
+    const a = D.C.filter(r => r.slice(0, 3).join(" ").toLowerCase().includes(q));
+    $("#docCount").textContent = nf.format(a.length);
+    $("#docs").innerHTML = a.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${link(r[4], r[2])}</td><td class="n">${esc(String(r[3]).slice(0, 10))}</td></tr>`).join("");
+  }
+  $("#docq").addEventListener("input", docs); docs();
+
+  /* ---------- Epoch campuses ---------- */
+  let sortK = 5, sortDir = "desc";
+  function camps() {
+    const q = $("#campq").value.trim().toLowerCase();
+    const num = k => k === 5;
+    const rows = D.campuses.filter(r => r.slice(0, 4).join(" ").toLowerCase().includes(q)).sort((a, b) => {
+      const x = num(sortK) ? (+a[sortK] || -1) - (+b[sortK] || -1) : String(a[sortK]).localeCompare(String(b[sortK]));
+      return sortDir === "asc" ? x : -x;
+    });
+    $("#camps").innerHTML = rows.map(r => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td>${conf(r[2])}</td><td>${conf(r[3])}</td><td>${esc(String(r[4]).replaceAll(",", ", "))}</td><td class="n">${r[5] ? nf.format(Math.round(+r[5])) : ""}</td><td>${esc(r[6])}</td><td>${Array.isArray(r[7]) ? link(r[7][1], r[7][0]) : esc(r[7])}</td></tr>`).join("");
+  }
+  $("#campTbl thead").addEventListener("click", e => {
+    const b = e.target.closest("button[data-k]");
+    if (!b) return;
+    const k = +b.dataset.k;
+    sortDir = sortK === k ? (sortDir === "asc" ? "desc" : "asc") : (k === 5 ? "desc" : "asc");
+    sortK = k;
+    document.querySelectorAll("#campTbl th button").forEach(x => x === b ? x.dataset.dir = sortDir : delete x.dataset.dir);
+    camps();
+  });
+  $("#campq").addEventListener("input", camps); camps();
+
+  /* ---------- bars ---------- */
+  function bars(el, rows, max, unit) {
+    el.innerHTML = rows.map(r => `<div class="bar-row"><span>${esc(r.label)}</span><div class="bar-track">${(r.parts || [[r.value]]).map(([v, t]) => `<i style="width:${(v / max * 100).toFixed(2)}%"${t ? ` title="${esc(t)}"` : ""}></i>`).join("")}</div><b>${unit(r.value)}</b>${r.sub ? `<div class="bar-sub">${r.sub}</div>` : ""}</div>`).join("");
+  }
+  const cap = D.capital.map(r => {
+    const parts = String(r[2]).split(" · ").map(x => { const m = x.match(/^(.*):\s*([\d.]+)$/); return m ? [+m[2], m[1]] : null; }).filter(x => x && x[0] > 0);
+    return { label: r[0], value: +r[1], parts: parts.length ? parts : [[+r[1]]],
+      sub: parts.slice(0, 6).map(([v, t]) => conf(t) + " " + v.toFixed(1)).join("; ") + (parts.length > 6 ? "; and others" : "") };
+  }).filter(r => r.value > 0);
+  bars($("#capBars"), cap, cap[0].value, v => "$" + (v >= 10 ? v.toFixed(0) : v.toFixed(1)) + "B");
+  const spend = [["Amazon", 220], ["Alphabet", 201], ["Microsoft", 194], ["Meta", 139], ["Oracle", 90], ["SpaceX", 73]].map(([label, value]) => ({ label, value }));
+  bars($("#spendBars"), spend, 220, v => "$" + v + "B");
+})();
+</script>
+<script>document.documentElement.classList.remove("pre");</script>
+</body>
+</html>
