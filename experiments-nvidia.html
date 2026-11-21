@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NVIDIA due diligence · AI Safety Overview</title>
+<meta name="description" content="Experiment 03: a twelve-quarter public-record review of NVIDIA's cash, receivables, investments, debt and guarantees, and how customer financing relates to its chip sales.">
+<meta name="color-scheme" content="light dark">
+<script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+document.documentElement.classList.add("pre"); setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);</script>
+<script type="speculationrules">{"prerender":[{"where":{"selector_matches":"a[href$='.html'], a[href*='.html#']"},"eagerness":"moderate"}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css?v=11">
+<link rel="stylesheet" href="explore.css?v=3">
+<style>
+/* Experiment 03. The page reports what the due diligence report found and the tests it asks for; it adds no findings of its own.
+   Figures are the report's, from NVIDIA's filings, in US$ millions unless a label says otherwise. */
+:root { --wrap: 1320px;
+  --c1: #008A7B; --c2: #8F6400; --c3: #5846B4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c1: #1FA89C; --c2: #BE8618; --c3: #8473E0; } }
+:root[data-theme="dark"] { --c1: #1FA89C; --c2: #BE8618; --c3: #8473E0; }
+
+.q { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 800; }
+.fh { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
+.lede { max-width: 46rem; color: var(--muted); }
+.xnav { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 28px; }
+.xnav a[aria-current] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.dl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.dl .small { margin: 0; }
+
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+@media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
+.tile b { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tile span { font-size: .92rem; color: var(--muted); line-height: 1.4; }
+
+.fig { margin: 0; padding-top: 48px; display: grid; gap: 14px; min-width: 0; scroll-margin-top: 72px; }
+.fig-head { display: grid; gap: 4px; max-width: 46rem; }
+.fig-head p { font-size: .94rem; color: var(--muted); }
+.card { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 11px; height: 11px; border-radius: 3px; flex: none; display: inline-block; }
+.chart svg { display: block; width: 100%; height: auto; font-family: var(--font-display); overflow: visible; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .base { stroke: var(--line-strong); stroke-width: 1; }
+.chart .ax { fill: var(--muted); font-size: 11px; font-family: var(--font-mono); }
+.chart .dlab { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.chart .hit { fill: transparent; cursor: default; }
+.chart .hit:hover { fill: var(--ink); fill-opacity: .05; }
+.chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .pt { stroke: var(--surface); stroke-width: 2; }
+/* on a phone the twelve-quarter bars keep a readable size and scroll sideways */
+@media (max-width: 600px) { #chCash { overflow-x: auto; overscroll-behavior-x: contain; } #chCash svg { min-width: 600px; } }
+.src { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); margin-top: 6px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .two { grid-template-columns: minmax(0, 1fr); } }
+
+.gbar { display: flex; height: 30px; border-radius: 6px; overflow: hidden; gap: 2px; background: var(--surface); }
+.gbar i { display: block; height: 100%; }
+.glist { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.glist li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; font-size: .94rem; }
+.glist .sw { transform: translateY(1px); }
+.glist b { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.glist small { display: block; color: var(--muted); font-size: .84rem; }
+
+.layer-body p { max-width: 70ch; }
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.tw table { border-collapse: collapse; width: 100%; font-size: .86rem; font-variant-numeric: tabular-nums; }
+.tw th, .tw td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; vertical-align: top; }
+.tw th:first-child, .tw td:first-child { text-align: left; position: sticky; left: 0; background: var(--surface); }
+.tw thead th { background: var(--surface-2); font-family: var(--font-label); font-weight: 600; }
+.tw thead th:first-child { background: var(--surface-2); }
+.tw td { font-family: var(--font-mono); font-size: .82rem; }
+.tw td:first-child { font-family: var(--font-display); font-size: .86rem; }
+.tw.wrap td, .tw.wrap th { white-space: normal; text-align: left; font-family: var(--font-body); font-size: .86rem; min-width: 12rem; }
+.tw.wrap td:first-child { font-family: var(--font-display); font-weight: 600; min-width: 10rem; }
+.pts { margin: 0; padding-left: 1.2em; display: grid; gap: .5em; max-width: 72ch; }
+.tests { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: t; }
+.tests li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 4px 12px; counter-increment: t; max-width: 72ch; }
+.tests li::before { content: counter(t); grid-row: span 2; font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--accent); line-height: 1.1; }
+.tests b { font-family: var(--font-display); }
+.tests span { color: var(--muted); font-size: .94rem; }
+.data { padding-top: 56px; display: grid; gap: 16px; }
+
+#tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.35; padding: 8px 11px; border-radius: 8px; max-width: 18rem; }
+#tip b { font-weight: 700; display: block; }
+#tip span { display: flex; gap: 8px; align-items: center; }
+#tip i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
+    <button class="toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="chapters"><span id="tocName">NVIDIA due diligence</span></button>
+    <nav class="chapters" id="chapters" aria-label="Experiments">
+      <a href="experiments.html">Who funds AI safety</a>
+      <a href="experiments-cycles.html">Cycles in Why Nations Fail</a>
+      <a href="experiments-nvidia.html" class="active" aria-current="page">NVIDIA due diligence</a>
+    </nav>
+    <div class="site-menu">
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Experiments</span></button>
+      <nav class="site-links" id="siteLinks" aria-label="Site pages">
+        <a href="index.html">Goals</a>
+        <a href="terms.html"><span class="n">1</span>Terms</a>
+        <a href="multi-agent-risks.html"><span class="n">2</span>Multi-agent risks</a>
+        <span class="site-grp"><span class="n">3</span>Ecosystem</span>
+        <a class="site-sub" href="ecosystem.html">AI safety landscape</a>
+        <a class="site-sub" href="hyperscale.html">Hyperscalers</a>
+        <a href="experiments.html" aria-current="page">Experiments</a>
+        <a href="reports.html">Reports</a>
+        <a href="timelines.html">Timelines</a>
+      </nav>
+    </div>
+    <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+    <nav class="xnav" aria-label="Experiments">
+      <a class="chip" href="experiments.html">Who funds AI safety</a>
+      <a class="chip" href="experiments-cycles.html">Cycles in Why Nations Fail</a>
+      <a class="chip" href="experiments-nvidia.html" aria-current="page">NVIDIA due diligence</a>
+    </nav>
+
+    <section class="chapter" id="nvidia" style="border-top:0;padding-top:28px">
+      <div class="chapter-head">
+        <h1 class="q">Is NVIDIA helping to pay for the demand behind its own sales?</h1>
+        <p class="lede">A review of twelve fiscal quarters, Q4 FY2024 to Q3 FY2027, built only from public filings. It traces cash, receivables, investments, debt and guarantees. It is not an audit and makes no finding of misconduct.</p>
+        <div class="dl">
+          <a class="btn sm" href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>Download the report</a>
+          <p class="small">PDF, 21 pages, 21 November 2026</p>
+        </div>
+      </div>
+
+      <div class="tiles">
+        <div class="tile"><b>$118B</b><span>maximum guarantees NVIDIA has given for partners’ leases and loans; $0.86B a year earlier</span></div>
+        <div class="tile"><b>70%</b><span>of net income arrived as operating cash over the last four quarters: $158.9B of $226.3B</span></div>
+        <div class="tile"><b>$81B</b><span>owed by customers in October, up from $10B in January 2024; two customers hold 35%</span></div>
+        <div class="tile"><b>$32B</b><span>borrowed, against $53.5B of cash and marketable debt securities</span></div>
+      </div>
+
+      <figure class="fig" id="fig-cash">
+        <div class="fig-head">
+          <h2 class="fh">Profit grew faster than the cash it brought in</h2>
+          <p>Net income and operating cash flow each quarter, US$ billions. In July operating cash was 40% of net income; in October, 74%.</p>
+        </div>
+        <div class="card">
+          <div class="legend"><span><i class="sw" style="background:var(--c2)"></i>Net income</span><span><i class="sw" style="background:var(--c1)"></i>Operating cash flow</span></div>
+          <div class="chart" id="chCash" role="img" aria-label="Grouped bars of net income and operating cash flow for twelve quarters. The figures are in the earnings table under The detail."></div>
+          <p class="src">NVIDIA quarterly statements, as compiled in the report.</p>
+        </div>
+      </figure>
+
+      <div class="two">
+        <figure class="fig" id="fig-wc">
+          <div class="fig-head">
+            <h2 class="fh">Receivables and inventory piled up</h2>
+            <p>Balances at each quarter end, US$ billions.</p>
+          </div>
+          <div class="card">
+            <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Receivables, net</span><span><i class="sw" style="background:var(--c3)"></i>Inventories</span></div>
+            <div class="chart" id="chWc" role="img" aria-label="Lines of net receivables and inventories for twelve quarters. The figures are in the working capital table under The detail."></div>
+          </div>
+        </figure>
+        <figure class="fig" id="fig-exp">
+          <div class="fig-head">
+            <h2 class="fh">Borrowing is small; guarantees are not</h2>
+            <p>Funded debt and the maximum guarantees disclosed at each quarter end, US$ billions.</p>
+          </div>
+          <div class="card">
+            <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Funded debt</span><span><i class="sw" style="background:var(--c2)"></i>Guarantee caps</span></div>
+            <div class="chart" id="chExp" role="img" aria-label="Stacked bars of funded debt and disclosed guarantee caps for twelve quarters. The figures are in the leverage table under The detail."></div>
+          </div>
+        </figure>
+      </div>
+
+      <figure class="fig" id="fig-guar">
+        <div class="fig-head">
+          <h2 class="fh">Whose obligations the $118B covers</h2>
+          <p>Maximum gross exposure at 25 October 2026. No payments had been made under any of them.</p>
+        </div>
+        <div class="card">
+          <div class="gbar" id="gbar" role="img" aria-label="One bar split into the three guarantee groups listed below it"></div>
+          <ul class="glist">
+            <li><i class="sw" style="background:var(--c2)"></i><div>OpenAI affiliate, Piketon, Ohio<small>Lease and power obligations to SB Energy affiliates for nine phases, 4.25 GW; runs down over 20 years; first expected FY2029</small></div><b>$105.0B</b></li>
+            <li><i class="sw" style="background:var(--c3)"></i><div>Selected partners, power and systems<small>Financing default support; borrowers, banks and amounts not disclosed one by one</small></div><b>$9.5B</b></li>
+            <li><i class="sw" style="background:var(--c1)"></i><div>Selected neocloud tenants<small>Default on land, power and shell leases; 5 to 7 years, with a $712M escrow</small></div><b>$3.5B</b></li>
+          </ul>
+        </div>
+      </figure>
+    </section>
+
+    <section class="data" id="detail">
+      <h2>The detail</h2>
+      <p class="small">The report’s sections in order, each with its summary and figures. US$ millions unless stated.</p>
+      <div class="layers">
+
+        <details class="layer">
+          <summary><span class="layer-kind">Assessment</span><span class="layer-what"><span class="layer-title">What the report concludes</span><span class="layer-inside">Four areas to test, and what the public record can and cannot show</span></span><span class="layer-hook"><span><b>4</b>areas</span></span></summary>
+          <div class="layer-body">
+            <p>NVIDIA’s borrowing is modest. What needs closer examination is the support it gives customers, the collection of fast-growing receivables, and its underwriting of future capacity.</p>
+            <div class="tw wrap"><table><thead><tr><th>Area</th><th>What the record shows</th><th>Why it matters</th></tr></thead><tbody>
+              <tr><td>Customer financing</td><td>$118.0B of maximum guarantees; one phased Ohio project is $105.0B of it.</td><td>Linked investment, hardware sales and guarantees can concentrate risk across companies. The caps far exceed today’s debt.</td></tr>
+              <tr><td>Receivables and cash</td><td>$81.0B owed; two customers hold 35%. October operating cash was 74% of net income.</td><td>Needs independent evidence of later cash receipts from those two customers and from customers given longer terms.</td></tr>
+              <tr><td>Revenue integrity</td><td>Contracts link NVIDIA to customers it also funds and backs.</td><td>The record does not show any amount of fictitious or overstated sales. Linked transactions should be tested.</td></tr>
+              <tr><td>Filing status</td><td>October figures come from unaudited 8-K exhibits of 17 November.</td><td>Refresh against the full 10-Q, with its notes and certifications, before relying on them.</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Earnings</span><span class="layer-what"><span class="layer-title">Earnings and cash conversion</span><span class="layer-inside">Revenue rose fivefold in twelve quarters; cash lagged profit by $67.4B over the last year</span></span><span class="layer-hook"><span><b>$115.8B</b>October revenue</span></span></summary>
+          <div class="layer-body">
+            <p>October revenue rose 20.4% on the quarter. Receivables grew 28.5% and inventory 25.8%, absorbing $18.1B and $8.1B of cash. Over the last four quarters operating cash fell $67.4B short of net income; receivables took $47.7B, inventory $20.0B, and $31.0B of investment gains were profit with no cash behind it. These overlap and should not be added. Data centers were about 93% of the latest quarter’s revenue.</p>
+            <div class="tw" id="tEarn"></div>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Working capital</span><span class="layer-what"><span class="layer-title">Working capital and supplier credit</span><span class="layer-inside">Customers take longer to pay and inventory sits longer</span></span><span class="layer-hook"><span><b>112</b>day cash cycle</span></span></summary>
+          <div class="layer-body">
+            <p>Days to collect rose from 38 to 57, and the cash conversion cycle from 80 to 112 days. Inventory at October was $15.8B of raw materials, $17.8B in process and $6.2B finished. Supply commitments rose from $279B in July to $390B, so product transitions and purchase losses deserve stress tests. NVIDIA reports 64 days to collect on its own convention; the report uses one method throughout.</p>
+            <div class="tw" id="tWc"></div>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Revenue</span><span class="layer-what"><span class="layer-title">Revenue recognition and circular financing</span><span class="layer-inside">The same companies receive NVIDIA capital, buy its hardware and sell capacity back</span></span><span class="layer-hook"><span><b>4</b>trails</span></span></summary>
+          <div class="layer-body">
+            <div class="tw wrap"><table><thead><tr><th>Trail</th><th>What it shows</th><th>Evidence to obtain</th></tr></thead><tbody>
+              <tr><td>CoreWeave</td><td>NVIDIA supplies GPUs, holds shares, and agreed in September 2025 to buy unused cloud capacity to April 2032; initial order $6.3B.</td><td>Match GPU invoices to deployments, use and independent tenant receipts; compare with third-party cloud rates.</td></tr>
+              <tr><td>OpenAI</td><td>$30B from NVIDIA in the February 2026 round, a Rubin compute partnership, and the $105B Ohio lease support.</td><td>Equity closing dates, bank statements, lease contracts, side letters and limits on the use of proceeds.</td></tr>
+              <tr><td>Neoclouds</td><td>$32B of conditional agreements: hardware sold upfront once financing and deployment conditions are met, with possible revenue sharing.</td><td>Test linked contracts under ASC 606, and any value paid back to customers above fair value.</td></tr>
+              <tr><td>Nscale</td><td>A November SEC filing describes Anthropic services at Monarch with financing still outstanding.</td><td>Match financing close and site acceptance to NVIDIA’s recorded sales.</td></tr>
+            </tbody></table></div>
+            <p>Disposition: credible evidence of reciprocal financial ties and credit support. The record does not show a revenue overstatement, a specific round-trip payment or an adjustment amount.</p>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Receivables</span><span class="layer-what"><span class="layer-title">Receivables, capital spending creditors and inquiries</span><span class="layer-inside">Two customers owe $28.4B; two government inquiries are open</span></span><span class="layer-hook"><span><b>35%</b>two customers</span></span></summary>
+          <div class="layer-body">
+            <ul class="pts">
+              <li>Two direct customers held 18% and 17% of October receivables, about $14.6B and $13.8B. Three customers made 14%, 11% and 11% of quarterly sales; the filings do not say whether they are the same customers. Management cites launch timing and longer terms for some investment-grade buyers.</li>
+              <li>Accounts payable rose $6.0B to $21.1B. Public schedules cannot separate equipment creditors from trade creditors.</li>
+              <li>Revenue by country follows the customer’s headquarters, not where chips are billed, installed or used. Commerce and Justice confirmed a Megaspeed export-control investigation; Reuters reported an SEC accounting inquiry on 20 November whose focus is unclear.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Investments</span><span class="layer-what"><span class="layer-title">Investments, loans and advances</span><span class="layer-inside">Equity purchases in the October quarter were three and a half times capital spending</span></span><span class="layer-hook"><span><b>$65.5B</b>private holdings</span></span></summary>
+          <div class="layer-body">
+            <ul class="pts">
+              <li>Marketable debt $24.4B and marketable equity $44.2B, of which $21.0B is under short-term sale restrictions.</li>
+              <li>Nonmarketable securities $65.5B. Private equity grew from $47.9B to $61.7B in the quarter, with $15.4B of additions and $1.8B of losses.</li>
+              <li>$3.5B of debt convertible into public equity is held as an asset; borrowers and repayment terms are not given.</li>
+              <li>Nine-month equity purchases $58.1B against sales of $9.5B; unrealised public-equity gains of $14.6B. Gains raise earnings without raising chip sales.</li>
+              <li>October-quarter equity purchases of $15.7B against $4.4B of cash capital spending.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Debt</span><span class="layer-what"><span class="layer-title">Funded debt and maturities</span><span class="layer-inside">$32.5B face value of notes from 2028 to 2060; no commercial paper outstanding</span></span><span class="layer-hook"><span><b>$32.4B</b>carrying value</span></span></summary>
+          <div class="layer-body">
+            <div class="tw"><table><thead><tr><th>Maturity</th><th>Coupons and principal</th><th>Face, $B</th></tr></thead><tbody>
+              <tr><td>2028</td><td>4.25% $3.50B; 1.55% $1.25B</td><td>4.75</td></tr>
+              <tr><td>2029 to 2030</td><td>4.35% $3.50B; 2.85% $1.50B</td><td>5.00</td></tr>
+              <tr><td>2031</td><td>4.50% $4.00B; 2.00% $1.25B</td><td>5.25</td></tr>
+              <tr><td>2033, 2036</td><td>4.75% $3.50B; 4.95% $4.00B</td><td>7.50</td></tr>
+              <tr><td>2040, 2046</td><td>3.50% $1.00B; 5.55% $3.00B</td><td>4.00</td></tr>
+              <tr><td>2050, 2056, 2060</td><td>3.50% $2.00B; 5.625% $3.50B; 3.70% $0.50B</td><td>6.00</td></tr>
+              <tr><td>Total</td><td>after the $1.00B 2026 note repaid in the quarter</td><td>32.50</td></tr>
+            </tbody></table></div>
+            <p>Total liabilities were $105.5B, including $33.3B of accrued current liabilities and $5.8B of long-term leases. Debt including those leases is at least $38.1B.</p>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Leverage</span><span class="layer-what"><span class="layer-title">Leverage with and without the guarantees</span><span class="layer-inside">Debt is 0.13 times a year’s operating earnings; with every guarantee cap, 0.62</span></span><span class="layer-hook"><span><b>0.62x</b>full stress</span></span></summary>
+          <div class="layer-body">
+            <div class="tw"><table><thead><tr><th>October 2026, analytical scenario</th><th>Debt equivalent, $B</th><th>÷ EBITDA</th><th>÷ equity</th></tr></thead><tbody>
+              <tr><td>Funded debt only</td><td>32.4</td><td>0.13x</td><td>0.12x</td></tr>
+              <tr><td>Plus 25% of guarantee caps</td><td>61.9</td><td>0.25x</td><td>0.23x</td></tr>
+              <tr><td>Plus 50% of guarantee caps</td><td>91.4</td><td>0.38x</td><td>0.34x</td></tr>
+              <tr><td>Plus all guarantee caps</td><td>150.4</td><td>0.62x</td><td>0.56x</td></tr>
+            </tbody></table></div>
+            <p>Trailing operating earnings before depreciation were $243.3B. The full-cap case is undiscounted, assumes no collateral and no probabilities; it is a stress measure, not a forecast of claims. The disclosure grew from $0.86B in October 2025 to $3.5B through July 2026, then $118.0B after the August Ohio deal.</p>
+            <div class="tw" id="tLev"></div>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Commitments</span><span class="layer-what"><span class="layer-title">Contractual commitments</span><span class="layer-inside">$518B to buy supply, cloud services, leases and equity; $222B falls due in FY2028</span></span><span class="layer-hook"><span><b>$518B</b>committed</span></span></summary>
+          <div class="layer-body">
+            <div class="tw"><table><thead><tr><th>US$ billions</th><th>FY27 rest</th><th>FY28</th><th>FY29</th><th>FY30</th><th>FY31</th><th>FY32 on</th><th>Total</th></tr></thead><tbody>
+              <tr><td>Supply and capacity</td><td>69</td><td>203</td><td>92</td><td>10</td><td>8</td><td>8</td><td>390</td></tr>
+              <tr><td>Cloud services</td><td>2</td><td>7</td><td>7</td><td>6</td><td>4</td><td>2</td><td>28</td></tr>
+              <tr><td>Data center leases not yet begun</td><td></td><td>1</td><td>2</td><td>4</td><td>4</td><td>63</td><td>74</td></tr>
+              <tr><td>Equity investments</td><td>5</td><td>11</td><td>2</td><td>2</td><td></td><td></td><td>20</td></tr>
+              <tr><td>Capital expenditure</td><td>6</td><td></td><td></td><td></td><td></td><td></td><td>6</td></tr>
+              <tr><td>Total</td><td>82</td><td>222</td><td>103</td><td>22</td><td>16</td><td>73</td><td>518</td></tr>
+              <tr><td>Conditional neocloud agreements, separate</td><td></td><td>6</td><td>7</td><td>6</td><td>5</td><td>8</td><td>32</td></tr>
+            </tbody></table></div>
+            <p>These schedules differ in kind, so the report does not add them to the guarantees. A five-day delay in collections at October’s sales rate ties up about $6.4B. Buybacks and dividends took $28.1B in the quarter.</p>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Requests</span><span class="layer-what"><span class="layer-title">What a regulator should ask for</span><span class="layer-inside">Five tests, ranked by their effect on revenue, cash and contingent losses</span></span><span class="layer-hook"><span><b>5</b>tests</span></span></summary>
+          <div class="layer-body">
+            <ol class="tests">
+              <li><b>Linked transactions and related parties</b><span>Join invoices, payments, investments, guarantees and cloud orders by ultimate owner, project and date. How much revenue depended on money NVIDIA supplied?</span></li>
+              <li><b>Revenue, receivables and cutoff</b><span>Confirm receivables with customers and lenders; check collections after quarter end, acceptance records, returns and credit notes.</span></li>
+              <li><b>Guarantees and consolidation</b><span>Obtain lender confirmations and valuation models; decide which entities bear losses and whether any should be consolidated.</span></li>
+              <li><b>Procurement and capital payables</b><span>Trace vendor invoices to receiving logs and asset registers; look for supplier finance and unrecorded liabilities.</span></li>
+              <li><b>Investments and governance</b><span>Confirm holdings with custodians; review round terms, side letters and common counterparties across equity marks and revenue.</span></li>
+            </ol>
+            <p>Positive operating cash, independently reported contracts and the annual audit count against a claim of wholesale fabrication. None replaces transaction-level checks.</p>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Method</span><span class="layer-what"><span class="layer-title">Evidence, checks and sources</span><span class="layer-inside">10-K and 10-Q filings, earnings exhibits, counterparty filings and press reports</span></span><span class="layer-hook"><span><b>12</b>quarters</span></span></summary>
+          <div class="layer-body">
+            <ul class="pts">
+              <li>Quarters run from 28 January 2024 to 25 October 2026. Quarterly cash flows sum to the annual figures within $1M to $2M of rounding; no balancing entry was posted.</li>
+              <li>The FY2026 auditor gave clean opinions on the accounts and internal control. Its critical audit matter was excess inventory and purchase commitments. The audit predates the Ohio guarantees.</li>
+              <li>No management representations, private ledgers, lender confirmations, bank records or auditor workpapers were available. The report was prepared for review and has not been submitted to a regulator.</li>
+              <li>Other sources: CoreWeave 8-K (September 2025), OpenAI announcement (27 February 2026), Nscale SEC filing (November 2026), Commerce and Justice statement (16 November 2026), Reuters and Financial Times (20 November 2026), Grant Thornton ASC 606 guide. The PDF links each one.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="res">
+      <a href="hyperscale.html">Hyperscalers: where the data centers are</a>
+      <a href="experiments.html">Experiment 01: who funds AI safety</a>
+      <a href="index.html">All goals of this site</a>
+    </div>
+  </div>
+</footer>
+
+<div id="tip" hidden></div>
+
+<script src="site.js?v=4"></script>
+<script src="explore.js?v=6"></script>
+<script>
+(() => {
+  const Q = ["Q4 FY24", "Q1 FY25", "Q2 FY25", "Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26", "Q1 FY27", "Q2 FY27", "Q3 FY27"];
+  const D = {
+    rev: [22103, 26044, 30040, 35082, 39331, 44062, 46743, 57006, 68127, 81615, 96221, 115844],
+    gp: [16791, 20406, 22574, 26156, 28723, 26668, 33853, 41849, 51093, 61157, 72142, 86676],
+    ni: [12285, 14881, 16599, 19309, 22091, 18775, 26422, 31910, 42960, 58321, 59688, 65287],
+    cfo: [11499, 15345, 14489, 17629, 16628, 27414, 15365, 23750, 36190, 50344, 24077, 48253],
+    ar: [9999, 12365, 14132, 17693, 23065, 22132, 27808, 33391, 38466, 40710, 63059, 81033],
+    inv: [5282, 5864, 6675, 7654, 10080, 11333, 14962, 19784, 21403, 25797, 31575, 39724],
+    ap: [2699, 2715, 3680, 5353, 6310, 7331, 9064, 8624, 9812, 13097, 15059, 21074],
+    dso: [37.7, 39.1, 40.1, 41.3, 47.2, 46.7, 48.6, 48.8, 48.0, 44.1, 49.1, 56.6],
+    dio: [86.2, 90.0, 76.4, 73.0, 76.1, 56.0, 92.8, 104.3, 110.0, 105.0, 108.4, 111.2],
+    ccc: [80.4, 85.3, 77.6, 68.3, 73.2, 67.0, 83.6, 100.1, 108.8, 98.2, 104.3, 111.5],
+    debt: [9709, 9710, 8461, 8462, 8463, 8464, 8466, 8467, 8468, 8470, 33366, 32371],
+    eq: [42978, 49142, 58157, 65899, 79327, 83843, 100131, 118897, 157293, 195474, 228984, 266666],
+    ebitda: [34480, 49275, 61185, 72743, 83318, 88248, 98281, 112696, 133229, 165513, 201266, 243278],
+    guar: [0, 0, 0, 0, 0, 0, 0, 860, 3500, 3500, 3500, 118000]
+  };
+  const $ = s => document.querySelector(s);
+  const nf = new Intl.NumberFormat("en");
+  const B = v => "$" + (v / 1000).toFixed(v >= 10000 ? 1 : 2).replace(/\.?0+$/, "") + "B";
+  const tip = $("#tip");
+  function showTip(e, html) {
+    tip.innerHTML = html; tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+    tip.style.transform = `translate(${x}px,${y}px)`;
+  }
+  const hideTip = () => { tip.hidden = true; };
+  const row = (c, k, v) => `<span><i style="background:var(${c})"></i>${k} ${v}</span>`;
+
+  /* one y-axis, gridlines in billions, quarter labels every other quarter */
+  function frame(W, H, max, step) {
+    const L = 40, R = 8, T = 10, Bm = 26, pw = W - L - R, ph = H - T - Bm;
+    const y = v => T + ph - v / max * ph;
+    let g = "";
+    for (let v = 0; v <= max; v += step) g += `<line class="${v ? "grid" : "base"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v / 1000}</text>`;
+    const bw = pw / Q.length;
+    const every = W > 700 ? 2 : 4, last = Q.length - 1;
+    Q.forEach((q, i) => { if ((i % every === 0 && last - i >= every / 2 + 1) || i === last) g += `<text class="ax" x="${L + bw * (i + .5)}" y="${H - 8}" text-anchor="middle">${q}</text>`; });
+    return { L, T, pw, ph, y, bw, g };
+  }
+  function bind(el, n, html) {
+    el.querySelectorAll(".hit").forEach((r, i) => {
+      r.addEventListener("pointermove", e => showTip(e, html(i)));
+      r.addEventListener("pointerleave", hideTip);
+    });
+  }
+
+  // grouped bars: net income and operating cash flow
+  (() => {
+    const W = 860, H = 300, f = frame(W, H, 70000, 10000), gw = f.bw * .7, b = (gw - 2) / 2;
+    let s = f.g;
+    Q.forEach((q, i) => {
+      const x0 = f.L + f.bw * i + (f.bw - gw) / 2;
+      [["ni", "--c2"], ["cfo", "--c1"]].forEach(([k, c], j) => {
+        const v = D[k][i], y = f.y(v), h = f.y(0) - y, x = x0 + j * (b + 2), r = Math.min(4, b / 2);
+        s += `<path d="M${x},${f.y(0)}V${y + r}Q${x},${y} ${x + r},${y}H${x + b - r}Q${x + b},${y} ${x + b},${y + r}V${f.y(0)}Z" fill="var(${c})"/>`;
+      });
+      s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`;
+    });
+    const i = 10, x = f.L + f.bw * i + f.bw / 2;
+    s += `<text class="dlab" x="${x}" y="${f.y(D.cfo[i]) - 8}" text-anchor="start" dx="4">40%</text>`;
+    const el = $("#chCash"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
+    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c2", "Net income", B(D.ni[i]))}${row("--c1", "Operating cash", B(D.cfo[i]))}<span>Cash ÷ income ${Math.round(D.cfo[i] / D.ni[i] * 100)}%</span>`);
+  })();
+
+  // lines: receivables and inventory
+  (() => {
+    const W = 520, H = 280, f = frame(W, H, 90000, 15000);
+    let s = f.g;
+    [["ar", "--c1", "Receivables"], ["inv", "--c3", "Inventories"]].forEach(([k, c, lab]) => {
+      const pts = D[k].map((v, i) => [f.L + f.bw * (i + .5), f.y(v)]);
+      s += `<path class="ln" stroke="var(${c})" d="M${pts.map(p => p.map(n => n.toFixed(1)).join(",")).join("L")}"/>`;
+      const p = pts[pts.length - 1];
+      s += `<circle class="pt" cx="${p[0]}" cy="${p[1]}" r="4" fill="var(${c})"/><text class="dlab" x="${p[0] - 8}" y="${k === "ar" ? p[1] - 10 : f.y(12000)}" text-anchor="end">${lab} ${B(D[k][11])}</text>`;
+    });
+    Q.forEach((q, i) => { s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`; });
+    const el = $("#chWc"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
+    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c1", "Receivables", B(D.ar[i]))}${row("--c3", "Inventories", B(D.inv[i]))}<span>Days to collect ${D.dso[i]}</span>`);
+  })();
+
+  // stacked bars: funded debt and guarantee caps
+  (() => {
+    const W = 520, H = 280, f = frame(W, H, 160000, 40000), b = f.bw * .62;
+    let s = f.g;
+    Q.forEach((q, i) => {
+      const x = f.L + f.bw * i + (f.bw - b) / 2, d = D.debt[i], g = D.guar[i];
+      const yd = f.y(d), yg = f.y(d + g), r = Math.min(4, b / 2);
+      if (g > 0) {
+        s += `<rect x="${x}" y="${yd}" width="${b}" height="${f.y(0) - yd}" fill="var(--c1)"/>`;
+        const top = yg, bot = yd - 2;
+        if (bot - top > 0.5) s += `<path d="M${x},${bot}V${top + Math.min(r, (bot - top) / 2)}Q${x},${top} ${x + r},${top}H${x + b - r}Q${x + b},${top} ${x + b},${top + Math.min(r, (bot - top) / 2)}V${bot}Z" fill="var(--c2)"/>`;
+      } else s += `<path d="M${x},${f.y(0)}V${yd + r}Q${x},${yd} ${x + r},${yd}H${x + b - r}Q${x + b},${yd} ${x + b},${yd + r}V${f.y(0)}Z" fill="var(--c1)"/>`;
+      s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`;
+    });
+    const x = f.L + f.bw * 11.5;
+    s += `<text class="dlab" x="${x - f.bw * .45}" y="${f.y(D.debt[11] + D.guar[11]) + 4}" text-anchor="end">$150B</text>`;
+    const el = $("#chExp"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
+    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c1", "Funded debt", B(D.debt[i]))}${row("--c2", "Guarantee caps", D.guar[i] ? B(D.guar[i]) : "none disclosed")}`);
+  })();
+
+  // guarantee split bar
+  $("#gbar").innerHTML = [[105, "--c2"], [9.5, "--c3"], [3.5, "--c1"]].map(([v, c]) => `<i style="flex:${v};background:var(${c})"></i>`).join("");
+
+  // tables
+  const tbl = (rows) => `<table><thead><tr><th>US$ millions</th>${Q.map(q => `<th>${q}</th>`).join("")}</tr></thead><tbody>${rows.map(([lab, arr, fmt]) => `<tr><td>${lab}</td>${arr.map(v => `<td>${v === null ? "" : (fmt || nf.format)(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  const pct = (a, b) => a.map((v, i) => Math.round(v / b[i] * 1000) / 10);
+  $("#tEarn").innerHTML = tbl([["Revenue", D.rev], ["Gross profit", D.gp], ["Net income", D.ni], ["Operating cash flow", D.cfo], ["Gross margin, %", pct(D.gp, D.rev), v => v.toFixed(1)], ["Cash ÷ net income, %", pct(D.cfo, D.ni), v => v.toFixed(1)]]);
+  $("#tWc").innerHTML = tbl([["Receivables, net", D.ar], ["Inventories", D.inv], ["Accounts payable", D.ap], ["Days to collect", D.dso, v => v.toFixed(1)], ["Days in inventory", D.dio, v => v.toFixed(1)], ["Cash conversion cycle, days", D.ccc, v => v.toFixed(1)]]);
+  $("#tLev").innerHTML = tbl([["Funded debt", D.debt], ["Shareholder equity", D.eq], ["Trailing operating EBITDA", D.ebitda], ["Guarantee caps disclosed", D.guar.map((v, i) => i < 7 ? null : v)]]);
+})();
+</script>
+<script>document.documentElement.classList.remove("pre");</script>
+</body>
+</html>

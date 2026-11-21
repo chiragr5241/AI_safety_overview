@@ -105,11 +105,11 @@
     { cat: 2, label: "Cloud and energy", color: "#C68ABD", x: 620, y: 760 },
     { cat: 1, label: "Chip supply chain", color: "#93ABC6", x: 370, y: 760 },
     { cat: 4, label: "Capital", color: "#C9A27E", x: 870, y: 760 },
-    { cat: 5, label: "Safety funders", color: "#B5B56E", x: 170, y: 110 },
+    { cat: 5, label: "Safety funders", color: "#4CC38A", x: 170, y: 110 },
     { cat: 6, label: "Research and think tanks", color: "#E8667A", x: 520, y: 120 },
-    { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#E8667A", color2: "#4FB0A7", x: 790, y: 120,
+    { cat: "6_10", of: [6, 10], label: "Universities: research and talent", color: "#E8667A", color2: "#F4D35E", x: 790, y: 120,
       about: "Universities do research and train the people who enter the field, so they sit between the two groups. Each is counted once." },
-    { cat: 10, label: "Talent pipeline", color: "#4FB0A7", x: 990, y: 120 },
+    { cat: 10, label: "Talent pipeline", color: "#F4D35E", x: 990, y: 120 },
     { cat: 9, label: "Critical voices and the public", color: "#6DB3D3", x: 800, y: 555 },
     { cat: 11, label: "Standards, insurers and users", color: "#DBA63E", x: 130, y: 770 },
     { cat: 7, label: "Public authority", color: "#9486EC", x: 640, y: 345 },
@@ -120,7 +120,7 @@
   // where its groups line up, and five muted tones of its own (steel, plum, brown, amber, cyan) for the groups the field map does not list.
   // The one-line descriptions are this map's own.
   const FIELD_CATS = {
-    funding: ["#B5B56E", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
+    funding: ["#4CC38A", "Funds, grantmakers and donor advisers that pay for AI safety work, and guides to them."],
     empirical_research: ["#E8667A", "Groups that run experiments on AI systems: evaluations, interpretability, control and robustness."],
     conceptual_research: ["#69A3E2", "Groups and individual researchers working on the theory of alignment and agency."],
     strategy: ["#96BC62", "Research on how the arrival of advanced AI could go, and what would make it go well."],
@@ -129,7 +129,7 @@
     capabilities_research: ["#E6ECE9", "Companies that build frontier AI systems. The field map lists them because they also run safety teams."],
     governance: ["#9486EC", "Policy institutes, public bodies and standards work on how AI is governed."],
     advocacy: ["#E88A52", "Campaigns and groups that press governments, companies or the public to act."],
-    training_and_education: ["#4FB0A7", "Fellowships, courses and bootcamps that bring people into the field."],
+    training_and_education: ["#F4D35E", "Fellowships, courses and bootcamps that bring people into the field."],
     career_support: ["#8A969C", "Advice, job boards and coaching for people moving into AI safety work."],
     blog: ["#8A969C", "Blogs that follow AI safety."],
     newsletter: ["#8A969C", "Newsletters that follow AI safety."],
@@ -147,7 +147,8 @@
   const LIGHT_TONE = {
     "#4FB0A7": "#1D6B67", "#9486EC": "#5846B4", "#E8667A": "#B8374A", "#DBA63E": "#8F6400", "#69A3E2": "#2D6CAF",
     "#E88A52": "#AE4A10", "#96BC62": "#4E7026", "#E6ECE9": "#16202A", "#8A969C": "#6B7A86", "#93ABC6": "#587592",
-    "#C68ABD": "#7B3F73", "#C9A27E": "#7A5432", "#B5B56E": "#64652A", "#6DB3D3": "#2A6F8C"
+    "#C68ABD": "#7B3F73", "#C9A27E": "#7A5432", "#B5B56E": "#64652A", "#6DB3D3": "#2A6F8C",
+    "#4CC38A": "#17784A", "#F4D35E": "#E8C21A"
   };
   (function tones() {
     const dark = [], light = [];

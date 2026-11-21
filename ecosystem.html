@@ -14,7 +14,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=10">
+<link rel="stylesheet" href="site.css?v=11">
 <link rel="stylesheet" href="explore.css?v=3">
 <style>
 /* Ecosystem page: a reference page. The map plate is the page header; hand-written reading sections follow, then lists drawn from ecosystem-data.js. */
@@ -37,9 +37,9 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 /* The map's own tokens. Its dark face is the default, like a printed chart plate; the light face follows the page's light theme.
    The group colours change with it: see the tones in ecosystem-graph.js. */
 :root { --w-bg: #07131C; --w-raise: #102433; --w-ink: #EEF3F6; --w-muted: #A3B5C1; --w-line: #27414F; --w-hi: #7FE9D8;
-  --w-soft: #DCE4EA; --w-hot: #1B3A4E; --w-in: #07131C; --w-sel: #FFFFFF; --w-shade: rgb(0 0 0 / .7); --k-a: #B5B56E; --k-b: #9486EC; }
+  --w-soft: #DCE4EA; --w-hot: #1B3A4E; --w-in: #07131C; --w-sel: #FFFFFF; --w-shade: rgb(0 0 0 / .7); --k-a: #4CC38A; --k-b: #9486EC; }
 :root[data-theme="light"] { --w-bg: #F7F9F8; --w-raise: #FCFDFC; --w-ink: #16202A; --w-muted: #56626C; --w-line: #CFD6D0; --w-hi: #1D6B67;
-  --w-soft: #3D4A54; --w-hot: #E3EAE7; --w-in: #FFFFFF; --w-sel: #16202A; --w-shade: rgb(0 0 0 / .22); --k-a: #64652A; --k-b: #5846B4; }
+  --w-soft: #3D4A54; --w-hot: #E3EAE7; --w-in: #FFFFFF; --w-sel: #16202A; --w-shade: rgb(0 0 0 / .22); --k-a: #17784A; --w-gold: #7A6000; --k-b: #5846B4; }
 .web {
   margin: 0 calc(-1 * var(--gutter)); background: var(--w-bg); color: var(--w-ink); border-bottom: 1px solid var(--w-line); padding: 22px var(--gutter) 24px; display: grid; gap: 14px; min-width: 0; color-scheme: dark; scroll-margin-top: 72px; }
 :root[data-theme="light"] .web { color-scheme: light; }
@@ -215,6 +215,9 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 #webStage .in.num { font-family: var(--font-mono); font-weight: 500; font-size: 12px; }
 #webStage .ctitle { font-family: var(--font-label); font-size: 12.5px; font-weight: 500; cursor: pointer; paint-order: stroke; stroke: var(--w-bg); stroke-width: 4px; }
 #webStage .ctitle:hover, #webStage .ctitle.sel { text-decoration: underline; }
+/* Banana yellow (training, talent) is a fill colour; as text on the light map it would wash out, so its words take a deeper gold. */
+:root[data-theme="light"] #webStage .ctitle[fill="var(--g-F4D35E)"] { fill: var(--w-gold); }
+:root[data-theme="light"] [style*="color:var(--g-F4D35E)"] { color: var(--w-gold) !important; }
 #webStage.has-focus .ctitle:not(.sel) { opacity: .55; }
 .web-panel { border-top: 1px solid var(--w-line); padding-top: 18px; margin-top: 2px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 20px 36px; align-items: start; min-height: 11rem; font-size: .93rem; }
 @media (max-width: 860px) { .web-panel { grid-template-columns: minmax(0, 1fr); } }
@@ -543,16 +546,17 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
       <a href="#sources">Sources</a>
     </nav>
     <div class="site-menu">
-      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Ecosystem</span></button>
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">AI safety landscape</span></button>
       <nav class="site-links" id="siteLinks" aria-label="Site pages">
         <a href="index.html">Goals</a>
         <a href="terms.html"><span class="n">1</span>Terms</a>
         <a href="multi-agent-risks.html"><span class="n">2</span>Multi-agent risks</a>
-        <a href="ecosystem.html" aria-current="page"><span class="n">3</span>Ecosystem</a>
+        <span class="site-grp"><span class="n">3</span>Ecosystem</span>
+        <a class="site-sub" href="ecosystem.html" aria-current="page">AI safety landscape</a>
+        <a class="site-sub" href="hyperscale.html">Hyperscalers</a>
         <a href="experiments.html">Experiments</a>
         <a href="reports.html">Reports</a>
         <a href="timelines.html">Timelines</a>
-        <a href="hyperscale.html">Hyperscale atlas</a>
       </nav>
     </div>
     <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>
@@ -1924,7 +1928,7 @@ table.tbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size
 })();
 </script>
 <script src="ecosystem-control.js"></script>
-<script src="ecosystem-graph.js?v=18"></script>
+<script src="ecosystem-graph.js?v=19"></script>
 <script src="field-list.js?v=3"></script>
 <script src="explore.js?v=6"></script>
 <script src="terms.js?v=2"></script>

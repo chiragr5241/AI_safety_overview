@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hyperscale atlas · AI Safety Overview</title>
+<title>Hyperscalers · AI Safety Overview</title>
 <meta name="description" content="Where the AI data center build-out is happening, who is named at each site, the contracts behind it and the capital in the largest AI campuses.">
 <meta name="color-scheme" content="light dark">
 <script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
@@ -12,7 +12,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=10">
+<link rel="stylesheet" href="site.css?v=11">
 <style>
 /* Hyperscale atlas. The map runs the width of the page; everything under it sits in a margined reading column.
    Data comes from hyperscale-data.js, built by hyperscale_build.py from the standalone atlas. */
@@ -209,16 +209,17 @@ td button.go-site { font: inherit; text-align: left; color: var(--accent); backg
       <a href="#sources">Sources</a>
     </nav>
     <div class="site-menu">
-      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Hyperscale atlas</span></button>
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Hyperscalers</span></button>
       <nav class="site-links" id="siteLinks" aria-label="Site pages">
         <a href="index.html">Goals</a>
         <a href="terms.html"><span class="n">1</span>Terms</a>
         <a href="multi-agent-risks.html"><span class="n">2</span>Multi-agent risks</a>
-        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <span class="site-grp"><span class="n">3</span>Ecosystem</span>
+        <a class="site-sub" href="ecosystem.html">AI safety landscape</a>
+        <a class="site-sub" href="hyperscale.html" aria-current="page">Hyperscalers</a>
         <a href="experiments.html">Experiments</a>
         <a href="reports.html">Reports</a>
         <a href="timelines.html">Timelines</a>
-        <a href="hyperscale.html" aria-current="page">Hyperscale atlas</a>
       </nav>
     </div>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
@@ -349,7 +350,7 @@ td button.go-site { font: inherit; text-align: left; color: var(--accent); backg
         <svg viewBox="0 0 44 54" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 2h26l10 10v40H4z"/><path d="M30 2v10h10M11 26h22M11 33h22M11 40h14"/></svg>
         <div>
           <p>Twelve quarters, FY2024 Q4 to FY2027 Q3: cash flows, receivables, investments, debt and guarantees, and how customer financing relates to the sale of computing infrastructure.</p>
-          <p><a href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>Download the report</a> <span class="note">PDF, 21 pages, 21 November 2026</span></p>
+          <p><a href="experiments-nvidia.html">Read the summary and charts</a> or <a href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>download the report</a> <span class="note">PDF, 21 pages, 21 November 2026</span></p>
         </div>
       </div>
     </section>

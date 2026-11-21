@@ -14,7 +14,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="site.css?v=10">
+<link rel="stylesheet" href="site.css?v=11">
 <link rel="stylesheet" href="explore.css?v=3">
 <style>
 /* Timelines page. Left: every event on one time axis, one lane per timeline, always in view. Right: the events in order.
@@ -136,11 +136,12 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
         <a href="index.html">Goals</a>
         <a href="terms.html"><span class="n">1</span>Terms</a>
         <a href="multi-agent-risks.html"><span class="n">2</span>Multi-agent risks</a>
-        <a href="ecosystem.html"><span class="n">3</span>Ecosystem</a>
+        <span class="site-grp"><span class="n">3</span>Ecosystem</span>
+        <a class="site-sub" href="ecosystem.html">AI safety landscape</a>
+        <a class="site-sub" href="hyperscale.html">Hyperscalers</a>
         <a href="experiments.html">Experiments</a>
         <a href="reports.html">Reports</a>
         <a href="timelines.html" aria-current="page">Timelines</a>
-        <a href="hyperscale.html">Hyperscale atlas</a>
       </nav>
     </div>
     <button class="icon-btn mode-btn" id="modeBtn" type="button" aria-pressed="false" aria-label="Open all the layers on this page" title="Open all the layers on this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="i-open" d="M7 9l5-5 5 5M7 15l5 5 5-5"/><path class="i-close" d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg></button>

@@ -124,6 +124,9 @@ strong { font-weight: 600; }
 .site-links.open { display: flex; }
 .site-links a { font-family: var(--font-display); font-weight: 500; font-size: 1rem; color: var(--ink); text-decoration: none; padding: 0 12px; min-height: 44px; border-radius: 10px; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: background-color .15s; }
 .site-links a:hover { background: var(--surface-2); }
+/* Ecosystem is a group in the site menu: its name, then its two pages indented under it. */
+.site-links .site-grp { font-family: var(--font-display); font-weight: 500; font-size: 1rem; color: var(--muted); padding: 0 12px; min-height: 40px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.site-links a.site-sub { padding-left: 40px; }
 .site-links a[aria-current] { color: var(--accent); background: var(--accent-soft); font-weight: 700; }
 .site-links .n { font-family: var(--font-mono); font-size: .72rem; font-weight: 400; line-height: 1; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; flex: none; }
 @media (max-width: 1439px) {
