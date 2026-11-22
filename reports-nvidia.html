@@ -77,17 +77,31 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 #path .end { stroke: var(--surface); stroke-width: 2; }
 #path .endlab { font-size: 12.5px; font-weight: 700; }
 
-.board { width: 100%; border-collapse: collapse; font-size: .86rem; font-variant-numeric: tabular-nums; }
-.board th, .board td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: middle; }
-.board tr:last-child td { border-bottom: 0; }
-.board th:first-child, .board td:first-child { text-align: left; font-family: var(--font-label); font-weight: 500; color: var(--muted); white-space: normal; }
-.board thead th { font-family: var(--font-display); font-weight: 700; font-size: .82rem; color: var(--ink); }
-.board thead th i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; background: var(--k); }
-.board td { font-family: var(--font-mono); font-size: .82rem; }
-.board td.sel { font-weight: 500; color: var(--ink); }
-.board td .mb { display: block; height: 4px; border-radius: 2px; background: var(--k); margin: 3px 0 0 auto; opacity: .85; }
-.board tr.hot td { background: var(--accent-soft); }
-.board tr.hot td:first-child { color: var(--ink); }
+/* the metric charts: one per unit, grouped so metrics that share an axis sit together */
+.lgd { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 2px 0 8px; font-family: var(--font-display); font-size: .84rem; }
+.lgd span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.lgd span.sel { color: var(--ink); font-weight: 700; }
+.lgd i { width: 11px; height: 11px; border-radius: 3px; background: var(--k); }
+.mcharts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 16px; }
+.mc { grid-column: span var(--sp); min-width: 0; }
+.mc .mct { margin: 0 0 2px; font-family: var(--font-display); font-weight: 700; font-size: .86rem; line-height: 1.3; }
+.mc .mct span { font-family: var(--font-label); font-weight: 500; color: var(--muted); margin-left: 4px; }
+.mc svg { display: block; width: 100%; height: auto; font-family: var(--font-display); overflow: visible; }
+.mc .grid { stroke: var(--line); stroke-width: 1; }
+.mc .zero { stroke: var(--line-strong); stroke-width: 1.2; }
+.mc .ax { fill: var(--muted); font-size: 12px; font-family: var(--font-mono); }
+.mc .ml { fill: var(--muted); font-size: 12px; font-family: var(--font-label); }
+.mc .ml.hot { fill: var(--ink); font-weight: 700; }
+.mc .hb { fill: var(--accent-soft); }
+.mc .vl { fill: var(--ink); font-size: 12px; font-weight: 700; font-family: var(--font-display); }
+.mc .ref { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.mc .reflab { fill: var(--muted); font-size: 12px; font-family: var(--font-label); }
+.mc .bar.sel { stroke: var(--ink); stroke-width: 1.5; }
+.mc .bar.cmp { opacity: .8; }
+.mc .hit { fill: transparent; }
+.mc .hit:hover { fill: var(--ink); fill-opacity: .06; }
+.mcharts.all .mc { grid-column: span var(--spa, var(--sp)); }
+@media (max-width: 760px) { .mcharts.all { grid-template-columns: minmax(0, 1fr); } .mcharts.all .mc { grid-column: auto; } }
 .cmp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; font-family: var(--font-label); font-size: .82rem; color: var(--muted); }
 .cmp button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border-radius: 999px; border: 1.5px solid var(--line-strong); font-family: var(--font-display); font-weight: 600; font-size: .82rem; color: var(--ink); transition: border-color .15s, background-color .15s; }
 .cmp button i { width: 9px; height: 9px; border-radius: 50%; background: var(--k); }
@@ -134,6 +148,11 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .tw thead th i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--k); }
 .tw td { font-family: var(--font-mono); font-size: .84rem; }
 .src { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); line-height: 1.5; max-width: 90ch; margin: 0; }
+.two-t { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .two-t { grid-template-columns: minmax(0, 1fr); } }
+.tw caption { caption-side: top; text-align: left; padding: 10px 12px 6px; font-family: var(--font-display); font-weight: 700; font-size: .92rem; }
+.tw tr.sum td { font-weight: 700; color: var(--ink); background: var(--accent-soft); }
+.pts { margin: 0; padding-left: 1.2em; display: grid; gap: .5em; max-width: 72ch; }
 
 #tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.35; padding: 8px 11px; border-radius: 8px; max-width: 18rem; }
 #tip b { display: block; }
@@ -199,8 +218,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
         <div class="panel tbl">
           <h3>The same metrics for every case</h3>
-          <p class="sub">Rows the current step depends on are shaded.</p>
-          <table class="board" id="board"></table>
+          <p class="sub">One chart per unit, on a fixed scale, so added cases line up. The metrics the current step depends on are shaded.</p>
+          <div class="lgd" id="lg"></div>
+          <div class="mcharts" id="mcharts"></div>
           <div class="cmp" id="cmp" role="group" aria-label="Compare with other cases"></div>
         </div>
       </div>
@@ -209,7 +229,21 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
     <section class="after" id="all">
       <h2>All five, side by side</h2>
+      <div class="panel">
+        <div class="lgd" id="lgAll"></div>
+        <div class="mcharts all" id="mchartsAll"></div>
+      </div>
       <div class="tw"><table id="allTbl"></table></div>
+    </section>
+
+    <section class="after" id="math">
+      <h2>How the weighted value is worked out</h2>
+      <p>The probabilities are the studies’ judgement, not a statistical estimate: each study assigns a weight to each case so that the five add up to 100%. The weighted value multiplies each case’s price by its weight and adds the results.</p>
+      <div class="two-t">
+        <div class="tw"><table id="mathA"></table></div>
+        <div class="tw"><table id="mathB"></table></div>
+      </div>
+      <ul class="pts" id="mathNotes"></ul>
       <p class="src">Cases, probabilities and figures from the breakpoint study of 20 November 2026; risk review prices from the forensic and investment risk review of the same day. The studies priced at about $127; changes here are against the $125.53 close. FY27 revenue is taken as about $424B (nine months reported plus the $130B Q4 guide). Analysis, not investment advice.</p>
       <p>The evidence behind every number, including the commitments, the accounting issues and where the sources disagree, is in <a href="experiments-nvidia.html">Experiment 03: NVIDIA due diligence</a>.</p>
     </section>
@@ -373,9 +407,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     const c = byId[sel], cols = shown();
     casesEl.querySelectorAll(".case").forEach(b => { b.setAttribute("aria-checked", b.dataset.id === sel ? "true" : "false"); b.tabIndex = b.dataset.id === sel ? 0 : -1; });
     $("#story").style.setProperty("--k", `var(${c.k})`);
-    // board
-    $("#board").innerHTML = `<thead><tr><th>Metric</th>${cols.map(x => `<th style="--k:var(${x.k})"><i></i>${x.name}</th>`).join("")}</tr></thead><tbody>` +
-      M.map(m => `<tr data-k="${m.k}"${STEPS[active].hot.includes(m.k) ? ' class="hot"' : ""}><td>${m.t}</td>${cols.map((x, j) => `<td class="${j ? "" : "sel"}" style="--k:var(${x.k})">${m.f(x)}${m.bar ? `<span class="mb" style="width:${Math.max(2, m.v(x) / MAX[m.k] * 100).toFixed(0)}%"></span>` : ""}</td>`).join("")}</tr>`).join("") + "</tbody>";
+    // metric charts, in case order so a case keeps its place in every cluster
+    const ordered = CASES.filter(x => x.id === sel || cmp.has(x.id));
+    $("#lg").innerHTML = ordered.map(x => `<span class="${x.id === sel ? "sel" : ""}" style="--k:var(${x.k})"><i></i>${x.name}</span>`).join("");
+    drawMetrics($("#mcharts"), ordered, STEPS[active].hot, true);
     cmpEl.innerHTML = `<span>Compare with</span>` + CASES.filter(x => x.id !== sel).map(x => `<button type="button" data-id="${x.id}" style="--k:var(${x.k})" aria-pressed="${cmp.has(x.id)}"><i></i>${x.name}</button>`).join("");
     // steps
     stepsEl.querySelectorAll(".step").forEach((el, i) => {
@@ -424,8 +459,106 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     $("#path").innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
   }
 
+  /* ---------- metric charts: one per unit, fixed scales so cases can be compared ---------- */
+  const V = { fy28: c => c.fy28, fy29: c => c.fy29, fcf: c => c.fcf, loss: c => c.loss, g28: c => (c.fy28 / FY27 - 1) * 100, g29: c => c.g29, chg: c => chg(c),
+    price: c => c.price, rr: c => c.rr, p: c => c.p, gm: c => c.gm, eps: c => c.eps, pe: c => c.pe };
+  const FMT = Object.fromEntries(M.map(m => [m.k, m.f]));
+  // sp: columns of six in the pinned panel; spa: columns of six in the side-by-side section.
+  // Each metric has a long and a short label; the short one is used when a cluster is narrow.
+  const G = [
+    { t: "Revenue, cash and losses", u: "US$ billions", sp: 6, spa: 3, mets: [["fy28", "FY28 revenue", "FY28"], ["fy29", "FY29 revenue", "FY29"], ["fcf", "FY29 free cash flow", "FY29 cash"], ["loss", "Commitment losses", "Losses"]], lo: 0, hi: 1000, ticks: [0, 250, 500, 750, 1000], tf: v => v },
+    { t: "Change", u: "%", sp: 3, spa: 3, mets: [["g28", "FY28 growth", "FY28"], ["g29", "FY29 change", "FY29"], ["chg", "Price vs today", "Price"]], lo: -75, hi: 125, ticks: [-50, 0, 50, 100], tf: v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) },
+    { t: "Share price", u: "US$", sp: 3, spa: 2, mets: [["price", "November 2027", "Nov 2027"], ["rr", "Risk review", "Review"]], lo: 0, hi: 300, ticks: [0, 100, 200, 300], tf: v => v, ref: [NOW, "today"] },
+    { t: "Probability and gross margin", u: "%", sp: 2, spa: 2, mets: [["p", "Probability", "Prob."], ["gm", "Gross margin", "Margin"]], lo: 0, hi: 100, ticks: [0, 50, 100], tf: v => v },
+    { t: "FY29 earnings a share", u: "US$", sp: 2, spa: 1, mets: [["eps", "", ""]], lo: 0, hi: 25, ticks: [0, 10, 20], tf: v => v },
+    { t: "Multiple on FY29 earnings", u: "x", sp: 2, spa: 1, mets: [["pe", "", ""]], lo: 0, hi: 15, ticks: [0, 5, 10, 15], tf: v => v }
+  ];
+  function drawMetrics(el, cases, hot, labels) {
+    // first lay out the chart boxes, then draw each at its real width so text stays at true size
+    el.innerHTML = G.map(g => `<div class="mc${g.mets.some(([k]) => hot.includes(k)) ? " hot" : ""}" style="--sp:${g.sp};--spa:${g.spa}"><p class="mct">${g.t}<span>${g.u}</span></p><div class="sv"></div></div>`).join("");
+    el.querySelectorAll(".mc").forEach((box, gi) => { box.querySelector(".sv").innerHTML = chartSVG(G[gi], gi, Math.max(160, box.clientWidth), cases, hot, labels); });
+    el.querySelectorAll(".hit").forEach(r => {
+      const c = byId[r.dataset.c], m = M.find(m => m.k === r.dataset.k);
+      r.addEventListener("pointermove", e => showTip(e, `<b>${c.name}</b>${m.t}: ${m.f(c)}`));
+      r.addEventListener("pointerleave", hideTip);
+    });
+  }
+  function chartSVG(g, gi, W, cases, hot, labels) {
+    {
+      const H = g.mets.length > 2 ? 178 : 160;
+      const L = 38, R = 6, T = 18, B = g.mets[0][1] ? 24 : 8, pw = W - L - R, ph = H - T - B;
+      const y = v => T + (g.hi - v) / (g.hi - g.lo) * ph;
+      const n = cases.length, cw = pw / g.mets.length, gap = 2;
+      const bw = Math.min(26, (cw * .8 - (n - 1) * gap) / n);
+      const short = g.mets.some(([, lab]) => lab.length * 7 > cw - 6);
+      let s = "";
+      g.mets.forEach(([k, lab, sh], mi) => {
+        const cx = L + cw * (mi + .5);
+        if (hot.includes(k)) s += `<rect class="hb" x="${L + cw * mi + 2}" y="${T - 14}" width="${cw - 4}" height="${ph + 14 + (B > 10 ? B : 4)}" rx="6"/>`;
+        if (lab) s += `<text class="ml${hot.includes(k) ? " hot" : ""}" x="${cx}" y="${H - 6}" text-anchor="middle">${short ? sh : lab}</text>`;
+      });
+      g.ticks.forEach(v => { s += `<line class="${v === 0 ? "zero" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${g.tf(v)}</text>`; });
+      if (g.ref) s += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(g.ref[0])}" y2="${y(g.ref[0])}"/><text class="reflab" x="${L + 4}" y="${y(g.ref[0]) - 5}">${g.ref[1]}</text>`;
+      g.mets.forEach(([k], mi) => {
+        const x0 = L + cw * (mi + .5) - (n * bw + (n - 1) * gap) / 2;
+        cases.forEach((c, ci) => {
+          const v = V[k](c), x = x0 + ci * (bw + gap), y0 = y(0), y1 = y(v), r = Math.min(3, bw / 2, Math.abs(y1 - y0) / 2);
+          const cls = c.id === sel ? "sel" : cmp.has(c.id) ? "cmp" : "";
+          let d;
+          if (Math.abs(y1 - y0) < 1.5) d = `M${x},${y0 - 1.5}h${bw}v1.5h${-bw}Z`;
+          else if (v >= 0) d = `M${x},${y0}V${y1 + r}Q${x},${y1} ${x + r},${y1}H${x + bw - r}Q${x + bw},${y1} ${x + bw},${y1 + r}V${y0}Z`;
+          else d = `M${x},${y0}V${y1 - r}Q${x},${y1} ${x + r},${y1}H${x + bw - r}Q${x + bw},${y1} ${x + bw},${y1 - r}V${y0}Z`;
+          s += `<path class="bar ${labels ? cls : ""}" d="${d}" fill="var(${c.k})"/>`;
+          if (labels && c.id === sel) s += `<text class="vl" x="${x + bw / 2}" y="${v >= 0 ? y1 - 5 : y1 + 14}" text-anchor="middle">${FMT[k](c).replace("~", "")}</text>`;
+          s += `<rect class="hit" data-g="${gi}" data-k="${k}" data-c="${c.id}" x="${x - gap / 2}" y="${T}" width="${bw + gap}" height="${ph}"/>`;
+        });
+      });
+      return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${g.t}: ${g.mets.map(([k, l]) => (l || g.t) + " " + cases.map(c => c.name + " " + FMT[k](c)).join(", ")).join("; ")}">${s}</svg>`;
+    }
+  }
+  // redraw at the new widths when the window changes size
+  let rz;
+  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => render(false), 150); });
+  const tip = $("#tip");
+  function showTip(e, html) {
+    tip.innerHTML = html; tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + 14, yy = e.clientY + 14;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (yy + h > innerHeight - 8) yy = e.clientY - h - 14;
+    tip.style.transform = `translate(${x}px,${yy}px)`;
+  }
+  const hideTip = () => { tip.hidden = true; };
+
+  /* ---------- the weighted value, worked through for both studies ---------- */
+  // The risk review gives its own weights: 8, 22, 35, 25 and 10% from strong bull to severe bear.
+  const RRW = { "strong-bull": 8, "bull": 22, "base": 35, "bear": 25, "severe-bear": 10 };
+  function mathTables() {
+    const money = v => "$" + v.toFixed(2);
+    const build = (cap, w, price) => {
+      let sum = 0, tot = 0;
+      const rows = CASES.map(c => { const part = w(c) / 100 * price(c); sum += part; tot += w(c);
+        return `<tr><td style="--k:var(${c.k})">${c.name}</td><td>${w(c)}%</td><td>$${price(c)}</td><td>${money(part)}</td></tr>`; }).join("");
+      return { sum, html: `<caption>${cap}</caption><thead><tr><th>Case</th><th>Weight</th><th>Price</th><th>Weight × price</th></tr></thead><tbody>${rows}<tr class="sum"><td>Weighted value</td><td>${tot}%</td><td></td><td>${money(sum)}</td></tr></tbody>` };
+    };
+    const a = build("Breakpoint study, 12 months", c => c.p, c => c.price), b = build("Risk review, November 2027", c => RRW[c.id], c => c.rr);
+    $("#mathA").innerHTML = a.html; $("#mathB").innerHTML = b.html;
+    const above = (w, price) => CASES.filter(c => price(c) > NOW).reduce((s, c) => s + w(c), 0);
+    const aUp = above(c => c.p, c => c.price), bUp = above(c => RRW[c.id], c => c.rr);
+    $("#mathNotes").innerHTML = [
+      `<b>Breakpoint study:</b> 0.10 × $266 + 0.25 × $180 + 0.35 × $123 + 0.20 × $84 + 0.10 × $46 = ${money(a.sum)}, which is ${pct((a.sum / NOW - 1) * 100)} on the $125.53 close (the study rounds to $136, +7% on its $127 price).`,
+      `<b>Risk review:</b> its own weights on its own prices give ${money(b.sum)}, ${pct((b.sum / NOW - 1) * 100)} on the close. The two studies agree within about $3.`,
+      `<b>The average is not the likeliest outcome.</b> In the breakpoint study only the two bull cases, ${aUp}% of the weight, end above today; the base case, the single most likely at 35%, is slightly below at $123. The average still sits above today because the upside cases are larger than the downside ones: +112% against −63%.`,
+      `<b>Where the studies differ:</b> the risk review’s base case keeps consensus earnings at 8 times, $133, so ${bUp}% of its weight ends above today. The gap is one judgement: whether the base case holds analysts’ FY28 earnings ($16.61) or a lower FY29 ($13.67).`,
+      `<b>How sensitive it is:</b> moving 10 points of weight from the base case to the bear case lowers the breakpoint study’s value by 0.10 × ($123 − $84) = $3.90; moving it to the bull case raises it by 0.10 × ($180 − $123) = $5.70.`
+    ].map(t => `<li>${t}</li>`).join("");
+  }
+
   /* ---------- full table ---------- */
   function allTable() {
+    mathTables();
+    $("#lgAll").innerHTML = CASES.map(x => `<span class="sel" style="--k:var(${x.k})"><i></i>${x.name}</span>`).join("");
+    drawMetrics($("#mchartsAll"), CASES, [], false);
     $("#allTbl").innerHTML = `<thead><tr><th>Metric</th>${CASES.map(c => `<th style="--k:var(${c.k})"><i></i>${c.name}</th>`).join("")}</tr></thead><tbody>` +
       M.map(m => `<tr><td>${m.t}</td>${CASES.map(c => `<td>${m.f(c)}</td>`).join("")}</tr>`).join("") +
       `<tr><td>Risk review: FY28 earnings and multiple</td>${CASES.map(c => `<td>${c.rrT}</td>`).join("")}</tr></tbody>`;
@@ -440,15 +573,15 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     stepEls.forEach((el, j) => el.classList.toggle("on", j === i));
     if (i === active) return;
     active = i;
-    $("#board").querySelectorAll("tbody tr").forEach(tr => tr.classList.toggle("hot", STEPS[active].hot.includes(tr.dataset.k)));
+    drawMetrics($("#mcharts"), CASES.filter(x => x.id === sel || cmp.has(x.id)), STEPS[active].hot, true);
     drawPath();
     revealHot();
   }
-  // the board can be taller than the pinned stage: keep the shaded rows in view
+  // the charts can be taller than the pinned stage: keep the shaded ones in view
   const stage = $(".stage");
   function revealHot() {
     if (stage.scrollHeight <= stage.clientHeight + 2) return;
-    const rows = [...$("#board").querySelectorAll("tr.hot")];
+    const rows = [...$("#mcharts").querySelectorAll(".mc.hot")];
     if (!rows.length) return;
     const sr = stage.getBoundingClientRect(), a = rows[0].getBoundingClientRect(), b = rows[rows.length - 1].getBoundingClientRect();
     if (b.bottom > sr.bottom - 24) stage.scrollBy({ top: b.bottom - sr.bottom + 48, behavior: "smooth" });
