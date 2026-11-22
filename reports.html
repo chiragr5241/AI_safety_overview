@@ -28,7 +28,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
 /* ---------- the opening question ---------- */
 /* The question fills the first screen, under the top bar. */
-.hero { min-height: calc(100vh - 57px); min-height: calc(100svh - 57px); box-sizing: border-box; display: grid; align-content: center; gap: clamp(22px, 3.4vh, 40px); padding: 32px 0 48px; }
+/* the two reports, one chip each, as on the experiments pages */
+.xnav { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 28px; }
+.xnav a[aria-current] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.hero { min-height: calc(100vh - 57px - 64px); min-height: calc(100svh - 57px - 64px); box-sizing: border-box; display: grid; align-content: center; gap: clamp(22px, 3.4vh, 40px); padding: 32px 0 48px; }
 .hero h1 { font-size: clamp(2.7rem, 8.6vw, 7.4rem); line-height: 1; letter-spacing: -0.02em; font-weight: 700; max-width: 16ch; }
 .hero p { font-family: var(--font-title); font-size: clamp(1.2rem, 2.2vw, 1.75rem); line-height: 1.35; max-width: 36ch; color: var(--muted); }
 .go { width: 52px; height: 52px; border: 1.5px solid var(--muted); border-radius: 50%; display: grid; place-items: center; color: var(--muted); text-decoration: none; font-family: var(--font-display); font-size: 1.15rem; }
@@ -400,7 +403,7 @@ a.next:hover { color: var(--accent); }
   <div class="bar">
     <a class="site-name" href="index.html" aria-label="AI Safety Overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>AI Safety Overview</span></a>
     <div class="site-menu">
-      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">Reports</span></button>
+      <button class="site-btn" id="siteBtn" type="button" aria-expanded="false" aria-controls="siteLinks" title="Site pages"><span class="site-page" id="sitePage">AI safety advice</span></button>
       <nav class="site-links" id="siteLinks" aria-label="Site pages">
         <a href="index.html">Goals</a>
         <a href="terms.html"><span class="n">1</span>Terms</a>
@@ -409,7 +412,9 @@ a.next:hover { color: var(--accent); }
         <a class="site-sub" href="ecosystem.html">AI safety landscape</a>
         <a class="site-sub" href="hyperscale.html">Hyperscalers</a>
         <a href="experiments.html">Experiments</a>
-        <a href="reports.html" aria-current="page">Reports</a>
+        <span class="site-grp">Reports</span>
+        <a class="site-sub" href="reports.html" aria-current="page">AI safety advice</a>
+        <a class="site-sub" href="reports-nvidia.html">NVIDIA scenarios</a>
         <a href="timelines.html">Timelines</a>
       </nav>
     </div>
@@ -421,6 +426,10 @@ a.next:hover { color: var(--accent); }
 <main id="main" tabindex="-1">
   <div class="wrap">
 
+    <nav class="xnav" aria-label="Reports">
+      <a class="chip" href="reports.html" aria-current="page">Is third-party AI safety advice independent?</a>
+      <a class="chip" href="reports-nvidia.html">NVIDIA: five ways the next year could go</a>
+    </nav>
     <section class="hero" id="question">
       <h1>What makes third-party AI safety advice independent and credible?</h1>
       <p>When an AI incident happens, a legislator has two questions. Should we respond? Can we rely on the lab’s own account?</p>
@@ -951,6 +960,7 @@ a.next:hover { color: var(--accent); }
 <footer>
   <div class="wrap">
     <div class="res">
+      <a href="reports-nvidia.html">Report: five ways NVIDIA’s next year could go</a>
       <a href="experiments.html">Experiments: who pays for AI safety?</a>
       <a href="ecosystem.html">See these organisations on the ecosystem map</a>
       <a href="index.html">All goals of this site</a>
