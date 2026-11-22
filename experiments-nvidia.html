@@ -239,7 +239,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         <div><span>Financial reporting risk</span><b>Unresolved</b><small>SEC inquiry reported; nothing found so far</small></div>
         <div><span>Share price, 12 months</span><b>Wide</b><small>Flat in the base case; $46 to $266 across cases</small></div>
       </div>
-      <p class="meta">Prices are the 20 November 2026 intraday reference, about 3:30 p.m. ET. Built from NVIDIA’s filings and three desk reviews dated 20 and 21 November: a twelve-quarter due diligence review, a breakpoint study and a risk review. Where they disagree, the reconciliation below says which figure is used. Analysis, not investment advice.</p>
+      <p class="meta">The valuation work is priced at the studies’ 20 November intraday reference of about $127; the stock closed that day at $125.53, 1.3% lower, which moves the implied long-run cash flow by about $4B. Built from NVIDIA’s filings and three desk reviews dated 20 and 21 November: a twelve-quarter due diligence review, a breakpoint study and a risk review. Where they disagree, the reconciliation below says which figure is used. Analysis, not investment advice.</p>
       <nav class="jump" aria-label="Questions in this report">
         <a class="chip" href="#q-what">What happened</a>
         <a class="chip" href="#q-sound">Is the accounting sound</a>
@@ -256,21 +256,22 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     <!-- ============ 1 WHAT HAPPENED ============ -->
     <section class="qs" id="q-what">
       <h2>What happened?</h2>
-      <p class="answer">The business had its best quarter ever. The stock lost 47% in seven weeks, almost all of it from a lower multiple.</p>
+      <p class="answer">The business had its best quarter ever. The stock lost 47.5% in seven weeks, from $239.24 to $125.53, almost all of it from a lower multiple.</p>
       <div class="card">
-        <h3>Closing prices we could confirm, and the news between them</h3>
-        <p class="sub">US$ per share. Dashed where there are days without a confirmed close.</p>
-        <div class="chart wide-scroll" id="chPrice" role="img" aria-label="Line of NVIDIA closing prices from the 6 October record of $239.24 to about $127 intraday on 20 November, with the events listed in the table below."></div>
-        <p class="src">Closes: Oct 6, Nov 9 and Nov 19 from the breakpoint study; Nov 13 and 16 from <a href="https://fourweekmba.com/ai-nvidia-closes-down-4-1-before-results-424b-lost-since-8-k/">FourWeekMBA</a>; Nov 17 and 18 from <a href="https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-november-19-2026/">Gotrade</a>. Nov 20 is intraday.</p>
+        <h3>Every close since 1 October, and the news on each day</h3>
+        <p class="sub">US$ per share. Dots mark days with news; hover any day. Grey bars are the intraday range on the three steepest days.</p>
+        <div class="chart wide-scroll" id="chPrice" role="img" aria-label="Line of NVIDIA's 37 daily closes from 1 October to 20 November 2026: from the 6 October record of $239.24 to $125.53, with falls of 9.3% on 5 November and 14.0% on 20 November."></div>
+        <p class="src">Daily closes, opens, highs and lows: <a href="https://finance.yahoo.com/quote/NVDA/history/">Yahoo Finance</a>, matching <a href="https://investor.nvidia.com/stock-info/stock-quote-and-chart/default.aspx">NVIDIA investor relations</a> for 20 November. News: <a href="https://www.trefis.com/stock/nvda/articles/623357/what-sent-nvidia-stock-lower/2026-11-06">Trefis</a> and <a href="https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-november-6-2026/">Gotrade</a> on 5 November; <a href="https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-october-23-2026/">Gotrade</a> on 22 October; <a href="https://sfstandard.com/2026/11/12/nvidia-shares-tumble-as-wall-street-reacts-huang-s-exit/">SF Standard</a> on 12 November; the breakpoint study for the rest.</p>
       </div>
       <div class="tiles">
-        <div class="tile"><b>$115.8B</b><span>Q3 FY27 revenue, $7.8B above NVIDIA’s own forecast</span></div>
-        <div class="tile"><b>~75%</b><span>FY28 growth outlook, raised on 17 November</span></div>
+        <div class="tile"><b>$115.8B</b><span>Q3 FY27 revenue, $7.8B above NVIDIA’s own forecast; EPS $2.68 against $2.50 expected</span></div>
+        <div class="tile"><b>~75%</b><span>FY28 growth outlook, raised from 70% on 17 November</span></div>
         <div class="tile"><b>14x</b><span>trailing earnings, down from about 30x at the October peak</span></div>
         <div class="tile"><b>~8x</b><span>FY28 consensus earnings, against 18.3x for the S&amp;P 500</span></div>
       </div>
       <ul class="pts">
-        <li><b>12 November:</b> Jensen Huang resigned as CEO and director. CFO Colette Kress is interim CEO and still CFO.</li>
+        <li><b>Before the board, leadership and SEC news:</b> the stock was already 16% off its record by 4 November, then fell 9.3% on 5 November in an AI chip sell-off with no company announcement. By 6 November it stood at $186.64, down 22%: nearly half of the whole fall.</li>
+        <li><b>12 November:</b> Jensen Huang resigned as CEO and director. The stock opened 13% down at $151.01 and recovered to close 4.3% down. CFO Colette Kress is interim CEO and still CFO.</li>
         <li><b>17 November:</b> the Wall Street Journal reported an SEC civil investigation into NVIDIA’s disclosures. On 20 November Reuters reported enforcement staff examining possible accounting issues. Neither the SEC nor NVIDIA has confirmed scope.</li>
         <li><b>Also open:</b> a shareholder class action over Megaspeed disclosures (9 November), a board investigation (8 November), DOJ questions on the $12.93B Hugging Face deal, and a Commerce rule of 16 November closing a remote-access loophole.</li>
       </ul>
@@ -399,6 +400,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="two">
         <div class="tw"><table><thead><tr><th>At $127.18, 20 November</th><th>Value</th></tr></thead><tbody>
           <tr><td>Market value, 24.1B shares</td><td>$3.07T</td></tr>
+          <tr><td>Same, at the $125.53 close</td><td>$3.03T</td></tr>
           <tr><td>Enterprise value, net of $53.5B cash and securities and $32.4B debt</td><td>$3.04T</td></tr>
           <tr><td>Same, also net of $109.7B equity stakes</td><td>$2.93T</td></tr>
           <tr><td>Price to trailing GAAP earnings ($9.31)</td><td>14x</td></tr>
@@ -474,7 +476,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <h2>Where do the sources disagree?</h2>
       <p class="answer">On consensus, on what counts as a stake or a guarantee, and on a few plain errors in the chat-based valuation notes. This report uses the filings first.</p>
       <div class="tw wrap"><table><thead><tr><th>Item</th><th>What the sources say</th><th>Used here, and why</th></tr></thead><tbody>
-        <tr><td>Share price</td><td>$127.18 at 3:21 p.m. and $127.30 at 3:31 p.m. (desk reviews); $125.53 called a close (chat notes)</td><td>~$127. No source we found confirms a $125.53 close</td></tr>
+        <tr><td>Share price</td><td>$127.18 at 3:21 p.m. and $127.30 at 3:31 p.m. (desk reviews); $125.53 close (chat notes)</td><td>The chat is right on the close: Yahoo Finance and NVIDIA investor relations both show $125.53, down 14.01%. The valuation keeps the studies’ ~$127</td></tr>
+        <tr><td>12 November fall</td><td>“−14% intraday” (breakpoint study)</td><td>Right at the low: $148.80 against a $173.73 prior close. The close was $166.19, down 4.3%</td></tr>
+        <tr><td>FY27 multiple before results</td><td>~11x FY27 consensus, from 17x a quarter earlier and 30x historically (<a href="https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/11/nvidia-earnings-preview-q3-2027">S&amp;P Global, 12 Nov</a>)</td><td>Consistent with the studies; no post-results FY28 revision has been published yet</td></tr>
         <tr><td>FY28 revenue consensus</td><td>$709B (FactSet); $725.5B (S&amp;P, 19 Nov); $742B (chat, 75% on FY27); ~$740B management outlook</td><td>A range. The breakpoints use FactSet; the gap is itself a 5% swing</td></tr>
         <tr><td>FY28 EPS consensus</td><td>$15.64 (FactSet, calendar 2027); $16.61 (S&amp;P); $15.85 to $16.30 (chat)</td><td>7.7 to 8.1x. The chat’s “9 to 10x” uses a blended next-twelve-months figure</td></tr>
         <tr><td>Funded debt</td><td>$32.4B (filings); “~$8.5B” (chat)</td><td>$32.4B. The chat uses the pre-July figure, before about $25B of notes were issued</td></tr>
@@ -711,39 +715,54 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   const hover = (el, html) => { el.addEventListener("pointermove", e => showTip(e, html)); el.addEventListener("pointerleave", hideTip); };
   const row = (c, k, v) => `<span><i style="background:var(${c})"></i>${k} ${v}</span>`;
 
-  /* ---------- share price: confirmed closes only, dashed across missing days ---------- */
+  /* ---------- share price: every close, 1 Oct to 20 Nov 2026 (Yahoo Finance), with the news on each day ---------- */
   (() => {
-    const P = [
-      ["2026-10-06", 239.24, "Record close"],
-      ["2026-11-09", 178.67, "Class action filed over Megaspeed disclosures"],
-      ["2026-11-13", 162.85, "Day after Huang resigns as CEO"],
-      ["2026-11-16", 156.14, "Commerce closes remote-access loophole"],
-      ["2026-11-17", 155.46, "Q3 results after the close; WSJ reports SEC probe"],
-      ["2026-11-18", 150.96, ""],
-      ["2026-11-19", 145.98, "Anthropic IPO; 52-week low close"],
-      ["2026-11-20", 127.2, "Reuters: SEC examining accounting (intraday)"]
-    ];
-    const W = 900, H = 300, L = 44, R = 20, T = 20, Bm = 34;
-    const d0 = Date.parse("2026-10-01"), d1 = Date.parse("2026-11-24");
+    const C = [["2026-10-01", 230.86], ["2026-10-02", 233.95], ["2026-10-05", 238.90], ["2026-10-06", 239.24], ["2026-10-07", 237.47], ["2026-10-08", 230.48], ["2026-10-09", 229.28],
+      ["2026-10-12", 226.32], ["2026-10-13", 228.52], ["2026-10-14", 221.30], ["2026-10-15", 217.23], ["2026-10-16", 214.13], ["2026-10-19", 217.09], ["2026-10-20", 216.47],
+      ["2026-10-21", 221.97], ["2026-10-22", 212.21], ["2026-10-23", 210.96], ["2026-10-26", 216.00], ["2026-10-27", 217.94], ["2026-10-28", 215.38], ["2026-10-29", 213.66],
+      ["2026-10-30", 204.64], ["2026-11-02", 202.06], ["2026-11-03", 206.69], ["2026-11-04", 200.13], ["2026-11-05", 181.60], ["2026-11-06", 186.64], ["2026-11-09", 178.67],
+      ["2026-11-10", 168.89], ["2026-11-11", 173.73], ["2026-11-12", 166.19], ["2026-11-13", 162.85], ["2026-11-16", 156.14], ["2026-11-17", 155.46], ["2026-11-18", 150.96],
+      ["2026-11-19", 145.98], ["2026-11-20", 125.53]];
+    // intraday low and high on the three steepest days
+    const RNG = { "2026-11-05": [181.46, 196.25], "2026-11-12": [148.80, 167.14], "2026-11-20": [124.50, 143.73] };
+    const EV = {
+      "2026-10-06": "Record close; intraday high $243.37",
+      "2026-10-22": "AI chip sell-off; no NVIDIA news",
+      "2026-10-28": "DOJ questions the $12.93B Hugging Face deal",
+      "2026-10-30": "Worst month since November 2025 ends",
+      "2026-11-05": "AI chip sell-off: Qualcomm’s light outlook, election and spending worries; no NVIDIA news",
+      "2026-11-09": "Shareholder class action over Megaspeed disclosures",
+      "2026-11-12": "Huang resigns as CEO; opened 13% down, recovered to close 4.3% down",
+      "2026-11-16": "Commerce closes the remote-access loophole",
+      "2026-11-17": "Q3 results after the close; WSJ reports an SEC civil probe",
+      "2026-11-19": "Anthropic IPO; Daiwa cuts its target to $185",
+      "2026-11-20": "Reuters: SEC staff examining accounting; low $124.50"
+    };
+    const W = 900, H = 320, L = 44, R = 24, T = 26, Bm = 34;
+    const d0 = Date.parse("2026-10-01"), d1 = Date.parse("2026-11-20");
     const x = d => L + (Date.parse(d) - d0) / (d1 - d0) * (W - L - R);
-    const y = v => T + (260 - v) / (260 - 100) * (H - T - Bm);
+    const y = v => T + (250 - v) / (250 - 120) * (H - T - Bm);
     let s = "";
-    for (let v = 100; v <= 260; v += 40) s += `<line class="${v === 100 ? "base" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
-    [["2026-10-01", "1 Oct"], ["2026-10-15", "15 Oct"], ["2026-11-01", "1 Nov"], ["2026-11-15", "15 Nov"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 10}" text-anchor="middle">${l}</text>`; });
-    // Huang's resignation, 12 Nov: a marker on the axis, since there is no confirmed close that day
-    s += `<line class="grid" x1="${x("2026-11-12")}" x2="${x("2026-11-12")}" y1="${T}" y2="${y(100)}" stroke-dasharray="2 4"/><text class="elab" x="${x("2026-11-12") - 6}" y="${y(250)}" text-anchor="end">12 Nov: Huang resigns</text>`;
-    for (let i = 1; i < P.length; i++) {
-      const a = P[i - 1], b = P[i], gap = (Date.parse(b[0]) - Date.parse(a[0])) / 864e5 > 3;
-      s += `<path class="${gap ? "gap" : "ln"}" stroke="var(--c1)" d="M${x(a[0]).toFixed(1)},${y(a[1]).toFixed(1)}L${x(b[0]).toFixed(1)},${y(b[1]).toFixed(1)}"/>`;
-    }
-    P.forEach((p, i) => {
-      s += `<circle class="pt" cx="${x(p[0])}" cy="${y(p[1])}" r="${i === P.length - 1 ? 6 : 4.5}" fill="var(--c1)"/>`;
-      s += `<circle class="hit" data-i="${i}" cx="${x(p[0])}" cy="${y(p[1])}" r="14"/>`;
+    for (let v = 120; v <= 240; v += 40) s += `<line class="${v === 120 ? "base" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+    [["2026-10-01", "1 Oct"], ["2026-10-15", "15 Oct"], ["2026-11-02", "2 Nov"], ["2026-11-16", "16 Nov"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 10}" text-anchor="middle">${l}</text>`; });
+    Object.entries(RNG).forEach(([d, [lo, hi]]) => { s += `<line x1="${x(d)}" x2="${x(d)}" y1="${y(hi)}" y2="${y(lo)}" stroke="var(--line-strong)" stroke-width="5" stroke-linecap="round" opacity=".55"/>`; });
+    s += `<path class="ln" stroke="var(--c1)" d="M${C.map(([d, v]) => x(d).toFixed(1) + "," + y(v).toFixed(1)).join("L")}"/>`;
+    C.forEach(([d, v]) => { if (EV[d]) s += `<circle class="pt" cx="${x(d)}" cy="${y(v)}" r="${d === "2026-11-20" ? 6 : 4.5}" fill="var(--c1)"/>`; });
+    const lab = (d, txt, dx, dy, anchor) => { const v = C.find(c => c[0] === d)[1]; s += `<text class="elab" x="${x(d) + dx}" y="${y(v) + dy}" text-anchor="${anchor}">${txt}</text>`; };
+    s += `<text class="dlab" x="${x("2026-10-06")}" y="${y(239.24) - 12}" text-anchor="middle">$239.24 record</text>`;
+    lab("2026-11-05", "5 Nov: −9.3%, chip sell-off", -10, 26, "end");
+    lab("2026-11-12", "12 Nov: Huang resigns", -10, 26, "end");
+    s += `<text class="dlab" x="${x("2026-11-20") - 12}" y="${y(125.53) + 4}" text-anchor="end">$125.53, −14.0% on the day</text>`;
+    // one hover strip per trading day
+    C.forEach(([d, v], i) => {
+      const a = i ? (x(C[i - 1][0]) + x(d)) / 2 : L, b = i < C.length - 1 ? (x(d) + x(C[i + 1][0])) / 2 : W - R;
+      s += `<rect class="hit" data-i="${i}" x="${a}" y="${T}" width="${b - a}" height="${H - T - Bm}"/>`;
     });
-    s += `<text class="dlab" x="${x(P[0][0])}" y="${y(P[0][1]) - 12}" text-anchor="middle">$239.24</text>`;
-    s += `<text class="dlab" x="${x(P[7][0]) - 10}" y="${y(P[7][1]) + 22}" text-anchor="end">~$127, −47%</text>`;
     const el = $("#chPrice"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
-    el.querySelectorAll(".hit").forEach(c => { const p = P[+c.dataset.i]; hover(c, `<b>${new Date(p[0] + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" })}: $${p[1].toFixed(2)}</b>${p[2] ? `<span>${esc(p[2])}</span>` : ""}`); });
+    el.querySelectorAll(".hit").forEach(r => {
+      const i = +r.dataset.i, [d, v] = C[i], ch = i ? (v / C[i - 1][1] - 1) * 100 : null;
+      hover(r, `<b>${new Date(d + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" })}: $${v.toFixed(2)}${ch === null ? "" : `, ${ch >= 0 ? "+" : "−"}${Math.abs(ch).toFixed(1)}%`}</b>${EV[d] ? `<span>${esc(EV[d])}</span>` : ""}${RNG[d] ? `<span>Range $${RNG[d][0].toFixed(2)} to $${RNG[d][1].toFixed(2)}</span>` : ""}`);
+    });
   })();
 
   /* ---------- twelve-quarter charts ---------- */
