@@ -310,12 +310,47 @@ window.NV_TRACK = {
    "url": null
   }
  ],
- "news": [],
+ "news": [
+  {
+   "date": "2026-11-20",
+   "title": "Reuters says the SEC probe is examining possible accounting issues; shares fall 14%",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/article/nvidia-stock-extends-25-trillion-rout-as-sec-probe-reportedly-investigates-its-accounting-194945274.html",
+   "topic": "sec",
+   "step": "s1",
+   "leans": "severe-bear",
+   "note": "An accounting focus raises the chance of a restatement, but no Wells notice or SEC subpoena has been disclosed."
+  },
+  {
+   "date": "2026-11-20",
+   "title": "California attorney general subpoenas NVIDIA and says the probe covers possible criminal violations",
+   "source": "Bloomberg",
+   "url": "https://www.bloomberg.com/news/articles/2026-11-21/california-nvidia-probe-covers-potential-criminal-law-violations",
+   "topic": "legal",
+   "step": "s1",
+   "leans": "severe-bear",
+   "note": "A second, state level probe into China chip sales and investor statements widens the legal overhang beyond the SEC matter."
+  },
+  {
+   "date": "2026-11-20",
+   "title": "Trump says Huang deserves a second chance; the board has ruled out his return",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/article/nvidia-stock-extends-25-trillion-rout-as-sec-probe-reportedly-investigates-its-accounting-194945274.html",
+   "topic": "leadership",
+   "step": "s1",
+   "leans": "none",
+   "note": "Political pressure on the board adds noise to the CEO search, which the bull cases need resolved."
+  }
+ ],
  "lessons": [],
  "runs": [
   {
    "date": "2026-11-22",
    "summary": "Tracker set up. Hypotheses frozen from the report as published; baseline is the 20 November close of $125.53."
+  },
+  {
+   "date": "2026-11-22",
+   "summary": "No new close: markets shut for the weekend, last close $125.53 on 20 November. 3 news items, 0 signs resolved, 0 lessons. The California subpoena is a state action before the s1 window, so s1-severe-bear stays open. CoreWeave credit spread figures could not be confirmed and were left out."
   }
  ]
 };
