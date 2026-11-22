@@ -154,6 +154,33 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .tw tr.sum td { font-weight: 700; color: var(--ink); background: var(--accent-soft); }
 .pts { margin: 0; padding-left: 1.2em; display: grid; gap: .5em; max-width: 72ch; }
 
+/* the tracker: marks on the frozen cases, filled in by the weekday task */
+.after .panel { display: grid; gap: 8px; }
+.after .panel h3 { margin: 0; }
+.trl { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.trl li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 4px 14px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .92rem; line-height: 1.45; }
+.trl li:last-child { border-bottom: 0; }
+.trl li > span:first-child { font-family: var(--font-mono); font-size: .82rem; color: var(--muted); }
+.trl li.empty { grid-template-columns: minmax(0, 1fr); color: var(--muted); }
+.trl small { display: block; color: var(--muted); font-size: .84rem; }
+.st { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: .8rem; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.st i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.st.seen { background: color-mix(in srgb, var(--k) 16%, var(--surface)); color: var(--ink); }
+.st.seen i { background: var(--k); }
+.st.not-seen { color: var(--con-ink); background: var(--con-soft); }
+.st.partial { color: var(--mis-ink); background: var(--mis-soft); }
+.st.right { color: var(--accent); background: var(--accent-soft); }
+.st.wrong { color: var(--con-ink); background: var(--con-soft); }
+#trSig td { white-space: normal; text-align: left; vertical-align: top; font-family: var(--font-body); font-size: .84rem; min-width: 9.5rem; }
+#trSig td:first-child { font-family: var(--font-display); font-weight: 600; min-width: 11rem; }
+#trSig small { display: block; font-family: var(--font-label); font-weight: 400; color: var(--muted); font-size: .8rem; margin-top: 2px; }
+#trSig td .st { margin-bottom: 4px; }
+#trSig tr.score td { font-family: var(--font-label); background: var(--surface-2); }
+#trAct td { white-space: normal; text-align: left; font-family: var(--font-body); font-size: .86rem; }
+#trAct td:first-child { font-family: var(--font-display); font-weight: 600; }
+#trAct small { display: block; color: var(--muted); font-family: var(--font-label); font-size: .8rem; }
+@media (max-width: 560px) { .trl li { grid-template-columns: minmax(0, 1fr); } }
+
 #tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.35; padding: 8px 11px; border-radius: 8px; max-width: 18rem; }
 #tip b { display: block; }
 @media (prefers-reduced-motion: reduce) { .step, .step .txt { transition: none; } }
@@ -225,6 +252,23 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         </div>
       </div>
       <div class="steps" id="steps"></div>
+    </section>
+
+    <section class="after" id="track">
+      <h2>Since 20 November: what has happened</h2>
+      <p class="answer" id="trAnswer"></p>
+      <p class="src" id="trMeta"></p>
+      <div class="panel">
+        <h3>Early signs, by step and case</h3>
+        <p class="sub">The early signs from the six steps above, marked as they appear. The cases and their figures never change; only these marks do.</p>
+        <div class="tw"><table id="trSig"></table></div>
+      </div>
+      <div class="two-t">
+        <div class="panel"><h3>Checkpoints</h3><ul class="trl" id="trCheck"></ul></div>
+        <div class="panel"><h3>Expected against actual</h3><div class="tw"><table id="trAct"></table></div></div>
+      </div>
+      <div class="panel"><h3>What the cases got right and wrong</h3><ul class="trl" id="trLessons"></ul></div>
+      <div class="panel"><h3>News log</h3><ul class="trl" id="trNews"></ul></div>
     </section>
 
     <section class="after" id="all">
@@ -448,7 +492,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     for (let v = 0; v <= 300; v += 100) s += `<line class="${v ? "grid" : "base"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
     [["2026-10-01", "Oct 2026"], ["2027-02-01", "Feb 2027"], ["2027-06-01", "Jun 2027"], ["2027-10-01", "Oct 2027"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 8}" text-anchor="middle">${l}</text>`; });
     s += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(239.24)}" y2="${y(239.24)}"/><text class="reflab" x="${x("2027-03-01")}" y="${y(239.24) - 6}">record close $239.24</text>`;
-    s += `<path class="hist" d="M${HIST.map(([d, v]) => x(d).toFixed(1) + "," + y(v).toFixed(1)).join("L")}"/>`;
+    // closes logged by the tracker after the cases were set continue the same line
+    const LIVE = HIST.concat(((window.NV_TRACK || {}).prices || []).filter(p => p[0] > "2026-11-20"));
+    s += `<path class="hist" d="M${LIVE.map(([d, v]) => x(d).toFixed(1) + "," + y(v).toFixed(1)).join("L")}"/>`;
+    if (LIVE.length > HIST.length) { const [ld, lv] = LIVE[LIVE.length - 1]; s += `<circle cx="${x(ld)}" cy="${y(lv)}" r="4.5" fill="var(--ink)" stroke="var(--surface)" stroke-width="2"/><text class="reflab" x="${x(ld) + 8}" y="${y(lv) - 8}">$${lv.toFixed(2)}, ${ld.slice(5)}</text>`; }
     const order = [...CASES.filter(c => !cmp.has(c.id) && c.id !== sel), ...CASES.filter(c => cmp.has(c.id) && c.id !== sel), byId[sel]];
     order.forEach(c => {
       const cls = c.id === sel ? "sel" : cmp.has(c.id) ? "cmp" : "other";
@@ -530,6 +577,45 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   }
   const hideTip = () => { tip.hidden = true; };
 
+  /* ---------- the tracker: what has happened since the cases were set ---------- */
+  function renderTrack() {
+    const T = window.NV_TRACK;
+    if (!T) return;
+    const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+    const lk = (u, t) => /^https:\/\//.test(u || "") ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t);
+    const day = s => new Date(s + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    // price against each case's straight line from the 20 November close to its November 2027 value
+    const [ld, lv] = T.prices[T.prices.length - 1];
+    const t = (Date.parse(ld) - Date.parse("2026-11-20")) / (365 * 864e5);
+    const near = CASES.map(c => [c, Math.abs(NOW + (c.price - NOW) * t - lv)]).sort((a, b) => a[1] - b[1])[0][0];
+    const seen = T.signals.filter(s => s.status !== "open");
+    $("#trAnswer").textContent = T.prices.length < 2
+      ? "Tracking starts from the 20 November close of $125.53. The first weekday update runs after Monday’s close."
+      : `Last close $${lv.toFixed(2)} on ${day(ld)}, ${pct((lv / NOW - 1) * 100)} since the cases were set. ${seen.length ? `${seen.length} of 25 early signs have resolved.` : "No early sign has resolved yet."} On price alone the stock is nearest the ${near.name.toLowerCase()} line${t < .25 ? ", which says little this early" : ""}.`;
+    $("#trMeta").innerHTML = `Updated ${day(T.updated)} by the weekday tracker. The five cases are frozen in <a href="nvidia-hypotheses.json">nvidia-hypotheses.json</a> (fingerprint ${esc(T.hypotheses.sha256.slice(0, 12))}); only the marks, values and notes below change.`;
+    // early signs: steps down, cases across
+    const S = Object.fromEntries(T.signals.map(s => [s.id, s]));
+    const LAB = { open: "Not yet", seen: "Seen", "not-seen": "Did not happen", partial: "Partly" };
+    const rows = STEPS.filter(s => Object.keys(s.sig).length).map(s => `<tr><td>${s.h}<small>${s.when}</small></td>${CASES.map(c => {
+      const g = S[`${s.id}-${c.id}`] || { status: "open" };
+      const ev = g.evidence ? `<small>${lk(g.url, g.evidence)}${g.date ? ", " + day(g.date) : ""}</small>` : "";
+      return `<td style="--k:var(${c.k})"><span class="st ${g.status}"><i></i>${LAB[g.status] || g.status}</span><div>${s.sig[c.id]}</div>${ev}</td>`;
+    }).join("")}</tr>`).join("");
+    const score = CASES.map(c => {
+      const mine = T.signals.filter(g => g.id.endsWith("-" + c.id) && g.status !== "open");
+      const hit = mine.filter(g => g.status === "seen").length + .5 * mine.filter(g => g.status === "partial").length;
+      return `<td>${mine.length ? `${hit} of ${mine.length} resolved signs seen` : "None resolved yet"}</td>`;
+    }).join("");
+    $("#trSig").innerHTML = `<thead><tr><th>Step</th>${CASES.map(c => `<th style="--k:var(${c.k})"><i></i>${c.name}</th>`).join("")}</tr></thead><tbody>${rows}<tr class="score"><td>So far</td>${score}</tr></tbody>`;
+    $("#trCheck").innerHTML = T.checkpoints.map(k => `<li><span>${esc(k.due)}</span><div>${esc(k.what)} <span class="st ${k.status === "done" ? "seen" : ""}" style="--k:var(--accent)"><i></i>${esc(k.status)}</span>${k.result ? `<small>${lk(k.url, k.result)}</small>` : ""}</div></li>`).join("");
+    $("#trAct").innerHTML = `<thead><tr><th>Measure</th><th>Expected on 20 Nov</th><th>Actual</th></tr></thead><tbody>${T.actuals.map(a => `<tr><td>${esc(a.metric)}</td><td>${esc(a.expected)}</td><td>${a.actual ? `${lk(a.url, a.actual)}${a.date ? `<small>${day(a.date)}</small>` : ""}` : "Not known yet"}</td></tr>`).join("")}</tbody>`;
+    $("#trLessons").innerHTML = T.lessons.length ? T.lessons.slice().reverse().map(l => `<li><span>${esc(l.date)}</span><div><span class="st ${l.verdict === "right" ? "right" : l.verdict === "wrong" ? "wrong" : "partial"}"><i></i>${esc(l.verdict)}</span> ${esc(l.text)}${l.why ? `<small>${esc(l.why)}</small>` : ""}</div></li>`).join("")
+      : `<li class="empty">Nothing has resolved yet. A lesson is written when a sign, checkpoint or expected value is settled, right or wrong.</li>`;
+    const lean = id => byId[id] ? `<span class="st seen" style="--k:var(${byId[id].k})"><i></i>points to ${byId[id].name.toLowerCase()}</span>` : "";
+    $("#trNews").innerHTML = T.news.length ? T.news.slice().reverse().slice(0, 25).map(n => `<li><span>${esc(n.date)}</span><div>${lk(n.url, n.title)} ${lean(n.leans)}<small>${esc(n.source)}${n.note ? ": " + esc(n.note) : ""}</small></div></li>`).join("")
+      : `<li class="empty">The first news is logged after Monday’s close.</li>`;
+  }
+
   /* ---------- the weighted value, worked through for both studies ---------- */
   // The risk review gives its own weights: 8, 22, 35, 25 and 10% from strong bull to severe bear.
   const RRW = { "strong-bull": 8, "bull": 22, "base": 35, "bear": 25, "severe-bear": 10 };
@@ -591,6 +677,12 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
   render(false);
   onScroll();
+  // The tracker file changes every weekday, so it is loaded with an hourly cache key rather than a fixed script tag.
+  const trs = document.createElement("script");
+  trs.src = "nvidia-tracker-data.js?h=" + new Date().toISOString().slice(0, 13);
+  trs.onload = () => { renderTrack(); drawPath(); };
+  trs.onerror = () => { $("#track").hidden = true; };
+  document.head.appendChild(trs);
   stepEls[0].classList.add("on");
 })();
 </script>

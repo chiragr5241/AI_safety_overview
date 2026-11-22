@@ -1,0 +1,491 @@
+{
+  "frozen_on": "2026-11-22",
+  "baseline": {
+    "date": "2026-11-20",
+    "close": 125.53,
+    "note": "Studies priced at about $127 intraday; changes are measured from the $125.53 close."
+  },
+  "sources": [
+    "Breakpoint study, 20 November 2026",
+    "Forensic and investment risk review, 20 November 2026",
+    "Twelve-quarter due diligence review, 21 November 2026"
+  ],
+  "rule": "This file is the original hypothesis. It is never edited. Tracking goes in nvidia-tracker-data.js.",
+  "fy27_revenue_bn_assumed": 424,
+  "risk_review_weights_pct": {
+    "strong-bull": 8,
+    "bull": 22,
+    "base": 35,
+    "bear": 25,
+    "severe-bear": 10
+  },
+  "weighted_value": {
+    "breakpoint_study": 136.05,
+    "risk_review": 133.5
+  },
+  "metrics": [
+    {
+      "key": "p",
+      "label": "Probability"
+    },
+    {
+      "key": "fy28",
+      "label": "FY28 revenue"
+    },
+    {
+      "key": "g28",
+      "label": "FY28 growth"
+    },
+    {
+      "key": "gm",
+      "label": "Gross margin"
+    },
+    {
+      "key": "fy29",
+      "label": "FY29 revenue"
+    },
+    {
+      "key": "g29",
+      "label": "FY29 change"
+    },
+    {
+      "key": "eps",
+      "label": "FY29 earnings a share"
+    },
+    {
+      "key": "fcf",
+      "label": "FY29 free cash flow"
+    },
+    {
+      "key": "loss",
+      "label": "Commitment losses"
+    },
+    {
+      "key": "pe",
+      "label": "Multiple on FY29 earnings"
+    },
+    {
+      "key": "price",
+      "label": "Price, November 2027"
+    },
+    {
+      "key": "chg",
+      "label": "Against $125.53"
+    },
+    {
+      "key": "rr",
+      "label": "Risk review price"
+    }
+  ],
+  "cases": [
+    {
+      "id": "strong-bull",
+      "name": "Strong bull",
+      "condition": "AI monetisation accelerates",
+      "probability_pct": 10,
+      "fy28_revenue_bn": 780,
+      "gross_margin_pct": 73,
+      "fy29_revenue_bn": 936,
+      "fy29_change_pct": 20,
+      "fy29_eps": 22.2,
+      "fy29_free_cash_flow_bn": 453,
+      "commitment_losses": "None",
+      "commitment_losses_bn_for_charts": 0,
+      "multiple_on_fy29_eps": "12x",
+      "price_nov_2027": 266,
+      "risk_review_price": 240,
+      "risk_review_basis": "$20.00 at 12x"
+    },
+    {
+      "id": "bull",
+      "name": "Bull",
+      "condition": "Demand holds through FY29",
+      "probability_pct": 25,
+      "fy28_revenue_bn": 740,
+      "gross_margin_pct": 72.5,
+      "fy29_revenue_bn": 777,
+      "fy29_change_pct": 5,
+      "fy29_eps": 18,
+      "fy29_free_cash_flow_bn": 367,
+      "commitment_losses": "None",
+      "commitment_losses_bn_for_charts": 0,
+      "multiple_on_fy29_eps": "10x",
+      "price_nov_2027": 180,
+      "risk_review_price": 180,
+      "risk_review_basis": "$18.00 at 10x"
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "condition": "Peak, then a gentle step down",
+      "probability_pct": 35,
+      "fy28_revenue_bn": 680,
+      "gross_margin_pct": 71,
+      "fy29_revenue_bn": 612,
+      "fy29_change_pct": -10,
+      "fy29_eps": 13.67,
+      "fy29_free_cash_flow_bn": 279,
+      "commitment_losses": "Minor",
+      "commitment_losses_bn_for_charts": 5,
+      "multiple_on_fy29_eps": "9x",
+      "price_nov_2027": 123,
+      "risk_review_price": 133,
+      "risk_review_basis": "$16.61 at 8x"
+    },
+    {
+      "id": "bear",
+      "name": "Bear",
+      "condition": "Spending slows, margins slip",
+      "probability_pct": 20,
+      "fy28_revenue_bn": 600,
+      "gross_margin_pct": 68,
+      "fy29_revenue_bn": 420,
+      "fy29_change_pct": -30,
+      "fy29_eps": 8.46,
+      "fy29_free_cash_flow_bn": 173,
+      "commitment_losses": "~$25B",
+      "commitment_losses_bn_for_charts": 25,
+      "multiple_on_fy29_eps": "10x",
+      "price_nov_2027": 84,
+      "risk_review_price": 91,
+      "risk_review_basis": "$13.00 at 7x"
+    },
+    {
+      "id": "severe-bear",
+      "name": "Severe bear",
+      "condition": "Financing stress, customer failures",
+      "probability_pct": 10,
+      "fy28_revenue_bn": 520,
+      "gross_margin_pct": 62,
+      "fy29_revenue_bn": 260,
+      "fy29_change_pct": -50,
+      "fy29_eps": 4.1,
+      "fy29_free_cash_flow_bn": 84,
+      "commitment_losses": "~$90B",
+      "commitment_losses_bn_for_charts": 90,
+      "multiple_on_fy29_eps": "12x trough",
+      "price_nov_2027": 46,
+      "risk_review_price": 54,
+      "risk_review_basis": "$9.00 at 6x"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "question": "Does the next quarter clear the air?",
+      "when": "December 2026 to February 2027",
+      "window": [
+        "2026-12-01",
+        "2027-02-28"
+      ],
+      "metrics": [
+        "p"
+      ],
+      "context": "The full Q3 10-Q is due by 4 December. Then come the SEC inquiry’s scope, the CEO search, and the Q4 report in late February against a $130B guide at a 71 to 72% gross margin.",
+      "what_must_happen": {
+        "strong-bull": "The 10-Q adds nothing alarming, the SEC matter stays narrow and a credible permanent CEO is named. Q4 beats $130B at a gross margin of 72% or more, and customers start paying faster.",
+        "bull": "Q4 lands at or above $130B with a gross margin of 72% or more. A credible permanent CEO is named and the SEC matter stays narrow. Confidence starts to come back.",
+        "base": "Q4 comes in line. The SEC inquiry and the CEO search drag on without escalating, and NVIDIA’s first words on FY29 are cautious. The stock swings between about $100 and $160.",
+        "bear": "Q4 is in line, but the gross margin guide slips below 70% and inventory grows faster than revenue for a second quarter. Customers still take more than 65 days to pay.",
+        "severe-bear": "The SEC inquiry escalates: a Wells notice or subpoena is disclosed and a restatement becomes possible. Collections slip past 75 days, or a bad-debt charge appears."
+      },
+      "early_sign": {
+        "strong-bull": "days to collect back below 55",
+        "bull": "Q4 gross margin at 72% or more",
+        "base": "Q4 revenue within $126B to $134B",
+        "bear": "a gross margin guide below 70%",
+        "severe-bear": "a Wells notice, subpoena or restatement"
+      }
+    },
+    {
+      "id": "s2",
+      "question": "Do the big buyers keep spending in 2027?",
+      "when": "January to February 2027 budgets",
+      "window": [
+        "2027-01-15",
+        "2027-02-28"
+      ],
+      "metrics": [
+        "fy29",
+        "g29"
+      ],
+      "context": "Alphabet, Amazon, Meta, Microsoft and Oracle guided $242B to $270B for Q4 2026 and promised significant increases for 2027. They buy 56% of NVIDIA’s data center chips, and several are projected to be cash-negative in 2027.",
+      "what_must_happen": {
+        "strong-bull": "The hyperscalers raise their 2027 budgets again and GPU rental prices rise. Demand outruns supply into FY29.",
+        "bull": "All five keep the 2027 increases they promised, borrowing where needed, and investors accept the debt.",
+        "base": "Budgets still grow, but more slowly, while Google TPUs, Amazon Trainium and Broadcom-built chips keep taking share.",
+        "bear": "One hyperscaler, or Oracle, cuts its 2027 budget. One top-five cut matters more than every NVIDIA financing loop combined.",
+        "severe-bear": "Two or more of the top five cut. With several already cash-negative, debt markets stop funding the gap."
+      },
+      "early_sign": {
+        "strong-bull": "2027 guidance raised again",
+        "bull": "no top-five buyer flat on 2027",
+        "base": "custom chips past about 28% of AI servers",
+        "bear": "any top-five buyer flat or down",
+        "severe-bear": "two or more cuts"
+      }
+    },
+    {
+      "id": "s3",
+      "question": "Do the AI labs and neoclouds stay financed?",
+      "when": "Through 2027",
+      "window": [
+        "2026-12-01",
+        "2027-11-20"
+      ],
+      "metrics": [
+        "loss"
+      ],
+      "context": "NVIDIA holds $109.7B of stakes, backs $32B of neocloud capacity and guarantees up to $105B of OpenAI’s Ohio leases from FY29. OpenAI expects to burn about $57B in 2027.",
+      "what_must_happen": {
+        "strong-bull": "OpenAI and Anthropic beat their revenue plans and neoclouds refinance at tighter spreads. NVIDIA’s stakes gain value and no backstop is used.",
+        "bull": "Funding continues on normal terms. The backstops go unused and the Ohio guarantee is never tested.",
+        "base": "Money keeps coming, at a higher price. NVIDIA is far more selective with financing deals, as it said on 17 November, and losses stay minor.",
+        "bear": "Neocloud refinancing stalls as GPU rental prices fall. Orders slip and backstops come into play: about $25B of losses on commitments.",
+        "severe-bear": "OpenAI or a large neocloud misses payments or raises money on distressed terms. Guarantees are called and stakes written down: about $90B of losses, hitting demand, the stake and sentiment at once."
+      },
+      "early_sign": {
+        "strong-bull": "lab revenue ahead of plan",
+        "bull": "neocloud debt at steady spreads",
+        "base": "backstops keep shrinking from $32B",
+        "bear": "debt raised at wider spreads",
+        "severe-bear": "a distressed raise or covenant breach"
+      }
+    },
+    {
+      "id": "s4",
+      "question": "What does FY28 deliver?",
+      "when": "February 2027 to January 2028",
+      "window": [
+        "2027-02-01",
+        "2027-11-20"
+      ],
+      "metrics": [
+        "fy28",
+        "g28",
+        "gm"
+      ],
+      "context": "Analysts expect $709B to $726B; management’s outlook is about $740B. $203B of supply purchases fall due in the year, about all its expected cost of goods.",
+      "what_must_happen": {
+        "strong-bull": "$780B, up 84% and above management’s outlook, at a 73% gross margin. Every dollar of supply bought for the year is used.",
+        "bull": "$740B, management’s ~75% growth, with gross margin back at 72.5% as contracted price rises take effect.",
+        "base": "$680B, up 60%: a record year that still misses consensus by about 5%. Gross margin settles at 71%.",
+        "bear": "$600B, up 42% but about 15% below consensus, and gross margin falls to 68% as custom chips force price cuts. That is close to the studies’ −30% combination.",
+        "severe-bear": "$520B, up 23%, at a 62% gross margin. The $203B of supply due in the year exceeds what sales use, and memory contracts become losses."
+      },
+      "early_sign": {
+        "strong-bull": "quarterly beats that keep growing",
+        "bull": "guides at or above consensus",
+        "base": "in-line guides",
+        "bear": "a guide below consensus",
+        "severe-bear": "write-downs of commitments or inventory"
+      }
+    },
+    {
+      "id": "s5",
+      "question": "Is FY28 the peak?",
+      "when": "FY29 outlook, priced by late 2027",
+      "window": [
+        "2027-08-15",
+        "2027-11-20"
+      ],
+      "metrics": [
+        "fy29",
+        "g29",
+        "eps",
+        "fcf"
+      ],
+      "context": "Today’s price assumes FY28 is the peak and long-run free cash flow settles near $240B a year. FY29 revenue above about $600B makes today’s price look cheap; below about $420B, expensive.",
+      "what_must_happen": {
+        "strong-bull": "No. FY29 grows another 20% to $936B, and free cash flow reaches about $453B, nearly twice what today’s price assumes.",
+        "bull": "Only just: FY29 edges up 5% to $777B, with about $367B of free cash flow. The plateau investors fear turns out higher than they priced.",
+        "base": "Yes, gently: FY29 falls 10% to $612B and free cash flow to about $279B, close to what today’s price already assumes.",
+        "bear": "Yes, sharply: FY29 falls 30% to $420B and free cash flow to about $173B, below the $182B a year at which the studies say the thesis breaks.",
+        "severe-bear": "FY29 halves to $260B. Free cash flow of about $84B is below even this year’s level."
+      },
+      "early_sign": {
+        "strong-bull": "a first FY29 outlook above FY28",
+        "bull": "a flat FY29 outlook",
+        "base": "a modest decline in the FY29 outlook",
+        "bear": "hyperscaler 2028 plans cut",
+        "severe-bear": "a FY29 outlook down by half"
+      }
+    },
+    {
+      "id": "s6",
+      "question": "What will investors pay?",
+      "when": "November 2027",
+      "window": [
+        "2027-10-25",
+        "2027-11-30"
+      ],
+      "metrics": [
+        "pe",
+        "price",
+        "chg",
+        "rr"
+      ],
+      "context": "Today the stock trades at about 8 times next year’s expected earnings, against 18 times for the S&P 500. A recovery needs confidence more than earnings.",
+      "what_must_happen": {
+        "strong-bull": "12 times FY29 earnings: about $266, more than double today and above the $239 record. It needs growth beyond FY28 and restored confidence; earnings alone are not enough.",
+        "bull": "10 times: about $180, up 43%. Confidence returns with a permanent CEO and a narrow SEC outcome.",
+        "base": "9 times: about $123, roughly where it is now. Analysts are about right on earnings, but the discount stays.",
+        "bear": "10 times lower earnings: about $84, down a third. Investors look through a weak year, but the earnings have gone.",
+        "severe-bear": "12 times depressed earnings, after about $90B of one-time losses: about $46, down nearly two thirds."
+      },
+      "early_sign": {}
+    }
+  ],
+  "signals": [
+    {
+      "id": "s1-strong-bull",
+      "step": "s1",
+      "case": "strong-bull",
+      "text": "days to collect back below 55"
+    },
+    {
+      "id": "s1-bull",
+      "step": "s1",
+      "case": "bull",
+      "text": "Q4 gross margin at 72% or more"
+    },
+    {
+      "id": "s1-base",
+      "step": "s1",
+      "case": "base",
+      "text": "Q4 revenue within $126B to $134B"
+    },
+    {
+      "id": "s1-bear",
+      "step": "s1",
+      "case": "bear",
+      "text": "a gross margin guide below 70%"
+    },
+    {
+      "id": "s1-severe-bear",
+      "step": "s1",
+      "case": "severe-bear",
+      "text": "a Wells notice, subpoena or restatement"
+    },
+    {
+      "id": "s2-strong-bull",
+      "step": "s2",
+      "case": "strong-bull",
+      "text": "2027 guidance raised again"
+    },
+    {
+      "id": "s2-bull",
+      "step": "s2",
+      "case": "bull",
+      "text": "no top-five buyer flat on 2027"
+    },
+    {
+      "id": "s2-base",
+      "step": "s2",
+      "case": "base",
+      "text": "custom chips past about 28% of AI servers"
+    },
+    {
+      "id": "s2-bear",
+      "step": "s2",
+      "case": "bear",
+      "text": "any top-five buyer flat or down"
+    },
+    {
+      "id": "s2-severe-bear",
+      "step": "s2",
+      "case": "severe-bear",
+      "text": "two or more cuts"
+    },
+    {
+      "id": "s3-strong-bull",
+      "step": "s3",
+      "case": "strong-bull",
+      "text": "lab revenue ahead of plan"
+    },
+    {
+      "id": "s3-bull",
+      "step": "s3",
+      "case": "bull",
+      "text": "neocloud debt at steady spreads"
+    },
+    {
+      "id": "s3-base",
+      "step": "s3",
+      "case": "base",
+      "text": "backstops keep shrinking from $32B"
+    },
+    {
+      "id": "s3-bear",
+      "step": "s3",
+      "case": "bear",
+      "text": "debt raised at wider spreads"
+    },
+    {
+      "id": "s3-severe-bear",
+      "step": "s3",
+      "case": "severe-bear",
+      "text": "a distressed raise or covenant breach"
+    },
+    {
+      "id": "s4-strong-bull",
+      "step": "s4",
+      "case": "strong-bull",
+      "text": "quarterly beats that keep growing"
+    },
+    {
+      "id": "s4-bull",
+      "step": "s4",
+      "case": "bull",
+      "text": "guides at or above consensus"
+    },
+    {
+      "id": "s4-base",
+      "step": "s4",
+      "case": "base",
+      "text": "in-line guides"
+    },
+    {
+      "id": "s4-bear",
+      "step": "s4",
+      "case": "bear",
+      "text": "a guide below consensus"
+    },
+    {
+      "id": "s4-severe-bear",
+      "step": "s4",
+      "case": "severe-bear",
+      "text": "write-downs of commitments or inventory"
+    },
+    {
+      "id": "s5-strong-bull",
+      "step": "s5",
+      "case": "strong-bull",
+      "text": "a first FY29 outlook above FY28"
+    },
+    {
+      "id": "s5-bull",
+      "step": "s5",
+      "case": "bull",
+      "text": "a flat FY29 outlook"
+    },
+    {
+      "id": "s5-base",
+      "step": "s5",
+      "case": "base",
+      "text": "a modest decline in the FY29 outlook"
+    },
+    {
+      "id": "s5-bear",
+      "step": "s5",
+      "case": "bear",
+      "text": "hyperscaler 2028 plans cut"
+    },
+    {
+      "id": "s5-severe-bear",
+      "step": "s5",
+      "case": "severe-bear",
+      "text": "a FY29 outlook down by half"
+    }
+  ]
+}
