@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NVIDIA due diligence · AI Safety Overview</title>
-<meta name="description" content="Experiment 03: a twelve-quarter public-record review of NVIDIA's cash, receivables, investments, debt and guarantees, and how customer financing relates to its chip sales.">
+<meta name="description" content="Experiment 03: how much disappointment NVIDIA's share price can absorb. Commitments, accounting, customer financing, what the price assumes, breakpoints, scenarios and what to watch, from public filings and three desk reviews of 20 and 21 November 2026.">
 <meta name="color-scheme" content="light dark">
 <script>var t = null; try { t = localStorage.getItem("wam-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
 document.documentElement.classList.add("pre"); setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);</script>
@@ -15,79 +15,176 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 <link rel="stylesheet" href="site.css?v=11">
 <link rel="stylesheet" href="explore.css?v=3">
 <style>
-/* Experiment 03. The page reports what the due diligence report found and the tests it asks for; it adds no findings of its own.
-   Figures are the report's, from NVIDIA's filings, in US$ millions unless a label says otherwise. */
+/* Experiment 03, written as a report for a senior business analyst: one question per section, the answer under it,
+   then the evidence. It combines NVIDIA's filings with three desk reviews of 20 and 21 November 2026 and says where they disagree.
+   Prices are the 20 November intraday reference (~$127). US$ unless stated. */
 :root { --wrap: 1320px;
   --c1: #008A7B; --c2: #8F6400; --c3: #5846B4; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c1: #1FA89C; --c2: #BE8618; --c3: #8473E0; } }
 :root[data-theme="dark"] { --c1: #1FA89C; --c2: #BE8618; --c3: #8473E0; }
 
-.q { font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 800; }
-.fh { font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 700; }
-.lede { max-width: 46rem; color: var(--muted); }
 .xnav { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 28px; }
 .xnav a[aria-current] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- opening: the question, the answer, four judgements ---------- */
+.hero { padding: clamp(28px, 6vh, 64px) 0 8px; display: grid; gap: 22px; }
+.hero h1 { font-size: clamp(2.3rem, 6vw, 4.4rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.02em; max-width: 18ch; }
+.hero .answer { max-width: 40ch; }
+.answer { font-family: var(--font-title); font-size: clamp(1.2rem, 2.1vw, 1.6rem); line-height: 1.32; max-width: 44ch; }
+.meta { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); max-width: 72ch; line-height: 1.5; }
+.verdicts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+@media (max-width: 900px) { .verdicts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .verdicts { grid-template-columns: minmax(0, 1fr); } }
+.verdicts div { background: var(--surface); color: var(--ink); padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.verdicts span { font-family: var(--font-label); font-size: .8rem; color: var(--muted); line-height: 1.3; }
+.verdicts b { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; line-height: 1.1; }
+.verdicts small { font-size: .86rem; color: var(--muted); line-height: 1.4; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
 .dl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .dl .small { margin: 0; }
 
-.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+/* ---------- each question ---------- */
+.qs { padding-top: clamp(64px, 10vh, 112px); display: grid; gap: 20px; scroll-margin-top: 72px; }
+.qs > h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 700; letter-spacing: -0.01em; max-width: 26ch; }
+.qs > p:not(.answer):not(.src), .qs > ul { max-width: 68ch; }
+.qs ul.pts { margin: 0; }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 460px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
-.tile b { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.tile span { font-size: .92rem; color: var(--muted); line-height: 1.4; }
+.tile { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.tile b { font-family: var(--font-title); font-weight: 400; font-size: 2rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; }
+.tile span { font-size: .9rem; color: var(--muted); line-height: 1.4; }
 
-.fig { margin: 0; padding-top: 48px; display: grid; gap: 14px; min-width: 0; scroll-margin-top: 72px; }
-.fig-head { display: grid; gap: 4px; max-width: 46rem; }
-.fig-head p { font-size: .94rem; color: var(--muted); }
 .card { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+.card h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+.card .sub { font-size: .9rem; color: var(--muted); margin: 0 0 12px; max-width: 60ch; }
+.qs p, .card p { margin: 0; }
+.card .src { margin-top: 14px; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .two { grid-template-columns: minmax(0, 1fr); } }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: .86rem; color: var(--muted); margin-bottom: 8px; }
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
 .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; display: inline-block; }
+.sw.ring { border-radius: 50%; border: 2px solid var(--ink); background: none; }
+.src { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); line-height: 1.45; max-width: 90ch; }
+
 .chart svg { display: block; width: 100%; height: auto; font-family: var(--font-display); overflow: visible; }
 .chart .grid { stroke: var(--line); stroke-width: 1; }
 .chart .base { stroke: var(--line-strong); stroke-width: 1; }
-.chart .ax { fill: var(--muted); font-size: 11px; font-family: var(--font-mono); }
+.chart .ax { fill: var(--muted); font-size: 12px; font-family: var(--font-mono); }
 .chart .dlab { fill: var(--ink); font-size: 12px; font-weight: 600; }
-.chart .hit { fill: transparent; cursor: default; }
+.chart .elab { fill: var(--muted); font-size: 12.5px; font-weight: 500; }
+.chart .hit { fill: transparent; }
 .chart .hit:hover { fill: var(--ink); fill-opacity: .05; }
 .chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .gap { fill: none; stroke-width: 2; stroke-dasharray: 3 5; stroke-linecap: round; }
 .chart .pt { stroke: var(--surface); stroke-width: 2; }
-/* on a phone the twelve-quarter bars keep a readable size and scroll sideways */
-@media (max-width: 600px) { #chCash { overflow-x: auto; overscroll-behavior-x: contain; } #chCash svg { min-width: 600px; } }
-.src { font-family: var(--font-label); font-size: var(--text-label); color: var(--muted); margin-top: 6px; }
-.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
-@media (max-width: 900px) { .two { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .wide-scroll { overflow-x: auto; overscroll-behavior-x: contain; } .wide-scroll svg { min-width: 620px; } }
 
-.gbar { display: flex; height: 30px; border-radius: 6px; overflow: hidden; gap: 2px; background: var(--surface); }
+/* commitments: gross amount against the severe-case loss, one scale */
+.cm { display: grid; gap: 12px; }
+.cm-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 9.5rem; gap: 6px 16px; align-items: center; }
+.cm-row > span:first-child { font-family: var(--font-display); font-weight: 600; font-size: .92rem; line-height: 1.25; }
+.cm-track { display: grid; gap: 3px; }
+.cm-track i { display: block; height: 12px; border-radius: 0 4px 4px 0; }
+.cm-track i.g { background: var(--line-strong); opacity: .45; }
+.cm-track .l { position: relative; height: 12px; }
+.cm-track .l i { position: absolute; top: 0; height: 12px; background: var(--c2); border-radius: 4px; min-width: 3px; }
+.cm-row > b { font-family: var(--font-mono); font-weight: 500; font-size: .82rem; text-align: right; font-variant-numeric: tabular-nums; line-height: 1.35; }
+.cm-row > b small { display: block; color: var(--muted); font-weight: 400; }
+@media (max-width: 640px) { .cm-row { grid-template-columns: minmax(0, 1fr) auto; } .cm-track { grid-column: 1 / -1; grid-row: 2; } }
+
+.gbar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; gap: 2px; background: var(--surface); }
 .gbar i { display: block; height: 100%; }
 .glist { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
-.glist li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; font-size: .94rem; }
+.glist li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; font-size: .92rem; }
 .glist .sw { transform: translateY(1px); }
 .glist b { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
 .glist small { display: block; color: var(--muted); font-size: .84rem; }
 
-.layer-title, .layer-hook { line-height: 1.3; }
-.layer-body p { max-width: 70ch; }
-.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+/* financing map */
+.map-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+#finmap { display: block; width: 100%; min-width: 760px; height: auto; font-family: var(--font-display); }
+#finmap .nd rect { fill: var(--surface-2); stroke: var(--line-strong); stroke-width: 1; }
+#finmap .nd.nv rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+#finmap .nd text { fill: var(--ink); font-size: 13px; font-weight: 700; }
+#finmap .nd text.s { fill: var(--muted); font-size: 12.5px; font-weight: 500; }
+#finmap .col { fill: var(--muted); font-size: 12px; font-family: var(--font-label); }
+#finmap .ed { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+#finmap .nvl { fill: none; stroke: var(--c1); stroke-width: 2; stroke-dasharray: 6 5; }
+#finmap .tag { fill: var(--c1); font-size: 12px; font-weight: 800; }
+#finmap .lab { fill: var(--muted); font-size: 12.5px; }
+.notes { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; font-size: .9rem; }
+.notes b { color: var(--c1); font-family: var(--font-display); margin-right: 6px; }
+
+/* horizontal bar rows (breakpoints) and scenario dots */
+.hb { display: grid; gap: 8px; position: relative; }
+.hb-row { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 14px; align-items: center; }
+.hb-row > span { font-family: var(--font-display); font-size: .9rem; text-align: right; font-variant-numeric: tabular-nums; }
+.hb-row.now > span { font-weight: 800; }
+.hb-plot { position: relative; height: 26px; }
+.hb-plot i { position: absolute; left: 0; top: 0; height: 26px; border-radius: 0 5px 5px 0; background: var(--line-strong); opacity: .45; }
+.hb-row.now .hb-plot i { background: var(--c1); opacity: 1; }
+.hb-plot em { position: absolute; top: 4px; font-style: normal; font-family: var(--font-mono); font-size: .8rem; color: var(--ink); padding-left: 8px; }
+.hb-ref { position: absolute; top: -22px; bottom: 0; border-left: 1.5px dashed var(--muted); pointer-events: none; }
+.hb-ref span { position: absolute; top: 0; left: 6px; font-family: var(--font-label); font-size: .76rem; color: var(--muted); white-space: nowrap; }
+.hb-head { height: 22px; }
+@media (max-width: 560px) { .hb-row { grid-template-columns: 6rem minmax(0, 1fr); gap: 8px; } .hb-row > span { font-size: .8rem; } .hb-head { height: 34px; } .hb-ref { top: -34px; } .hb-ref + .hb-ref span { top: 15px; } }
+
+.sc { display: grid; gap: 4px; }
+.sc-row { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); gap: 14px; align-items: center; min-height: 44px; }
+.sc-row > span { font-family: var(--font-display); font-weight: 600; font-size: .9rem; line-height: 1.25; }
+.sc-row > span small { display: block; font-weight: 400; color: var(--muted); font-size: .8rem; }
+.sc-plot { position: relative; height: 40px; border-bottom: 1px solid var(--line); }
+.sc-plot .d { position: absolute; top: 50%; translate: -50% -50%; border-radius: 50%; background: var(--c1); border: 2px solid var(--surface); }
+.sc-plot .h { position: absolute; top: 50%; translate: -50% -50%; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--ink); background: var(--surface); }
+.sc-plot .v { position: absolute; top: 50%; translate: 12px -50%; font-family: var(--font-mono); font-size: .78rem; color: var(--ink); white-space: nowrap; }
+.sc-axis { position: relative; height: 22px; margin-left: calc(10.5rem + 14px); }
+.sc-axis span { position: absolute; translate: -50% 0; font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
+.sc-line { position: absolute; top: 0; bottom: 22px; border-left: 1.5px dashed var(--muted); pointer-events: none; }
+.sc-line span { position: absolute; top: -18px; translate: -50% 0; font-family: var(--font-label); font-size: .76rem; color: var(--muted); white-space: nowrap; }
+.sc-wrap { position: relative; padding-top: 18px; }
+.sc-lines { position: absolute; inset: 18px 0 0 calc(10.5rem + 14px); pointer-events: none; }
+@media (max-width: 560px) { .sc-row { grid-template-columns: 6.5rem minmax(0, 1fr); gap: 8px; } .sc-lines { left: calc(6.5rem + 8px); } .sc-axis { margin-left: calc(6.5rem + 8px); } }
+
+/* scorecard */
+.score { display: grid; gap: 0; }
+.score-row { display: grid; grid-template-columns: 14rem 6.5rem minmax(0, 1fr); gap: 4px 16px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.score-row:last-child { border-bottom: 0; }
+.score-row > span:first-child { font-family: var(--font-display); font-weight: 600; font-size: .92rem; }
+.dots { display: inline-flex; gap: 4px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: inline-block; }
+.dots i.on { background: var(--c1); border-color: var(--c1); }
+.score-row p { font-size: .88rem; color: var(--muted); line-height: 1.45; }
+@media (max-width: 700px) { .score-row { grid-template-columns: minmax(0, 1fr) auto; } .score-row p { grid-column: 1 / -1; } }
+
+/* tables */
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .tw table { border-collapse: collapse; width: 100%; font-size: .86rem; font-variant-numeric: tabular-nums; }
 .tw th, .tw td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; vertical-align: top; }
+.tw tr:last-child td { border-bottom: 0; }
 .tw th:first-child, .tw td:first-child { text-align: left; position: sticky; left: 0; background: var(--surface); }
 .tw thead th { background: var(--surface-2); font-family: var(--font-label); font-weight: 600; }
 .tw thead th:first-child { background: var(--surface-2); }
 .tw td { font-family: var(--font-mono); font-size: .82rem; }
 .tw td:first-child { font-family: var(--font-display); font-size: .86rem; }
-.tw.wrap td, .tw.wrap th { white-space: normal; text-align: left; font-family: var(--font-body); font-size: .86rem; min-width: 12rem; }
-.tw.wrap td:first-child { font-family: var(--font-display); font-weight: 600; min-width: 10rem; }
+.tw.wrap td, .tw.wrap th { white-space: normal; text-align: left; font-family: var(--font-body); font-size: .86rem; min-width: 11rem; }
+.tw.wrap td:first-child { font-family: var(--font-display); font-weight: 600; min-width: 9rem; }
+.tw tr.hl td { background: var(--accent-soft); }
+.tw tr.hl td:first-child { background: var(--accent-soft); }
 .pts { margin: 0; padding-left: 1.2em; display: grid; gap: .5em; max-width: 72ch; }
 .tests { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: t; }
 .tests li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 4px 12px; counter-increment: t; max-width: 72ch; }
 .tests li::before { content: counter(t); grid-row: span 2; font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--accent); line-height: 1.1; }
 .tests b { font-family: var(--font-display); }
 .tests span { color: var(--muted); font-size: .94rem; }
-.data { padding-top: 56px; display: grid; gap: 16px; }
+.callout { max-width: 60rem; }
 
-#tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.35; padding: 8px 11px; border-radius: 8px; max-width: 18rem; }
+.layer-title, .layer-hook { line-height: 1.3; }
+.layer-body p { max-width: 70ch; }
+.data { padding-top: clamp(64px, 10vh, 112px); display: grid; gap: 16px; }
+
+#tip { position: fixed; z-index: 50; left: 0; top: 0; pointer-events: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: .84rem; line-height: 1.35; padding: 8px 11px; border-radius: 8px; max-width: 19rem; }
 #tip b { font-weight: 700; display: block; }
 #tip span { display: flex; gap: 8px; align-items: center; }
 #tip i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
@@ -132,88 +229,318 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <a class="chip" href="experiments-nvidia.html" aria-current="page">NVIDIA due diligence</a>
     </nav>
 
-    <section class="chapter" id="nvidia" style="border-top:0;padding-top:28px">
-      <div class="chapter-head">
-        <h1 class="q">Is NVIDIA helping to pay for the demand behind its own sales?</h1>
-        <p class="lede">A review of twelve fiscal quarters, Q4 FY2024 to Q3 FY2027, built only from public filings. It traces cash, receivables, investments, debt and guarantees. It is not an audit and makes no finding of misconduct.</p>
-        <div class="dl">
-          <a class="btn sm" href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>Download the report</a>
-          <p class="small">PDF, 21 pages, 21 November 2026</p>
-        </div>
+    <!-- ============ THE ANSWER ============ -->
+    <section class="hero" id="answer">
+      <h1>How much disappointment can NVIDIA’s price absorb?</h1>
+      <p class="answer">At about $127 the price already assumes profits peak next year and settle 28% lower for good. A further 20% fall needs long-run free cash flow near $180B a year, about this year’s level.</p>
+      <div class="verdicts" aria-label="Four judgements">
+        <div><span>Business strength</span><b>High</b><small>Revenue doubled on a year ago; Q4 guided to $130B</small></div>
+        <div><span>Commitment and financing risk</span><b>Material</b><small>$670B of promises; realistic severe loss $140B to $225B</small></div>
+        <div><span>Financial reporting risk</span><b>Unresolved</b><small>SEC inquiry reported; nothing found so far</small></div>
+        <div><span>Share price, 12 months</span><b>Wide</b><small>Flat in the base case; $46 to $266 across cases</small></div>
       </div>
-
-      <div class="tiles">
-        <div class="tile"><b>$118B</b><span>maximum guarantees NVIDIA has given for partners’ leases and loans; $0.86B a year earlier</span></div>
-        <div class="tile"><b>70%</b><span>of net income arrived as operating cash over the last four quarters: $158.9B of $226.3B</span></div>
-        <div class="tile"><b>$81B</b><span>owed by customers in October, up from $10B in January 2024; two customers hold 35%</span></div>
-        <div class="tile"><b>$32B</b><span>borrowed, against $53.5B of cash and marketable debt securities</span></div>
-      </div>
-
-      <figure class="fig" id="fig-cash">
-        <div class="fig-head">
-          <h2 class="fh">Profit grew faster than the cash it brought in</h2>
-          <p>Net income and operating cash flow each quarter, US$ billions. In July operating cash was 40% of net income; in October, 74%.</p>
-        </div>
-        <div class="card">
-          <div class="legend"><span><i class="sw" style="background:var(--c2)"></i>Net income</span><span><i class="sw" style="background:var(--c1)"></i>Operating cash flow</span></div>
-          <div class="chart" id="chCash" role="img" aria-label="Grouped bars of net income and operating cash flow for twelve quarters. The figures are in the earnings table under The detail."></div>
-          <p class="src">NVIDIA quarterly statements, as compiled in the report.</p>
-        </div>
-      </figure>
-
-      <div class="two">
-        <figure class="fig" id="fig-wc">
-          <div class="fig-head">
-            <h2 class="fh">Receivables and inventory piled up</h2>
-            <p>Balances at each quarter end, US$ billions.</p>
-          </div>
-          <div class="card">
-            <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Receivables, net</span><span><i class="sw" style="background:var(--c3)"></i>Inventories</span></div>
-            <div class="chart" id="chWc" role="img" aria-label="Lines of net receivables and inventories for twelve quarters. The figures are in the working capital table under The detail."></div>
-          </div>
-        </figure>
-        <figure class="fig" id="fig-exp">
-          <div class="fig-head">
-            <h2 class="fh">Borrowing is small; guarantees are not</h2>
-            <p>Funded debt and the maximum guarantees disclosed at each quarter end, US$ billions.</p>
-          </div>
-          <div class="card">
-            <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Funded debt</span><span><i class="sw" style="background:var(--c2)"></i>Guarantee caps</span></div>
-            <div class="chart" id="chExp" role="img" aria-label="Stacked bars of funded debt and disclosed guarantee caps for twelve quarters. The figures are in the leverage table under The detail."></div>
-          </div>
-        </figure>
-      </div>
-
-      <figure class="fig" id="fig-guar">
-        <div class="fig-head">
-          <h2 class="fh">Whose obligations the $118B covers</h2>
-          <p>Maximum gross exposure at 25 October 2026. No payments had been made under any of them.</p>
-        </div>
-        <div class="card">
-          <div class="gbar" id="gbar" role="img" aria-label="One bar split into the three guarantee groups listed below it"></div>
-          <ul class="glist">
-            <li><i class="sw" style="background:var(--c2)"></i><div>OpenAI affiliate, Piketon, Ohio<small>Lease and power obligations to SB Energy affiliates for nine phases, 4.25 GW; runs down over 20 years; first expected FY2029</small></div><b>$105.0B</b></li>
-            <li><i class="sw" style="background:var(--c3)"></i><div>Selected partners, power and systems<small>Financing default support; borrowers, banks and amounts not disclosed one by one</small></div><b>$9.5B</b></li>
-            <li><i class="sw" style="background:var(--c1)"></i><div>Selected neocloud tenants<small>Default on land, power and shell leases; 5 to 7 years, with a $712M escrow</small></div><b>$3.5B</b></li>
-          </ul>
-        </div>
-      </figure>
+      <p class="meta">Prices are the 20 November 2026 intraday reference, about 3:30 p.m. ET. Built from NVIDIA’s filings and three desk reviews dated 20 and 21 November: a twelve-quarter due diligence review, a breakpoint study and a risk review. Where they disagree, the reconciliation below says which figure is used. Analysis, not investment advice.</p>
+      <nav class="jump" aria-label="Questions in this report">
+        <a class="chip" href="#q-what">What happened</a>
+        <a class="chip" href="#q-sound">Is the accounting sound</a>
+        <a class="chip" href="#q-promises">What it has promised</a>
+        <a class="chip" href="#q-circular">Who funds the demand</a>
+        <a class="chip" href="#q-price">What the price assumes</a>
+        <a class="chip" href="#q-break">What breaks it</a>
+        <a class="chip" href="#q-likely">What is likely</a>
+        <a class="chip" href="#q-watch">What to watch</a>
+        <a class="chip" href="#q-disagree">Where sources disagree</a>
+      </nav>
     </section>
 
+    <!-- ============ 1 WHAT HAPPENED ============ -->
+    <section class="qs" id="q-what">
+      <h2>What happened?</h2>
+      <p class="answer">The business had its best quarter ever. The stock lost 47% in seven weeks, almost all of it from a lower multiple.</p>
+      <div class="card">
+        <h3>Closing prices we could confirm, and the news between them</h3>
+        <p class="sub">US$ per share. Dashed where there are days without a confirmed close.</p>
+        <div class="chart wide-scroll" id="chPrice" role="img" aria-label="Line of NVIDIA closing prices from the 6 October record of $239.24 to about $127 intraday on 20 November, with the events listed in the table below."></div>
+        <p class="src">Closes: Oct 6, Nov 9 and Nov 19 from the breakpoint study; Nov 13 and 16 from <a href="https://fourweekmba.com/ai-nvidia-closes-down-4-1-before-results-424b-lost-since-8-k/">FourWeekMBA</a>; Nov 17 and 18 from <a href="https://www.heygotrade.com/en/news/nvidia-nvda-stock-news-november-19-2026/">Gotrade</a>. Nov 20 is intraday.</p>
+      </div>
+      <div class="tiles">
+        <div class="tile"><b>$115.8B</b><span>Q3 FY27 revenue, $7.8B above NVIDIA’s own forecast</span></div>
+        <div class="tile"><b>~75%</b><span>FY28 growth outlook, raised on 17 November</span></div>
+        <div class="tile"><b>14x</b><span>trailing earnings, down from about 30x at the October peak</span></div>
+        <div class="tile"><b>~8x</b><span>FY28 consensus earnings, against 18.3x for the S&amp;P 500</span></div>
+      </div>
+      <ul class="pts">
+        <li><b>12 November:</b> Jensen Huang resigned as CEO and director. CFO Colette Kress is interim CEO and still CFO.</li>
+        <li><b>17 November:</b> the Wall Street Journal reported an SEC civil investigation into NVIDIA’s disclosures. On 20 November Reuters reported enforcement staff examining possible accounting issues. Neither the SEC nor NVIDIA has confirmed scope.</li>
+        <li><b>Also open:</b> a shareholder class action over Megaspeed disclosures (9 November), a board investigation (8 November), DOJ questions on the $12.93B Hugging Face deal, and a Commerce rule of 16 November closing a remote-access loophole.</li>
+      </ul>
+    </section>
+
+    <!-- ============ 2 ACCOUNTING ============ -->
+    <section class="qs" id="q-sound">
+      <h2>Are the numbers sound?</h2>
+      <p class="answer">No misconduct is substantiated. Four issues are open, and the SEC inquiry raises their stakes. The clearest warning is cash: profit is running well ahead of it.</p>
+      <div class="tiles">
+        <div class="tile"><b>52%</b><span>of Q2 and Q3 net income became free cash flow ($65B of $125B)</span></div>
+        <div class="tile"><b>$81B</b><span>owed by customers; 64 days to collect, up from 45 in two quarters</span></div>
+        <div class="tile"><b>$25.5B</b><span>of nine-month profit was gains on NVIDIA’s own stock portfolio</span></div>
+        <div class="tile"><b>$39.7B</b><span>inventory, up 86% since January</span></div>
+      </div>
+      <div class="two">
+        <div class="card">
+          <h3>Profit grew faster than the cash it brought in</h3>
+          <p class="sub">Net income and operating cash flow, US$ billions a quarter.</p>
+          <div class="legend"><span><i class="sw" style="background:var(--c2)"></i>Net income</span><span><i class="sw" style="background:var(--c1)"></i>Operating cash flow</span></div>
+          <div class="chart wide-scroll" id="chCash" role="img" aria-label="Grouped bars of net income and operating cash flow for twelve quarters; the figures are in the earnings fold under The detail."></div>
+        </div>
+        <div class="card">
+          <h3>Receivables and inventory piled up</h3>
+          <p class="sub">Balances at each quarter end, US$ billions.</p>
+          <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Receivables, net</span><span><i class="sw" style="background:var(--c3)"></i>Inventories</span></div>
+          <div class="chart" id="chWc" role="img" aria-label="Lines of net receivables and inventories for twelve quarters; the figures are in the working capital fold under The detail."></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Accounting quality, 1 weak to 5 strong</h3>
+        <p class="sub">The breakpoint study’s scores, with the evidence that drives each.</p>
+        <div class="score" id="score"></div>
+      </div>
+      <p>The four open issues: <b>what the SEC is examining</b> (a presentation question about Singapore revenue is very different from a restatement); <b>slower collections</b> (economic risk, not yet an accounting problem); <b>sales to companies NVIDIA funds</b> (revenue by customer is not disclosed); and <b>supply sized for 75% growth</b> (a loss is booked only once it is probable). Positive cash flow, independently reported customer contracts and a clean FY2026 audit count against a claim of wholesale fabrication.</p>
+    </section>
+
+    <!-- ============ 3 COMMITMENTS ============ -->
+    <section class="qs" id="q-promises">
+      <h2>What has NVIDIA promised?</h2>
+      <p class="answer">About $670B of commitments and contingent exposure. Most of it is supply it will sell at a 70% margin; the realistic loss even in a severe downturn is a fifth to a third.</p>
+      <div class="card">
+        <h3>Gross amount against the severe-case loss, on one scale</h3>
+        <p class="sub">Grey: the disclosed amount. Gold: the breakpoint study’s estimated loss if FY28 revenue came in 50% below forecast with customer failures.</p>
+        <div class="cm" id="commit"></div>
+        <p class="src">Amounts at 25 October 2026 from the CFO commentary. Loss ranges are estimates: supply losses assume 10 to 60% of the unneeded excess is lost; guarantees are probable losses, not the cap. Total estimated loss: $10B to $20B mild (revenue 10% below forecast), $55B to $90B moderate (30% below), $140B to $225B severe.</p>
+      </div>
+      <div class="two">
+        <div class="card">
+          <h3>Borrowing is small; guarantees are not</h3>
+          <p class="sub">Funded debt and disclosed guarantee caps at each quarter end, US$ billions.</p>
+          <div class="legend"><span><i class="sw" style="background:var(--c1)"></i>Funded debt</span><span><i class="sw" style="background:var(--c2)"></i>Guarantee caps</span></div>
+          <div class="chart" id="chExp" role="img" aria-label="Stacked bars of funded debt and guarantee caps for twelve quarters; the figures are in the leverage fold under The detail."></div>
+        </div>
+        <div class="card">
+          <h3>Whose obligations the $118B covers</h3>
+          <p class="sub">Maximum gross exposure; nothing paid so far.</p>
+          <div class="gbar" id="gbar" role="img" aria-label="One bar split into the three guarantee groups listed below it"></div>
+          <ul class="glist">
+            <li><i class="sw" style="background:var(--c2)"></i><div>OpenAI affiliate, Piketon, Ohio<small>Lease and power obligations to SB Energy affiliates; nine phases, 4.25 GW; starts FY2029, runs down over 20 years; ends early if OpenAI reaches a set credit rating</small></div><b>$105.0B</b></li>
+            <li><i class="sw" style="background:var(--c3)"></i><div>Selected partners, power and systems<small>Financing default support; borrowers and banks not named</small></div><b>$9.5B</b></li>
+            <li><i class="sw" style="background:var(--c1)"></i><div>Selected neocloud tenants<small>Land, power and shell leases; 5 to 7 years; $712M escrow</small></div><b>$3.5B</b></li>
+          </ul>
+        </div>
+      </div>
+      <p><b>The pressure point is timing.</b> $203B of supply falls due in FY2028, about all the cost of goods implied by FY28 consensus revenue. On consensus about $298B of FY28 free cash flow is left after all commitments. If revenue and cash came in 30% short and buybacks continued at today’s pace, NVIDIA would be about $43B short by January 2028; it would stop buybacks and still hold about $184B.</p>
+    </section>
+
+    <!-- ============ 4 CIRCULAR FINANCING ============ -->
+    <section class="qs" id="q-circular">
+      <h2>How much of the demand does NVIDIA fund itself?</h2>
+      <p class="answer">A minority: 6 to 12% of revenue on realistic flowback, 20% at most. But it sits with the riskiest customers, and the bigger dependence is on other people’s debt.</p>
+      <div class="card">
+        <h3>Two loops carry NVIDIA’s own money to its buyers</h3>
+        <p class="sub">Grey: customer money buying NVIDIA systems. Dashed: NVIDIA investments, backstops and guarantees. Q3 FY27 data center sales.</p>
+        <div class="map-scroll">
+          <svg id="finmap" viewBox="0 0 960 420" role="img" aria-label="Diagram. Own cash and bonds fund hyperscalers; private credit and banks fund AI clouds and enterprise; equity and IPO markets fund AI labs. Hyperscalers ($60.1B, 56%) and AI clouds ($47.5B, 44%) buy from NVIDIA. AI labs rent compute from both. NVIDIA buys from suppliers ($390B committed). NVIDIA money reaches AI clouds through backstops, site guarantees and stakes, and AI labs through stakes and the Ohio lease guarantee.">
+            <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--line-strong)"/></marker>
+            <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--c1)"/></marker></defs>
+            <text class="col" x="20" y="22">Who funds the buyers</text>
+            <text class="col" x="330" y="22">Buyers, Q3 FY27 data center sales</text>
+            <g class="nd"><rect x="20" y="40" width="230" height="58" rx="10"/><text x="36" y="64">Own cash flow and bonds</text><text class="s" x="36" y="84">Cash-negative in 2027 for some</text></g>
+            <g class="nd"><rect x="20" y="160" width="230" height="58" rx="10"/><text x="36" y="184">Private credit and banks</text><text class="s" x="36" y="204">Backstops make loans easier</text></g>
+            <g class="nd"><rect x="20" y="310" width="230" height="58" rx="10"/><text x="36" y="334">Equity and IPO markets</text><text class="s" x="36" y="354">OpenAI rounds; Anthropic IPO</text></g>
+            <g class="nd"><rect x="330" y="40" width="250" height="58" rx="10"/><text x="346" y="64">Hyperscalers</text><text class="s" x="346" y="84">$60.1B, 56% of data center</text></g>
+            <g class="nd"><rect x="330" y="160" width="250" height="58" rx="10"/><text x="346" y="184">AI clouds and enterprise</text><text class="s" x="346" y="204">$47.5B, 44%; includes neoclouds</text></g>
+            <g class="nd"><rect x="330" y="310" width="250" height="58" rx="10"/><text x="346" y="334">AI labs</text><text class="s" x="346" y="354">OpenAI, Anthropic, xAI</text></g>
+            <g class="nd nv"><rect x="690" y="150" width="240" height="78" rx="12"/><text x="708" y="180">NVIDIA</text><text class="s" x="708" y="202">Q3 revenue $115.8B</text></g>
+            <g class="nd"><rect x="690" y="30" width="240" height="58" rx="10"/><text x="708" y="54">Suppliers</text><text class="s" x="708" y="74">$390B committed</text></g>
+            <path class="ed" d="M250,69H322" marker-end="url(#ah)"/>
+            <path class="ed" d="M250,189H322" marker-end="url(#ah)"/>
+            <path class="ed" d="M250,339H322" marker-end="url(#ah)"/>
+            <path class="ed" d="M580,69C640,69 640,170 682,170" marker-end="url(#ah)"/>
+            <path class="ed" d="M580,189H682" marker-end="url(#ah)"/>
+            <path class="ed" d="M810,150V96" marker-end="url(#ah)"/>
+            <path class="ed" d="M455,310V226" marker-end="url(#ah)"/>
+            <text class="lab" x="463" y="276">rent compute</text>
+            <path class="nvl" d="M690,212C640,212 640,214 588,214" marker-end="url(#ahc)"/>
+            <text class="tag" x="630" y="236">1</text>
+            <path class="nvl" d="M810,228V339H588" marker-end="url(#ahc)"/>
+            <text class="tag" x="820" y="290">2</text>
+          </svg>
+        </div>
+        <ul class="notes">
+          <li><b>1</b>Neoclouds: $32B of conditional backstops, $3.5B of site guarantees, $2B stakes each in CoreWeave and Nebius.</li>
+          <li><b>2</b>AI labs: $30B OpenAI stake, up to $10B in Anthropic, xAI undisclosed, and up to $105B guarantee on OpenAI’s Ohio leases.</li>
+        </ul>
+      </div>
+      <div class="tw wrap"><table><thead><tr><th>Buyer</th><th>NVIDIA’s financial link</th><th>Classification</th></tr></thead><tbody>
+        <tr><td>Microsoft, Amazon, Alphabet, Meta</td><td>None disclosed. Largest direct buyers; also building TPU and Trainium alternatives.</td><td>Independent, increasingly debt-funded</td></tr>
+        <tr><td>Oracle</td><td>None disclosed. Large buyer serving OpenAI.</td><td>Independent, financing-sensitive</td></tr>
+        <tr><td>OpenAI</td><td>$30B stake; up to $105B guarantee on its Ohio leases from FY2029. Buys through Microsoft, Oracle, CoreWeave and Ohio.</td><td>Materially dependent</td></tr>
+        <tr><td>CoreWeave, Nebius</td><td>$2B stake each; backstops; NVIDIA buys unused capacity and shares revenue above the backstop.</td><td>Partly financing-supported</td></tr>
+        <tr><td>Other neoclouds</td><td>Share of the $32B backstops and $3.5B site guarantees (Lambda, Nscale, IREN and others).</td><td>Partly financing-supported</td></tr>
+        <tr><td>Anthropic</td><td>Up to $10B stake. Rents NVIDIA capacity but is a heavy user of TPUs and Trainium.</td><td>Partly; also a competitor’s channel</td></tr>
+        <tr><td>xAI</td><td>Stake of undisclosed size. Large direct buyer.</td><td>Indeterminate</td></tr>
+      </tbody></table></div>
+      <p><b>Why the ceiling is 20%:</b> NVIDIA bought $58.1B of equity stakes in the nine months to October against $294B of revenue. Even if every dollar came back as purchases, that caps recycled revenue at 20%; assuming 30 to 60% flows back gives 6 to 12%. The larger dependence is indirect. Alphabet, Amazon and Oracle are projected to be cash-negative in 2027, and OpenAI expects to burn about $57B. One lab’s compute bill is a cloud’s revenue and then NVIDIA’s, so a stumble anywhere is felt at every link. The ECB warned in November of exactly this opacity across AI financing.</p>
+      <p><b>Contagion, in order:</b> an OpenAI funding shortfall (demand, the $30B stake, the Ohio guarantee and sentiment at once); neocloud refinancing if GPU rental prices fall; a top-five hyperscaler cutting 2027 capital spending, which would matter more than every NVIDIA loop combined.</p>
+    </section>
+
+    <!-- ============ 5 WHAT THE PRICE ASSUMES ============ -->
+    <section class="qs" id="q-price">
+      <h2>What does the price already assume?</h2>
+      <p class="answer">A plateau, then a step down. FY28 is the peak, and long-run free cash flow settles near $240B a year: 28% below the peak, still well above this year’s $150B.</p>
+      <div class="two">
+        <div class="tw"><table><thead><tr><th>At $127.18, 20 November</th><th>Value</th></tr></thead><tbody>
+          <tr><td>Market value, 24.1B shares</td><td>$3.07T</td></tr>
+          <tr><td>Enterprise value, net of $53.5B cash and securities and $32.4B debt</td><td>$3.04T</td></tr>
+          <tr><td>Same, also net of $109.7B equity stakes</td><td>$2.93T</td></tr>
+          <tr><td>Price to trailing GAAP earnings ($9.31)</td><td>14x</td></tr>
+          <tr><td>Price to FY28 consensus earnings ($15.64 to $16.61)</td><td>7.7 to 8.1x</td></tr>
+          <tr><td>Enterprise value to FY28 free cash flow ($334.9B)</td><td>9.1x</td></tr>
+          <tr><td>FY28 free cash flow yield</td><td>10.9%</td></tr>
+          <tr><td>Core business to FY28 operating profit after tax</td><td>about 7.5x</td></tr>
+        </tbody></table></div>
+        <div class="tw"><table><thead><tr><th>Discount rate</th><th>Long-run free cash flow the price implies</th><th>Share of FY28 peak</th></tr></thead><tbody>
+          <tr><td>9%</td><td>$174B</td><td>52%</td></tr>
+          <tr class="hl"><td>11%, base</td><td>$240B</td><td>72%</td></tr>
+          <tr><td>13%</td><td>$309B</td><td>92%</td></tr>
+        </tbody></table></div>
+      </div>
+      <p class="src">Reverse discounted cash flow from the breakpoint study: FY28 free cash flow at FactSet consensus, FY29 halfway to a normal level, then 3% growth from FY30, discounted at 11% (a stock that moves about 2.25 times the market). Every 10% move in the price shifts the implied level by about $30B. The core-business row is our arithmetic: $2.93T against FY28 consensus revenue of $709B to $726B at a 72.5% gross margin, $45B to $50B of operating costs and a 17% tax rate.</p>
+      <p>At a mid-cycle free cash flow margin of about 42%, $240B implies normal revenue of about $570B, between FY27 (about $424B) and the FY28 forecast. The demanding assumptions are not growth but durability: gross margins near 70% as TPUs, Trainium and Broadcom-built chips take share; hyperscalers spending through negative free cash flow; and NVIDIA keeping its lead without its founder.</p>
+    </section>
+
+    <!-- ============ 6 BREAKPOINTS ============ -->
+    <section class="qs" id="q-break">
+      <h2>What would take it down another 20%?</h2>
+      <p class="answer">FY28 revenue about 10% below forecast (still up 50%), gross margin 2 points lower and a slightly lower multiple gets to $107. Any further loss of confidence does the rest.</p>
+      <div class="card">
+        <h3>Long-run free cash flow each share price implies</h3>
+        <p class="sub">US$ billions a year from FY30, 11% discount rate, 3% growth. The thesis breaks where a bar falls short of this year’s line: the price would then assume cash flow drops below what NVIDIA earns now, for good.</p>
+        <div class="hb" id="brk"></div>
+      </div>
+      <div class="tw wrap"><table><thead><tr><th>Stock move</th><th>One change alone (FY28)</th><th>Smallest plausible combination</th><th>Long-run cash flow needed</th></tr></thead><tbody>
+        <tr><td>−10%, ~$114</td><td>Revenue 9% below consensus (still +52%); or gross margin −6.7 points; or P/E 8.1x to 7.3x</td><td>Revenue −5%, gross margin −1 point, P/E 7.5x</td><td>$211B, 63% of peak</td></tr>
+        <tr><td>−20%, ~$102</td><td>Revenue 18% below (still +37%); or gross margin −13 points; or P/E 6.5x</td><td>Revenue −10%, gross margin −2 points, P/E 7.5x gives $107; plus any confidence shock</td><td>$182B, 54%</td></tr>
+        <tr><td>−30%, ~$89</td><td>Revenue 28% below (still +21%); or P/E 5.7x</td><td>Revenue −15%, gross margin −3 points, P/E 7x</td><td>$153B, about FY27</td></tr>
+        <tr><td>−50%, ~$64</td><td>Revenue 46% below (a 10% decline); or P/E 4.1x</td><td>Revenue −30%, gross margin −6 points, P/E 6x</td><td>$94B, 28%</td></tr>
+        <tr><td>+20%, ~$153</td><td>P/E back to about 9.2 to 9.8x on consensus</td><td>FY28 at management’s ~$740B and FY29 roughly flat</td><td>$298B, 89%</td></tr>
+        <tr><td>Back to $239</td><td>P/E about 15x on consensus</td><td>Strong FY29 growth plus a re-rating</td><td>$496B, 148%</td></tr>
+      </tbody></table></div>
+      <p>Rules of thumb: each 1% of FY28 revenue shortfall costs about 1.1% of earnings; each gross margin point about 1.6%; a one-time pre-tax charge of about $47B equals 10% of a year’s earnings, though markets forgive one-time losses far more than lost earning power. Down to −20% the fall is mostly expectations (in the −16% case, 85% from lower earnings and 15% from a lower multiple). At −30% it becomes impairment. The risk review’s identities agree: −20% at a constant multiple needs an 18% revenue miss.</p>
+    </section>
+
+    <!-- ============ 7 SCENARIOS ============ -->
+    <section class="qs" id="q-likely">
+      <h2>What is most likely over twelve months?</h2>
+      <p class="answer">Roughly flat. Both studies weight their scenarios to about $134 to $136, 5 to 7% above today, with a range from about $46 to $266.</p>
+      <div class="card">
+        <h3>Five scenarios, two studies</h3>
+        <p class="sub">Dot size is the breakpoint study’s probability. Rings are the risk review’s prices for the same case. Probabilities are judgement, not statistics.</p>
+        <div class="legend"><span><i class="sw" style="background:var(--c1);border-radius:50%"></i>Breakpoint study, 12 months</span><span><i class="sw ring"></i>Risk review, November 2027</span></div>
+        <div class="sc-wrap"><div class="sc-lines" id="scLines"></div><div class="sc" id="scen"></div><div class="sc-axis" id="scAxis"></div></div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Scenario</th><th>Probability</th><th>FY28 revenue</th><th>FY29 revenue</th><th>Gross margin</th><th>FY29 EPS</th><th>Commitment losses</th><th>Multiple</th><th>Price</th></tr></thead><tbody id="scTbl"></tbody></table></div>
+      <ul class="pts">
+        <li><b>Next 1 to 3 months:</b> event-driven. The Q3 10-Q (due 4 December) should give guarantee and customer detail; then the SEC’s scope, the CEO search and the Q4 report in late February. A range of $100 to $160 is plausible.</li>
+        <li><b>6 months:</b> base and bear cases are hard to tell apart until hyperscalers set 2027 budgets and NVIDIA speaks to FY2029. Most event risk sits here.</li>
+        <li><b>24 months:</b> FY2029 decides. Revenue above about $600B makes today’s price look cheap; below about $420B, expensive.</li>
+      </ul>
+    </section>
+
+    <!-- ============ 8 WATCH ============ -->
+    <section class="qs" id="q-watch">
+      <h2>What would show the thesis breaking first?</h2>
+      <p class="answer">Five indicators should move one to three quarters before NVIDIA’s own revenue does. Revenue lags: it reflects orders placed and supply bought months earlier.</p>
+      <div class="tw wrap"><table><thead><tr><th>Indicator</th><th>Now</th><th>Watch</th><th>Serious</th><th>Lead time</th></tr></thead><tbody>
+        <tr><td>Hyperscaler 2027 capital spending (Alphabet, Amazon, Meta, Microsoft, Oracle)</td><td>Q4 2026 guides $242B to $270B, above Q3’s $228B; 2027 “significant increases”</td><td>Any top-five spender flat on 2027</td><td>Two or more cut</td><td>2 to 4 quarters</td></tr>
+        <tr><td>Days to collect</td><td>64, from 45 and 60</td><td>Above 65</td><td>Above 75, or any bad-debt charge</td><td>1 to 2 quarters</td></tr>
+        <tr><td>Supply commitments against next-year revenue</td><td>$390B, $203B due FY28; tripled since April</td><td>Growing faster than the revenue outlook</td><td>Any write-down of commitments or inventory</td><td>2 to 3 quarters</td></tr>
+        <tr><td>AI lab and neocloud financing (OpenAI, CoreWeave, Nebius, Anthropic)</td><td>OpenAI projects ~$57B burn in 2027; Anthropic fell ~12% on its second trading day</td><td>Debt at wider spreads; missed plans</td><td>Distressed raise or covenant breach</td><td>1 to 3 quarters</td></tr>
+        <tr><td>SEC inquiry scope</td><td>Reported 17 and 20 November; scope unknown</td><td>Wells notice or subpoena disclosed</td><td>Restatement or material weakness</td><td>Immediate</td></tr>
+      </tbody></table></div>
+      <p><b>What would prove this report wrong.</b> First, the SEC finds a revenue problem, not a presentation problem; the valuation math assumes reported results are reliable. Second, FY2029 falls more than 35 to 40% from the FY28 peak and stays there, meaning the price was not cheap but rightly anticipating a bust; the tell would be hyperscaler cuts plus neocloud refinancing failures in early 2027. Third, NVIDIA cuts prices to defend share against custom chips; a gross margin in the low 60s justifies a much lower price even at steady volumes.</p>
+    </section>
+
+    <!-- ============ 9 RECONCILIATION ============ -->
+    <section class="qs" id="q-disagree">
+      <h2>Where do the sources disagree?</h2>
+      <p class="answer">On consensus, on what counts as a stake or a guarantee, and on a few plain errors in the chat-based valuation notes. This report uses the filings first.</p>
+      <div class="tw wrap"><table><thead><tr><th>Item</th><th>What the sources say</th><th>Used here, and why</th></tr></thead><tbody>
+        <tr><td>Share price</td><td>$127.18 at 3:21 p.m. and $127.30 at 3:31 p.m. (desk reviews); $125.53 called a close (chat notes)</td><td>~$127. No source we found confirms a $125.53 close</td></tr>
+        <tr><td>FY28 revenue consensus</td><td>$709B (FactSet); $725.5B (S&amp;P, 19 Nov); $742B (chat, 75% on FY27); ~$740B management outlook</td><td>A range. The breakpoints use FactSet; the gap is itself a 5% swing</td></tr>
+        <tr><td>FY28 EPS consensus</td><td>$15.64 (FactSet, calendar 2027); $16.61 (S&amp;P); $15.85 to $16.30 (chat)</td><td>7.7 to 8.1x. The chat’s “9 to 10x” uses a blended next-twelve-months figure</td></tr>
+        <tr><td>Funded debt</td><td>$32.4B (filings); “~$8.5B” (chat)</td><td>$32.4B. The chat uses the pre-July figure, before about $25B of notes were issued</td></tr>
+        <tr><td>Equity stakes</td><td>$65.5B private plus $44.2B listed, $109.7B (filings); “$65.5B strategic equity” (chat)</td><td>$109.7B. The chat leaves out about $1.80 a share of listed stakes</td></tr>
+        <tr><td>Guarantees</td><td>$105B OpenAI affiliate, $9.5B power and systems, $3.5B neoclouds; “$118B neocloud guarantees” (chat)</td><td>The filing’s split. 89% backs one OpenAI campus, not neoclouds</td></tr>
+        <tr><td>Q3 GAAP net income</td><td>$65.3B (filings); $63.8B (chat)</td><td>$65.3B</td></tr>
+        <tr><td>Days to collect</td><td>64 (NVIDIA’s convention); 56.6 (due diligence review, average balances)</td><td>Both rise every quarter; the trend is the signal</td></tr>
+        <tr><td>Cash conversion</td><td>Operating cash 74% of Q3 net income; free cash flow 67% (Q3), 52% (Q2 and Q3), 62% (nine months)</td><td>All are right on their own definitions; each is stated with its basis</td></tr>
+        <tr><td>SEC inquiry</td><td>WSJ, 17 Nov: civil probe of disclosures. Reuters, 20 Nov: possible accounting issues</td><td>Both reported; neither confirmed by the SEC or NVIDIA</td></tr>
+        <tr><td>Sum of the parts</td><td>The chat’s first table puts a “bear case” 25% above the price</td><td>That table applies a 10x multiple to base-case earnings. Its own later bear case gives $98 (FY27) and $118 (FY28)</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <!-- ============ AI SAFETY CONTEXT ============ -->
+    <section class="qs" id="q-safety">
+      <h2>Why is this on an AI safety site?</h2>
+      <p class="answer">Because who finances compute shapes who can build frontier AI, and export-control enforcement now reaches NVIDIA’s revenue directly.</p>
+      <ul class="pts">
+        <li><b>Concentration.</b> One supplier is underwriting up to 4.25 GW of one lab’s compute in Ohio and holds stakes in OpenAI, Anthropic and xAI. Its financing choices are a lever on the pace of frontier training.</li>
+        <li><b>Verification is becoming practical.</b> MATS research by Tom Kimpson, Mauricio Baker and Emlyn Graham (October 2026) tests whether AI training can be <a href="https://www.matsprogram.org/research/detecting-ai-training-in-datacentre-power">detected in data center power</a>, and <a href="https://www.matsprogram.org/research/can-power-draw-constrain-covert-compute-limits-of-analogue-verification-for-ai-governance">where that stops working</a>. An IAPS report (Avellar and Grunewald, August 2026) sets out <a href="https://arxiv.org/abs/2609.07637">near-term end-location, end-user and end-use checks</a> for exported chips. Checks like these would help answer where chips billed to Singapore, or sold through Megaspeed, end up.</li>
+        <li><b>The policy channel.</b> Horizon Institute fellows have been placed in Commerce, the White House and congressional offices, and two of its fellow profiles cite export-control work, according to <a href="https://www.washingtonexaminer.com/?p=3874805">Washington Examiner reporting</a>. China data center revenue is already at $0 in guidance, and the 16 November rule added licences for five countries.</li>
+      </ul>
+      <p class="src">None of this changes the valuation above; it names the route by which export-control risk reaches revenue. SPAR listed a spring 2026 project mapping where the world’s AI chips are; its project page is no longer online.</p>
+    </section>
+
+    <!-- ============ THE DETAIL ============ -->
     <section class="data" id="detail">
       <h2>The detail</h2>
-      <p class="small">The report’s sections in order, each with its summary and figures. US$ millions unless stated.</p>
+      <p class="small">The twelve-quarter due diligence review, section by section, then the full registers from the other two studies. US$ millions unless stated.</p>
+      <div class="dl">
+        <a class="btn sm" href="hyperscale/NVIDIA_Financial_Due_Diligence.pdf" download>Download the due diligence review</a>
+        <p class="small">PDF, 21 pages, 21 November 2026</p>
+      </div>
       <div class="layers">
 
         <details class="layer">
-          <summary><span class="layer-kind">Assessment</span><span class="layer-what"><span class="layer-title">What the report concludes</span><span class="layer-inside">Four areas to test, and what the public record can and cannot show</span></span><span class="layer-hook"><span><b>4</b>areas</span></span></summary>
+          <summary><span class="layer-kind">Register</span><span class="layer-what"><span class="layer-title">Commitments register</span><span class="layer-inside">Every commitment: when it falls due, whether it is binding, whether it feeds sales, and the estimated loss in three downturns</span></span><span class="layer-hook"><span><b>$670B</b>gross</span></span></summary>
           <div class="layer-body">
-            <p>NVIDIA’s borrowing is modest. What needs closer examination is the support it gives customers, the collection of fast-growing receivables, and its underwriting of future capacity.</p>
-            <div class="tw wrap"><table><thead><tr><th>Area</th><th>What the record shows</th><th>Why it matters</th></tr></thead><tbody>
-              <tr><td>Customer financing</td><td>$118.0B of maximum guarantees; one phased Ohio project is $105.0B of it.</td><td>Linked investment, hardware sales and guarantees can concentrate risk across companies. The caps far exceed today’s debt.</td></tr>
-              <tr><td>Receivables and cash</td><td>$81.0B owed; two customers hold 35%. October operating cash was 74% of net income.</td><td>Needs independent evidence of later cash receipts from those two customers and from customers given longer terms.</td></tr>
-              <tr><td>Revenue integrity</td><td>Contracts link NVIDIA to customers it also funds and backs.</td><td>The record does not show any amount of fictitious or overstated sales. Linked transactions should be tested.</td></tr>
-              <tr><td>Filing status</td><td>October figures come from unaudited 8-K exhibits of 17 November.</td><td>Refresh against the full 10-Q, with its notes and certifications, before relying on them.</td></tr>
+            <div class="tw wrap"><table><thead><tr><th>Commitment, 25 Oct 2026</th><th>Amount</th><th>Falls due</th><th>On the balance sheet</th><th>Binding</th><th>Feeds NVIDIA sales</th><th>Loss: mild, moderate, severe</th></tr></thead><tbody>
+              <tr><td>Supply and capacity (mostly multi-year memory; also foundry)</td><td>$390B, from $279B in July and $119B in April</td><td>$69B by Jan 2027; $203B FY28; $92B FY29; $26B later</td><td>No, disclosure only</td><td>Largely; cancellation terms not disclosed</td><td>Yes, it is the cost of future products</td><td>$3 to7B; $17 to27B; $42 to63B</td></tr>
+              <tr><td>Guarantees, maximum gross</td><td>$118B: $105B SB Energy for an OpenAI affiliate; $9.5B power and systems; $3.5B neocloud land, power and shell</td><td>SB Energy from FY29, building with each phase, then running down over 20 years</td><td>Small fair-value liability</td><td>Contingent on tenant default; ends if OpenAI reaches a set credit rating</td><td>Yes, the Ohio site must host NVIDIA systems</td><td>$0; $3 to8B; $20 to40B</td></tr>
+              <tr><td>Data center leases not yet begun</td><td>$74B ($63B in FY32 and later)</td><td>Up to 20-year terms</td><td>Not until each starts</td><td>Yes</td><td>Indirectly</td><td>$0; $3 to5B; $10 to20B</td></tr>
+              <tr><td>Neocloud agreements (backstops)</td><td>$32B, down from $36B</td><td>$6B FY28; $7B FY29; $6B FY30; $5B FY31; $8B later</td><td>No</td><td>Only if the operator is financed and deploys, and NVIDIA accepts</td><td>Yes</td><td>$0 to2B; $5 to8B; $12 to18B</td></tr>
+              <tr><td>Cloud service agreements</td><td>$28B</td><td>Multi-year</td><td>No</td><td>Yes</td><td>Indirectly</td><td>~$1B; ~$5B; $10 to14B</td></tr>
+              <tr><td>Equity investment commitments</td><td>$20B</td><td>Mostly near term</td><td>No</td><td>Yes</td><td>Partly</td><td>Counted in the stakes row</td></tr>
+              <tr><td>Capital spending commitments</td><td>$6B</td><td>Near term</td><td>No</td><td>Yes</td><td>No</td><td>~$0</td></tr>
+              <tr><td>Equity stakes already held</td><td>$109.7B: $44.2B listed, $65.5B private (OpenAI $30B; Anthropic up to $10B)</td><td></td><td>Yes</td><td></td><td>Partly</td><td>$5 to10B; $20 to30B; $40 to55B</td></tr>
+              <tr><td>Receivables</td><td>$81.0B; two customers owe ~$28B</td><td>64 days on average</td><td>Yes</td><td></td><td>Already sold</td><td>$0 to1B; $2 to4B; $8 to15B</td></tr>
+              <tr><td>Total estimated loss</td><td></td><td></td><td></td><td></td><td></td><td>$10 to20B; $55 to90B; $140 to225B</td></tr>
+            </tbody></table></div>
+            <p>Supply commitments are not added to costs: they are the cost of goods for future sales. Only the excess over what lower sales would consume is at risk. The $518B schedule, the $32B conditional neocloud schedule and the $118B guarantees differ in kind and are not added together.</p>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Register</span><span class="layer-what"><span class="layer-title">Accounting issues register</span><span class="layer-inside">Eight issues: the verified facts, the rule that applies, management’s explanation and the assessment</span></span><span class="layer-hook"><span><b>8</b>issues</span></span></summary>
+          <div class="layer-body">
+            <div class="tw wrap"><table><thead><tr><th>Issue</th><th>Verified facts</th><th>Rule</th><th>Assessment</th><th>Confidence</th></tr></thead><tbody>
+              <tr><td>SEC enforcement inquiry</td><td>Scope and start date unknown. The FT reports Singapore sales neared half of revenue around the time NVIDIA switched geography from billing address to customer headquarters</td><td>Disclosure rules; ASC 280; ASC 606</td><td>Unresolved and the highest-impact unknown. Inquiries often close without action</td><td>Low</td></tr>
+              <tr><td>Customers paying slower</td><td>Days to collect 45, 60, 64 in two quarters; two customers owe ~35%</td><td>ASC 606 financing component; ASC 326</td><td>Economic risk, not yet an accounting problem; NVIDIA is in effect lending to its biggest customers</td><td>Medium</td></tr>
+              <tr><td>Sales to companies NVIDIA funds</td><td>Stakes in OpenAI, Anthropic, xAI, CoreWeave, Nebius; $32B of backstops; no revenue by customer</td><td>ASC 850; ASC 606 collectibility</td><td>Disclosure gap: readers cannot see revenue from funded customers</td><td>Medium</td></tr>
+              <tr><td>Investment gains in earnings</td><td>GAAP net income exceeded non-GAAP by $5.7B in Q2; listed stakes are marked through profit</td><td>ASC 321</td><td>Earnings quality point; gains reverse into losses in Q4 after November’s sell-off</td><td>High</td></tr>
+              <tr><td>Supply sized for ~75% growth</td><td>$390B committed; $203B due FY28</td><td>ASC 330 loss on firm purchase commitments when probable</td><td>Main future accounting risk if growth falls short</td><td>Medium</td></tr>
+              <tr><td>Guarantees and project entities</td><td>$105B SB Energy cap; nothing paid; starts FY29</td><td>ASC 460; ASC 450; ASC 810</td><td>Likely correctly off the balance sheet, but the terms that would confirm it are not public</td><td>Low to medium</td></tr>
+              <tr><td>Changing disclosure labels</td><td>“AI cloud agreements” renamed “neocloud agreements”; a $20B third-party lease line folded into $74B of leases</td><td>Consistency of disclosure</td><td>Makes quarter-to-quarter comparison harder</td><td>Medium</td></tr>
+              <tr><td>Governance under strain</td><td>CFO also interim CEO during an SEC inquiry, a board investigation, an FBI inquiry and a class action</td><td>Internal control (SOX 404)</td><td>Control-environment risk until a permanent CEO and CFO are in place</td><td>Medium</td></tr>
             </tbody></table></div>
           </div>
         </details>
@@ -221,7 +548,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         <details class="layer">
           <summary><span class="layer-kind">Earnings</span><span class="layer-what"><span class="layer-title">Earnings and cash conversion</span><span class="layer-inside">Revenue rose fivefold in twelve quarters; cash lagged profit by $67.4B over the last year</span></span><span class="layer-hook"><span><b>$115.8B</b>October revenue</span></span></summary>
           <div class="layer-body">
-            <p>October revenue rose 20.4% on the quarter. Receivables grew 28.5% and inventory 25.8%, absorbing $18.1B and $8.1B of cash. Over the last four quarters operating cash fell $67.4B short of net income; receivables took $47.7B, inventory $20.0B, and $31.0B of investment gains were profit with no cash behind it. These overlap and should not be added. Data centers were about 93% of the latest quarter’s revenue.</p>
+            <p>October revenue rose 20.4% on the quarter. Receivables grew 28.5% and inventory 25.8%, absorbing $18.1B and $8.1B of cash. Over the last four quarters operating cash fell $67.4B short of net income; receivables took $47.7B, inventory $20.0B, and $31.0B of investment gains were profit with no cash behind it. These overlap and should not be added. Nine-month free cash flow was about $113.8B against $183.3B of net income; after $48.6B of net equity purchases about $65.2B remained.</p>
             <div class="tw" id="tEarn"></div>
           </div>
         </details>
@@ -229,32 +556,20 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         <details class="layer">
           <summary><span class="layer-kind">Working capital</span><span class="layer-what"><span class="layer-title">Working capital and supplier credit</span><span class="layer-inside">Customers take longer to pay and inventory sits longer</span></span><span class="layer-hook"><span><b>112</b>day cash cycle</span></span></summary>
           <div class="layer-body">
-            <p>Days to collect rose from 38 to 57, and the cash conversion cycle from 80 to 112 days. Inventory at October was $15.8B of raw materials, $17.8B in process and $6.2B finished. Supply commitments rose from $279B in July to $390B, so product transitions and purchase losses deserve stress tests. NVIDIA reports 64 days to collect on its own convention; the report uses one method throughout.</p>
+            <p>On average balances, days to collect rose from 38 to 57 and the cash conversion cycle from 80 to 112 days. Inventory at October was $15.8B of raw materials, $17.8B in process and $6.2B finished. Supply commitments rose from $279B in July to $390B, so product transitions and purchase losses deserve stress tests.</p>
             <div class="tw" id="tWc"></div>
           </div>
         </details>
 
         <details class="layer">
-          <summary><span class="layer-kind">Revenue</span><span class="layer-what"><span class="layer-title">Revenue recognition and circular financing</span><span class="layer-inside">The same companies receive NVIDIA capital, buy its hardware and sell capacity back</span></span><span class="layer-hook"><span><b>4</b>trails</span></span></summary>
+          <summary><span class="layer-kind">Revenue</span><span class="layer-what"><span class="layer-title">Revenue recognition and circular financing trails</span><span class="layer-inside">The same companies receive NVIDIA capital, buy its hardware and sell capacity back</span></span><span class="layer-hook"><span><b>4</b>trails</span></span></summary>
           <div class="layer-body">
             <div class="tw wrap"><table><thead><tr><th>Trail</th><th>What it shows</th><th>Evidence to obtain</th></tr></thead><tbody>
-              <tr><td>CoreWeave</td><td>NVIDIA supplies GPUs, holds shares, and agreed in September 2025 to buy unused cloud capacity to April 2032; initial order $6.3B.</td><td>Match GPU invoices to deployments, use and independent tenant receipts; compare with third-party cloud rates.</td></tr>
-              <tr><td>OpenAI</td><td>$30B from NVIDIA in the February 2026 round, a Rubin compute partnership, and the $105B Ohio lease support.</td><td>Equity closing dates, bank statements, lease contracts, side letters and limits on the use of proceeds.</td></tr>
+              <tr><td>CoreWeave</td><td>NVIDIA supplies GPUs, holds shares, and agreed in September 2025 to buy unused cloud capacity to April 2032; initial order $6.3B. CoreWeave reports a $132.5B backlog, with $23.6B of capital spending against $5.6B of operating cash in nine months.</td><td>Match GPU invoices to deployments, use and independent tenant receipts; compare with third-party cloud rates.</td></tr>
+              <tr><td>OpenAI</td><td>$30B from NVIDIA in the February 2026 round, a Rubin compute partnership, and the $105B Ohio lease support. SB Energy separately discloses NVIDIA investment agreements of $3B.</td><td>Equity closing dates, bank statements, lease contracts, side letters and limits on the use of proceeds.</td></tr>
               <tr><td>Neoclouds</td><td>$32B of conditional agreements: hardware sold upfront once financing and deployment conditions are met, with possible revenue sharing.</td><td>Test linked contracts under ASC 606, and any value paid back to customers above fair value.</td></tr>
               <tr><td>Nscale</td><td>A November SEC filing describes Anthropic services at Monarch with financing still outstanding.</td><td>Match financing close and site acceptance to NVIDIA’s recorded sales.</td></tr>
             </tbody></table></div>
-            <p>Disposition: credible evidence of reciprocal financial ties and credit support. The record does not show a revenue overstatement, a specific round-trip payment or an adjustment amount.</p>
-          </div>
-        </details>
-
-        <details class="layer">
-          <summary><span class="layer-kind">Receivables</span><span class="layer-what"><span class="layer-title">Receivables, capital spending creditors and inquiries</span><span class="layer-inside">Two customers owe $28.4B; two government inquiries are open</span></span><span class="layer-hook"><span><b>35%</b>two customers</span></span></summary>
-          <div class="layer-body">
-            <ul class="pts">
-              <li>Two direct customers held 18% and 17% of October receivables, about $14.6B and $13.8B. Three customers made 14%, 11% and 11% of quarterly sales; the filings do not say whether they are the same customers. Management cites launch timing and longer terms for some investment-grade buyers.</li>
-              <li>Accounts payable rose $6.0B to $21.1B. Public schedules cannot separate equipment creditors from trade creditors.</li>
-              <li>Revenue by country follows the customer’s headquarters, not where chips are billed, installed or used. Commerce and Justice confirmed a Megaspeed export-control investigation; Reuters reported an SEC accounting inquiry on 20 November whose focus is unclear.</li>
-            </ul>
           </div>
         </details>
 
@@ -265,30 +580,13 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
               <li>Marketable debt $24.4B and marketable equity $44.2B, of which $21.0B is under short-term sale restrictions.</li>
               <li>Nonmarketable securities $65.5B. Private equity grew from $47.9B to $61.7B in the quarter, with $15.4B of additions and $1.8B of losses.</li>
               <li>$3.5B of debt convertible into public equity is held as an asset; borrowers and repayment terms are not given.</li>
-              <li>Nine-month equity purchases $58.1B against sales of $9.5B; unrealised public-equity gains of $14.6B. Gains raise earnings without raising chip sales.</li>
-              <li>October-quarter equity purchases of $15.7B against $4.4B of cash capital spending.</li>
+              <li>Nine-month equity purchases $58.1B against sales of $9.5B; unrealised public-equity gains of $14.6B. Gains raise earnings without raising chip sales; after November’s sell-off, Q4 could carry $5B to $15B of GAAP losses on listed stakes (breakpoint study estimate).</li>
             </ul>
           </div>
         </details>
 
         <details class="layer">
-          <summary><span class="layer-kind">Debt</span><span class="layer-what"><span class="layer-title">Funded debt and maturities</span><span class="layer-inside">$32.5B face value of notes from 2028 to 2060; no commercial paper outstanding</span></span><span class="layer-hook"><span><b>$32.4B</b>carrying value</span></span></summary>
-          <div class="layer-body">
-            <div class="tw"><table><thead><tr><th>Maturity</th><th>Coupons and principal</th><th>Face, $B</th></tr></thead><tbody>
-              <tr><td>2028</td><td>4.25% $3.50B; 1.55% $1.25B</td><td>4.75</td></tr>
-              <tr><td>2029 to 2030</td><td>4.35% $3.50B; 2.85% $1.50B</td><td>5.00</td></tr>
-              <tr><td>2031</td><td>4.50% $4.00B; 2.00% $1.25B</td><td>5.25</td></tr>
-              <tr><td>2033, 2036</td><td>4.75% $3.50B; 4.95% $4.00B</td><td>7.50</td></tr>
-              <tr><td>2040, 2046</td><td>3.50% $1.00B; 5.55% $3.00B</td><td>4.00</td></tr>
-              <tr><td>2050, 2056, 2060</td><td>3.50% $2.00B; 5.625% $3.50B; 3.70% $0.50B</td><td>6.00</td></tr>
-              <tr><td>Total</td><td>after the $1.00B 2026 note repaid in the quarter</td><td>32.50</td></tr>
-            </tbody></table></div>
-            <p>Total liabilities were $105.5B, including $33.3B of accrued current liabilities and $5.8B of long-term leases. Debt including those leases is at least $38.1B.</p>
-          </div>
-        </details>
-
-        <details class="layer">
-          <summary><span class="layer-kind">Leverage</span><span class="layer-what"><span class="layer-title">Leverage with and without the guarantees</span><span class="layer-inside">Debt is 0.13 times a year’s operating earnings; with every guarantee cap, 0.62</span></span><span class="layer-hook"><span><b>0.62x</b>full stress</span></span></summary>
+          <summary><span class="layer-kind">Leverage</span><span class="layer-what"><span class="layer-title">Debt, leverage and the guarantee stress</span><span class="layer-inside">Debt is 0.13 times a year’s operating earnings; with every guarantee cap, 0.62</span></span><span class="layer-hook"><span><b>0.62x</b>full stress</span></span></summary>
           <div class="layer-body">
             <div class="tw"><table><thead><tr><th>October 2026, analytical scenario</th><th>Debt equivalent, $B</th><th>÷ EBITDA</th><th>÷ equity</th></tr></thead><tbody>
               <tr><td>Funded debt only</td><td>32.4</td><td>0.13x</td><td>0.12x</td></tr>
@@ -296,13 +594,13 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
               <tr><td>Plus 50% of guarantee caps</td><td>91.4</td><td>0.38x</td><td>0.34x</td></tr>
               <tr><td>Plus all guarantee caps</td><td>150.4</td><td>0.62x</td><td>0.56x</td></tr>
             </tbody></table></div>
-            <p>Trailing operating earnings before depreciation were $243.3B. The full-cap case is undiscounted, assumes no collateral and no probabilities; it is a stress measure, not a forecast of claims. The disclosure grew from $0.86B in October 2025 to $3.5B through July 2026, then $118.0B after the August Ohio deal.</p>
+            <p>Notes of $32.5B face value mature from 2028 to 2060; no commercial paper is outstanding. Trailing operating earnings before depreciation were $243.3B. The full-cap case is undiscounted, assumes no collateral and no probabilities.</p>
             <div class="tw" id="tLev"></div>
           </div>
         </details>
 
         <details class="layer">
-          <summary><span class="layer-kind">Commitments</span><span class="layer-what"><span class="layer-title">Contractual commitments</span><span class="layer-inside">$518B to buy supply, cloud services, leases and equity; $222B falls due in FY2028</span></span><span class="layer-hook"><span><b>$518B</b>committed</span></span></summary>
+          <summary><span class="layer-kind">Commitments</span><span class="layer-what"><span class="layer-title">Commitments by year</span><span class="layer-inside">$518B to buy supply, cloud services, leases and equity; $222B falls due in FY2028</span></span><span class="layer-hook"><span><b>$518B</b>scheduled</span></span></summary>
           <div class="layer-body">
             <div class="tw"><table><thead><tr><th>US$ billions</th><th>FY27 rest</th><th>FY28</th><th>FY29</th><th>FY30</th><th>FY31</th><th>FY32 on</th><th>Total</th></tr></thead><tbody>
               <tr><td>Supply and capacity</td><td>69</td><td>203</td><td>92</td><td>10</td><td>8</td><td>8</td><td>390</td></tr>
@@ -313,32 +611,47 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
               <tr><td>Total</td><td>82</td><td>222</td><td>103</td><td>22</td><td>16</td><td>73</td><td>518</td></tr>
               <tr><td>Conditional neocloud agreements, separate</td><td></td><td>6</td><td>7</td><td>6</td><td>5</td><td>8</td><td>32</td></tr>
             </tbody></table></div>
-            <p>These schedules differ in kind, so the report does not add them to the guarantees. A five-day delay in collections at October’s sales rate ties up about $6.4B. Buybacks and dividends took $28.1B in the quarter.</p>
           </div>
         </details>
 
         <details class="layer">
-          <summary><span class="layer-kind">Requests</span><span class="layer-what"><span class="layer-title">What a regulator should ask for</span><span class="layer-inside">Five tests, ranked by their effect on revenue, cash and contingent losses</span></span><span class="layer-hook"><span><b>5</b>tests</span></span></summary>
+          <summary><span class="layer-kind">Dashboard</span><span class="layer-what"><span class="layer-title">The other seven indicators</span><span class="layer-inside">Lagging and slower signals that complete the dashboard</span></span><span class="layer-hook"><span><b>7</b>more</span></span></summary>
+          <div class="layer-body">
+            <div class="tw wrap"><table><thead><tr><th>Indicator</th><th>Now</th><th>Watch</th><th>Serious</th><th>Lead time</th></tr></thead><tbody>
+              <tr><td>Gross margin guide</td><td>71 to 72% for Q4; 72 to 73% for FY28</td><td>Below 70%</td><td>Below 66%; each point is ~1.6% of EPS</td><td>0 to 1 quarter</td></tr>
+              <tr><td>Revenue against consensus</td><td>Q3 beat by about $7B</td><td>In-line guide</td><td>Guide below consensus</td><td>0 to 1 quarter</td></tr>
+              <tr><td>Inventory growth against revenue growth</td><td>$39.7B, up 86% this year</td><td>Faster than revenue two quarters running</td><td>Reserve increase</td><td>1 to 2 quarters</td></tr>
+              <tr><td>Free cash flow against net income</td><td>67% in Q3; 52% over Q2 and Q3</td><td>Below 60% for two quarters</td><td>Below 40%</td><td>1 quarter</td></tr>
+              <tr><td>GPU rental prices and neocloud use</td><td>Not reliably public</td><td>Falling rates for current GPUs</td><td>Utilisation below ~70%</td><td>2 to 3 quarters</td></tr>
+              <tr><td>Custom chip share (TPU, Trainium, Broadcom)</td><td>~28% of AI servers in 2026 (forecast)</td><td>A top-five lab moves most new capacity off NVIDIA</td><td>NVIDIA price cuts</td><td>2 to 4 quarters</td></tr>
+              <tr><td>Export controls and leadership</td><td>China compute at $0 in guidance; interim CEO who is also CFO</td><td>Licence delays in Southeast Asia; CEO search past Q1 2027</td><td>Middle East or allied restrictions; more senior departures</td><td>Immediate</td></tr>
+            </tbody></table></div>
+          </div>
+        </details>
+
+        <details class="layer">
+          <summary><span class="layer-kind">Requests</span><span class="layer-what"><span class="layer-title">What a regulator or diligence team should ask for</span><span class="layer-inside">Five tests, ranked by their effect on revenue, cash and contingent losses, and what the record cannot answer yet</span></span><span class="layer-hook"><span><b>5</b>tests</span></span></summary>
           <div class="layer-body">
             <ol class="tests">
               <li><b>Linked transactions and related parties</b><span>Join invoices, payments, investments, guarantees and cloud orders by ultimate owner, project and date. How much revenue depended on money NVIDIA supplied?</span></li>
               <li><b>Revenue, receivables and cutoff</b><span>Confirm receivables with customers and lenders; check collections after quarter end, acceptance records, returns and credit notes.</span></li>
               <li><b>Guarantees and consolidation</b><span>Obtain lender confirmations and valuation models; decide which entities bear losses and whether any should be consolidated.</span></li>
-              <li><b>Procurement and capital payables</b><span>Trace vendor invoices to receiving logs and asset registers; look for supplier finance and unrecorded liabilities.</span></li>
-              <li><b>Investments and governance</b><span>Confirm holdings with custodians; review round terms, side letters and common counterparties across equity marks and revenue.</span></li>
+              <li><b>Procurement and capital payables</b><span>Trace vendor invoices to receiving logs and asset registers; reconcile the $518B to expected sales, cancellability and annual gross margin.</span></li>
+              <li><b>Investments and governance</b><span>Confirm holdings with custodians; compare the OpenAI stake’s carrying value with its latest round; review side letters and common counterparties.</span></li>
             </ol>
-            <p>Positive operating cash, independently reported contracts and the annual audit count against a claim of wholesale fabrication. None replaces transaction-level checks.</p>
+            <p>Still unanswerable from public records: revenue from invested or backstopped companies; cancellation and prepayment terms in the $390B; collateral and the expected-loss model behind the $105B guarantee; whether any “large, multi-quarter” payment terms pass twelve months; GPU utilisation at neoclouds.</p>
           </div>
         </details>
 
         <details class="layer">
-          <summary><span class="layer-kind">Method</span><span class="layer-what"><span class="layer-title">Evidence, checks and sources</span><span class="layer-inside">10-K and 10-Q filings, earnings exhibits, counterparty filings and press reports</span></span><span class="layer-hook"><span><b>12</b>quarters</span></span></summary>
+          <summary><span class="layer-kind">Method</span><span class="layer-what"><span class="layer-title">Method, limits and sources</span><span class="layer-inside">Filings first, allegations second; every estimate is labelled</span></span><span class="layer-hook"><span><b>3</b>studies</span></span></summary>
           <div class="layer-body">
             <ul class="pts">
-              <li>Quarters run from 28 January 2024 to 25 October 2026. Quarterly cash flows sum to the annual figures within $1M to $2M of rounding; no balancing entry was posted.</li>
-              <li>The FY2026 auditor gave clean opinions on the accounts and internal control. Its critical audit matter was excess inventory and purchase commitments. The audit predates the Ohio guarantees.</li>
-              <li>No management representations, private ledgers, lender confirmations, bank records or auditor workpapers were available. The report was prepared for review and has not been submitted to a regulator.</li>
-              <li>Other sources: CoreWeave 8-K (September 2025), OpenAI announcement (27 February 2026), Nscale SEC filing (November 2026), Commerce and Justice statement (16 November 2026), Reuters and Financial Times (20 November 2026), Grant Thornton ASC 606 guide. The PDF links each one.</li>
+              <li>Quarters run to 25 October 2026. Quarterly cash flows sum to annual figures within $1M to $2M of rounding. The Q3 figures come from unaudited 8-K exhibits of 17 November; the 10-Q is due by 4 December.</li>
+              <li>Consensus comes from secondary aggregators (FactSet via Compound, S&amp;P via StockAnalysis, TIKR, FinBold). Loss rates, flowback rates, discount rates and scenario probabilities are the studies’ estimates.</li>
+              <li>No management representations, private ledgers, lender confirmations or auditor workpapers were available. Nothing here is a finding of misconduct.</li>
+              <li>Primary sources: <a href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Third-Quarter-Fiscal-2027/default.aspx">Q3 FY27 release</a>; <a href="https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/q3fy27cfocommentary.htm">CFO commentary</a>; <a href="https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/supplementalfinancialinfor.htm">supplemental financial information</a>; <a href="https://www.sec.gov/Archives/edgar/data/2133037/000162828026075026/sbenergy-sx1a3.htm">SB Energy S-1/A</a>; <a href="https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition">CEO transition</a>; <a href="https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm">CoreWeave Q3 10-Q</a>.</li>
+              <li>Reporting and context: <a href="https://www.reuters.com/world/us-secs-nvidia-probe-is-examining-potential-accounting-issues-sources-say-2026-11-20/">Reuters on the SEC inquiry</a>; <a href="https://www.investmentnews.com/equities/embattled-nvidia-faces-sec-probe-as-california-attorney-general-mulls-action/269054">InvestmentNews on the WSJ report</a>; <a href="https://www.ft.com/content/dbde7a30-548c-4f9d-a4be-7898a0c24dcf">Financial Times on Singapore revenue</a>; <a href="https://www.ecb.europa.eu/press/financial-stability-publications/fsr/focus/2026/html/ecb.fsrbox202611_03~4fd1449eaa.et.html">ECB on the debt financing of AI</a>; <a href="https://stockanalysis.com/stocks/nvda/forecast/">StockAnalysis consensus</a>.</li>
             </ul>
           </div>
         </details>
@@ -382,6 +695,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     guar: [0, 0, 0, 0, 0, 0, 0, 860, 3500, 3500, 3500, 118000]
   };
   const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const nf = new Intl.NumberFormat("en");
   const B = v => "$" + (v / 1000).toFixed(v >= 10000 ? 1 : 2).replace(/\.?0+$/, "") + "B";
   const tip = $("#tip");
@@ -394,9 +708,45 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     tip.style.transform = `translate(${x}px,${y}px)`;
   }
   const hideTip = () => { tip.hidden = true; };
+  const hover = (el, html) => { el.addEventListener("pointermove", e => showTip(e, html)); el.addEventListener("pointerleave", hideTip); };
   const row = (c, k, v) => `<span><i style="background:var(${c})"></i>${k} ${v}</span>`;
 
-  /* one y-axis, gridlines in billions, quarter labels every other quarter */
+  /* ---------- share price: confirmed closes only, dashed across missing days ---------- */
+  (() => {
+    const P = [
+      ["2026-10-06", 239.24, "Record close"],
+      ["2026-11-09", 178.67, "Class action filed over Megaspeed disclosures"],
+      ["2026-11-13", 162.85, "Day after Huang resigns as CEO"],
+      ["2026-11-16", 156.14, "Commerce closes remote-access loophole"],
+      ["2026-11-17", 155.46, "Q3 results after the close; WSJ reports SEC probe"],
+      ["2026-11-18", 150.96, ""],
+      ["2026-11-19", 145.98, "Anthropic IPO; 52-week low close"],
+      ["2026-11-20", 127.2, "Reuters: SEC examining accounting (intraday)"]
+    ];
+    const W = 900, H = 300, L = 44, R = 20, T = 20, Bm = 34;
+    const d0 = Date.parse("2026-10-01"), d1 = Date.parse("2026-11-24");
+    const x = d => L + (Date.parse(d) - d0) / (d1 - d0) * (W - L - R);
+    const y = v => T + (260 - v) / (260 - 100) * (H - T - Bm);
+    let s = "";
+    for (let v = 100; v <= 260; v += 40) s += `<line class="${v === 100 ? "base" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+    [["2026-10-01", "1 Oct"], ["2026-10-15", "15 Oct"], ["2026-11-01", "1 Nov"], ["2026-11-15", "15 Nov"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 10}" text-anchor="middle">${l}</text>`; });
+    // Huang's resignation, 12 Nov: a marker on the axis, since there is no confirmed close that day
+    s += `<line class="grid" x1="${x("2026-11-12")}" x2="${x("2026-11-12")}" y1="${T}" y2="${y(100)}" stroke-dasharray="2 4"/><text class="elab" x="${x("2026-11-12") - 6}" y="${y(250)}" text-anchor="end">12 Nov: Huang resigns</text>`;
+    for (let i = 1; i < P.length; i++) {
+      const a = P[i - 1], b = P[i], gap = (Date.parse(b[0]) - Date.parse(a[0])) / 864e5 > 3;
+      s += `<path class="${gap ? "gap" : "ln"}" stroke="var(--c1)" d="M${x(a[0]).toFixed(1)},${y(a[1]).toFixed(1)}L${x(b[0]).toFixed(1)},${y(b[1]).toFixed(1)}"/>`;
+    }
+    P.forEach((p, i) => {
+      s += `<circle class="pt" cx="${x(p[0])}" cy="${y(p[1])}" r="${i === P.length - 1 ? 6 : 4.5}" fill="var(--c1)"/>`;
+      s += `<circle class="hit" data-i="${i}" cx="${x(p[0])}" cy="${y(p[1])}" r="14"/>`;
+    });
+    s += `<text class="dlab" x="${x(P[0][0])}" y="${y(P[0][1]) - 12}" text-anchor="middle">$239.24</text>`;
+    s += `<text class="dlab" x="${x(P[7][0]) - 10}" y="${y(P[7][1]) + 22}" text-anchor="end">~$127, −47%</text>`;
+    const el = $("#chPrice"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
+    el.querySelectorAll(".hit").forEach(c => { const p = P[+c.dataset.i]; hover(c, `<b>${new Date(p[0] + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" })}: $${p[1].toFixed(2)}</b>${p[2] ? `<span>${esc(p[2])}</span>` : ""}`); });
+  })();
+
+  /* ---------- twelve-quarter charts ---------- */
   function frame(W, H, max, step) {
     const L = 40, R = 8, T = 10, Bm = 26, pw = W - L - R, ph = H - T - Bm;
     const y = v => T + ph - v / max * ph;
@@ -407,34 +757,24 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     Q.forEach((q, i) => { if ((i % every === 0 && last - i >= every / 2 + 1) || i === last) g += `<text class="ax" x="${L + bw * (i + .5)}" y="${H - 8}" text-anchor="middle">${q}</text>`; });
     return { L, T, pw, ph, y, bw, g };
   }
-  function bind(el, n, html) {
-    el.querySelectorAll(".hit").forEach((r, i) => {
-      r.addEventListener("pointermove", e => showTip(e, html(i)));
-      r.addEventListener("pointerleave", hideTip);
-    });
-  }
+  const bindQ = (el, html) => el.querySelectorAll(".hit").forEach((r, i) => hover(r, html(i)));
+  const top = (x, y, b, base, r) => `M${x},${base}V${y + r}Q${x},${y} ${x + r},${y}H${x + b - r}Q${x + b},${y} ${x + b},${y + r}V${base}Z`;
 
-  // grouped bars: net income and operating cash flow
   (() => {
-    const W = 860, H = 300, f = frame(W, H, 70000, 10000), gw = f.bw * .7, b = (gw - 2) / 2;
+    const W = 620, H = 290, f = frame(W, H, 70000, 10000), gw = f.bw * .74, b = (gw - 2) / 2;
     let s = f.g;
     Q.forEach((q, i) => {
       const x0 = f.L + f.bw * i + (f.bw - gw) / 2;
-      [["ni", "--c2"], ["cfo", "--c1"]].forEach(([k, c], j) => {
-        const v = D[k][i], y = f.y(v), h = f.y(0) - y, x = x0 + j * (b + 2), r = Math.min(4, b / 2);
-        s += `<path d="M${x},${f.y(0)}V${y + r}Q${x},${y} ${x + r},${y}H${x + b - r}Q${x + b},${y} ${x + b},${y + r}V${f.y(0)}Z" fill="var(${c})"/>`;
-      });
+      [["ni", "--c2"], ["cfo", "--c1"]].forEach(([k, c], j) => { const v = D[k][i]; s += `<path d="${top(x0 + j * (b + 2), f.y(v), b, f.y(0), Math.min(3, b / 2))}" fill="var(${c})"/>`; });
       s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`;
     });
-    const i = 10, x = f.L + f.bw * i + f.bw / 2;
-    s += `<text class="dlab" x="${x}" y="${f.y(D.cfo[i]) - 8}" text-anchor="start" dx="4">40%</text>`;
+    s += `<text class="dlab" x="${f.L + f.bw * 10.5}" y="${f.y(D.cfo[10]) - 8}" text-anchor="middle">40%</text>`;
     const el = $("#chCash"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
-    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c2", "Net income", B(D.ni[i]))}${row("--c1", "Operating cash", B(D.cfo[i]))}<span>Cash ÷ income ${Math.round(D.cfo[i] / D.ni[i] * 100)}%</span>`);
+    bindQ(el, i => `<b>${Q[i]}</b>${row("--c2", "Net income", B(D.ni[i]))}${row("--c1", "Operating cash", B(D.cfo[i]))}<span>Cash ÷ income ${Math.round(D.cfo[i] / D.ni[i] * 100)}%</span>`);
   })();
 
-  // lines: receivables and inventory
   (() => {
-    const W = 520, H = 280, f = frame(W, H, 90000, 15000);
+    const W = 620, H = 290, f = frame(W, H, 90000, 15000);
     let s = f.g;
     [["ar", "--c1", "Receivables"], ["inv", "--c3", "Inventories"]].forEach(([k, c, lab]) => {
       const pts = D[k].map((v, i) => [f.L + f.bw * (i + .5), f.y(v)]);
@@ -444,34 +784,80 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     });
     Q.forEach((q, i) => { s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`; });
     const el = $("#chWc"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
-    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c1", "Receivables", B(D.ar[i]))}${row("--c3", "Inventories", B(D.inv[i]))}<span>Days to collect ${D.dso[i]}</span>`);
+    bindQ(el, i => `<b>${Q[i]}</b>${row("--c1", "Receivables", B(D.ar[i]))}${row("--c3", "Inventories", B(D.inv[i]))}<span>Days to collect ${D.dso[i]}</span>`);
   })();
 
-  // stacked bars: funded debt and guarantee caps
   (() => {
-    const W = 520, H = 280, f = frame(W, H, 160000, 40000), b = f.bw * .62;
+    const W = 620, H = 290, f = frame(W, H, 160000, 40000), b = f.bw * .62;
     let s = f.g;
     Q.forEach((q, i) => {
-      const x = f.L + f.bw * i + (f.bw - b) / 2, d = D.debt[i], g = D.guar[i];
-      const yd = f.y(d), yg = f.y(d + g), r = Math.min(4, b / 2);
+      const x = f.L + f.bw * i + (f.bw - b) / 2, d = D.debt[i], g = D.guar[i], yd = f.y(d), yg = f.y(d + g), r = Math.min(3, b / 2);
       if (g > 0) {
         s += `<rect x="${x}" y="${yd}" width="${b}" height="${f.y(0) - yd}" fill="var(--c1)"/>`;
-        const top = yg, bot = yd - 2;
-        if (bot - top > 0.5) s += `<path d="M${x},${bot}V${top + Math.min(r, (bot - top) / 2)}Q${x},${top} ${x + r},${top}H${x + b - r}Q${x + b},${top} ${x + b},${top + Math.min(r, (bot - top) / 2)}V${bot}Z" fill="var(--c2)"/>`;
-      } else s += `<path d="M${x},${f.y(0)}V${yd + r}Q${x},${yd} ${x + r},${yd}H${x + b - r}Q${x + b},${yd} ${x + b},${yd + r}V${f.y(0)}Z" fill="var(--c1)"/>`;
+        const bot = yd - 2; if (bot - yg > 0.5) s += `<path d="${top(x, yg, b, bot, Math.min(r, (bot - yg) / 2))}" fill="var(--c2)"/>`;
+      } else s += `<path d="${top(x, yd, b, f.y(0), r)}" fill="var(--c1)"/>`;
       s += `<rect class="hit" x="${f.L + f.bw * i}" y="${f.T}" width="${f.bw}" height="${f.ph}"/>`;
     });
-    const x = f.L + f.bw * 11.5;
-    s += `<text class="dlab" x="${x - f.bw * .45}" y="${f.y(D.debt[11] + D.guar[11]) + 4}" text-anchor="end">$150B</text>`;
+    s += `<text class="dlab" x="${f.L + f.bw * 11.05}" y="${f.y(D.debt[11] + D.guar[11]) + 4}" text-anchor="end">$150B</text>`;
     const el = $("#chExp"); el.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${s}</svg>`;
-    bind(el, Q.length, i => `<b>${Q[i]}</b>${row("--c1", "Funded debt", B(D.debt[i]))}${row("--c2", "Guarantee caps", D.guar[i] ? B(D.guar[i]) : "none disclosed")}`);
+    bindQ(el, i => `<b>${Q[i]}</b>${row("--c1", "Funded debt", B(D.debt[i]))}${row("--c2", "Guarantee caps", D.guar[i] ? B(D.guar[i]) : "none disclosed")}`);
   })();
 
-  // guarantee split bar
   $("#gbar").innerHTML = [[105, "--c2"], [9.5, "--c3"], [3.5, "--c1"]].map(([v, c]) => `<i style="flex:${v};background:var(${c})"></i>`).join("");
 
-  // tables
-  const tbl = (rows) => `<table><thead><tr><th>US$ millions</th>${Q.map(q => `<th>${q}</th>`).join("")}</tr></thead><tbody>${rows.map(([lab, arr, fmt]) => `<tr><td>${lab}</td>${arr.map(v => `<td>${v === null ? "" : (fmt || nf.format)(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  /* ---------- scorecard ---------- */
+  const SC = [
+    ["Revenue recognition transparency", 3, "No revenue by customer; geographic basis changed. Counter: standard ASC 606 for hardware; clean FY26 audit."],
+    ["Revenue collectibility", 4, "Buyers mostly investment-grade. Counter: two customers owe about $28B."],
+    ["Cash-flow conversion", 3, "52% of net income over Q2 and Q3. Counter: Q3 alone was 67%; Q4 consensus free cash flow $58.7B."],
+    ["Receivables quality", 3, "64 days, highest since the 2022 slump. Counter: launch timing and contracted terms."],
+    ["Inventory and commitments", 2, "Inventory up 86%; supply commitments tripled since April. Counter: memory is scarce, buying early locks price."],
+    ["Related-party and investee transparency", 2, "Investees not matched to revenue. Counter: stakes are minority and below disclosure thresholds."],
+    ["Investment valuation", 3, "$65.5B of private stakes at cost or last round. Counter: the rules are standard."],
+    ["Guarantees and contingencies", 3, "Caps disclosed, nothing paid, timing given. Counter: land, power and buildings back them."],
+    ["Disclosure consistency", 2, "Relabelled tables and a geographic change. Counter: the business changed fast."],
+    ["Governance and controls", 2, "Leadership vacuum and several probes. Counter: a strong audit committee; an independent investigation under way."]
+  ];
+  $("#score").innerHTML = SC.map(([a, n, t]) => `<div class="score-row"><span>${a}</span><span class="dots" role="img" aria-label="${n} of 5">${[1, 2, 3, 4, 5].map(k => `<i class="${k <= n ? "on" : ""}"></i>`).join("")}</span><p>${esc(t)}</p></div>`).join("");
+
+  /* ---------- commitments: gross against severe-case loss, one scale ---------- */
+  const CM = [
+    ["Supply and capacity", 390, [42, 63], "$3 to7B mild; $17 to27B moderate"],
+    ["Guarantees, maximum", 118, [20, 40], "$0 mild; $3 to8B moderate"],
+    ["Equity stakes held", 109.7, [40, 55], "$5 to10B mild; $20 to30B moderate"],
+    ["Receivables", 81, [8, 15], "$0 to1B mild; $2 to4B moderate"],
+    ["Leases not yet begun", 74, [10, 20], "$0 mild; $3 to5B moderate"],
+    ["Neocloud backstops", 32, [12, 18], "$0 to2B mild; $5 to8B moderate"],
+    ["Cloud services", 28, [10, 14], "~$1B mild; ~$5B moderate"]
+  ];
+  $("#commit").innerHTML = CM.map(([k, g, [lo, hi], mm]) => `<div class="cm-row" data-k="${esc(k)}"><span>${k}</span><div class="cm-track"><i class="g" style="width:${(g / 390 * 100).toFixed(2)}%"></i><div class="l"><i style="left:${(lo / 390 * 100).toFixed(2)}%;width:${((hi - lo) / 390 * 100).toFixed(2)}%"></i></div></div><b>$${g}B<small>loss $${lo} to${hi}B</small></b></div>`).join("");
+  $("#commit").querySelectorAll(".cm-row").forEach((r, i) => { const c = CM[i]; hover(r, `<b>${c[0]}: $${c[1]}B</b><span>Severe-case loss $${c[2][0]}B to $${c[2][1]}B</span><span>${c[3]}</span>`); });
+
+  /* ---------- breakpoints ---------- */
+  const BK = [["Prior high, $239", 496], ["+20%, $153", 298], ["Today, $127", 240, 1], ["−10%, $114", 211], ["−20%, $102", 182], ["−30%, $89", 153], ["−50%, $64", 94]];
+  const bmax = 580;
+  $("#brk").innerHTML = `<div class="hb-row hb-head"><span></span><div class="hb-plot" style="height:0"><div class="hb-ref" style="left:${150 / bmax * 100}%;height:${BK.length * 34 + 30}px"><span>FY27 $150B</span></div><div class="hb-ref" style="left:${335 / bmax * 100}%;height:${BK.length * 34 + 30}px"><span>FY28 $335B</span></div></div></div>` +
+    BK.map(([k, v, now]) => `<div class="hb-row${now ? " now" : ""}"><span>${k}</span><div class="hb-plot"><i style="width:${(v / bmax * 100).toFixed(2)}%"></i><em style="left:${(v / bmax * 100).toFixed(2)}%">$${v}B</em></div></div>`).join("");
+  $("#brk").querySelectorAll(".hb-row:not(.hb-head)").forEach((r, i) => hover(r, `<b>${BK[i][0]}</b><span>Implies long-run free cash flow of $${BK[i][1]}B a year</span><span>${Math.round(BK[i][1] / 335 * 100)}% of the FY28 peak</span>`));
+
+  /* ---------- scenarios ---------- */
+  const SN = [
+    ["Strong bull", "AI monetisation accelerates", .10, 266, 240, "$780B", "$936B (+20%)", "73%", "$22.20", "None", "12x"],
+    ["Bull", "Demand holds through FY29", .25, 180, 180, "$740B", "$777B (+5%)", "72.5%", "$18.00", "None", "10x"],
+    ["Base", "Peak, then a gentle step down", .35, 123, 133, "$680B", "$612B (−10%)", "71%", "$13.67", "Minor", "9x"],
+    ["Bear", "Capital spending slows, margins slip", .20, 84, 91, "$600B", "$420B (−30%)", "68%", "$8.46", "~$25B", "10x"],
+    ["Severe bear", "Financing stress, customer failures", .10, 46, 54, "$520B", "$260B (−50%)", "62%", "$4.10", "~$90B", "12x trough"]
+  ];
+  const sx = v => ((v - 20) / (280 - 20) * 100).toFixed(2) + "%";
+  $("#scen").innerHTML = SN.map(s => { const d = Math.round(12 + Math.sqrt(s[2]) * 40); return `<div class="sc-row"><span>${s[0]}<small>${s[1]}</small></span><div class="sc-plot"><i class="h" style="left:${sx(s[4])}"></i><i class="d" style="left:${sx(s[3])};width:${d}px;height:${d}px"></i>${Math.max(s[3], s[4]) > 200 ? `<span class="v" style="left:${sx(Math.min(s[3], s[4]))};translate:calc(-100% - 22px) -50%">$${s[3]}, ${Math.round(s[2] * 100)}%</span>` : `<span class="v" style="left:${sx(Math.max(s[3], s[4]))}">$${s[3]}, ${Math.round(s[2] * 100)}%</span>`}</div></div>`; }).join("");
+  $("#scAxis").innerHTML = [50, 100, 150, 200, 250].map(v => `<span style="left:${sx(v)}">$${v}</span>`).join("");
+  $("#scLines").innerHTML = `<div class="sc-line" style="left:${sx(127)}"><span style="translate:calc(-100% - 6px) 0">Today $127</span></div><div class="sc-line" style="left:${sx(136)};border-left-style:dotted"><span style="translate:6px 0">Weighted $136</span></div>`;
+  $("#scen").querySelectorAll(".sc-row").forEach((r, i) => { const s = SN[i]; hover(r, `<b>${s[0]}: ${Math.round(s[2] * 100)}%</b><span>Breakpoint study $${s[3]}</span><span>Risk review $${s[4]}</span><span>FY29 revenue ${s[6]}</span>`); });
+  $("#scTbl").innerHTML = SN.map(s => `<tr><td>${s[0]}</td><td>${Math.round(s[2] * 100)}%</td><td>${s[5]}</td><td>${s[6]}</td><td>${s[7]}</td><td>${s[8]}</td><td>${s[9]}</td><td>${s[10]}</td><td>$${s[3]}</td></tr>`).join("") +
+    `<tr class="hl"><td>Weighted</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>$136</td></tr>`;
+
+  /* ---------- tables for the folds ---------- */
+  const tbl = rows => `<table><thead><tr><th>US$ millions</th>${Q.map(q => `<th>${q}</th>`).join("")}</tr></thead><tbody>${rows.map(([lab, arr, fmt]) => `<tr><td>${lab}</td>${arr.map(v => `<td>${v === null ? "" : (fmt || nf.format)(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   const pct = (a, b) => a.map((v, i) => Math.round(v / b[i] * 1000) / 10);
   $("#tEarn").innerHTML = tbl([["Revenue", D.rev], ["Gross profit", D.gp], ["Net income", D.ni], ["Operating cash flow", D.cfo], ["Gross margin, %", pct(D.gp, D.rev), v => v.toFixed(1)], ["Cash ÷ net income, %", pct(D.cfo, D.ni), v => v.toFixed(1)]]);
   $("#tWc").innerHTML = tbl([["Receivables, net", D.ar], ["Inventories", D.inv], ["Accounts payable", D.ap], ["Days to collect", D.dso, v => v.toFixed(1)], ["Days in inventory", D.dio, v => v.toFixed(1)], ["Cash conversion cycle, days", D.ccc, v => v.toFixed(1)]]);
