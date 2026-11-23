@@ -10,7 +10,7 @@ window.NV_TRACK = {
   "date": "2026-11-20",
   "close": 125.53
  },
- "updated": "2026-11-22",
+ "updated": "2026-11-23",
  "prices": [
   [
    "2026-11-20",
@@ -229,11 +229,11 @@ window.NV_TRACK = {
   },
   {
    "id": "ceo",
-   "due": "open",
+   "due": "2026-11-23",
    "what": "A permanent CEO named",
-   "status": "open",
-   "result": null,
-   "url": null
+   "status": "done",
+   "result": "Jensen Huang reinstated as president and CEO by a unanimous board vote after input from the US government; the board probe continues",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000090/nov23pressrelease.htm"
   },
   {
    "id": "sec",
@@ -340,9 +340,47 @@ window.NV_TRACK = {
    "step": "s1",
    "leans": "none",
    "note": "Political pressure on the board adds noise to the CEO search, which the bull cases need resolved."
+  },
+  {
+   "date": "2026-11-23",
+   "title": "Board reinstates Jensen Huang as CEO, reversing its 17 November stance",
+   "source": "NVIDIA 8-K",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000090/nov23pressrelease.htm",
+   "topic": "leadership",
+   "step": "s1",
+   "leans": "bull",
+   "note": "The bull cases needed a credible permanent CEO; this settles the search far sooner than the base case assumed, though the board's own probe continues."
+  },
+  {
+   "date": "2026-11-23",
+   "title": "Trump says he convinced the board; NVIDIA shares rise about 30% intraday",
+   "source": "CNBC",
+   "url": "https://www.cnbc.com/2026/11/23/anthropic-nvidia-shares.html",
+   "topic": "leadership",
+   "step": "s1",
+   "leans": "none",
+   "note": "A one day rebound after a fall of more than 40% in a month is weak evidence, and political involvement adds a governance question of its own."
+  },
+  {
+   "date": "2026-11-19",
+   "title": "Anthropic raises a record $93.5B in its IPO",
+   "source": "CNBC",
+   "url": "https://www.cnbc.com/2026/11/23/anthropic-nvidia-shares.html",
+   "topic": "financing",
+   "step": "s3",
+   "leans": "bull",
+   "note": "Public markets are still funding a top AI lab at scale, which supports the view that lab customers stay financed."
   }
  ],
- "lessons": [],
+ "lessons": [
+  {
+   "date": "2026-11-23",
+   "about": "ceo",
+   "verdict": "partly",
+   "text": "The base case expected the CEO search to drag on through the quarter, and the bull cases needed a credible permanent CEO named. Eleven days after he resigned, the board reinstated Jensen Huang.",
+   "why": "The studies treated succession as a slow outside search and did not consider a reversal under political pressure. This removes one obstacle for the bull cases in step s1, but the SEC, California and board probes are unresolved, so the severe bear sign in s1 is as open as before."
+  }
+ ],
  "runs": [
   {
    "date": "2026-11-22",
@@ -351,6 +389,10 @@ window.NV_TRACK = {
   {
    "date": "2026-11-22",
    "summary": "No new close: markets shut for the weekend, last close $125.53 on 20 November. 3 news items, 0 signs resolved, 0 lessons. The California subpoena is a state action before the s1 window, so s1-severe-bear stays open. CoreWeave credit spread figures could not be confirmed and were left out."
+  },
+  {
+   "date": "2026-11-23",
+   "summary": "No new close: run at 3:13 p.m. Eastern before the market closed, so today's close is left for the next run; last close $125.53 on 20 November. 3 news items, 0 signs resolved, CEO checkpoint done, 1 lesson. Analyst upgrades reported in search summaries (Melius, Bernstein, StoneX) could not be confirmed from a source page and were left out."
   }
  ]
 };
