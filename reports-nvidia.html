@@ -60,7 +60,8 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .stage { position: sticky; top: 64px; align-self: start; max-height: calc(100svh - 72px); overflow: auto; display: grid; gap: 10px; padding: 8px 0 12px; min-width: 0; scrollbar-width: thin; }
 .panel { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-width: 0; }
 .panel h3 { font-family: var(--font-display); font-weight: 700; font-size: .98rem; margin: 0 0 2px; }
-.panel .sub { font-size: .84rem; color: var(--muted); margin: 0 0 6px; }
+/* site.css gives .sub a 40px top pad and grid gap; panels need a plain one-line subtitle */
+.panel .sub { display: block; padding: 0; font-size: .84rem; color: var(--muted); margin: 0 0 6px; }
 #path svg { display: block; width: 100%; height: auto; font-family: var(--font-display); overflow: visible; }
 #path .grid { stroke: var(--line); stroke-width: 1; }
 #path .base { stroke: var(--line-strong); stroke-width: 1; }
@@ -83,8 +84,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 .lgd span.sel { color: var(--ink); font-weight: 700; }
 .lgd i { width: 11px; height: 11px; border-radius: 3px; background: var(--k); }
 .mcharts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 16px; }
+#mcharts { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px 14px; }
 .mc { grid-column: span var(--sp); min-width: 0; }
-.mc .mct { margin: 0 0 2px; font-family: var(--font-display); font-weight: 700; font-size: .86rem; line-height: 1.3; }
+.mc .mct { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 2px; font-family: var(--font-display); font-weight: 700; font-size: .86rem; line-height: 1.3; }
 .mc .mct span { font-family: var(--font-label); font-weight: 500; color: var(--muted); margin-left: 4px; }
 .mc svg { display: block; width: 100%; height: auto; font-family: var(--font-display); overflow: visible; }
 .mc .grid { stroke: var(--line); stroke-width: 1; }
@@ -240,12 +242,12 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       <div class="stage">
         <div class="panel">
           <h3 id="pathTitle">Where the price could be in November 2027</h3>
-          <p class="sub">Daily closes to 20 November 2026, then a straight line to each case’s 12-month value. The lines are end points, not forecast paths.</p>
+          <p class="sub">Daily closes, then a straight line to each case’s end point. Not a forecast path.</p>
           <div id="path" role="img" aria-label="Chart of NVIDIA's share price since October 2026 and lines from the 20 November close to each case's value in November 2027."></div>
         </div>
         <div class="panel tbl">
           <h3>The same metrics for every case</h3>
-          <p class="sub">One chart per unit, on a fixed scale, so added cases line up. The metrics the current step depends on are shaded.</p>
+          <p class="sub">Fixed scales, so added cases line up. Shaded: what the current step depends on.</p>
           <div class="lgd" id="lg"></div>
           <div class="mcharts" id="mcharts"></div>
           <div class="cmp" id="cmp" role="group" aria-label="Compare with other cases"></div>
@@ -447,6 +449,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
 
   const shown = () => [byId[sel], ...CASES.filter(c => cmp.has(c.id) && c.id !== sel)];
 
+  const stage = $(".stage");
   function render(swap) {
     const c = byId[sel], cols = shown();
     casesEl.querySelectorAll(".case").forEach(b => { b.setAttribute("aria-checked", b.dataset.id === sel ? "true" : "false"); b.tabIndex = b.dataset.id === sel ? 0 : -1; });
@@ -454,7 +457,6 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     // metric charts, in case order so a case keeps its place in every cluster
     const ordered = CASES.filter(x => x.id === sel || cmp.has(x.id));
     $("#lg").innerHTML = ordered.map(x => `<span class="${x.id === sel ? "sel" : ""}" style="--k:var(${x.k})"><i></i>${x.name}</span>`).join("");
-    drawMetrics($("#mcharts"), ordered, STEPS[active].hot, true);
     cmpEl.innerHTML = `<span>Compare with</span>` + CASES.filter(x => x.id !== sel).map(x => `<button type="button" data-id="${x.id}" style="--k:var(${x.k})" aria-pressed="${cmp.has(x.id)}"><i></i>${x.name}</button>`).join("");
     // steps
     stepsEl.querySelectorAll(".step").forEach((el, i) => {
@@ -470,8 +472,25 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
       };
       if (swap && !matchMedia("(prefers-reduced-motion: reduce)").matches) { txt.classList.add("swap"); setTimeout(fill, 180); } else fill();
     });
-    drawPath();
+    fitStage();
     allTable();
+  }
+
+  /* ---------- the pinned stage fits one screen: chart heights shrink until nothing scrolls ---------- */
+  let fitK = 1;
+  function drawStage() {
+    drawMetrics($("#mcharts"), CASES.filter(x => x.id === sel || cmp.has(x.id)), STEPS[active].hot, true);
+    drawPath();
+  }
+  function fitStage() {
+    fitK = 1; drawStage();
+    if (innerWidth < 900) return;
+    for (let i = 0; i < 3; i++) {
+      const over = stage.scrollHeight - stage.clientHeight;
+      if (over <= 0 || fitK <= .5) break;
+      fitK = Math.max(.5, fitK - (over + 4) / 588);   // 588: price chart plus the two rows of metric charts at full height
+      drawStage();
+    }
   }
 
   /* ---------- the price chart ---------- */
@@ -482,15 +501,16 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     ["2026-11-10", 168.89], ["2026-11-11", 173.73], ["2026-11-12", 166.19], ["2026-11-13", 162.85], ["2026-11-16", 156.14], ["2026-11-17", 155.46], ["2026-11-18", 150.96],
     ["2026-11-19", 145.98], ["2026-11-20", 125.53]];
   function drawPath() {
-    const W = 720, H = 250, L = 40, R = 64, T = 14, B = 28;
+    const W = Math.max(300, Math.round($("#path").clientWidth || 720)), H = Math.round(Math.min(250, Math.max(170, W * .36)) * fitK), L = 40, R = 64, T = 14, B = 28;
     const d0 = Date.parse("2026-10-01"), d1 = Date.parse("2027-11-30"), end = "2027-11-20", start = "2026-11-20";
     const x = d => L + (Date.parse(d) - d0) / (d1 - d0) * (W - L - R);
     const y = v => T + (300 - v) / 300 * (H - T - B);
     const st = STEPS[active];
     let s = `<rect class="band" x="${x(st.band[0])}" y="${T}" width="${x(st.band[1]) - x(st.band[0])}" height="${H - T - B}"/>`;
-    s += `<text class="bandlab" x="${Math.min(x(st.band[0]) + 6, W - R - 120)}" y="${T + 14}">${st.when}</text>`;
+    // the step label sits at the foot of its band, clear of the record line and the end labels
+    s += x(st.band[0]) > W / 2 ? `<text class="bandlab" x="${x(st.band[0]) - 6}" y="${H - B - 6}" text-anchor="end">${st.when}</text>` : `<text class="bandlab" x="${x(st.band[0]) + 6}" y="${H - B - 6}">${st.when}</text>`;
     for (let v = 0; v <= 300; v += 100) s += `<line class="${v ? "grid" : "base"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
-    [["2026-10-01", "Oct 2026"], ["2027-02-01", "Feb 2027"], ["2027-06-01", "Jun 2027"], ["2027-10-01", "Oct 2027"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 8}" text-anchor="middle">${l}</text>`; });
+    [["2026-10-01", "Oct 2026"], ["2027-02-01", "Feb 2027"], ["2027-06-01", "Jun 2027"], ["2027-10-01", "Oct 2027"]].forEach(([d, l]) => { s += `<text class="ax" x="${x(d)}" y="${H - 8}" text-anchor="middle">${W < 480 ? l.replace(" 20", " ") : l}</text>`; });
     s += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(239.24)}" y2="${y(239.24)}"/><text class="reflab" x="${x("2027-03-01")}" y="${y(239.24) - 6}">record close $239.24</text>`;
     // closes logged by the tracker after the cases were set continue the same line
     const LIVE = HIST.concat(((window.NV_TRACK || {}).prices || []).filter(p => p[0] > "2026-11-20"));
@@ -510,20 +530,20 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   const V = { fy28: c => c.fy28, fy29: c => c.fy29, fcf: c => c.fcf, loss: c => c.loss, g28: c => (c.fy28 / FY27 - 1) * 100, g29: c => c.g29, chg: c => chg(c),
     price: c => c.price, rr: c => c.rr, p: c => c.p, gm: c => c.gm, eps: c => c.eps, pe: c => c.pe };
   const FMT = Object.fromEntries(M.map(m => [m.k, m.f]));
-  // sp: columns of six in the pinned panel; spa: columns of six in the side-by-side section.
+  // sp: columns of twelve in the pinned panel (two rows); spa: columns of six in the side-by-side section.
   // Each metric has a long and a short label; the short one is used when a cluster is narrow.
   const G = [
-    { t: "Revenue, cash and losses", u: "US$ billions", sp: 6, spa: 3, mets: [["fy28", "FY28 revenue", "FY28"], ["fy29", "FY29 revenue", "FY29"], ["fcf", "FY29 free cash flow", "FY29 cash"], ["loss", "Commitment losses", "Losses"]], lo: 0, hi: 1000, ticks: [0, 250, 500, 750, 1000], tf: v => v },
-    { t: "Change", u: "%", sp: 3, spa: 3, mets: [["g28", "FY28 growth", "FY28"], ["g29", "FY29 change", "FY29"], ["chg", "Price vs today", "Price"]], lo: -75, hi: 125, ticks: [-50, 0, 50, 100], tf: v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) },
-    { t: "Share price", u: "US$", sp: 3, spa: 2, mets: [["price", "November 2027", "Nov 2027"], ["rr", "Risk review", "Review"]], lo: 0, hi: 300, ticks: [0, 100, 200, 300], tf: v => v, ref: [NOW, "today"] },
-    { t: "Probability and gross margin", u: "%", sp: 2, spa: 2, mets: [["p", "Probability", "Prob."], ["gm", "Gross margin", "Margin"]], lo: 0, hi: 100, ticks: [0, 50, 100], tf: v => v },
-    { t: "FY29 earnings a share", u: "US$", sp: 2, spa: 1, mets: [["eps", "", ""]], lo: 0, hi: 25, ticks: [0, 10, 20], tf: v => v },
-    { t: "Multiple on FY29 earnings", u: "x", sp: 2, spa: 1, mets: [["pe", "", ""]], lo: 0, hi: 15, ticks: [0, 5, 10, 15], tf: v => v }
+    { t: "Revenue, cash and losses", u: "US$ billions", sp: 7, spa: 3, mets: [["fy28", "FY28 revenue", "FY28"], ["fy29", "FY29 revenue", "FY29"], ["fcf", "FY29 free cash flow", "FY29 cash"], ["loss", "Commitment losses", "Losses"]], lo: 0, hi: 1000, ticks: [0, 250, 500, 750, 1000], tf: v => v },
+    { t: "Change", u: "%", sp: 5, spa: 3, mets: [["g28", "FY28 growth", "FY28"], ["g29", "FY29 change", "FY29"], ["chg", "Price vs today", "Price"]], lo: -75, hi: 125, ticks: [-50, 0, 50, 100], tf: v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) },
+    { t: "Share price", ts: "Share price", u: "US$", sp: 3, spa: 2, mets: [["price", "November 2027", "Nov 2027"], ["rr", "Risk review", "Review"]], lo: 0, hi: 300, ticks: [0, 100, 200, 300], tf: v => v, ref: [NOW, "today"] },
+    { t: "Probability and gross margin", ts: "Probability, margin", u: "%", sp: 3, spa: 2, mets: [["p", "Probability", "Prob."], ["gm", "Gross margin", "Margin"]], lo: 0, hi: 100, ticks: [0, 50, 100], tf: v => v },
+    { t: "FY29 earnings a share", ts: "FY29 EPS", u: "US$", sp: 3, spa: 1, mets: [["eps", "", ""]], lo: 0, hi: 25, ticks: [0, 10, 20], tf: v => v },
+    { t: "Multiple on FY29 earnings", ts: "FY29 multiple", u: "x", sp: 3, spa: 1, mets: [["pe", "", ""]], lo: 0, hi: 15, ticks: [0, 5, 10, 15], tf: v => v }
   ];
   function drawMetrics(el, cases, hot, labels) {
     // first lay out the chart boxes, then draw each at its real width so text stays at true size
-    el.innerHTML = G.map(g => `<div class="mc${g.mets.some(([k]) => hot.includes(k)) ? " hot" : ""}" style="--sp:${g.sp};--spa:${g.spa}"><p class="mct">${g.t}<span>${g.u}</span></p><div class="sv"></div></div>`).join("");
-    el.querySelectorAll(".mc").forEach((box, gi) => { box.querySelector(".sv").innerHTML = chartSVG(G[gi], gi, Math.max(160, box.clientWidth), cases, hot, labels); });
+    el.innerHTML = G.map(g => `<div class="mc${g.mets.some(([k]) => hot.includes(k)) ? " hot" : ""}" style="--sp:${g.sp};--spa:${g.spa}"><p class="mct"${labels && g.ts ? ` title="${g.t}"` : ""}>${labels && g.ts ? g.ts : g.t}<span>${g.u}</span></p><div class="sv"></div></div>`).join("");
+    el.querySelectorAll(".mc").forEach((box, gi) => { box.querySelector(".sv").innerHTML = chartSVG(G[gi], gi, Math.max(110, box.clientWidth), cases, hot, labels); });
     el.querySelectorAll(".hit").forEach(r => {
       const c = byId[r.dataset.c], m = M.find(m => m.k === r.dataset.k);
       r.addEventListener("pointermove", e => showTip(e, `<b>${c.name}</b>${m.t}: ${m.f(c)}`));
@@ -532,7 +552,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   }
   function chartSVG(g, gi, W, cases, hot, labels) {
     {
-      const H = g.mets.length > 2 ? 178 : 160;
+      const H = Math.round((g.mets.length > 2 ? 178 : 160) * (labels ? fitK : 1));
       const L = 38, R = 6, T = 18, B = g.mets[0][1] ? 24 : 8, pw = W - L - R, ph = H - T - B;
       const y = v => T + (g.hi - v) / (g.hi - g.lo) * ph;
       const n = cases.length, cw = pw / g.mets.length, gap = 2;
@@ -544,8 +564,9 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
         if (hot.includes(k)) s += `<rect class="hb" x="${L + cw * mi + 2}" y="${T - 14}" width="${cw - 4}" height="${ph + 14 + (B > 10 ? B : 4)}" rx="6"/>`;
         if (lab) s += `<text class="ml${hot.includes(k) ? " hot" : ""}" x="${cx}" y="${H - 6}" text-anchor="middle">${short ? sh : lab}</text>`;
       });
-      g.ticks.forEach(v => { s += `<line class="${v === 0 ? "zero" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${g.tf(v)}</text>`; });
-      if (g.ref) s += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(g.ref[0])}" y2="${y(g.ref[0])}"/><text class="reflab" x="${L + 4}" y="${y(g.ref[0]) - 5}">${g.ref[1]}</text>`;
+      // short charts keep only the end and zero ticks so the labels do not collide
+      (ph < 90 ? g.ticks.filter((v, i, a) => !i || i === a.length - 1 || v === 0) : g.ticks).forEach(v => { s += `<line class="${v === 0 ? "zero" : "grid"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${g.tf(v)}</text>`; });
+      if (g.ref) s += `<line class="ref" x1="${L}" x2="${W - R}" y1="${y(g.ref[0])}" y2="${y(g.ref[0])}"/>` + (ph < 90 ? "" : `<text class="reflab" x="${L + 4}" y="${y(g.ref[0]) - 5}">${g.ref[1]}</text>`);
       g.mets.forEach(([k], mi) => {
         const x0 = L + cw * (mi + .5) - (n * bw + (n - 1) * gap) / 2;
         cases.forEach((c, ci) => {
@@ -659,12 +680,10 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
     stepEls.forEach((el, j) => el.classList.toggle("on", j === i));
     if (i === active) return;
     active = i;
-    drawMetrics($("#mcharts"), CASES.filter(x => x.id === sel || cmp.has(x.id)), STEPS[active].hot, true);
-    drawPath();
+    drawStage();
     revealHot();
   }
   // the charts can be taller than the pinned stage: keep the shaded ones in view
-  const stage = $(".stage");
   function revealHot() {
     if (stage.scrollHeight <= stage.clientHeight + 2) return;
     const rows = [...$("#mcharts").querySelectorAll(".mc.hot")];
@@ -680,7 +699,7 @@ document.documentElement.classList.add("pre"); setTimeout(function () { document
   // The tracker file changes every weekday, so it is loaded with an hourly cache key rather than a fixed script tag.
   const trs = document.createElement("script");
   trs.src = "nvidia-tracker-data.js?h=" + new Date().toISOString().slice(0, 13);
-  trs.onload = () => { renderTrack(); drawPath(); };
+  trs.onload = () => { renderTrack(); fitStage(); };
   trs.onerror = () => { $("#track").hidden = true; };
   document.head.appendChild(trs);
   stepEls[0].classList.add("on");
