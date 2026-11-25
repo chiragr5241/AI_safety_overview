@@ -10,11 +10,19 @@ window.NV_TRACK = {
   "date": "2026-11-20",
   "close": 125.53
  },
- "updated": "2026-11-23",
+ "updated": "2026-11-24",
  "prices": [
   [
    "2026-11-20",
    125.53
+  ],
+  [
+   "2026-11-23",
+   165.05
+  ],
+  [
+   "2026-11-24",
+   155.38
   ]
  ],
  "signals": [
@@ -242,6 +250,14 @@ window.NV_TRACK = {
    "status": "open",
    "result": null,
    "url": null
+  },
+  {
+   "id": "senate",
+   "due": "2026-12-03",
+   "what": "Jensen Huang at a public Senate Banking Committee hearing, as stated by Senator Cramer",
+   "status": "upcoming",
+   "result": null,
+   "url": null
   }
  ],
  "actuals": [
@@ -370,6 +386,36 @@ window.NV_TRACK = {
    "step": "s3",
    "leans": "bull",
    "note": "Public markets are still funding a top AI lab at scale, which supports the view that lab customers stay financed."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "Shares give back about 6% a day after the 31% jump on Huang's return",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/stocks/article/nvidia-stock-falls-after-epic-rally-on-jensen-huangs-return-as-ceo-094535877.html",
+   "topic": "other",
+   "step": "s1",
+   "leans": "none",
+   "note": "The report says DOJ and SEC probes tied to Megaspeed continue, so the leadership relief does not settle the s1 regulatory question."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "Senator Cramer says Huang will testify at a Senate Banking hearing on 3 December",
+   "source": "NBC News",
+   "url": "https://www.nbcnews.com/politics/trump-administration/live-blog/trump-white-house-congress-2026-live-updates-rcna611009",
+   "topic": "export",
+   "step": "s1",
+   "leans": "bear",
+   "note": "Cramer also pushes a bill limiting AI chip sales to China, which would bear on China revenue and keeps political risk alive."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "Raskin says there is bipartisan support for a congressional NVIDIA investigation",
+   "source": "NBC News",
+   "url": "https://www.nbcnews.com/politics/trump-administration/live-blog/trump-white-house-congress-2026-live-updates-rcna611009",
+   "topic": "legal",
+   "step": "s1",
+   "leans": "none",
+   "note": "A House probe is proposed, not opened; it adds to the list of inquiries that could widen the s1 severe bear sign."
   }
  ],
  "lessons": [
@@ -393,6 +439,10 @@ window.NV_TRACK = {
   {
    "date": "2026-11-23",
    "summary": "No new close: run at 3:13 p.m. Eastern before the market closed, so today's close is left for the next run; last close $125.53 on 20 November. 3 news items, 0 signs resolved, CEO checkpoint done, 1 lesson. Analyst upgrades reported in search summaries (Melius, Bernstein, StoneX) could not be confirmed from a source page and were left out."
+  },
+  {
+   "date": "2026-11-24",
+   "summary": "Closes $165.05 on 23 November and $155.38 on 24 November, both matched on Yahoo Finance and stockanalysis.com; up 23.8% since 20 November. 3 news items, 0 signs resolved, 0 lessons, 1 checkpoint added (Senate hearing on 3 December, from a senator's statement). Analyst notes from BofA and New Street and a new chief compliance officer were seen only in headlines or without a date and were left out."
   }
  ]
 };
