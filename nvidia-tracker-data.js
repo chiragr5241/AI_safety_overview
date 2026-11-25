@@ -10,7 +10,7 @@ window.NV_TRACK = {
   "date": "2026-11-20",
   "close": 125.53
  },
- "updated": "2026-11-24",
+ "updated": "2026-11-25",
  "prices": [
   [
    "2026-11-20",
@@ -23,6 +23,10 @@ window.NV_TRACK = {
   [
    "2026-11-24",
    155.38
+  ],
+  [
+   "2026-11-25",
+   149.3
   ]
  ],
  "signals": [
@@ -258,6 +262,14 @@ window.NV_TRACK = {
    "status": "upcoming",
    "result": null,
    "url": null
+  },
+  {
+   "id": "house",
+   "due": "2026-12-01",
+   "what": "Jensen Huang in a closed, transcribed interview with three House committees on China chip access",
+   "status": "upcoming",
+   "result": null,
+   "url": null
   }
  ],
  "actuals": [
@@ -416,6 +428,46 @@ window.NV_TRACK = {
    "step": "s1",
    "leans": "none",
    "note": "A House probe is proposed, not opened; it adds to the list of inquiries that could widen the s1 severe bear sign."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "Investors and governance experts say the Huang reversal undercuts the board's independence",
+   "source": "Reuters via Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/stocks/live/nvidia-live-updates-nvidia-stock-falls-as-exuberance-fades-after-jensen-huangs-return-as-ceo-142100906.html",
+   "topic": "leadership",
+   "step": "s1",
+   "leans": "none",
+   "note": "The board vouched for Huang before its own probe ended, so the leadership question in s1 is settled in name but not in confidence."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "Most Republican Banking senators promise hard questions; two say Huang should not be CEO",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/stocks/live/nvidia-live-updates-nvidia-stock-falls-as-exuberance-fades-after-jensen-huangs-return-as-ceo-142100906.html",
+   "topic": "legal",
+   "step": "s1",
+   "leans": "bear",
+   "note": "Lawmakers of the president's own party keep pressure on, which keeps China sales limits and further inquiries alive."
+  },
+  {
+   "date": "2026-11-24",
+   "title": "DOJ official says it has no evidence of wrongdoing by Huang or NVIDIA",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/stocks/live/nvidia-live-updates-nvidia-stock-falls-as-exuberance-fades-after-jensen-huangs-return-as-ceo-142100906.html",
+   "topic": "legal",
+   "step": "s1",
+   "leans": "none",
+   "note": "This eases the national security worry, but it does not speak to the SEC accounting inquiry, which is what the s1 severe bear sign tracks."
+  },
+  {
+   "date": "2026-11-25",
+   "title": "Shares fall 3.9% to $149.30 as the Huang rally fades in a wider tech selloff",
+   "source": "Yahoo Finance",
+   "url": "https://finance.yahoo.com/markets/stocks/live/nvidia-live-updates-nvidia-stock-falls-as-exuberance-fades-after-jensen-huangs-return-as-ceo-142100906.html",
+   "topic": "other",
+   "step": "s1",
+   "leans": "none",
+   "note": "Two days of losses take back about half of Monday's jump; daily swings this size are noise for the November 2027 cases."
   }
  ],
  "lessons": [
@@ -443,6 +495,10 @@ window.NV_TRACK = {
   {
    "date": "2026-11-24",
    "summary": "Closes $165.05 on 23 November and $155.38 on 24 November, both matched on Yahoo Finance and stockanalysis.com; up 23.8% since 20 November. 3 news items, 0 signs resolved, 0 lessons, 1 checkpoint added (Senate hearing on 3 December, from a senator's statement). Analyst notes from BofA and New Street and a new chief compliance officer were seen only in headlines or without a date and were left out."
+  },
+  {
+   "date": "2026-11-25",
+   "summary": "Close $149.30 on 25 November, matched on Yahoo Finance and stockanalysis.com; up 18.9% since 20 November. 4 news items, 0 signs resolved, 0 lessons, 1 checkpoint added (House interview on 1 December). An S&P CreditWatch negative action and a $290 million settlement appeared only in search summaries and were left out."
   }
  ]
 };
