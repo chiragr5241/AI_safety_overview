@@ -223,7 +223,7 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
       exact: hap.length > 0 && hap.every(h => h.d.length > 7 && !h.approx)
     });
   })).sort((a, b) => a.t - b.t || a.lane - b.lane);
-  const lagText = e => e.lag == null ? "" : e.lag === 0 ? "same day" : e.exact ? e.lag + " days" : e.hap[0].d.length === 7 ? "about " + Math.round(e.lag / 30) + " months" : "about " + e.lag + " days";
+  const lagText = e => e.lag == null ? "" : e.lag === 0 ? "same day" : e.exact ? e.lag + " days" : e.hap[0].d.length === 7 ? "about " + (Math.round(e.lag / 30) === 1 ? "a month" : Math.round(e.lag / 30) + " months") : "about " + e.lag + " days";
   let lane = -1;   // -1 shows all three
 
   const tip = $("#tip");
@@ -392,14 +392,18 @@ footer .wrap { max-width: calc(1280px + 2 * var(--gutter)); }
 
   /* ---------- agent incidents: from event to public report ---------- */
   (function () {
-    const t0 = Date.UTC(2026, 4, 1), t1 = Date.UTC(2026, 9, 16);
+    /* the axis runs from the first month anything happened to the month after the last report */
+    const lagEv = events.filter(e => ALL[e.lane].lag), pts = lagEv.flatMap(e => [day(e.on)].concat(e.hap.map(h => day(h.d))));
+    const first = new Date(Math.min(...pts)), last = new Date(Math.max(...pts));
+    const t0 = Date.UTC(first.getUTCFullYear(), first.getUTCMonth(), 1), t1 = Date.UTC(last.getUTCFullYear(), last.getUTCMonth() + 1, 1);
     const x = t => (100 * (t - t0) / (t1 - t0)).toFixed(2) + "%";
-    const ticks = [4, 5, 6, 7, 8, 9].map(m => Date.UTC(2026, m, 1));
+    const ticks = [];
+    for (let t = t0; t < t1; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) ticks.push(t);
     const grid = ticks.map(t => `<span class="grid" style="left:${x(t)}"></span>`).join("");
     const axis = el("div", "lag-row lag-axis");
-    axis.innerHTML = `<span class="nm"></span><span class="lag-track">${ticks.map((t, i) => `<span class="grid" style="left:${x(t)}"></span><span class="tick" style="left:${x(t)}">${MONTHS[4 + i]}</span>`).join("")}</span><span class="val">gap</span>`;
+    axis.innerHTML = `<span class="nm"></span><span class="lag-track">${ticks.map(t => `<span class="grid" style="left:${x(t)}"></span><span class="tick" style="left:${x(t)}">${MONTHS[new Date(t).getUTCMonth()]}</span>`).join("")}</span><span class="val">gap</span>`;
     $("#lag").appendChild(axis);
-    events.filter(e => ALL[e.lane].lag).forEach(e => {
+    lagEv.forEach(e => {
       const row = el("div", "lag-row");
       let m = grid;
       if (e.hap.length) {
