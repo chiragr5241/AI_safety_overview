@@ -10,7 +10,7 @@ window.NV_TRACK = {
   "date": "2026-11-20",
   "close": 125.53
  },
- "updated": "2026-11-25",
+ "updated": "2026-11-26",
  "prices": [
   [
    "2026-11-20",
@@ -468,6 +468,36 @@ window.NV_TRACK = {
    "step": "s1",
    "leans": "none",
    "note": "Two days of losses take back about half of Monday's jump; daily swings this size are noise for the November 2027 cases."
+  },
+  {
+   "date": "2026-11-26",
+   "title": "NVIDIA tells server partners to pause shipments to four Southeast Asian countries",
+   "source": "The Decoder, citing the Financial Times",
+   "url": "https://the-decoder.com/nvidia-halts-server-shipments-to-malaysia-singapore-thailand-and-indonesia-after-tighter-us-export-controls/",
+   "topic": "export",
+   "step": "s4",
+   "leans": "bear",
+   "note": "Dell and Supermicro were told to stop shipping to Malaysia, Singapore, Thailand and Indonesia under the new license rule, with no end date, which could trim FY28 sales outside the top buyers."
+  },
+  {
+   "date": "2026-11-26",
+   "title": "Banks halt about $500 million of loans to a Singapore cloud renting compute to ByteDance",
+   "source": "The Decoder, citing the Financial Times",
+   "url": "https://the-decoder.com/nvidia-halts-server-shipments-to-malaysia-singapore-thailand-and-indonesia-after-tighter-us-export-controls/",
+   "topic": "financing",
+   "step": "s3",
+   "leans": "bear",
+   "note": "A first sign that the export rule is cutting off credit to GPU renters in the region, though it is one small lender group and not a distressed raise."
+  },
+  {
+   "date": "2026-11-25",
+   "title": "Several brokers cut price targets after Huang returns; average target near $233",
+   "source": "BeInCrypto via Mitrade",
+   "url": "https://www.mitrade.com/au/insights/stock-analysis/us-stocks/beincrypto-NVDA-202611251038",
+   "topic": "estimates",
+   "step": null,
+   "leans": "none",
+   "note": "Oppenheimer, Bank of America and Phillip Securities cut targets while Citi, Melius and StoneX raised or upgraded; these are price targets, not earnings estimates, so the FY28 consensus actual stays open."
   }
  ],
  "lessons": [
@@ -499,6 +529,10 @@ window.NV_TRACK = {
   {
    "date": "2026-11-25",
    "summary": "Close $149.30 on 25 November, matched on Yahoo Finance and stockanalysis.com; up 18.9% since 20 November. 4 news items, 0 signs resolved, 0 lessons, 1 checkpoint added (House interview on 1 December). An S&P CreditWatch negative action and a $290 million settlement appeared only in search summaries and were left out."
+  },
+  {
+   "date": "2026-11-26",
+   "summary": "No new close: US markets shut for Thanksgiving, last close $149.30 on 25 November, up 18.9% since 20 November. 3 news items, 0 signs resolved, 0 lessons. The shipment pause and Aolani loan halt come from the Financial Times via The Decoder and are not confirmed by NVIDIA. The broker target page shows no exact date (taken as 25 November from its address). Forbes and Benzinga pages on neocloud debt and the shipment pause could not be read and were left out."
   }
  ]
 };
