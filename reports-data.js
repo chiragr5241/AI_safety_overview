@@ -1,4 +1,4 @@
-/* Data for reports.html, read on 12 November 2026; grant figures rebuilt on 15 November 2026.
+/* Data for reports.html, read on 12 November 2026; grant figures rebuilt on 27 November 2026.
    'fund' is itemised grants to each organisation in AISafety.fund's database (CC BY-NC-SA 4.0). Each figure adds every spelling of the recipient the database lists
    ("X", "X (via Jaan Tallinn)", an earlier name). Rows the database leaves out of its totals (conditional matching pledges,
    repeats of one gift) are left out here too. An entry with no figure has no grant row.
@@ -6,37 +6,33 @@
    plus any published investment ('invest' below). The site's own grant records are compared with it in the data audit on experiments.html. Keys are the field map ids without the "f_" prefix. */
 window.REPORT = {
   read: "2026-11-12",
-  fundSource: { name: "AISafety.fund", url: "https://aisafety.fund/", licence: "CC BY-NC-SA 4.0", version: 16714 },
+  fundSource: { name: "AISafety.fund", url: "https://aisafety.fund/", licence: "CC BY-NC-SA 4.0", version: 19206 },
 
   /* Technical safety research: each of the 50 looked up by name. */
   /* Every entry's counted grants in AISafety.fund, from the local copy of its database (evidence/aisafety_fund, pulled through its MCP server
-     on 15 November 2026, data version 16714) and matched to map entries by evidence/aisafety_fund/build.py. An entry not listed has no row. */
+     on 27 November 2026, data version 19206) and matched to map entries by evidence/aisafety_fund/build.py. An entry not listed has no row. */
   fund: {
-    lawzero: 228985396, resolution: 160000000, redwood_research: 139324971, cset: 122073000, epoch_ai: 94761872, rand: 83430751,
-    far_ai: 66639276, mats: 58711127, kairos: 53437080, govai: 48608352, iaps: 35256182, bluedot: 30149324, openai: 30000000,
-    longview: 29729707, constellation: 26250000, miri: 23662373, metr: 23417000, lightcone: 18694765, cais: 17647788,
-    ai_digest: 16633505, beri: 15466022, aigi: 14833018, geodesic: 14296046, lawai: 12879479, palisade: 12244177,
-    arcadia_impact: 12229609, caif: 11422847, cltr: 10816746, cbai: 10726303, simon_institute: 10003633, ought: 9328333,
-    metaculus: 8194788, talos_fellowship: 7589189, chai: 6747550, apollo: 6672180, arc: 5785043, aifp: 5389022, aiss: 5235352,
-    averi: 5000000, lisa: 4702962, ai_impacts: 4536210, meridian: 4299534, era_ai_fellowship: 4172685, successif: 4054570,
-    iaseai: 4000000, pivotal_fellowship: 3751690, ashgro: 3718896, princint: 3644555, simplex: 3355700, acs: 3318700,
-    pai: 3305000, fli: 3239000, foresight_institute: 3148000, clr: 3136627, manifold_markets: 3084000, heron: 3055164,
-    chinatalk: 3020017, encode: 3000000, ari: 3000000, vista_institute: 2989873, good_impressions: 2835000, eip: 2790000,
-    aoi: 2752000, fri: 2747850, eleutherai: 2642273, lesswrong: 2303760, carma: 2300000, good_ancestors: 2278356, aipi: 2277000,
-    pauseai: 2120574, nightingale: 1963400, rational_animations: 1946249, tfs: 1879000, ist: 1840773, saif: 1747513,
-    saferai: 1669515, tfi: 1633659, aiaf: 1570000, fig_fellowship: 1552586, arena: 1435258, apart: 1428838, catalyze: 1415963,
-    pibbss: 1411000, secure_ai_project: 1241064, aisc: 1221938, lasst: 1218000, ceealar: 1185046, iliad: 1175496,
-    conjecture: 1149083, ai_standards_lab: 1130000, ml4good: 1095293, cesia: 1034310, dovetail: 1019000, gcp: 1008465,
-    mai: 831196, legal_safety_lab: 811000, cltc: 808353, sash: 779167, ilina: 764170, aether: 756570, orthogonal: 753000,
-    nonlinear: 599000, gcri: 575850, modeling_cooperation: 571416, coral: 560300, neo_research: 553000, alter: 552800,
-    caml: 534000, rob_miles: 507537, aistof: 500000, forethought: 483899, affine: 477000, lens: 452000, cadenza_labs: 441549,
-    roman_yampolskiy: 429000, equistamp: 400000, non_trivial: 350195, convergence: 338000, xlab_fellowship: 329000,
-    future_matters: 299460, lasr_labs: 288732, cser: 283500, aiwi: 251000, founders_pledge: 232668, cfg: 223834,
-    algoverse: 216769, vanessa_kosoy: 200000, zvi_mowshowitz: 200000, aed: 190330, spar: 189350, aisafety_info: 162000,
-    manifund: 155000, luthien: 150000, aisafety_com: 150000, dylan_hadfield_menell: 134175, evitable: 111802, athena: 91600,
-    softmax: 90000, cavendish_labs: 88000, formation_research: 87300, ero: 78484, harmony: 54270, axrp: 51102,
-    humans_in_control: 48000, transluce: 40250, gwwc: 36000, tmp: 31000, tara: 14901, base: 14100, dr_waku: 10000,
-    odyssean_institute: 7900, ai_plans: 5370
+    lawzero: 228985396, resolution: 160000000, redwood_research: 139324971, cset: 122073000, epoch_ai: 94761872, rand: 83430751, far_ai: 66639276,
+    mats: 58931127, kairos: 53437080, govai: 48608352, iaps: 35256182, bluedot: 30149324, openai: 30000000, constellation: 26250000, miri: 23662373,
+    metr: 23417000, lightcone: 17844815, cais: 17647788, ai_digest: 16633505, beri: 15366022, aigi: 14833018, longview: 14729707, geodesic: 14296046,
+    lawai: 12879479, palisade: 12244177, arcadia_impact: 12229609, caif: 11422847, cltr: 10816746, cbai: 10726303, simon_institute: 10003633,
+    ought: 9328333, metaculus: 8194788, talos_fellowship: 7589189, chai: 6747550, apollo: 6672180, aifp: 5389022, aiss: 5235352, averi: 5000000,
+    lisa: 4702962, ai_impacts: 4536210, arc: 4535043, meridian: 4299534, successif: 4054570, iaseai: 4000000, era_ai_fellowship: 3766402,
+    pivotal_fellowship: 3751690, ashgro: 3718896, princint: 3644555, simplex: 3355700, acs: 3318700, pai: 3305000, fli: 3239000,
+    foresight_institute: 3148000, clr: 3136627, manifold_markets: 3084000, heron: 3055164, chinatalk: 3020017, encode: 3000000, ari: 3000000,
+    vista_institute: 2989873, good_impressions: 2835000, eip: 2790000, aoi: 2752000, fri: 2747850, eleutherai: 2642273, lesswrong: 2303760,
+    carma: 2300000, good_ancestors: 2278356, aipi: 2277000, pauseai: 2120574, nightingale: 1963400, rational_animations: 1946249, tfs: 1879000,
+    ist: 1840773, saif: 1747513, saferai: 1669515, secure_ai_project: 1641064, tfi: 1633659, aiaf: 1570000, fig_fellowship: 1552586, arena: 1435258,
+    apart: 1428838, catalyze: 1415963, pibbss: 1411000, poseidon: 1315200, aisc: 1221938, lasst: 1218000, ceealar: 1185046, iliad: 1175496,
+    conjecture: 1149083, ai_standards_lab: 1130000, ml4good: 1095293, cesia: 1090310, dovetail: 1019000, gcp: 1008465, mai: 831196,
+    legal_safety_lab: 811000, cltc: 808353, forethought: 788999, sash: 779167, ilina: 764170, aether: 756570, orthogonal: 753000, nonlinear: 599000,
+    gcri: 575850, resi: 571429, modeling_cooperation: 571416, coral: 560300, neo_research: 553000, alter: 552800, caml: 534000, rob_miles: 507537,
+    aistof: 500000, affine: 477000, lens: 452000, cadenza_labs: 441549, roman_yampolskiy: 429000, equistamp: 400000, non_trivial: 350195,
+    convergence: 338000, xlab_fellowship: 329000, future_matters: 299460, lasr_labs: 288732, cser: 283500, aiwi: 251000, founders_pledge: 232668,
+    cfg: 223834, algoverse: 216769, vanessa_kosoy: 200000, zvi_mowshowitz: 200000, aed: 190330, spar: 189350, alignment_journal: 170000,
+    aisafety_info: 162000, manifund: 155000, luthien: 150000, aisafety_com: 150000, dylan_hadfield_menell: 134175, evitable: 109602, athena: 91600,
+    softmax: 90000, cavendish_labs: 88000, formation_research: 87300, ero: 78484, harmony: 54270, axrp: 51102, humans_in_control: 48000,
+    transluce: 40250, gwwc: 36000, tmp: 31000, tara: 14901, base: 14400, dr_waku: 10000, odyssean_institute: 7900, ai_plans: 5370
   },
 
   /* Notes shown beside a figure in the audit table. */
@@ -114,7 +110,7 @@ window.REPORT = {
   /* The seven groups the chart sorts third parties into, in the order of the brief. */
   groups: ["training_and_education", "governance", "empirical_research", "funding", "conceptual_research", "advocacy", "strategy"],
 
-  /* Each third party sits in one group only. An entry the map tags with one of the seven sits there; these 42 carry two or more,
+  /* Each third party sits in one group only. An entry the map tags with one of the seven sits there; these 60 carry two or more,
      so each gets one home, chosen from its map description, and the reason shown at the foot of the page. Our call, not the map's. */
   home: {
     fli: ["advocacy", "Outreach and policy advocacy lead its own description; grantmaking and events come after."],
@@ -136,7 +132,6 @@ window.REPORT = {
     convergence: ["strategy", "Its main output is reports on AI scenarios; awareness campaigns come second."],
     cltr: ["governance", "Works to improve how governments decide on extreme risks."],
     buddhism_ai_initiative: ["advocacy", "Brings communities together to shape AI; no policy or strategy research is described."],
-    aisf: ["training_and_education", "Educational work comes first; awareness campaigns second."],
     janus: ["empirical_research", "Studies how language models behave by working with them; the Simulators framework came from that work."],
     softmax: ["conceptual_research", "Developing a theory of organic alignment comes first in its description."],
     formation_research: ["conceptual_research", "Researches the basic dynamics of lock-in; interventions follow from that."],
@@ -158,7 +153,26 @@ window.REPORT = {
     aigsi: ["advocacy", "Outreach and educational materials to change how institutions respond to AI risk."],
     odyssean_institute: ["strategy", "Horizon scanning and decisions under deep uncertainty."],
     intelligence_rising: ["training_and_education", "An educational roleplay game for decision makers."],
-    ilina: ["training_and_education", "Developing African talent leads its description; research and policy follow."]
+    ilina: ["training_and_education", "Developing African talent leads its description; research and policy follow."],
+    uk_aisi: ["governance", "A government body: its testing serves policy at home and abroad."],
+    bluedot: ["training_and_education", "Its courses are the main work; funding is a side programme."],
+    ero: ["advocacy", "Informing public debate is its stated aim."],
+    chai: ["conceptual_research", "Provably beneficial systems: the conceptual groundwork leads its description."],
+    modeling_cooperation: ["conceptual_research", "Research and software on cooperation; the policy relevance follows from it."],
+    far_ai: ["empirical_research", "Research comes first; events, programmes and funding support it."],
+    cser: ["strategy", "Studies existential and catastrophic risks across fields, not AI policy alone."],
+    gpai: ["strategy", "Puts shared principles into practice across 46 countries rather than writing law."],
+    pai: ["strategy", "Convenes many kinds of organisations to build shared solutions."],
+    dylan_hadfield_menell: ["conceptual_research", "Agent alignment theory leads; experiments test it."],
+    baif: ["empirical_research", "Supports technical safety research; the funding serves that research."],
+    palisade: ["empirical_research", "Tests offensive cyber capability and controllability; its advice to policy makers draws on them."],
+    transluce: ["empirical_research", "Builds tools to analyse AI systems; public-interest oversight is the use."],
+    ari: ["governance", "Works across many AI policy issues, from current harms to emerging risks."],
+    aipn: ["governance", "Builds support for federal policy on the path to AGI."],
+    carma: ["strategy", "Research on global AI risk management; policy research is one output."],
+    narrow_path: ["strategy", "A set of proposals, not an organisation doing policy work."],
+    guidelight: ["governance", "Assesses company practices and is writing an alignment standard; the open letter came second."],
+    lasi: ["governance", "Legal work: Freedom of Information requests and dialogue with the EU and Council of Europe."]
   },
 
   /* The four organisations the report follows, one for each of four claimed gaps. */

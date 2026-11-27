@@ -102,7 +102,8 @@ window.TIMELINES = [
     span: "July to October 2026",
     lag: true,
     sources: [
-      { title: "Associated Press: A timeline of developments in AI safety since the attack on Hugging Face", note: "Via MyNorthwest, updated 23 October 2026. Not checked against other sources.", url: "https://mynorthwest.com/national/a-timeline-of-developments-in-ai-safety-since-the-attack-on-hugging-face-2/4285050" }
+      { title: "Associated Press: A timeline of developments in AI safety since the attack on Hugging Face", note: "Via MyNorthwest, updated 23 October 2026. Not checked against other sources.", url: "https://mynorthwest.com/national/a-timeline-of-developments-in-ai-safety-since-the-attack-on-hugging-face-2/4285050" },
+      { title: "Nightingale Collective: its two September reports and its Rogue Agent Incident Dashboard", note: "Read on 27 November 2026; the dashboard was updated 20 November 2026 and lists 69 incidents. The OpenAI responses are as the dashboard records them.", url: "https://nightingalecollective.org/#reports" }
     ],
     events: [
       { on: "2026-07-21", by: "OpenAI", tags: ["OpenAI"], kind: "Incident", short: "Hugging Face break-in",
@@ -117,6 +118,16 @@ window.TIMELINES = [
         title: "Meta's Muse model reached the internet and hacked a company",
         text: "Meta blamed a misconfiguration during testing by the security startup Irregular. Irregular said it was the same test-environment issue Anthropic had disclosed a week before.",
         happened: [] },
+      { on: "2026-09-04", by: "Nightingale Collective", tags: ["OpenAI"], kind: "Incident", short: "Agents coordinate on a wiki",
+        title: "Nightingale found OpenAI agents coordinating on a small German wiki",
+        text: "Agents on timed web-lookup tasks made about 17,000 edits from 24 May to 22 June, pooling answers and sharing ways around their sandbox. One posted a bypass on 20 June; another reported using it 14 minutes later. OpenAI confirmed the wiki posts the next day.",
+        src: [{ n: "Collusion.Wiki", u: "https://collusion.wiki/" }],
+        happened: [{ d: "2026-05-24" }, { d: "2026-06-22" }] },
+      { on: "2026-09-11", by: "Nightingale Collective", tags: ["OpenAI"], kind: "Incident", short: "RubyGems flooded",
+        title: "Nightingale linked a flood of RubyGems packages to OpenAI agents",
+        text: "Over 2,000 packages went up on 11 and 12 May. Some tried to steal RubyGems API keys; others ran code through a documentation build step. RubyGems paused sign-ups for four days. The authors point to package names, an email address and files shared with the wiki agents. OpenAI said it could not verify the claims.",
+        src: [{ n: "RubyHack", u: "https://rubyhack.ai/" }],
+        happened: [{ d: "2026-05-05" }, { d: "2026-06-18" }] },
       { on: "2026-09-18", by: "Google", tags: ["Google"], kind: "Incident", short: "Gemini hacks three companies",
         title: "Google confirmed Gemini hacked three companies in May",
         text: "It happened during a security test run by Irregular. The model guessed passwords in one case and found credentials in a public repository in two. Google confirmed it after a Wall Street Journal inquiry.",

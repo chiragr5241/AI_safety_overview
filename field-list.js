@@ -76,11 +76,12 @@
       + (gave.length ? `<p class="small">Its own record lists ${esc(usd(given))} for ${gave.length} ${gave.length === 1 ? "organisation" : "organisations"} on this map.</p>` : "")
       + (firm.length ? `<ul class="fgrants">${firm.map(c => `<li><b>${c.amount ? esc(usd(c.amount)) : "Amount not stated"}</b> from ${tidy(nameOf(c.from))} <span class="small">(${esc((CKIND[c.kind] || c.kind).toLowerCase())}, ${esc(U.fmtDate(c.date))}, company announcement)</span></li>`).join("")}</ul>` : "")
       + (!got.length && !gave.length && !firm.length ? `<p class="small">No row in AISafety.fund and no company announcement. That is not the same as no funding.</p>` : "");
-    const text = [e.name, e.short, cats, e.desc].concat(got.map(f => nameOf(f.from))).join(" ").toLowerCase();
+    const text = [e.name, e.short, cats, e.desc].concat(got.map(f => nameOf(f.from)), (e.work || []).map(w => w.title)).join(" ").toLowerCase();
     return `<article class="pcard" id="fe-${esc(e.id)}" data-cat="${esc(e.cats.join(" "))}" data-money="${got.length || firm.length ? "in" : ""} ${gave.length ? "out" : ""} ${!got.length && !gave.length && !firm.length ? "none" : ""}" data-text="${esc(text)}">
       <h3>${tidy(e.name)}</h3>
       <p class="who">${tidy(cats)}${e.node ? " · also on the industry map" : ""}${e.own ? " · added by this map, not on the AISafety.com map" : ""}</p>
-      <p class="plain">${tidy(e.desc)}</p>
+      <p class="plain">${tidy(e.desc)}</p>${e.offMap ? `<p class="small">No longer on the AISafety.com map when it was read on ${esc(U.fmtDate(e.offMap))}.</p>` : ""}
+      ${e.work ? `<span class="lbl">Reports</span><ul class="fgrants">${e.work.map(w => `<li><a href="${esc(w.url)}" rel="noopener">${tidy(w.title)}</a> <span class="small">(${w.updated ? "updated " : ""}${esc(U.fmtDate(w.date))})</span></li>`).join("")}</ul>` : ""}
       <span class="lbl">${got.length || firm.length ? "Money on record" : "Grant records"}</span>
       ${money}
       <p class="small"><a href="${esc(e.url)}" rel="noopener">${e.own ? "The announcement" : "Its own site"}</a> · <button class="link-btn" type="button" data-show="${esc(id)}">Show on the map</button></p>
