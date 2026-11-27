@@ -10,7 +10,7 @@ window.NV_TRACK = {
   "date": "2026-11-20",
   "close": 125.53
  },
- "updated": "2026-11-26",
+ "updated": "2026-11-27",
  "prices": [
   [
    "2026-11-20",
@@ -27,6 +27,10 @@ window.NV_TRACK = {
   [
    "2026-11-25",
    149.3
+  ],
+  [
+   "2026-11-27",
+   150.49
   ]
  ],
  "signals": [
@@ -498,6 +502,26 @@ window.NV_TRACK = {
    "step": null,
    "leans": "none",
    "note": "Oppenheimer, Bank of America and Phillip Securities cut targets while Citi, Melius and StoneX raised or upgraded; these are price targets, not earnings estimates, so the FY28 consensus actual stays open."
+  },
+  {
+   "date": "2026-11-27",
+   "title": "Report says barred Blackwell chips were installed at a Shanghai site tied to the Megaspeed founder",
+   "source": "Stock Titan, citing CNBC and Bloomberg",
+   "url": "https://stocktitan.net/articles/stock-market-today-live-november-27-2026",
+   "topic": "export",
+   "step": "s1",
+   "leans": "bear",
+   "note": "It extends a 13 November Bloomberg report on older Hopper chips to the newest generation, which adds to the diversion questions before Huang's hearings on 1 to 3 December; NVIDIA has not confirmed it."
+  },
+  {
+   "date": "2026-11-27",
+   "title": "Shares close up 0.8% at $150.49 in a short session as chip stocks rebound",
+   "source": "Stock Titan",
+   "url": "https://stocktitan.net/articles/stock-market-today-live-november-27-2026",
+   "topic": "other",
+   "step": null,
+   "leans": "none",
+   "note": "The stock traded lower for most of the morning before a late lift with other chip and memory names; a move this small is noise for the November 2027 cases."
   }
  ],
  "lessons": [
@@ -507,6 +531,13 @@ window.NV_TRACK = {
    "verdict": "partly",
    "text": "The base case expected the CEO search to drag on through the quarter, and the bull cases needed a credible permanent CEO named. Eleven days after he resigned, the board reinstated Jensen Huang.",
    "why": "The studies treated succession as a slow outside search and did not consider a reversal under political pressure. This removes one obstacle for the bull cases in step s1, but the SEC, California and board probes are unresolved, so the severe bear sign in s1 is as open as before."
+  },
+  {
+   "date": "2026-11-27",
+   "about": "week",
+   "verdict": "partly",
+   "text": "After one week the close of $150.49 is up 19.9% from $125.53, above all five straight lines for today (strong bull $128.22, bull $126.57, base $125.48, bear $124.73, severe bear $124.00). No early sign resolved this week; the CEO checkpoint closed on 23 November.",
+   "why": "Almost all of the gain came on one day from Huang's reinstatement, an event the studies did not model, so it says little about which case is likelier; the price had fallen back from $165.05 by Friday. What the studies got right so far is that the legal and export overhang would persist: the SEC, California and DOJ matters are open, the new license rule has paused shipments to four Southeast Asian countries, and more chip diversion reports keep coming, all of which lean bear. None of the business measures (Q4 revenue, gross margin, days to collect, hyperscaler 2027 budgets) has been reported yet, so the cases are untested."
   }
  ],
  "runs": [
@@ -533,6 +564,10 @@ window.NV_TRACK = {
   {
    "date": "2026-11-26",
    "summary": "No new close: US markets shut for Thanksgiving, last close $149.30 on 25 November, up 18.9% since 20 November. 3 news items, 0 signs resolved, 0 lessons. The shipment pause and Aolani loan halt come from the Financial Times via The Decoder and are not confirmed by NVIDIA. The broker target page shows no exact date (taken as 25 November from its address). Forbes and Benzinga pages on neocloud debt and the shipment pause could not be read and were left out."
+  },
+  {
+   "date": "2026-11-27",
+   "summary": "Close $150.49 on 27 November (half day), matched on Yahoo Finance and stockanalysis.com; up 19.9% since 20 November. 2 news items, 0 signs resolved, 1 lesson (weekly). No 10-Q on EDGAR yet; it is due by 4 December. The Blackwell report was read only through Stock Titan's summary of CNBC and Bloomberg; the Forbes and Seeking Alpha pages could not be read. No analyst estimate changes or hyperscaler 2027 guidance could be confirmed this week."
   }
  ]
 };
